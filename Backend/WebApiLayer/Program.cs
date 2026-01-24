@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Context;
+﻿using BusinessLayer.Container;
+using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,13 +17,9 @@ builder.Services.AddOpenApi();
 #region benim yazdığım eklediğim şeyler bitince buradan taşı 
 
 
-
-//bu kod veritabanına bağlama kodu 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
-});
-
+builder.Services.AddDatabaseLayers(builder.Configuration);
+builder.Services.ContainerDependencies();
+builder.Services.AddThirdPartyServices();
 
 
 

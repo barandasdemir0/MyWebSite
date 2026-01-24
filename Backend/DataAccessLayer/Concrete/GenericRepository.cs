@@ -31,24 +31,44 @@ namespace DataAccessLayer.Concrete
             await Task.CompletedTask;
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync(bool tracking = true)
         {
-            return await _dbSet.ToListAsync();
+            var query = _dbSet.AsQueryable();
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.ToListAsync();
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter, bool tracking = true)
         {
-            return await _dbSet.Where(filter).ToListAsync();
+            var query = _dbSet.Where(filter);
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.ToListAsync();
         }
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true)
         {
-            return await _dbSet.FirstOrDefaultAsync(filter);
+            var query = _dbSet.AsQueryable();
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.FirstOrDefaultAsync(filter);
         }
 
-        public async Task<T?> GetByIdAsync(Guid guid)
+        public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true)
         {
-            return await _dbSet.FindAsync(guid);
+            var query = _dbSet.AsQueryable();
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.FirstOrDefaultAsync(x => EF.Property<Guid>(x, "Id") == guid);
         }
 
         public async Task<int> SaveAsync()
@@ -61,5 +81,47 @@ namespace DataAccessLayer.Concrete
             _dbSet.Update(entity);
             await Task.CompletedTask;
         }
+        //trackingsiz yapı bu şekildeydi
+        //public async Task AddAsync(T entity)
+        //{
+        //    await _dbSet.AddAsync(entity);
+        //}
+
+        //public async Task DeleteAsync(T entity)
+        //{
+        //    _dbSet.Remove(entity);
+        //    await Task.CompletedTask;
+        //}
+
+        //public async Task<List<T>> GetAllAsync()
+        //{
+        //    return await _dbSet.ToListAsync();
+        //}
+
+        //public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter)
+        //{
+        //    return await _dbSet.Where(filter).ToListAsync();
+        //}
+
+        //public async Task<T?> GetAsync(Expression<Func<T, bool>> filter)
+        //{
+        //    return await _dbSet.FirstOrDefaultAsync(filter);
+        //}
+
+        //public async Task<T?> GetByIdAsync(Guid guid)
+        //{
+        //    return await _dbSet.FindAsync(guid);
+        //}
+
+        //public async Task<int> SaveAsync()
+        //{
+        //    return await _context.SaveChangesAsync();
+        //}
+
+        //public async Task UpdateAsync(T entity)
+        //{
+        //    _dbSet.Update(entity);
+        //    await Task.CompletedTask;
+        //}
     }
 }
