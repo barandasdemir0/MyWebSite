@@ -4,7 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	  <SatelliteResourceLanguages>tr;en;</SatelliteResourceLanguages>
+	  <SatelliteResourceLanguages>tr;en;</SatelliteResourceLanguages> 
+	  <!--bunun yardımı ile gereksiz dil dosyalarını temizliyoruz-->
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 

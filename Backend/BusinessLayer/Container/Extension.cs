@@ -1,11 +1,15 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Context;
+using DtoLayer.Mapping;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace BusinessLayer.Container
@@ -28,6 +32,14 @@ namespace BusinessLayer.Container
 
         public static void AddThirdPartyServices(this IServiceCollection services)
         {
+            //mapster için
+            // DtoLayer assembly'sindeki TÜM IRegister'ları tarar (AboutMapping referans noktası)
+            var config = TypeAdapterConfig.GlobalSettings;
+            TypeAdapterConfig.GlobalSettings.Scan(typeof(AboutMapping).Assembly);
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, ServiceMapper>();
+
+
 
         }
 
