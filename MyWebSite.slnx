@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Backend/">
+    <Project Path="Backend/BusinessLayer/BusinessLayer.csproj" />
+    <Project Path="Backend/DataAccessLayer/DataAccessLayer.csproj" />
+    <Project Path="Backend/DtoLayer/DtoLayer.csproj" />
+    <Project Path="Backend/EntityLayer/EntityLayer.csproj" />
+    <Project Path="Backend/WebApiLayer/WebApiLayer.csproj" />
+  </Folder>
+  <Folder Name="/Frontend/">
+    <Project Path="Frontend/WebUILayer/WebUILayer.csproj" />
+  </Folder>
+</Solution>

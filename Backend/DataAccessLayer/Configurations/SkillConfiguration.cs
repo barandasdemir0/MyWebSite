@@ -1,0 +1,21 @@
+﻿using CV.EntityLayer.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DataAccessLayer.Configurations
+{
+    public sealed class SkillConfiguration : IEntityTypeConfiguration<Skill>
+    {
+        public void Configure(EntityTypeBuilder<Skill> builder)
+        {
+            builder.ToTable("Skills");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.SkillName).IsRequired().HasMaxLength(100);
+            builder.Property(x => x.SkillUrl).HasMaxLength(200);
+            builder.Property(x => x.SkillIcon).HasMaxLength(200);
+        }
+    }
+}
