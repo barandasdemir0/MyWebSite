@@ -9,10 +9,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
+		<ProjectReference Include="..\DtoLayer\DtoLayer.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Concrete\" />
 	  <Folder Include="ValidationRules\" />
 	</ItemGroup>
 
