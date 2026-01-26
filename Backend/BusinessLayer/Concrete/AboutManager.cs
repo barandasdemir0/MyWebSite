@@ -68,6 +68,8 @@ public class AboutManager : IAboutService
         return _mapper.Map<AboutDto>(entity);
     }
 
+    #region  eski kodlar
+
     //public async Task<AboutDto> UpdateAsync(UpdateAboutDto dto)
     //{
     //    var entity = await _repository.GetByIdAsync(dto.Id);
@@ -128,4 +130,6 @@ public class AboutManager : IAboutService
     //    return _mapper.Map<AboutDto>(entity);
 
     //}
+
+    #endregion
 }

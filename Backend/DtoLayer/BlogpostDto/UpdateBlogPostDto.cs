@@ -15,5 +15,4 @@ public class UpdateBlogPostDto
 
     // İlişkiler (Seçim)
     public List<Guid> TopicIds { get; set; } = new();
-    public List<Guid> ProjectIds { get; set; } = new();
 }

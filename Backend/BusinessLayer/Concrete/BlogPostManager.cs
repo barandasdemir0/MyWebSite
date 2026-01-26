@@ -43,7 +43,11 @@ namespace BusinessLayer.Concrete
 
         public async Task<List<BlogPostListDto>> GetAllAsync()
         {
-            var entity = await _repository.GetAllAsync(tracking: false);
+            var entity = await _repository.GetAllAsync(
+                tracking: false,
+                includes: x => x.BlogTopics);
+
+
             return _mapper.Map<List<BlogPostListDto>>(entity);
         }
 
@@ -59,7 +63,9 @@ namespace BusinessLayer.Concrete
 
         public async Task<BlogPostDto?> GetBySlugAsync(string slug)
         {
-            var entity = await _repository.GetAsync(x => x.Slug == slug, tracking: false);
+            var entity = await _repository.GetAsync(x => x.Slug == slug, 
+                tracking: false,
+                includes:x=>x.BlogTopics);
             if (entity == null)
             {
                 return null;
@@ -71,7 +77,8 @@ namespace BusinessLayer.Concrete
         //bu yöntem ID ile çekmektir mantığı ne kadar doğru olsada işlem slugla çekmek daha profesyonelce yaklaşmaktır
         public async Task<BlogPostDto?> GetDetailsByIdAsync(Guid guid)
         {
-            var entity = await _repository.GetByIdAsync(guid, tracking: false);
+            var entity = await _repository.GetByIdAsync(guid, 
+                tracking: false);
             if (entity == null)
             {
                 return null;

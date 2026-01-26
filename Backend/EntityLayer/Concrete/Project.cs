@@ -35,6 +35,5 @@ namespace CV.EntityLayer.Entities
 
         // Many-to-Many Navigation
         public ICollection<ProjectTopic> ProjectTopics { get; set; } = new List<ProjectTopic>();
-        public ICollection<ProjectBlog> ProjectBlogs { get; set; } = new List<ProjectBlog>();
     }
 }

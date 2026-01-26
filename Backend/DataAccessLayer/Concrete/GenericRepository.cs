@@ -10,7 +10,7 @@ namespace DataAccessLayer.Concrete
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-
+        #region tanımlama ve constructor kısımları
         private readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
 
@@ -19,6 +19,9 @@ namespace DataAccessLayer.Concrete
             _context = context;
             _dbSet = context.Set<T>();
         }
+        #endregion
+
+        #region CRUD İŞLEMLERİ
 
         public async Task AddAsync(T entity)
         {
@@ -30,6 +33,23 @@ namespace DataAccessLayer.Concrete
             _dbSet.Remove(entity);
             await Task.CompletedTask;
         }
+
+        public async Task<int> SaveAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            _dbSet.Update(entity);
+            await Task.CompletedTask;
+        }
+
+
+
+        #endregion
+
+        #region komple getirme
 
         public async Task<List<T>> GetAllAsync(bool tracking = true)
         {
@@ -51,6 +71,46 @@ namespace DataAccessLayer.Concrete
             return await query.ToListAsync();
         }
 
+        public async Task<List<T>> GetAllAsync(bool tracking = true, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _dbSet.AsQueryable();
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter, bool tracking = true, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _dbSet.Where(filter);
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.ToListAsync();
+        }
+
+        #endregion
+
+        #region  getirme
         public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true)
         {
             var query = _dbSet.AsQueryable();
@@ -60,6 +120,32 @@ namespace DataAccessLayer.Concrete
             }
             return await query.FirstOrDefaultAsync(filter);
         }
+
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _dbSet.AsQueryable();
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return await query.FirstOrDefaultAsync(filter);
+
+
+        }
+
+        #endregion
+
+        #region idye göre getirme
+
 
         public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true)
         {
@@ -71,16 +157,15 @@ namespace DataAccessLayer.Concrete
             return await query.FirstOrDefaultAsync(x => EF.Property<Guid>(x, "Id") == guid);
         }
 
-        public async Task<int> SaveAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
 
-        public async Task UpdateAsync(T entity)
-        {
-            _dbSet.Update(entity);
-            await Task.CompletedTask;
-        }
+        #endregion
+
+
+
+        #region trackingsiz hali eski kodlar
+
+
+
         //trackingsiz yapı bu şekildeydi
         //public async Task AddAsync(T entity)
         //{
@@ -123,5 +208,7 @@ namespace DataAccessLayer.Concrete
         //    _dbSet.Update(entity);
         //    await Task.CompletedTask;
         //}
+
+        #endregion
     }
 }

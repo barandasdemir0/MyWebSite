@@ -25,5 +25,4 @@ public class UpdateProjectDto
 
     // İlişkiler (Seçim)
     public List<Guid> TopicIds { get; set; } = new();
-    public List<Guid> BlogIds { get; set; } = new();
 }

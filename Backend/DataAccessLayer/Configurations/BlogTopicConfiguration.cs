@@ -13,7 +13,7 @@ namespace DataAccessLayer.Configurations
         {
             builder.HasKey(bt => new { bt.BlogPostId, bt.TopicId });
 
-            builder.HasOne(bt => bt.BlogPost).WithMany(b => b.BlogTopics).HasForeignKey(bt => bt.TopicId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(bt => bt.BlogPost).WithMany(b => b.BlogTopics).HasForeignKey(bt => bt.BlogPostId).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(bt => bt.Topic).WithMany(b => b.BlogTopics).HasForeignKey(bt => bt.TopicId).OnDelete(DeleteBehavior.Cascade);
         }
