@@ -1,12 +1,18 @@
-﻿using DataAccessLayer.Abstract;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
+using BusinessLayer.ValidationRules.AboutValidator;
+using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Context;
 using DtoLayer.Mapping;
+using FluentValidation;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -35,13 +41,24 @@ namespace BusinessLayer.Container
             //mapster için
             // DtoLayer assembly'sindeki TÜM IRegister'ları tarar (AboutMapping referans noktası)
             var config = TypeAdapterConfig.GlobalSettings;
-            TypeAdapterConfig.GlobalSettings.Scan(typeof(AboutMapping).Assembly);
+            TypeAdapterConfig.GlobalSettings.Scan(typeof(IMapperMarker).Assembly);
             services.AddSingleton(config);
             services.AddScoped<IMapper, ServiceMapper>();
+
+            services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
+            //services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationAutoValidation();
+
+
 
 
 
         }
+
+        //public static void AddScalarConfiguration(this IServiceCollection services)
+        //{
+
+        //}
 
 
 
@@ -71,6 +88,7 @@ namespace BusinessLayer.Container
         public static void ContainerDependencies(this IServiceCollection services)
         {
             services.AddScoped<IAboutDal, EfAboutDal>();
+            services.AddScoped<IAboutService, AboutManager>();
             services.AddScoped<IBlogPostDal, EfBlogPostDal>();
             services.AddScoped<ICertificateDal, EfCertificateDal>();
             services.AddScoped<IContactDal, EfContactDal>();
