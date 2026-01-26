@@ -90,6 +90,7 @@ namespace BusinessLayer.Container
             services.AddScoped<IAboutDal, EfAboutDal>();
             services.AddScoped<IAboutService, AboutManager>();
             services.AddScoped<IBlogPostDal, EfBlogPostDal>();
+            services.AddScoped<IBlogPostService, BlogPostManager>();
             services.AddScoped<ICertificateDal, EfCertificateDal>();
             services.AddScoped<IContactDal, EfContactDal>();
             services.AddScoped<IEducationDal, EfEducationDal>();

@@ -14,7 +14,7 @@ namespace DataAccessLayer.Configurations
             builder.ToTable("BlogPosts");
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Title).IsRequired().HasMaxLength(50);
+            builder.Property(x => x.Title).IsRequired().HasMaxLength(150);
             builder.Property(x => x.Slug).IsRequired().HasMaxLength(100);
             builder.HasIndex(x => x.Slug).IsUnique();
             builder.Property(x => x.CoverImage).HasMaxLength(200);

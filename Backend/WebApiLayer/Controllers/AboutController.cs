@@ -64,7 +64,7 @@ public class AboutController : ControllerBase
             return NotFound();
         }
         await _aboutService.DeleteAsync(id);
-        return NoContent();
+        return Ok(existing);
 
     }
 
