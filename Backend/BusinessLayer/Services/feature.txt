@@ -1,1 +1,1 @@
-﻿Buraya mail attırma gibi işlemleri koyacağız 
+﻿Buraya mail attırma chatbot ve translate gibi işlemleri koyacağız 

@@ -6,14 +6,14 @@ using System.Text;
 
 namespace BusinessLayer.ValidationRules.BlogPostValidator
 {
-    public class CreateBlogPostValidator:AbstractValidator<CreateBlogPostDto>
+    public class UpdateBlogPostValidator:AbstractValidator<UpdateBlogPostDto>
     {
-        public CreateBlogPostValidator()
+        public UpdateBlogPostValidator()
         {
             RuleFor(x => x.Title).NotEmpty()
-                .WithMessage("Bu Alanı Girmek Zorundasınız")
-                .MaximumLength(150)
-                .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır");
+              .WithMessage("Bu Alanı Girmek Zorundasınız")
+              .MaximumLength(150)
+              .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır");
 
 
             RuleFor(x => x.CoverImage)
@@ -24,12 +24,7 @@ namespace BusinessLayer.ValidationRules.BlogPostValidator
                .WithMessage("Bu Alanı Girmek Zorundasınız");
 
             RuleFor(x => x.TopicIds).NotEmpty()
-               .WithMessage("Kategori Girilmesi zorunludur");
-
-
-
-
-
+                .WithMessage("Kategori Girilmesi zorunludur");
         }
     }
 }
