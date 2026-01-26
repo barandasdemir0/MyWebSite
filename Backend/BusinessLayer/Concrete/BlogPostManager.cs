@@ -41,10 +41,12 @@ namespace BusinessLayer.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<BlogPostListDto> UpdateAsync(UpdateBlogPostDto dto)
+        public Task<BlogPostListDto?> UpdateAsync(UpdateBlogPostDto dto)
         {
             throw new NotImplementedException();
         }
+
+
 
 
 
