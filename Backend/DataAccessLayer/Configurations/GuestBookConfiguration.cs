@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DataAccessLayer.Configurations
 {
-    public sealed class GueestBookConfiguration : IEntityTypeConfiguration<GuestBook>
+    public sealed class GuestBookConfiguration : IEntityTypeConfiguration<GuestBook>
     {
         public void Configure(EntityTypeBuilder<GuestBook> builder)
         {
