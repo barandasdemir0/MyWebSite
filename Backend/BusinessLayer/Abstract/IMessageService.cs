@@ -1,10 +1,13 @@
-﻿using System;
+﻿using DtoLayer.MessageDto;
+using EntityLayer.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    internal interface IMessageService
+    public interface IMessageService:IGenericService<Message,MessageListDto,CreateMessageDto,UpdateMessageDto>
     {
+        Task<MessageListDto?> GetDetailsByIdAsync(Guid guid);
     }
 }

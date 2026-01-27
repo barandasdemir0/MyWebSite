@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.EducationDto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    internal interface IEducationService
+    public interface IEducationService:IGenericService<Education,EducationDto,CreateEducationDto,UpdateEducationDto>
     {
     }
 }

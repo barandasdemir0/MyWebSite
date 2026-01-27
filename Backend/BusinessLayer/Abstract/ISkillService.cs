@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.SkillDto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    internal interface ISkillService
+    public interface ISkillService:IGenericService<Skill,SkillDto,CreateSkillDto,UpdateSkillDto>
     {
     }
 }

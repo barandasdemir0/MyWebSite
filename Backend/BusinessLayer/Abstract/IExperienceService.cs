@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.ExperienceDto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    internal interface IExperienceService
+    public interface IExperienceService:IGenericService<Experience,ExperienceDto,CreateExperienceDto,UpdateExperienceDto>
     {
     }
 }

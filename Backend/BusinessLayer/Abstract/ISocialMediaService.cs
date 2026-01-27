@@ -1,10 +1,12 @@
-﻿using System;
+﻿using DtoLayer.SocialMediaDto;
+using EntityLayer.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    internal interface ISocialMediaService
+    public interface ISocialMediaService:IGenericService<SocialMedia,SocialMediaDto,CreateSocialMediaDto,UpdateSocialMediaDto>
     {
     }
 }

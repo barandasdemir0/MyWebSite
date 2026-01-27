@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.CertificateDto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    internal interface ICertificateService
+    public interface ICertificateService:IGenericService<Certificate,CertificateDto,CreateCertificateDto,UpdateCertificateDto>
     {
     }
 }

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.HeroDto;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Abstract
 {
-    internal interface IHeroService
+    public interface IHeroService:IGenericService<Hero,HeroDto,CreateHeroDto,UpdateHeroDto>
     {
     }
 }
