@@ -25,7 +25,6 @@ namespace DataAccessLayer.Context
         public DbSet<GuestBook> GuestBooks { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<Project> Projects { get; set; }
-        //public DbSet<ProjectBlog> ProjectBlogs { get; set; }
         public DbSet<ProjectTopic> ProjectTopics { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Message> Messages { get; set; }

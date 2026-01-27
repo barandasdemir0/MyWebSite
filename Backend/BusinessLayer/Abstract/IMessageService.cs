@@ -8,6 +8,6 @@ namespace BusinessLayer.Abstract
 {
     public interface IMessageService:IGenericService<Message,MessageListDto,CreateMessageDto,UpdateMessageDto>
     {
-        Task<MessageListDto?> GetDetailsByIdAsync(Guid guid);
+        Task<MessageDto?> GetDetailsByIdAsync(Guid guid);
     }
 }

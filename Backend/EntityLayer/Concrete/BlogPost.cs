@@ -6,7 +6,7 @@ namespace CV.EntityLayer.Entities
     public sealed class BlogPost : BaseEntity
     {
         public string Title { get; set; } = string.Empty;
-        public string Slug { get; private set; } = string.Empty;
+        public string Slug { get;  set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
         public string? CoverImage { get; set; }
         public int ReadTime { get; set; }

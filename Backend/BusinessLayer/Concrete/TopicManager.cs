@@ -1,10 +1,72 @@
-﻿using System;
+﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
+using DataAccessLayer.Abstract;
+using DtoLayer.TopicDto;
+using MapsterMapper;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Concrete
 {
-    internal class TopicManager
+    public class TopicManager : ITopicService
     {
+
+        private readonly ITopicDal _topicDal;
+        private readonly IMapper _mapper;
+
+        public TopicManager(ITopicDal topicDal, IMapper mapper)
+        {
+            _topicDal = topicDal;
+            _mapper = mapper;
+        }
+
+        public async Task<TopicDto> AddAsync(CreateTopicDto dto)
+        {
+            var entity = _mapper.Map<Topic>(dto);
+            await _topicDal.AddAsync(entity);
+            await _topicDal.SaveAsync();
+            return _mapper.Map<TopicDto>(entity);
+        }
+
+        public async Task DeleteAsync(Guid guid)
+        {
+            var entity = await _topicDal.GetByIdAsync(guid);
+            if (entity != null)
+            {
+                await _topicDal.DeleteAsync(entity);
+                await _topicDal.SaveAsync();
+            }
+
+        }
+
+        public async Task<List<TopicDto>> GetAllAsync()
+        {
+            var entity = await _topicDal.GetAllAsync(tracking: false);
+            return _mapper.Map<List<TopicDto>>(entity);
+        }
+
+        public async Task<TopicDto?> GetByIdAsync(Guid guid)
+        {
+            var entity = await _topicDal.GetByIdAsync(guid, tracking: false);
+            if (entity == null)
+            {
+                return null;
+            }
+            return _mapper.Map<TopicDto>(entity);
+        }
+
+        public async Task<TopicDto?> UpdateAsync(UpdateTopicDto dto)
+        {
+            var entity = await _topicDal.GetByIdAsync(dto.Id);
+            if (entity == null)
+            {
+                return null;
+            }
+            _mapper.Map(dto, entity);
+            await _topicDal.UpdateAsync(entity);
+            await _topicDal.SaveAsync();
+            return _mapper.Map<TopicDto>(entity);
+        }
     }
 }

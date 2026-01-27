@@ -10,6 +10,6 @@ namespace BusinessLayer.Abstract
     {
         Task<ProjectDto?> GetDetailsByIdAsync(Guid guid);
 
-        Task<ProjectDto> GetBySlugAsync(string slug);
+        Task<ProjectDto?> GetBySlugAsync(string slug);
     }
 }

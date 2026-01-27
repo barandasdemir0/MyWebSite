@@ -24,13 +24,12 @@ public class AboutManager : IAboutService
         var entity = _mapper.Map<About>(dto); // Create -> Entity yani elimdeki dto nesnesini al about entitysine çevir
         await _repository.AddAsync(entity);
         await _repository.SaveAsync();
-
         return _mapper.Map<AboutDto>(entity); // Entity -> Read (ID var artık)  yani elimdeki aentity nesnesini al onu aboutdto tipine çevir 
     }
 
     public async Task DeleteAsync(Guid guid)
     {
-        var entity = await _repository.GetByIdAsync(guid, tracking: false);
+        var entity = await _repository.GetByIdAsync(guid);
         if (entity != null)
         {
             await _repository.DeleteAsync(entity);
