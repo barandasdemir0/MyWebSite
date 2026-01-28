@@ -26,6 +26,11 @@ namespace BusinessLayer.Concrete
         {
             var entity = _mapper.Map<BlogPost>(dto);
             entity.Slug = await UniqueSlugAsync(dto.Title);
+            if (entity.IsPublished && entity.PublishedAt == null )
+            {
+                entity.PublishedAt = DateTime.UtcNow;
+            }
+           
             if (dto.TopicIds !=null)
             {
                 foreach (var topicId in dto.TopicIds)
@@ -110,11 +115,18 @@ namespace BusinessLayer.Concrete
         public async Task<BlogPostListDto?> UpdateAsync(UpdateBlogPostDto dto)
         {
             var entity = await _repository.GetAsync(x=>x.Id == dto.Id,tracking:true,includes:x=>x.BlogTopics);
+
             if (entity == null)
             {
                 return null;
             }
+           
             _mapper.Map(dto, entity);
+
+            if (entity.IsPublished && entity.PublishedAt == null)
+            {
+                entity.PublishedAt = DateTime.UtcNow;
+            }
             entity.BlogTopics.Clear();
             if (dto.TopicIds != null)
             {

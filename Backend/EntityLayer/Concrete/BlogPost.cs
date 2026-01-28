@@ -11,7 +11,7 @@ namespace CV.EntityLayer.Entities
         public string? CoverImage { get; set; }
         public int ReadTime { get; set; }
         public bool IsPublished { get; set; } = false;
-        public DateTime? PublishedAt { get; set; }
+        public DateTime? PublishedAt { get; set; } 
         public int ViewCount { get; set; } = 0;
 
         //// Many-to-Many Navigation
