@@ -7,12 +7,12 @@ namespace WebApiLayer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BlogPostController:ControllerBase
+    public class BlogPostsController:ControllerBase
     {
 
         private readonly IBlogPostService _blogPostService;
 
-        public BlogPostController(IBlogPostService blogPostService)
+        public BlogPostsController(IBlogPostService blogPostService)
         {
             _blogPostService = blogPostService;
         }

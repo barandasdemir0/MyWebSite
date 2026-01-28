@@ -8,11 +8,11 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AboutController : ControllerBase
+public class AboutsController : ControllerBase
 {
     private readonly IAboutService _aboutService;
 
-    public AboutController(IAboutService aboutService)
+    public AboutsController(IAboutService aboutService)
     {
         _aboutService = aboutService;
     }

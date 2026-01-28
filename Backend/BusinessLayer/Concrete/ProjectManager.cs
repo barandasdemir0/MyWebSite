@@ -24,7 +24,14 @@ namespace BusinessLayer.Concrete
         public async Task<ProjectListDto> AddAsync(CreateProjectDto dto)
         {
             var entity = _mapper.Map<Project>(dto);
-            entity.Name = await UniqueSlugAsync(dto.Name);
+            entity.Slug = await UniqueSlugAsync(dto.Name);
+            if (dto.TopicIds!=null)
+            {
+                foreach (var topic in dto.TopicIds)
+                {
+                    entity.ProjectTopics.Add(new ProjectTopic { TopicId = topic });
+                }
+            }
             await _projectDal.AddAsync(entity);
             await _projectDal.SaveAsync();
             return _mapper.Map<ProjectListDto>(entity);
@@ -79,12 +86,23 @@ namespace BusinessLayer.Concrete
 
         public async Task<ProjectListDto?> UpdateAsync(UpdateProjectDto dto)
         {
-            var entity = await _projectDal.GetByIdAsync(dto.Id);
+            var entity = await _projectDal.GetAsync(x => x.Id == dto.Id,
+            tracking: true,
+            includes: x => x.ProjectTopics);
             if (entity == null)
             {
                 return null;
             }
             _mapper.Map(dto, entity);
+            entity.ProjectTopics.Clear();
+            if (dto.TopicIds!=null)
+            {
+                foreach (var topic in dto.TopicIds)
+                {
+                    entity.ProjectTopics.Add(new ProjectTopic { TopicId = topic });
+
+                }
+            }
             await _projectDal.UpdateAsync(entity);
             await _projectDal.SaveAsync();
             return _mapper.Map<ProjectListDto>(entity);
