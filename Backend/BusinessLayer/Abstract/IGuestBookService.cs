@@ -9,5 +9,7 @@ namespace BusinessLayer.Abstract
     public interface IGuestBookService:IGenericService<GuestBook,GuestBookListDto,CreateGuestBookDto,UpdateGuestBookDto>
     {
         Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid);
+
+        Task<GuestBookDto?> RestoreAsync(Guid guid);
     }
 }

@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SocialMediasController:ControllerBase
+public sealed class SocialMediasController:ControllerBase
 {
     private readonly ISocialMediaService _socialMediaService;
 

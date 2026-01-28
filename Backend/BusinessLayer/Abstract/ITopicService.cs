@@ -8,5 +8,6 @@ namespace BusinessLayer.Abstract
 {
     public interface ITopicService:IGenericService<Topic,TopicDto,CreateTopicDto,UpdateTopicDto>
     {
+        Task<TopicDto?> RestoreAsync(Guid guid);
     }
 }

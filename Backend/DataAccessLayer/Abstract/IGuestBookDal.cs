@@ -7,5 +7,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface IGuestBookDal:IGenericRepository<GuestBook>
     {
+        Task<GuestBook?> RestoreDeleteByIdAsync(Guid guid);
     }
 }

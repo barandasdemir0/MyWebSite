@@ -1,6 +1,7 @@
 ﻿using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,11 @@ namespace DataAccessLayer.Concrete
     {
         public EfTopicDal(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<Topic?> GetDeleteByIdAsync(Guid guid)
+        {
+            return await _context.Topics.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BlogPostsController:ControllerBase
+    public sealed class BlogPostsController:ControllerBase
     {
 
         private readonly IBlogPostService _blogPostService;
@@ -89,7 +89,12 @@ namespace WebApiLayer.Controllers
             return Ok(query);
         }
 
-
+        [HttpPut("restore/{id}")]
+        public async Task<IActionResult> Restore(Guid id)
+        {
+            var entity = await _blogPostService.RestoreAsync(id);
+            return Ok(entity);
+        }
 
 
 

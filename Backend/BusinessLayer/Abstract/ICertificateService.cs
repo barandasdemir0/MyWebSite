@@ -8,5 +8,6 @@ namespace BusinessLayer.Abstract
 {
     public interface ICertificateService:IGenericService<Certificate,CertificateDto,CreateCertificateDto,UpdateCertificateDto>
     {
+        Task<CertificateDto?> RestoreAsync(Guid guid);
     }
 }

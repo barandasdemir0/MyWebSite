@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class HeroesController:ControllerBase
+public sealed class HeroesController:ControllerBase
 {
     private readonly IHeroService _heroService;
 

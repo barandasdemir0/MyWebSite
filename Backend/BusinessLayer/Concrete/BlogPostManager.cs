@@ -28,9 +28,9 @@ namespace BusinessLayer.Concrete
             entity.Slug = await UniqueSlugAsync(dto.Title);
             if (dto.TopicIds !=null)
             {
-                foreach (var topic in dto.TopicIds)
+                foreach (var topicId in dto.TopicIds)
                 {
-                    entity.BlogTopics.Add(new BlogTopic { TopicId = topic });
+                    entity.BlogTopics.Add(new BlogTopic { TopicId = topicId });
                 }
             }
             await _repository.AddAsync(entity);
@@ -91,6 +91,20 @@ namespace BusinessLayer.Concrete
                 return null;
             }
             return _mapper.Map<BlogPostDto>(entity);
+        }
+
+        public async Task<BlogPostListDto?> RestoreAsync(Guid guid)
+        {
+            var entity = await _repository.RestoreDeletedByIdAsync(guid);
+            if (entity == null)
+            {
+                return null;
+            }
+            entity.IsDeleted = false;
+            entity.DeletedAt = null;
+            await _repository.UpdateAsync(entity);
+            await _repository.SaveAsync();
+            return _mapper.Map<BlogPostListDto>(entity);
         }
 
         public async Task<BlogPostListDto?> UpdateAsync(UpdateBlogPostDto dto)

@@ -1,4 +1,5 @@
-﻿using DtoLayer.ProjectDto;
+﻿using DataAccessLayer.Abstract;
+using DtoLayer.ProjectDto;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace BusinessLayer.ValidationRules.ProjectValidator
 {
     public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
     {
-        public CreateProjectValidator()
+        public CreateProjectValidator(ITopicDal topicDal)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
@@ -71,6 +72,12 @@ namespace BusinessLayer.ValidationRules.ProjectValidator
             RuleFor(x => x.TopicIds).NotEmpty()
               .WithMessage("Kategori Girilmesi zorunludur");
 
+            RuleForEach(x => x.TopicIds)
+                .MustAsync(async (topic, cancelation) =>
+                {
+                    var query = await topicDal.GetByIdAsync(topic);
+                    return query != null;
+                }).WithMessage("Seçilen Kategori Mevcut değil veya silinmiş");
 
 
 

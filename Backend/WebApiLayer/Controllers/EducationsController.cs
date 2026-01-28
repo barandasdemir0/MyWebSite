@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class EducationsController : ControllerBase
+public sealed class EducationsController : ControllerBase
 {
     private readonly IEducationService _educationService;
 
@@ -68,7 +68,12 @@ public class EducationsController : ControllerBase
         return Ok(query);
     }
 
-
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var entity = await _educationService.RestoreAsync(id);
+        return Ok(entity);
+    }
 
 
 }

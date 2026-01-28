@@ -11,5 +11,7 @@ namespace BusinessLayer.Abstract
         Task<ProjectDto?> GetDetailsByIdAsync(Guid guid);
 
         Task<ProjectDto?> GetBySlugAsync(string slug);
+
+        Task<ProjectListDto?> RestoreAsync(Guid guid);
     }
 }

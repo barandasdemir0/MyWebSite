@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TopicsController:ControllerBase
+public sealed class TopicsController:ControllerBase
 {
     private readonly ITopicService _topicService;
 
@@ -55,6 +55,12 @@ public class TopicsController:ControllerBase
         return Ok(query);
     }
 
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var entity = await _topicService.RestoreAsync(id);
+        return Ok(entity);
+    }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)

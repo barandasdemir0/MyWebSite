@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SkillsController:ControllerBase
+public sealed class SkillsController:ControllerBase
 {
     private readonly ISkillService _skillService;
 
@@ -68,5 +68,13 @@ public class SkillsController:ControllerBase
         await _skillService.DeleteAsync(id);
         return Ok(query);
     }
+
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var entity = await _skillService.RestoreAsync(id);
+        return Ok(entity);
+    }
+
 
 }

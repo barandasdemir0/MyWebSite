@@ -2,6 +2,8 @@
 using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
+using DtoLayer.GuestBookDto;
 using DtoLayer.ProjectDto;
 using MapsterMapper;
 using System;
@@ -123,9 +125,20 @@ namespace BusinessLayer.Concrete
 
         }
 
+        public async Task<ProjectListDto?> RestoreAsync(Guid guid)
+        {
+            var entity = await _projectDal.RestoreDeleteByIdAsync(guid);
+            if (entity == null)
+            {
+                return null;
+            }
+            entity.IsDeleted = false;
+            entity.DeletedAt = null;
 
+            await _projectDal.UpdateAsync(entity);
+            await _projectDal.SaveAsync();
 
-
-
+            return _mapper.Map<ProjectListDto>(entity);
+        }
     }
 }

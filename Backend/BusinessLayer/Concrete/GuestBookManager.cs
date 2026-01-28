@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.GuestBookDto;
+using DtoLayer.TopicDto;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;
@@ -61,6 +63,22 @@ namespace BusinessLayer.Concrete
             {
                 return null;
             }
+            return _mapper.Map<GuestBookDto>(entity);
+        }
+
+        public async Task<GuestBookDto?> RestoreAsync(Guid guid)
+        {
+            var entity = await _guestBookDal.RestoreDeleteByIdAsync(guid);
+            if (entity == null)
+            {
+                return null;
+            }
+            entity.IsDeleted = false;
+            entity.DeletedAt = null;
+
+            await _guestBookDal.UpdateAsync(entity);
+            await _guestBookDal.SaveAsync();
+
             return _mapper.Map<GuestBookDto>(entity);
         }
 

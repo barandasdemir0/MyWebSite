@@ -15,6 +15,8 @@ namespace BusinessLayer.Abstract
         //bu yöntem ile slug ile çektik daha sağlıklı bir yöntem oldu
         Task<BlogPostDto?> GetBySlugAsync(string slug);
 
+        Task<BlogPostListDto?> RestoreAsync(Guid guid);
+
 
     }
 }

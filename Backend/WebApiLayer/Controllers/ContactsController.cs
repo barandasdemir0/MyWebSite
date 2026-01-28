@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ContactsController : ControllerBase
+public sealed class ContactsController : ControllerBase
 {
     private readonly IContactService _contactService;
 

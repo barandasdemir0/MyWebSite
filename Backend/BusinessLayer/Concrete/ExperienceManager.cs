@@ -55,6 +55,20 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ExperienceDto>(entity);
         }
 
+        public async Task<ExperienceDto?> RestoreAsync(Guid guid)
+        {
+            var entity = await _experienceDal.RestoreDeleteByIdAsync(guid);
+            if (entity == null)
+            {
+                return null;
+            }
+            entity.IsDeleted = false;
+            entity.DeletedAt = null;
+            await _experienceDal.UpdateAsync(entity);
+            await _experienceDal.SaveAsync();
+            return _mapper.Map<ExperienceDto>(entity);
+        }
+
         public async Task<ExperienceDto?> UpdateAsync(UpdateExperienceDto dto)
         {
             var entity = await _experienceDal.GetByIdAsync(dto.Id);

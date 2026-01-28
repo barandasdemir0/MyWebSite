@@ -1,4 +1,5 @@
-﻿using DtoLayer.BlogpostDto;
+﻿using DataAccessLayer.Abstract;
+using DtoLayer.BlogpostDto;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace BusinessLayer.ValidationRules.BlogPostValidator
 {
     public class UpdateBlogPostValidator:AbstractValidator<UpdateBlogPostDto>
     {
-        public UpdateBlogPostValidator()
+        public UpdateBlogPostValidator(ITopicDal topicDal)
         {
             RuleFor(x => x.Title).NotEmpty()
               .WithMessage("Bu Alanı Girmek Zorundasınız")
@@ -25,6 +26,13 @@ namespace BusinessLayer.ValidationRules.BlogPostValidator
 
             RuleFor(x => x.TopicIds).NotEmpty()
                 .WithMessage("Kategori Girilmesi zorunludur");
+
+            RuleForEach(x => x.TopicIds).MustAsync(async (topicId, cancelation) =>
+            {
+                var exists = await topicDal.GetByIdAsync(topicId);
+                return exists != null;
+            }).WithMessage("Seçilen Kategori Mevcut değil veya silinmiş");
+
         }
     }
 }

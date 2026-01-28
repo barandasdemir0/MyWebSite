@@ -7,5 +7,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface ISkillDal:IGenericRepository<Skill>
     {
+        Task<Skill?> RestoreDeleteByIdAsync(Guid guid);
     }
 }

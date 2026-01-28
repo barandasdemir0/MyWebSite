@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class GuestBooksController:ControllerBase
+public sealed class GuestBooksController:ControllerBase
 {
 
     private readonly IGuestBookService _guestBookService;
@@ -68,5 +68,12 @@ public class GuestBooksController:ControllerBase
         }
         await _guestBookService.DeleteAsync(id);
         return Ok(query);
+    }
+
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var entity = await _guestBookService.RestoreAsync(id);
+        return Ok(entity);
     }
 }

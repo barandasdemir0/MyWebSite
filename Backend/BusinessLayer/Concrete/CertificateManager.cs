@@ -55,6 +55,20 @@ public class CertificateManager : ICertificateService
         return _mapper.Map<CertificateDto>(entity);
     }
 
+    public async Task<CertificateDto?> RestoreAsync(Guid guid)
+    {
+        var entity = await _certificateDal.RestoreDeleteByIdAsync(guid);
+        if (entity == null)
+        {
+            return null;
+        }
+        entity.IsDeleted = false;
+        entity.DeletedAt = null;
+        await _certificateDal.UpdateAsync(entity);
+        await _certificateDal.SaveAsync();
+        return _mapper.Map<CertificateDto>(entity);
+    }
+
     public async Task<CertificateDto?> UpdateAsync(UpdateCertificateDto dto)
     {
         var entity = await _certificateDal.GetByIdAsync(dto.Id);

@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CertificatesController:ControllerBase
+public sealed class CertificatesController:ControllerBase
 {
     private readonly ICertificateService _certificateService;
 
@@ -67,8 +67,12 @@ public class CertificatesController:ControllerBase
         return Ok(values);
     }
 
-
-
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var entity = await _certificateService.RestoreAsync(id);
+        return Ok(entity);
+    }
 
 
 

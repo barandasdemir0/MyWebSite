@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 
-public class GithubReposController:ControllerBase
+public sealed class GithubReposController:ControllerBase
 {
     private readonly IGithubRepoService _githubRepoService;
 

@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
+using DtoLayer.ProjectDto;
 using DtoLayer.SkillDto;
 using MapsterMapper;
 using System;
@@ -51,6 +53,22 @@ namespace BusinessLayer.Concrete
             {
                 return null;
             }
+            return _mapper.Map<SkillDto>(entity);
+        }
+
+        public async Task<SkillDto?> RestoreAsync(Guid guid)
+        {
+            var entity = await _skillDal.RestoreDeleteByIdAsync(guid);
+            if (entity == null)
+            {
+                return null;
+            }
+            entity.IsDeleted = false;
+            entity.DeletedAt = null;
+
+            await _skillDal.UpdateAsync(entity);
+            await _skillDal.SaveAsync();
+
             return _mapper.Map<SkillDto>(entity);
         }
 

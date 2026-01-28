@@ -7,5 +7,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface IBlogPostDal:IGenericRepository<BlogPost>
     {
+        Task<BlogPost?> RestoreDeletedByIdAsync(Guid guid);
     }
 }

@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MessagesController:ControllerBase
+public sealed class MessagesController:ControllerBase
 {
     private readonly IMessageService _messageService;
 

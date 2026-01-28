@@ -89,20 +89,60 @@ namespace BusinessLayer.Container
         {
             services.AddScoped<IAboutDal, EfAboutDal>();
             services.AddScoped<IAboutService, AboutManager>();
+
+
             services.AddScoped<IBlogPostDal, EfBlogPostDal>();
             services.AddScoped<IBlogPostService, BlogPostManager>();
+
+
             services.AddScoped<ICertificateDal, EfCertificateDal>();
+            services.AddScoped<ICertificateService, CertificateManager>();
+
+
             services.AddScoped<IContactDal, EfContactDal>();
+            services.AddScoped<IContactService, ContactManager>();
+
+
             services.AddScoped<IEducationDal, EfEducationDal>();
+            services.AddScoped<IEducationService, EducationManager>();
+
+
             services.AddScoped<IExperienceDal, EfExperienceDal>();
+            services.AddScoped<IExperienceService, ExperienceManager>();
+
+
             services.AddScoped<IGithubRepoDal, EfGithubRepoDal>();
+            services.AddScoped<IGithubRepoService, GithubRepoManager>();
+
+
             services.AddScoped<IGuestBookDal, EfGuestBookDal>();
+            services.AddScoped<IGuestBookService, GuestBookManager>();
+
+
             services.AddScoped<IHeroDal, EfHeroDal>();
+            services.AddScoped<IHeroService, HeroManager>();
+
+
             services.AddScoped<IMessageDal, EfMessageDal>();
+            services.AddScoped<IMessageService, MessageManager>();
+
+
             services.AddScoped<IProjectDal, EfProjectDal>();
+            services.AddScoped<IProjectService, ProjectManager>();
+
+
             services.AddScoped<ISkillDal, EfSkillDal>();
+            services.AddScoped<ISkillService, SkillManager>();
+
+
             services.AddScoped<ISocialMediaDal, EfSocialMediaDal>();
+            services.AddScoped<ISocialMediaService, SocialMediaManager>();
+
+
             services.AddScoped<ITopicDal, EfTopicDal>();
+            services.AddScoped<ITopicService, TopicManager>();
+
+
         }
 
 

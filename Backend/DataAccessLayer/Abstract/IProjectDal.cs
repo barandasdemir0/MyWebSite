@@ -7,5 +7,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface IProjectDal:IGenericRepository<Project>
     {
+        Task<Project?> RestoreDeleteByIdAsync(Guid guid);
     }
 }

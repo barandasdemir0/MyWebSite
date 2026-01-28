@@ -7,5 +7,6 @@ namespace DataAccessLayer.Abstract
 {
     public interface ITopicDal:IGenericRepository<Topic>
     {
+        Task<Topic?> GetDeleteByIdAsync(Guid guid);
     }
 }

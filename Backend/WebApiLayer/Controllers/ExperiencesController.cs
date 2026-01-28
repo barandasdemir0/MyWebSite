@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExperiencesController:ControllerBase
+public sealed class ExperiencesController:ControllerBase
 {
     private readonly IExperienceService _experienceService;
 
@@ -69,7 +69,12 @@ public class ExperiencesController:ControllerBase
         return Ok(query);
     }
 
-
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var entity = await _experienceService.RestoreAsync(id);
+        return Ok(entity);
+    }
 
 
 

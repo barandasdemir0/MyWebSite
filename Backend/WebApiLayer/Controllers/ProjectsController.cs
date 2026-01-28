@@ -6,7 +6,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProjectsController : ControllerBase
+public sealed class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;
 
@@ -78,7 +78,12 @@ public class ProjectsController : ControllerBase
     }
 
 
-
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var entity = await _projectService.RestoreAsync(id);
+        return Ok(entity);
+    }
 
 
 

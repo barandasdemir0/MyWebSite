@@ -56,6 +56,22 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<TopicDto>(entity);
         }
 
+        public async Task<TopicDto?> RestoreAsync(Guid guid)
+        {
+            var entity = await _topicDal.GetDeleteByIdAsync(guid);
+            if (entity == null)
+            {
+                return null;
+            }
+            entity.IsDeleted = false;
+            entity.DeletedAt = null;
+
+            await _topicDal.UpdateAsync(entity);
+            await _topicDal.SaveAsync();
+
+            return _mapper.Map<TopicDto>(entity);
+        }
+
         public async Task<TopicDto?> UpdateAsync(UpdateTopicDto dto)
         {
             var entity = await _topicDal.GetByIdAsync(dto.Id);
