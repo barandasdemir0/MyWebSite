@@ -61,3 +61,12 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+
+###############################################################################
+# GitHub Linguist overrides
+###############################################################################
+Frontend/WebUILayer/wwwroot/** linguist-vendored
+*.cshtml linguist-language=C#
+
+
