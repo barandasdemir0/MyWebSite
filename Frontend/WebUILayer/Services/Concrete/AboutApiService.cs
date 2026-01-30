@@ -36,8 +36,8 @@ namespace WebUILayer.Services.Concrete
             {
               
          
-                updateAboutDto.Id = existing.Id;
-                await UpdateAsync(updateAboutDto.Id,updateAboutDto);
+           
+                await UpdateAsync(existing.Id,updateAboutDto);
             }
         }
     }

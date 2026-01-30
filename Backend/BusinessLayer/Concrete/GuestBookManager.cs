@@ -82,7 +82,7 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<GuestBookDto>(entity);
         }
 
-        public Task<GuestBookListDto?> UpdateAsync(UpdateGuestBookDto dto)
+        public Task<GuestBookListDto?> UpdateAsync(Guid guid, UpdateGuestBookDto dto)
         {
             throw new NotSupportedException("Ziyaretçi Mesajları güncellenemez!");
         }

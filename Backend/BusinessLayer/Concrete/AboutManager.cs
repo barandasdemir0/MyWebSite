@@ -54,9 +54,9 @@ public class AboutManager : IAboutService
         return _mapper.Map<AboutDto>(entity);
     }
 
-    public async Task<AboutDto?> UpdateAsync(UpdateAboutDto dto)
+    public async Task<AboutDto?> UpdateAsync(Guid guid,UpdateAboutDto dto)
     {
-        var entity = await _repository.GetByIdAsync(dto.Id);
+        var entity = await _repository.GetByIdAsync(guid);
         if (entity == null)
         {
             return null;

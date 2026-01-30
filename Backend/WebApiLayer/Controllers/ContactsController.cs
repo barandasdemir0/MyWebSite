@@ -44,8 +44,8 @@ public sealed class ContactsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContactDto updateContactDto)
     {
-        updateContactDto.Id = id;
-        var query = await _contactService.UpdateAsync(updateContactDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var query = await _contactService.UpdateAsync(id,updateContactDto);
         if (query == null)
         {
             return NotFound();

@@ -46,8 +46,8 @@ public sealed class EducationsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateEducationDto updateEducationDto)
     {
-        updateEducationDto.Id = id;
-        var values = await _educationService.UpdateAsync(updateEducationDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var values = await _educationService.UpdateAsync(id,updateEducationDto);
         if (values==null)
         {
             return NotFound(); ;

@@ -55,9 +55,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<SocialMediaDto>(entity);
         }
 
-        public async Task<SocialMediaDto?> UpdateAsync(UpdateSocialMediaDto dto)
+        public async Task<SocialMediaDto?> UpdateAsync(Guid guid, UpdateSocialMediaDto dto)
         {
-            var entity = await _socialMediaDal.GetByIdAsync(dto.Id);
+            var entity = await _socialMediaDal.GetByIdAsync(guid);
             if (entity == null)
             {
                 return null;

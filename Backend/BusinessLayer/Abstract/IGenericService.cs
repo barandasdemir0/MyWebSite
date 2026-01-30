@@ -17,7 +17,7 @@ namespace BusinessLayer.Abstract
 
         #region crud işlemleri
         Task<TListDto> AddAsync(TCreateDto dto);
-        Task<TListDto?> UpdateAsync(TUpdateDto dto);
+        Task<TListDto?> UpdateAsync(Guid guid,TUpdateDto dto);
         Task DeleteAsync(Guid guid);
 
         #endregion

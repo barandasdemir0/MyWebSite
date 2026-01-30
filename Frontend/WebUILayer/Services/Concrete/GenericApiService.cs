@@ -2,7 +2,7 @@
 
 namespace WebUILayer.Services.Concrete
 {
-    public class GenericApiService<TListDto, TCreateDto, TUpdateDto> : IGenericApiService<TListDto, TCreateDto, TUpdateDto>
+    public class GenericApiService<TListDto, TCreateDto, TUpdateDto> : IGenericApiService<TListDto, TCreateDto, TUpdateDto> where TListDto: class
     {
 
         protected readonly HttpClient _httpClient;
@@ -17,6 +17,10 @@ namespace WebUILayer.Services.Concrete
         public virtual async Task<TListDto?> AddAsync(TCreateDto dto)
         {
             var response = await _httpClient.PostAsJsonAsync(_endpoint, dto);
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
             return await response.Content.ReadFromJsonAsync<TListDto>();
         }
 
@@ -27,12 +31,19 @@ namespace WebUILayer.Services.Concrete
 
         public virtual async Task<List<TListDto>> GetAllAsync()
         {
-            var query = await _httpClient.GetFromJsonAsync<List<TListDto>>(_endpoint);
-            if (query != null)
+
+            var response = await _httpClient.GetAsync(_endpoint);
+            if (!response.IsSuccessStatusCode)
             {
-                return query;
+                return new List<TListDto>();
             }
-            return new List<TListDto>();
+            var query = await response.Content.ReadFromJsonAsync<List<TListDto>>();
+            if (query == null)
+            {
+                return new List<TListDto>();
+            }
+            return query;
+            
         }
 
         public virtual async Task<TListDto?> GetByIdAsync(Guid guid)
@@ -44,12 +55,13 @@ namespace WebUILayer.Services.Concrete
         public virtual async Task<TListDto?> UpdateAsync(Guid guid, TUpdateDto dto)
         {
             var response = await _httpClient.PutAsJsonAsync($"{_endpoint}/{guid}", dto);
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<TListDto>();
+                return null;
+               
             }
+            return await response.Content.ReadFromJsonAsync<TListDto>();
 
-            return default;
 
 
         }

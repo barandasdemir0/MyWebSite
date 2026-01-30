@@ -37,6 +37,7 @@ public class AboutsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    #region eski güncelleme ve update komutları yukarııda tek komutta yapıldı
     //[HttpGet]
     //public IActionResult Create() => View();
 
@@ -60,6 +61,8 @@ public class AboutsController : Controller
     //    await _aboutApiService.UpdateAsync(updateAboutDto);
     //    return RedirectToAction(nameof(Index));
     //}
+
+    #endregion
 
     public async Task<IActionResult> Delete(Guid id)
     {

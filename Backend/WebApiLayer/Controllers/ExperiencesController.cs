@@ -48,8 +48,8 @@ public sealed class ExperiencesController:ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update (Guid id, [FromBody] UpdateExperienceDto updateExperienceDto)
     {
-        updateExperienceDto.Id = id;
-        var query = await _experienceService.UpdateAsync(updateExperienceDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var query = await _experienceService.UpdateAsync(id,updateExperienceDto);
         if (query == null)
         {
             return NotFound();

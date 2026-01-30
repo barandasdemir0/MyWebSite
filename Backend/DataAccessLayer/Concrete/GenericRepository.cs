@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Abstract;
+﻿using CV.EntityLayer.Entities;
+using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace DataAccessLayer.Concrete
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         #region tanımlama ve constructor kısımları
         protected readonly AppDbContext _context;
@@ -154,7 +155,25 @@ namespace DataAccessLayer.Concrete
             {
                 query = query.AsNoTracking();
             }
-            return await query.FirstOrDefaultAsync(x => EF.Property<Guid>(x, "Id") == guid);
+            return await query.FirstOrDefaultAsync(x => x.Id == guid);
+        }
+
+        public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _dbSet.AsQueryable();
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            return await query.FirstOrDefaultAsync(x=> x.Id == guid);
+
         }
 
 

@@ -47,8 +47,8 @@ public sealed class SocialMediasController:ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSocialMediaDto updateSocialMediaDto)
     {
-        updateSocialMediaDto.Id = id;
-        var query = await _socialMediaService.UpdateAsync(updateSocialMediaDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var query = await _socialMediaService.UpdateAsync(id,updateSocialMediaDto);
         if (query == null)
         {
             return NotFound();

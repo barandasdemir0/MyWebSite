@@ -6,7 +6,7 @@ namespace DtoLayer.ExperienceDto
 {
     public class UpdateExperienceDto
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
         public string ExperienceTitle { get; set; } = string.Empty;
         public DateTime ExperienceStartDate { get; set; }
         public DateTime? ExperienceFinishDate { get; set; }

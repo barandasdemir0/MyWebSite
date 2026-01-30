@@ -1,11 +1,12 @@
-﻿using System;
+﻿using CV.EntityLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
 namespace DataAccessLayer.Abstract
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : BaseEntity
     {
 
         #region getirme komutları
@@ -23,6 +24,7 @@ namespace DataAccessLayer.Abstract
         #region idye göre getirme
 
         Task<T?> GetByIdAsync(Guid guid, bool tracking = true); //idye göre getir 
+        Task<T?> GetByIdAsync(Guid guid, bool tracking = true, params Expression<Func<T, object>>[] includes); //idye göre getir 
 
         #endregion
 

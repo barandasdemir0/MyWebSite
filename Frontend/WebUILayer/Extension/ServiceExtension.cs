@@ -11,7 +11,7 @@ public static class ServiceExtension
 
         services.AddHttpClient<IAboutApiService, AboutApiService>(client =>
         {
-            client.BaseAddress = new Uri(baseurl);
+            client.BaseAddress = new Uri(baseurl!);
         });
     }
 }

@@ -72,9 +72,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<TopicDto>(entity);
         }
 
-        public async Task<TopicDto?> UpdateAsync(UpdateTopicDto dto)
+        public async Task<TopicDto?> UpdateAsync(Guid guid, UpdateTopicDto dto)
         {
-            var entity = await _topicDal.GetByIdAsync(dto.Id);
+            var entity = await _topicDal.GetByIdAsync(guid);
             if (entity == null)
             {
                 return null;

@@ -69,9 +69,9 @@ public class CertificateManager : ICertificateService
         return _mapper.Map<CertificateDto>(entity);
     }
 
-    public async Task<CertificateDto?> UpdateAsync(UpdateCertificateDto dto)
+    public async Task<CertificateDto?> UpdateAsync(Guid guid, UpdateCertificateDto dto)
     {
-        var entity = await _certificateDal.GetByIdAsync(dto.Id);
+        var entity = await _certificateDal.GetByIdAsync(guid);
         if (entity == null)
         {
             return null;

@@ -55,9 +55,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<GithubRepoDto>(entity);
         }
 
-        public async Task<GithubRepoDto?> UpdateAsync(UpdateGithubRepoDto dto)
+        public async Task<GithubRepoDto?> UpdateAsync(Guid guid, UpdateGithubRepoDto dto)
         {
-            var entity = await _githubRepoDal.GetByIdAsync(dto.Id);
+            var entity = await _githubRepoDal.GetByIdAsync(guid);
             if (entity == null)
             {
                 return null;

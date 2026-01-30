@@ -45,8 +45,8 @@ public sealed class CertificatesController:ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id,[FromBody] UpdateCertificateDto updateCertificateDto)
     {
-        updateCertificateDto.Id = id;
-        var values = await _certificateService.UpdateAsync(updateCertificateDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var values = await _certificateService.UpdateAsync(id,updateCertificateDto);
         if (values == null)
         {
             return NotFound();

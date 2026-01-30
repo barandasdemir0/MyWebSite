@@ -65,7 +65,7 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<MessageDto>(entity);
         }
 
-        public async Task<MessageListDto?> UpdateAsync(UpdateMessageDto dto)
+        public async Task<MessageListDto?> UpdateAsync(Guid guid, UpdateMessageDto dto)
         {
             throw new NotSupportedException("Mesajlar güncellenemez!");
         }

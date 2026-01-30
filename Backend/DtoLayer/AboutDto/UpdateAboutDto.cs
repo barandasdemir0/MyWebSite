@@ -6,7 +6,7 @@ namespace DtoLayer.AboutDto
 {
     public class UpdateAboutDto
     {
-        public Guid Id { get; set; }  // Hangi kayıt güncelleniyor
+        //public Guid Id { get; set; }  // Hangi kayıt güncelleniyor  --> kaldırdık çünkü updatte ıd alanı güncellenmez zaten biz entityde protected alanı verdik
         public string FullName { get; set; } = string.Empty;
         public string Greeting { get; set; } = string.Empty;
         public string Bio { get; set; } = string.Empty;

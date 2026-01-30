@@ -71,9 +71,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<EducationDto>(entity);
         }
 
-        public async Task<EducationDto?> UpdateAsync(UpdateEducationDto dto)
+        public async Task<EducationDto?> UpdateAsync(Guid guid, UpdateEducationDto dto)
         {
-            var entity = await _educationDal.GetByIdAsync(dto.Id);
+            var entity = await _educationDal.GetByIdAsync(guid);
             if (entity == null)
             {
                 return null;

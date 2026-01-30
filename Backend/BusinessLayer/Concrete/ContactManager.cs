@@ -55,9 +55,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ContactDto>(entity);
         }
 
-        public async Task<ContactDto?> UpdateAsync(UpdateContactDto dto)
+        public async Task<ContactDto?> UpdateAsync(Guid guid, UpdateContactDto dto)
         {
-            var entity = await _contactDal.GetByIdAsync(dto.Id);
+            var entity = await _contactDal.GetByIdAsync(guid);
             if (entity == null)
             {
                 return null;

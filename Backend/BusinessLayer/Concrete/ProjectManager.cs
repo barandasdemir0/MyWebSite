@@ -86,9 +86,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ProjectDto>(entity);
         }
 
-        public async Task<ProjectListDto?> UpdateAsync(UpdateProjectDto dto)
+        public async Task<ProjectListDto?> UpdateAsync(Guid guid, UpdateProjectDto dto)
         {
-            var entity = await _projectDal.GetAsync(x => x.Id == dto.Id,
+            var entity = await _projectDal.GetAsync(x => x.Id == guid,
             tracking: true,
             includes: x => x.ProjectTopics);
             if (entity == null)

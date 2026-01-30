@@ -68,8 +68,8 @@ namespace WebApiLayer.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBlogPostDto updateBlogPostDto)
         {
-            updateBlogPostDto.Id = id;
-            var query = await _blogPostService.UpdateAsync(updateBlogPostDto);
+            //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+            var query = await _blogPostService.UpdateAsync(id, updateBlogPostDto);
             if (query == null)
             {
                 return NotFound();

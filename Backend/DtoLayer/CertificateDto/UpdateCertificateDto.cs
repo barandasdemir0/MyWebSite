@@ -6,7 +6,7 @@ namespace DtoLayer.CertificateDto
 {
     public class UpdateCertificateDto
     {
-        public Guid Id { get; set; }  
+        //public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
         public string CertificateName { get; set; } = string.Empty;
         public DateTime IssueDate { get; set; }
         public DateTime? ExpiryDate { get; set; }

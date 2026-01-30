@@ -46,8 +46,8 @@ public sealed class TopicsController:ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTopicDto updateTopicDto)
     {
-        updateTopicDto.Id = id;
-        var query = await _topicService.UpdateAsync(updateTopicDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var query = await _topicService.UpdateAsync(id,updateTopicDto);
         if (query == null)
         {
             return NotFound();

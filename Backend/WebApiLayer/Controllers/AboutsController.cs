@@ -45,8 +45,8 @@ public sealed class AboutsController : ControllerBase
     [HttpPut("{id}")] //güncelleme
     public async Task<IActionResult> Update(Guid id,[FromBody] UpdateAboutDto updateAboutDto)
     {
-        updateAboutDto.Id = id;
-        var result = await _aboutService.UpdateAsync(updateAboutDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var result = await _aboutService.UpdateAsync(id,updateAboutDto);
         if (result == null)
         {
             return NotFound();

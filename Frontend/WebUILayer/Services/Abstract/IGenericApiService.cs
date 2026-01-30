@@ -1,6 +1,6 @@
 ﻿namespace WebUILayer.Services.Abstract
 {
-    public interface IGenericApiService<TListDto, TCreateDto, TUpdateDto>
+    public interface IGenericApiService<TListDto, TCreateDto, TUpdateDto> where TListDto :class
     {
         Task<List<TListDto>> GetAllAsync();
         Task<TListDto?> GetByIdAsync(Guid guid);

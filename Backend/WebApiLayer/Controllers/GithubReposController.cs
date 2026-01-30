@@ -47,8 +47,8 @@ public sealed class GithubReposController:ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateGithubRepoDto updateGithubRepoDto)
     {
-        updateGithubRepoDto.Id = id;
-        var query = await _githubRepoService.UpdateAsync(updateGithubRepoDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var query = await _githubRepoService.UpdateAsync(id,updateGithubRepoDto);
         if (query == null)
         {
             return NotFound();

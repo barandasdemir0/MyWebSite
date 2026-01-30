@@ -47,8 +47,8 @@ public sealed class HeroesController:ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateHeroDto updateHeroDto)
     {
-        updateHeroDto.Id = id;
-        var query = await _heroService.UpdateAsync(updateHeroDto);
+        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
+        var query = await _heroService.UpdateAsync(id,updateHeroDto);
         if (query == null)
         {
             return NotFound();

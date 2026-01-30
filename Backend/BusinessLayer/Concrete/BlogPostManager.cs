@@ -112,9 +112,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<BlogPostListDto>(entity);
         }
 
-        public async Task<BlogPostListDto?> UpdateAsync(UpdateBlogPostDto dto)
+        public async Task<BlogPostListDto?> UpdateAsync(Guid id,UpdateBlogPostDto dto)
         {
-            var entity = await _repository.GetAsync(x=>x.Id == dto.Id,tracking:true,includes:x=>x.BlogTopics);
+            var entity = await _repository.GetAsync(x=>x.Id == id,tracking:true,includes:x=>x.BlogTopics);
 
             if (entity == null)
             {

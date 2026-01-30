@@ -69,9 +69,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ExperienceDto>(entity);
         }
 
-        public async Task<ExperienceDto?> UpdateAsync(UpdateExperienceDto dto)
+        public async Task<ExperienceDto?> UpdateAsync(Guid guid, UpdateExperienceDto dto)
         {
-            var entity = await _experienceDal.GetByIdAsync(dto.Id);
+            var entity = await _experienceDal.GetByIdAsync(guid);
             if (entity == null)
             {
                 return null;

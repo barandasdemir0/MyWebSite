@@ -72,9 +72,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<SkillDto>(entity);
         }
 
-        public async Task<SkillDto?> UpdateAsync(UpdateSkillDto dto)
+        public async Task<SkillDto?> UpdateAsync(Guid guid, UpdateSkillDto dto)
         {
-            var entity = await _skillDal.GetByIdAsync(dto.Id);
+            var entity = await _skillDal.GetByIdAsync(guid);
             if (entity == null)
             {
                 return null;
