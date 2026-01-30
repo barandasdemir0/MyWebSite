@@ -1,0 +1,52 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+
+
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    @await Component.InvokeAsync("_LayoutHeaderPartialComponent")
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="@(ViewData["BodyClass"] ?? "")">
+    <!-- Preloader -->
+    @await Component.InvokeAsync("_LayoutPreLoaderPartialComponent")
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        @await Component.InvokeAsync("_LayoutSideBarPartialComponent")
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            @await Component.InvokeAsync("_LayoutNavbarPartialComponent")
+
+            <!-- Content Area -->
+ @*            <div class="content-grid blank-grid">
+                <div class="card"> *@
+                    @RenderBody()
+          @*       </div>
+            </div> *@
+
+            @await Component.InvokeAsync("_LayoutFooterPartialComponent")
+        </main>
+    </div>
+
+    @await Component.InvokeAsync("_LayoutScriptPartialComponent")
+    @RenderSection("Scripts", required: false)
+
+</body>
+
+</html>
+
+
+
+
+
+
+

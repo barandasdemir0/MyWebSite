@@ -75,7 +75,7 @@ class UISystem {
         document.querySelectorAll('form').forEach(form => {
             if (form.id !== 'loginForm') {
                 form.addEventListener('submit', (e) => {
-                    e.preventDefault();
+                   /* e.preventDefault();*/
 
                     const btn = form.querySelector('button[type="submit"]');
                     if (btn) {
@@ -152,7 +152,7 @@ class UISystem {
                 btn.getAttribute('data-action') !== 'deleteCategory' &&
                 btn.getAttribute('data-action') !== 'deleteMessage') {
 
-                e.preventDefault();
+              /*  e.preventDefault();*/
                 e.stopPropagation();
 
                 // Prevent conflict with Guestbook page's own delete logic
@@ -216,7 +216,7 @@ class UISystem {
         document.body.addEventListener('click', (e) => {
             const btn = e.target.closest('[data-action="restoreItem"]');
             if (btn) {
-                e.preventDefault();
+          /*      e.preventDefault();*/
                 e.stopPropagation(); // Stop other handlers
 
                 // If specific pages have their own restore logic (like Guestbook/Categories/Projects), 

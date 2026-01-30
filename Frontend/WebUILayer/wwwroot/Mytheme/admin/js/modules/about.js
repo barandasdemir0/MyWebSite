@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const photoUrlModal = document.getElementById('photoUrlModal');
     const removePhotoModal = document.getElementById('removePhotoModal');
     const photoUrlInput = document.getElementById('photoUrlInput');
-
     // Trigger file input when clicking on preview or upload button
     const triggerUploadButtons = document.querySelectorAll('[data-action="triggerProfilePhotoUpload"]');
     triggerUploadButtons.forEach(btn => {
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
             profilePhotoInput.click();
         });
     });
-
     // Handle file selection
     if (profilePhotoInput) {
         profilePhotoInput.addEventListener('change', function (e) {
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
     // Show Photo URL Modal
     const showUrlModalBtn = document.querySelector('[data-action="showPhotoUrlModal"]');
     if (showUrlModalBtn) {
@@ -42,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
             photoUrlModal.classList.add('active');
         });
     }
-
     // Close Photo URL Modal
     const closeUrlModalBtn = document.querySelector('[data-action="closePhotoUrlModal"]');
     if (closeUrlModalBtn) {
@@ -50,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
             photoUrlModal.classList.remove('active');
         });
     }
-
     // Confirm Photo URL
     const confirmUrlBtn = document.querySelector('[data-action="confirmPhotoUrl"]');
     if (confirmUrlBtn) {
@@ -58,6 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = photoUrlInput.value.trim();
             if (url) {
                 profileImage.src = url;
+                // EKLENEN KISIM BAŞLANGIÇ: Gizli inputu güncelle
+                const hiddenInput = document.getElementById('hiddenProfileImageInput');
+                if (hiddenInput) {
+                    hiddenInput.value = url;
+                }
+                // EKLENEN KISIM BİTİŞ
                 photoUrlModal.classList.remove('active');
                 if (window.adminApp && window.adminApp.notifications) {
                     const config = document.getElementById('aboutConfig');
@@ -74,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
     // Show remove photo modal
     const removePhotoBtn = document.querySelector('[data-action="removeProfilePhoto"]');
     if (removePhotoBtn) {
@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
             removePhotoModal.classList.add('active');
         });
     }
-
     // Close remove photo modal
     const closeRemoveModalBtn = document.querySelector('[data-action="closeRemovePhotoModal"]');
     if (closeRemoveModalBtn) {
@@ -90,12 +89,17 @@ document.addEventListener('DOMContentLoaded', function () {
             removePhotoModal.classList.remove('active');
         });
     }
-
     // Confirm remove photo
     const confirmRemoveBtn = document.querySelector('[data-action="confirmRemovePhoto"]');
     if (confirmRemoveBtn) {
         confirmRemoveBtn.addEventListener('click', function () {
-            profileImage.src = 'https://ui-avatars.com/api/?name=Baran+D&background=6366f1&color=fff&size=140';
+            profileImage.src = 'https://ui-avatars.com/api/?name=Admin'; // Default resim
+            // EKLENEN KISIM BAŞLANGIÇ: Gizli inputu boşalt
+            const hiddenInput = document.getElementById('hiddenProfileImageInput');
+            if (hiddenInput) {
+                hiddenInput.value = ''; // Boş gönder ki silindiği anlaşılsın (veya default url koyabilirsin)
+            }
+            // EKLENEN KISIM BİTİŞ
             removePhotoModal.classList.remove('active');
             if (window.adminApp && window.adminApp.notifications) {
                 const config = document.getElementById('aboutConfig');

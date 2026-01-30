@@ -11,9 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Helpers\" />
     <Folder Include="wwwroot\Mytheme\portfolio\assets\fonts\" />
     <Folder Include="wwwroot\Mytheme\portfolio\assets\icons\" />
     <Folder Include="wwwroot\Mytheme\portfolio\assets\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
   </ItemGroup>
 
 </Project>

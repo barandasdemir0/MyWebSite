@@ -1,0 +1,263 @@
+﻿@model DtoLayer.AboutDto.UpdateAboutDto
+
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "about-page"; // <-- BUNU EKLE
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/about.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/modal.css">
+}
+
+
+
+<form asp-action="Index" method="post">
+
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ProfileImage" id="hiddenProfileImageInput" />
+    <!-- Profile Photo Card -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-image"></i>Profil Fotoğrafı</h3>
+        </div>
+
+        <div class="profile-photo-section">
+            <div class="profile-photo-preview-wrapper">
+                <div class="profile-photo-preview" id="profilePhotoPreview">
+                    <img id="profileImage"
+                         @* src="https://ui-avatars.com/api/?name=Baran+D&background=6366f1&color=fff&size=140"> *@
+                         src="@(!string.IsNullOrEmpty(Model.ProfileImage) ? Model.ProfileImage : "https://ui-avatars.com/api/?name=Admin")"
+                         class="img-fluid rounded" style="max-height: 200px;" />
+                </div>
+            </div>
+            <div class="profile-photo-content">
+                <p class="profile-photo-helper">
+                    Hakkımda sayfasında görünecek profil fotoğrafınız. PNG veya JPG formatında, en az 200x200
+                    piksel önerilir.
+                </p>
+                <div class="profile-photo-actions">
+                    <button type="button" class="btn btn-outline btn-sm" data-action="showPhotoUrlModal">
+                        <i class="fas fa-link"></i> URL ile Ekle
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger-ghost" data-action="removeProfilePhoto">
+                        <i class="fas fa-trash"></i> Kaldır
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- About Content -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-user-circle"></i>Hakkımda Metni</h3>
+        </div>
+
+
+        <div class="form-row full">
+            <div class="form-group">
+                <label>Sayfa Başlığı</label>
+                <input type="text" class="form-control" asp-for="FullName">
+            </div>
+        </div>
+
+        <div class="form-row full">
+            <div class="form-group">
+                <label>Detaylı Hakkımda Metni (Paragraf 1)</label>
+                <textarea class="form-control about-textarea" asp-for="Greeting"></textarea>
+            </div>
+        </div>
+
+        <div class="form-row full">
+            <div class="form-group">
+                <label>Detaylı Hakkımda Metni (Paragraf 2)</label>
+                <textarea class="form-control about-textarea" asp-for="Bio"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    @* <!-- Personal Info Card -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-id-card"></i>Kişisel Bilgiler</h3>
+        </div>
+
+
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>İsim Soyisim</label>
+                <input type="text" class="form-control" value="Baran Dasdemir">
+            </div>
+            <div class="form-group">
+                <label>Email Adresi</label>
+                <input type="email" class="form-control" value="hello@barandasdemir.com">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Konum</label>
+                <input type="text" class="form-control" value="İstanbul, Türkiye">
+            </div>
+            <div class="form-group">
+                <label>Çalışma Durumu</label>
+                <input type="text" class="form-control" value="Açık İşlere Açık"
+                       placeholder="Örn: Freelance Projelere Açık">
+            </div>
+        </div>
+
+    </div>
+ *@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Statistics Section -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-chart-bar"></i>İstatistikler</h3>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-code"></i>Proje Sayısı</label>
+                <input type="number" class="form-control" asp-for="ProjectCount">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-calendar-alt"></i>Yıl Deneyim</label>
+                <input type="number" class="form-control" asp-for="ExperienceYear">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-mug-hot"></i>İçilen Çay</label>
+                <input type="number" class="form-control" asp-for="ProjectDrink">
+            </div>
+            <div class="form-group">
+                <!-- Empty for layout balance -->
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i>
+                Değişiklikleri Kaydet
+            </button>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Photo URL Modal -->
+    <div class="admin-modal-overlay" id="photoUrlModal">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h3>Fotoğraf URL'si Ekle</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Fotoğraf URL'si</label>
+                    <input type="url" id="photoUrlInput" class="form-control"
+                           placeholder="https://example.com/photo.jpg">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-action="closePhotoUrlModal">İptal</button>
+                <button class="btn btn-primary" data-action="confirmPhotoUrl">Ekle</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Remove Photo Confirmation Modal -->
+    <div class="admin-modal-overlay" id="removePhotoModal">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Fotoğrafı Kaldır</h3>
+            </div>
+            <div class="modal-body">
+                <p>Profil fotoğrafını kaldırmak istediğinize emin misiniz?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-action="closeRemovePhotoModal">İptal</button>
+                <button class="btn btn-danger" data-action="confirmRemovePhoto">Evet, Kaldır</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+</form>
+
+
+
+
+
+@section Scripts {
+    <script src="/Mytheme/admin/js/theme-init.js" defer></script>
+    <script src="/Mytheme/admin/js/modules/about.js" defer></script>
+
+
+}

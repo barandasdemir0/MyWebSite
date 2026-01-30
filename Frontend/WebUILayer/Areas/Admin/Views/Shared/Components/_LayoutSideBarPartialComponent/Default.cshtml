@@ -1,0 +1,85 @@
+﻿<aside class="admin-sidebar">
+    <div class="sidebar-header">
+        <h2><span>Admin</span> Panel</h2>
+        <p>Portfolio Yönetimi</p>
+    </div>
+    <nav class="sidebar-menu">
+        <div class="menu-section">
+            <p class="menu-section-title">Sayfa Yönetimi</p>
+            <a asp-area="Admin" asp-controller="Profile" asp-action="Index" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Hero & Profil</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Abouts" asp-action="Index" class="menu-item active">
+                <i class="fas fa-user"></i>
+                <span>Hakkımda</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Resume" asp-action="Index" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Özgeçmiş</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Contact" asp-action="Index" class="menu-item">
+                <i class="fas fa-envelope"></i>
+                <span>İletişim</span>
+            </a>
+        </div>
+        <div class="menu-section">
+            <p class="menu-section-title">İçerik Yönetimi</p>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="menu-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Messages" asp-action="Index" class="menu-item">
+                <i class="fas fa-inbox"></i>
+                <span>Mesajlar</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Projects" asp-action="Index" class="menu-item">
+                <i class="fas fa-folder-open"></i>
+                <span>Projeler</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Blog" asp-action="Index" class="menu-item">
+                <i class="fas fa-blog"></i>
+                <span>Blog Yazıları</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Guestbook" asp-action="Index" class="menu-item">
+                <i class="fas fa-comments"></i>
+                <span>Ziyaretçi Defteri</span>
+            </a>
+        </div>
+        <div class="menu-section">
+            <p class="menu-section-title">Ayarlar</p>
+            <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="menu-item">
+                <i class="fas fa-tags"></i>
+                <span>Kategoriler</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Skills" asp-action="Index" class="menu-item">
+                <i class="fas fa-code"></i>
+                <span>Yetenekler</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Github" asp-action="Index" class="menu-item">
+                <i class="fab fa-github"></i>
+                <span>GitHub Repoları</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Settings" asp-action="Index" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Site Ayarları</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Security" asp-action="Index" class="menu-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>Güvenlik</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Chatbot" asp-action="Index" class="menu-item">
+                <i class="fas fa-robot"></i>
+                <span>Chatbot</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Notifications" asp-action="Index" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Bildirimler</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Auth" asp-action="Logout" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Çıkış Yap</span>
+            </a>
+        </div>
+    </nav>
+</aside>

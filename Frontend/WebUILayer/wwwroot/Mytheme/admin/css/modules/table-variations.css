@@ -1,0 +1,240 @@
+/* Table Variations CSS Module - Theme Compatible */
+
+/* Layout & Spacing */
+.preview-grid {
+    display: block !important;
+}
+
+.preview-card-spacer {
+    margin-bottom: 30px;
+}
+
+.preview-header {
+    margin: 40px 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--admin-border);
+    color: var(--admin-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Visual Icon Box (Design 1) */
+.visual-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Note: Using rgba for transparency is okay as it overlays on theme bg */
+.visual-box.blue {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--admin-primary);
+}
+
+.visual-box.green {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--admin-success);
+}
+
+.visual-box.orange {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--admin-warning);
+}
+
+.visual-box.red {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--admin-danger);
+}
+
+/* Deleted Row Styling */
+.tr-deleted {
+    opacity: 0.75;
+    background: rgba(239, 68, 68, 0.05);
+    /* Slight red tint works on both dark/light */
+}
+
+.text-deleted {
+    text-decoration: line-through;
+    color: var(--admin-text-muted);
+    opacity: 0.8;
+}
+
+/* Restore Buttons */
+.action-btn.restore {
+    color: var(--admin-warning);
+    border-color: rgba(245, 158, 11, 0.3);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.action-btn.restore:hover {
+    background: var(--admin-warning);
+    color: #fff;
+    border-color: var(--admin-warning);
+}
+
+.btn-restore {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--admin-warning);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.btn-restore:hover {
+    background-color: var(--admin-warning) !important;
+    color: #fff !important;
+}
+
+/* Profile Images & Avatars */
+.avatar-md {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.avatar-rounded {
+    border-radius: 10px;
+}
+
+.avatar-circle {
+    border-radius: 50%;
+}
+
+.avatar-group-item {
+    border: 2px solid var(--admin-card);
+    /* Border matches card bg to create 'cutout' effect */
+    margin-left: -10px;
+}
+
+.avatar-more {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--admin-border);
+    color: var(--admin-text);
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--admin-card);
+    margin-left: -10px;
+}
+
+/* Minimal & Status Dots */
+.dot-indicator {
+    font-size: 8px;
+    margin-right: 10px;
+}
+
+/* Image Previews */
+.img-preview-sm {
+    width: 80px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--admin-border);
+}
+
+/* Progress Bars */
+.progress-wrapper {
+    width: 200px;
+}
+
+.progress-track {
+    height: 6px;
+    background: var(--admin-border);
+    /* Adaptive track color */
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--admin-success);
+}
+
+.progress-label {
+    font-size: 0.75rem;
+    margin-top: 3px;
+    text-align: right;
+    color: var(--admin-text-muted);
+}
+
+/* Timeline/Logs */
+.log-dot-cell {
+    width: 50px;
+    text-align: center;
+}
+
+.log-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.bg-purple {
+    background: var(--admin-primary);
+}
+
+.bg-red {
+    background: var(--admin-danger);
+}
+
+/* Utility Text */
+.text-primary {
+    color: var(--admin-primary) !important;
+}
+
+.text-warning {
+    color: var(--admin-warning) !important;
+}
+
+.text-success {
+    color: var(--admin-success) !important;
+}
+
+.text-danger {
+    color: var(--admin-danger) !important;
+}
+
+.text-muted {
+    color: var(--admin-text-muted) !important;
+}
+
+.font-bold {
+    font-weight: 600;
+}
+
+.font-monospace {
+    font-family: monospace;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.gap-10 {
+    gap: 10px;
+}
+
+.gap-8 {
+    gap: 8px;
+}
+
+.pl-10 {
+    padding-left: 10px;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.text-right {
+    text-align: right;
+}
