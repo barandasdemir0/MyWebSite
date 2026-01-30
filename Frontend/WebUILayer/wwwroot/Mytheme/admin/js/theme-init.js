@@ -24,7 +24,7 @@ window.I18N = {
         actionStarted: "İşlem Başlatıldı",
         loadingMenu: "Hızlı işlem menüsü yükleniyor...",
         deleteTitle: "Silme İşlemi",
-        deleteConfirm: "Bu öğeyi silmek istediğinizden emin misiniz? <br><small>Bu işlem geri alınabilir (soft delete).</small>",
+        deleteConfirm: "Bu öğeyi silmek istediğinizden emin misiniz? <br><small>Bu işlem geri alınabilir.</small>",
         itemDeleted: "Öğe silindi (Arşivlendi).",
         deleted: "Silindi",
         restoreTitle: "Geri Yükle",

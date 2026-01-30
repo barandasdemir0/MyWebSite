@@ -1,6 +1,7 @@
 ﻿using DtoLayer.AboutDto;
 using Microsoft.AspNetCore.Mvc;
-using WebUILayer.Services.Abstract;
+using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
@@ -33,8 +34,20 @@ public class AboutsController : Controller
             return View(updateAboutDto);
         }
 
-        await _aboutApiService.SaveAboutAsync(updateAboutDto);
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _aboutApiService.SaveAboutAsync(updateAboutDto);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+
+
+            ModelState.AddApiError(ex);
+            return View(updateAboutDto);
+      
+        }
+      
     }
 
     #region eski güncelleme ve update komutları yukarııda tek komutta yapıldı

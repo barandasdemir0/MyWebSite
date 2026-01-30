@@ -74,23 +74,23 @@ class UISystem {
     setupForms() {
         document.querySelectorAll('form').forEach(form => {
             if (form.id !== 'loginForm') {
-                form.addEventListener('submit', (e) => {
-                   /* e.preventDefault();*/
+                //form.addEventListener('submit', (e) => {
+                //   /* e.preventDefault();*/
 
-                    const btn = form.querySelector('button[type="submit"]');
-                    if (btn) {
-                        const originalText = btn.innerHTML;
-                        btn.innerHTML = `<i class="fas fa-check"></i> ${window.I18N?.ui?.saved || 'Kaydedildi!'}`;
-                        btn.classList.add('btn-saved-state');
+                //    const btn = form.querySelector('button[type="submit"]');
+                //    if (btn) {
+                //        const originalText = btn.innerHTML;
+                //        btn.innerHTML = `<i class="fas fa-check"></i> ${window.I18N?.ui?.saved || 'Kaydedildi!'}`;
+                //        btn.classList.add('btn-saved-state');
 
-                        this.notifications.showToast(window.I18N?.common?.success || 'Başarılı', window.I18N?.ui?.changesSaved || 'Değişiklikler kaydedildi.', 'success');
+                //        this.notifications.showToast(window.I18N?.common?.success || 'Başarılı', window.I18N?.ui?.changesSaved || 'Değişiklikler kaydedildi.', 'success');
 
-                        setTimeout(() => {
-                            btn.innerHTML = originalText;
-                            btn.classList.remove('btn-saved-state');
-                        }, 2000);
-                    }
-                });
+                //        setTimeout(() => {
+                //            btn.innerHTML = originalText;
+                //            btn.classList.remove('btn-saved-state');
+                //        }, 2000);
+                //    }
+                //});
             }
         });
 

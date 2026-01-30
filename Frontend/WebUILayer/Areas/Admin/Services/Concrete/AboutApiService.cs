@@ -1,9 +1,9 @@
 ﻿using DtoLayer.AboutDto;
 using Humanizer;
 using Mapster;
-using WebUILayer.Services.Abstract;
+using WebUILayer.Areas.Admin.Services.Abstract;
 
-namespace WebUILayer.Services.Concrete
+namespace WebUILayer.Areas.Admin.Services.Concrete
 {
     public class AboutApiService : GenericApiService<AboutDto, CreateAboutDto, UpdateAboutDto>, IAboutApiService
     {

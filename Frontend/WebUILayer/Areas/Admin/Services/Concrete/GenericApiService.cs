@@ -1,6 +1,6 @@
-﻿using WebUILayer.Services.Abstract;
+﻿using WebUILayer.Areas.Admin.Services.Abstract;
 
-namespace WebUILayer.Services.Concrete
+namespace WebUILayer.Areas.Admin.Services.Concrete
 {
     public class GenericApiService<TListDto, TCreateDto, TUpdateDto> : IGenericApiService<TListDto, TCreateDto, TUpdateDto> where TListDto: class
     {
@@ -19,7 +19,8 @@ namespace WebUILayer.Services.Concrete
             var response = await _httpClient.PostAsJsonAsync(_endpoint, dto);
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(error);
             }
             return await response.Content.ReadFromJsonAsync<TListDto>();
         }
@@ -57,7 +58,9 @@ namespace WebUILayer.Services.Concrete
             var response = await _httpClient.PutAsJsonAsync($"{_endpoint}/{guid}", dto);
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                var error = await response.Content.ReadAsStringAsync();
+
+                throw new Exception(error) ;
                
             }
             return await response.Content.ReadFromJsonAsync<TListDto>();

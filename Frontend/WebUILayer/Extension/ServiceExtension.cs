@@ -1,5 +1,5 @@
-﻿using WebUILayer.Services.Abstract;
-using WebUILayer.Services.Concrete;
+﻿using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Areas.Admin.Services.Concrete;
 
 namespace WebUILayer.Extension;
 
