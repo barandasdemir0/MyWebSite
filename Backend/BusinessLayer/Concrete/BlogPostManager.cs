@@ -5,6 +5,7 @@ using DataAccessLayer.Abstract;
 using DtoLayer.AboutDto;
 using DtoLayer.BlogpostDto;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -57,10 +58,20 @@ namespace BusinessLayer.Concrete
         {
             var entity = await _repository.GetAllAsync(
                 tracking: false,
-                includes: x => x.BlogTopics);
+                includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
 
 
             return _mapper.Map<List<BlogPostListDto>>(entity);
+        }
+
+        public async Task<List<BlogPostListDto>> GetAllAdminAsync()
+        {
+            var entity = await _repository.GetAllAdminAsync(
+                tracking: false,
+                includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
+            return _mapper.Map<List<BlogPostListDto>>(entity);
+
+
         }
 
         public async Task<BlogPostListDto?> GetByIdAsync(Guid guid)
@@ -77,7 +88,7 @@ namespace BusinessLayer.Concrete
         {
             var entity = await _repository.GetAsync(x => x.Slug == slug, 
                 tracking: false,
-                includes:x=>x.BlogTopics);
+                includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
             if (entity == null)
             {
                 return null;
@@ -114,7 +125,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<BlogPostListDto?> UpdateAsync(Guid id,UpdateBlogPostDto dto)
         {
-            var entity = await _repository.GetAsync(x=>x.Id == id,tracking:true,includes:x=>x.BlogTopics);
+            var entity = await _repository.GetAsync(x=>x.Id == id,tracking:true,includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
 
             if (entity == null)
             {

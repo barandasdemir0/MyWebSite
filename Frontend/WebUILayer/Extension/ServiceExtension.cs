@@ -13,5 +13,11 @@ public static class ServiceExtension
         {
             client.BaseAddress = new Uri(baseurl!);
         });
+
+
+        services.AddHttpClient<IBlogPostApiService, BlogPostApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
     }
 }

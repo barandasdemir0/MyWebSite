@@ -15,6 +15,7 @@ public class BlogPostDto
     public bool IsPublished { get; set; }
     public DateTime? PublishedAt { get; set; }
     public int ViewCount { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     // İlişkiler (Okuma)
     public List<string> Topics { get; set; } = new();        // Topic isimleri

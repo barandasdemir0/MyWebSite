@@ -2,6 +2,7 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -52,54 +53,20 @@ namespace DataAccessLayer.Concrete
 
         #region komple getirme
 
-        public async Task<List<T>> GetAllAsync(bool tracking = true)
+
+
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
         {
             var query = _dbSet.AsQueryable();
-            if (!tracking)
+            if (filter != null)
             {
-                query = query.AsNoTracking();
+                query = query.Where(filter);
             }
-            return await query.ToListAsync();
-        }
-
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter, bool tracking = true)
-        {
-            var query = _dbSet.Where(filter);
-            if (!tracking)
-            {
-                query = query.AsNoTracking();
-            }
-            return await query.ToListAsync();
-        }
-
-        public async Task<List<T>> GetAllAsync(bool tracking = true, params Expression<Func<T, object>>[] includes)
-        {
-            var query = _dbSet.AsQueryable();
-            if (includes != null)
-            {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
-            }
-
-            if (!tracking)
-            {
-                query = query.AsNoTracking();
-            }
-            return await query.ToListAsync();
-        }
-
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter, bool tracking = true, params Expression<Func<T, object>>[] includes)
-        {
-            var query = _dbSet.Where(filter);
 
             if (includes != null)
             {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
+                   query = includes(query);
+               
             }
 
             if (!tracking)
@@ -108,29 +75,38 @@ namespace DataAccessLayer.Concrete
             }
             return await query.ToListAsync();
         }
+
+
+        public async Task<List<T>> GetAllAdminAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+        {
+            var query = _dbSet.AsQueryable();
+
+            query = query.IgnoreQueryFilters();
+            if (!tracking)
+            {
+                query = query.AsNoTracking();
+            }
+            if (includes != null)
+            {
+                query = includes(query);
+
+            }
+
+            return await query.ToListAsync();
+        }
+
 
         #endregion
 
         #region  getirme
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true)
-        {
-            var query = _dbSet.AsQueryable();
-            if (!tracking)
-            {
-                query = query.AsNoTracking();
-            }
-            return await query.FirstOrDefaultAsync(filter);
-        }
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true, params Expression<Func<T, object>>[] includes)
+
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
         {
             var query = _dbSet.AsQueryable();
             if (includes != null)
             {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
+                query = includes(query);
             }
 
             if (!tracking)
@@ -148,25 +124,14 @@ namespace DataAccessLayer.Concrete
         #region idye göre getirme
 
 
-        public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true)
-        {
-            var query = _dbSet.AsQueryable();
-            if (!tracking)
-            {
-                query = query.AsNoTracking();
-            }
-            return await query.FirstOrDefaultAsync(x => x.Id == guid);
-        }
 
-        public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true, params Expression<Func<T, object>>[] includes)
+
+        public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
         {
             var query = _dbSet.AsQueryable();
             if (includes != null)
             {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
+                query = includes(query);
             }
             if (!tracking)
             {
@@ -176,10 +141,70 @@ namespace DataAccessLayer.Concrete
 
         }
 
+      
 
         #endregion
 
+        #region eski kodlar
 
+
+        //public async Task<List<T>> GetAllAsync(bool tracking = true)
+        //{
+        //    var query = _dbSet.AsQueryable();
+        //    if (!tracking)
+        //    {
+        //        query = query.AsNoTracking();
+        //    }
+        //    return await query.ToListAsync();
+        //}
+
+        //public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter, bool tracking = true)
+        //{
+        //    var query = _dbSet.Where(filter);
+        //    if (!tracking)
+        //    {
+        //        query = query.AsNoTracking();
+        //    }
+        //    return await query.ToListAsync();
+        //}
+
+        //public async Task<List<T>> GetAllAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+        //{
+        //    var query = _dbSet.AsQueryable();
+        //    if (includes != null)
+        //    {
+
+        //        query = includes(query);
+
+        //    }
+
+        //    if (!tracking)
+        //    {
+        //        query = query.AsNoTracking();
+        //    }
+        //    return await query.ToListAsync();
+        //}
+        //public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true)
+        //{
+        //    var query = _dbSet.AsQueryable();
+        //    if (!tracking)
+        //    {
+        //        query = query.AsNoTracking();
+        //    }
+        //    return await query.FirstOrDefaultAsync(x => x.Id == guid);
+        //}
+
+
+        //public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true)
+        //{
+        //    var query = _dbSet.AsQueryable();
+        //    if (!tracking)
+        //    {
+        //        query = query.AsNoTracking();
+        //    }
+        //    return await query.FirstOrDefaultAsync(filter);
+        //}
+        #endregion
 
         #region trackingsiz hali eski kodlar
 

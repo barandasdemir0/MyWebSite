@@ -24,6 +24,13 @@ namespace WebApiLayer.Controllers
             return Ok(query);
         }
 
+        [HttpGet("admin-all")] // hepsini getirme 
+        public async Task<IActionResult> GetAllAdmin()
+        {
+            var query = await _blogPostService.GetAllAdminAsync();
+            return Ok(query);
+        }
+
         //[HttpGet("{id}")] //idye göre getirme 
         //public async Task<IActionResult> GetById(Guid id)
         //{

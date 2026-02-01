@@ -1,0 +1,198 @@
+﻿@model List<DtoLayer.BlogpostDto.BlogPostDto>
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "blogpost-page"; // <-- BUNU EKLE
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/modal.css">
+}
+
+
+<!-- Blog Posts Table -->
+<div class="card">
+    <div class="card-header">
+        <h3>Tüm Yazılar</h3>
+        <div class="filter-container">
+            <select class="form-control filter-select">
+                <option>Tüm Kategoriler</option>
+                <option>Yazılım</option>
+                <option>Kariyer</option>
+                <option>SaaS</option>
+            </select>
+            <a href="blog-editor.html" class="btn btn-primary btn-gap">
+                <i class="fas fa-plus"></i>
+                Yeni Yazı
+            </a>
+            <input type="text" class="form-control filter-search" placeholder="Ara...">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Kategori</th>
+                    <th>Okuma Süresi</th>
+                    <th>Görünürlük</th>
+                    <th>Durum</th>
+                    <th>Yayın Tarihi</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+
+                    if (item.IsDeleted == true)
+                    {
+                        <tr class="deleted-item">
+                            <td><strong>@item.Title</strong></td>
+                            <td>@string.Join(", ", item.Topics)</td>
+                            <td>4 dk</td>
+                            <td><span class="status-badge danger">Silindi</span></td>
+                            <td><span class="status-badge draft">Taslak</span></td>
+                            <td>10 Kas 2023</td>
+                            <td>
+                                <div class="action-btns">
+                                    <a href="blog-editor.html?view=true&deleted=true" class="action-btn"
+                                       title="Görüntüle"><i class="fas fa-eye"></i></a>
+                                    <a href="blog-editor.html?deleted=true" class="action-btn edit"
+                                       title="Detaylar"><i class="fas fa-pen"></i></a>
+                                    <button class="action-btn delete hidden" title="Sil" data-action="deleteRow">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <button class="action-btn restore" title="Geri Yükle"
+                                            data-action="restoreRow">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.IsPublished == false)
+                    {
+                        <tr>
+                            <td><strong>@item.Title</strong></td>
+                            <td>@string.Join(",",item.Topics)</td>
+                            <td>5 dk</td>
+                            <td><span class="status-badge draft">Sitede Aktif Değil</span></td>
+                            <td><span class="status-badge draft">Taslak</span></td>
+                            <td>@item.PublishedAt!.Value.AddHours(3)</td>
+                            <td>
+                                <div class="action-btns">
+                                    <a href="blog-editor.html?view=true" class="action-btn" title="Görüntüle">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="blog-editor.html" class="action-btn edit" title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <button class="action-btn delete" title="Sil" data-action="deleteRow">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <button class="action-btn restore hidden" title="Geri Yükle"
+                                            data-action="restoreRow">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if(item.IsDeleted == false)
+                    {
+                        <tr>
+                            <td><strong>@item.Title</strong></td>
+                            <td>@string.Join(",",item.Topics)</td>
+                            <td>5 dk</td>
+                            <td><span class="status-badge active">Sitede Aktif</span></td>
+                            <td><span class="status-badge active">Yayında</span></td>
+                            <td>@item.PublishedAt</td>
+                            <td>
+                                <div class="action-btns">
+                                    <a href="blog-editor.html?view=true" class="action-btn" title="Görüntüle">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="blog-editor.html" class="action-btn edit" title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <button class="action-btn delete" title="Sil" data-action="deleteRow">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <button class="action-btn restore hidden" title="Geri Yükle"
+                                            data-action="restoreRow">
+                                        <i class="fas fa-undo"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    }
+
+
+
+
+                }
+
+
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-wrapper">
+        <div class="pagination">
+            <button class="pagination-btn" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">4</button>
+            <button class="pagination-btn">5</button>
+            <button class="pagination-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Blog Post Form -->
+<!-- Restore Modal Template -->
+<div id="restoreModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-restore">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div class="modal-title">Geri Yükle</div>
+        </div>
+        <div class="modal-body">
+            <strong id="restoreItemName"></strong> isimli öğe geri yüklenecek ve sitede tekrar yayına
+            alınacaktır.<br><br>
+            Bu işlem geri alınamaz (tekrar silmeniz gerekir).
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelRestore">İptal</button>
+            <button class="btn btn-warning" id="confirmRestore">Onayla ve Yükle</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    <script src="/Mytheme/admin/js/theme-init.js" defer></script>
+    <script src="/Mytheme/admin/js/modules/blog.js" defer></script>
+
+
+}

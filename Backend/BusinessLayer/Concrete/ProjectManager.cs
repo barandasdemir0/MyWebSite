@@ -6,6 +6,7 @@ using DataAccessLayer.Concrete;
 using DtoLayer.GuestBookDto;
 using DtoLayer.ProjectDto;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,7 +52,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<List<ProjectListDto>> GetAllAsync()
         {
-            var entity = await _projectDal.GetAllAsync(tracking: false, includes: x => x.ProjectTopics);
+            var entity = await _projectDal.GetAllAsync(tracking: false, includes: source => source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
             return _mapper.Map<List<ProjectListDto>>(entity);
         }
 
@@ -67,7 +68,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<ProjectDto?> GetBySlugAsync(string slug)
         {
-            var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: x => x.ProjectTopics);
+            var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: source => source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
             if (entity == null)
             {
                 return null;
@@ -90,7 +91,7 @@ namespace BusinessLayer.Concrete
         {
             var entity = await _projectDal.GetAsync(x => x.Id == guid,
             tracking: true,
-            includes: x => x.ProjectTopics);
+            includes: source => source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
             if (entity == null)
             {
                 return null;

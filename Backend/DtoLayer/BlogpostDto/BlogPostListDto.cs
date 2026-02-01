@@ -13,6 +13,8 @@ public class BlogPostListDto
     public string? CoverImage { get; set; }
     public int ReadTime { get; set; }
     public DateTime? PublishedAt { get; set; }
+    public bool IsDeleted { get; set; } = false;
+    public bool IsPublished { get; set; } = false;
 
     // Kartta kategori isimlerini göstermek şık olur
     public List<string> Topics { get; set; } = new();
