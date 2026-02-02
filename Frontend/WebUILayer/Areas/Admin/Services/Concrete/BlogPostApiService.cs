@@ -31,9 +31,9 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
             return await _httpClient.GetFromJsonAsync<BlogPostListDto>($"{_endpoint}/{slug}");
         }
 
-        public async Task RestoreAsync(Guid guid)
+        public async Task RestoreAsync(Guid id)
         {
-            var response = await _httpClient.PostAsync($"{_endpoint}/restore/{guid}",null);
+            var response = await _httpClient.PutAsync($"{_endpoint}/restore/{id}",null);
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();

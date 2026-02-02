@@ -77,6 +77,7 @@ public class AboutsController : Controller
 
     #endregion
 
+    [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _aboutApiService.DeleteAsync(id);

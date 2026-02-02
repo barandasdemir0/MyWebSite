@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddApiService(builder.Configuration);
+builder.Services.AddAutoValidate();
 
 var app = builder.Build();
 

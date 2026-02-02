@@ -1,4 +1,5 @@
-﻿using WebUILayer.Areas.Admin.Services.Abstract;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
 
 namespace WebUILayer.Extension;
@@ -19,5 +20,15 @@ public static class ServiceExtension
         {
             client.BaseAddress = new Uri(baseurl!);
         });
+    }
+
+
+    public static void AddAutoValidate(this IServiceCollection services)
+    {
+        services.AddControllersWithViews(options =>
+        {
+            options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+        });
+      
     }
 }

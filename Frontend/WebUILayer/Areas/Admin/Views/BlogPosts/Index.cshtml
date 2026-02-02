@@ -57,20 +57,26 @@
                             <td>4 dk</td>
                             <td><span class="status-badge danger">Silindi</span></td>
                             <td><span class="status-badge draft">Taslak</span></td>
-                            <td>10 Kas 2023</td>
+                            <td>@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
                             <td>
                                 <div class="action-btns">
                                     <a href="blog-editor.html?view=true&deleted=true" class="action-btn"
                                        title="Görüntüle"><i class="fas fa-eye"></i></a>
                                     <a href="blog-editor.html?deleted=true" class="action-btn edit"
                                        title="Detaylar"><i class="fas fa-pen"></i></a>
-                                    <button class="action-btn delete hidden" title="Sil" data-action="deleteRow">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <button class="action-btn restore" title="Geri Yükle"
-                                            data-action="restoreRow">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
+                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="action-btn delete hidden" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+
+
+                                    <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn restore" title="Geri Yükle">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -83,7 +89,8 @@
                             <td>5 dk</td>
                             <td><span class="status-badge draft">Sitede Aktif Değil</span></td>
                             <td><span class="status-badge draft">Taslak</span></td>
-                            <td>@item.PublishedAt!.Value.AddHours(3)</td>
+                            <td>@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
+
                             <td>
                                 <div class="action-btns">
                                     <a href="blog-editor.html?view=true" class="action-btn" title="Görüntüle">
@@ -92,13 +99,19 @@
                                     <a href="blog-editor.html" class="action-btn edit" title="Düzenle">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <button class="action-btn delete" title="Sil" data-action="deleteRow">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <button class="action-btn restore hidden" title="Geri Yükle"
-                                            data-action="restoreRow">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
+                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="action-btn delete" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+
+
+                                    <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn restore hidden" title="Geri Yükle">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -111,23 +124,35 @@
                             <td>5 dk</td>
                             <td><span class="status-badge active">Sitede Aktif</span></td>
                             <td><span class="status-badge active">Yayında</span></td>
-                            <td>@item.PublishedAt</td>
+                            <td>@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
+
                             <td>
+                               
                                 <div class="action-btns">
                                     <a href="blog-editor.html?view=true" class="action-btn" title="Görüntüle">
                                         <i class="fas fa-eye"></i>
                                     </a>
+
+
                                     <a href="blog-editor.html" class="action-btn edit" title="Düzenle">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <button class="action-btn delete" title="Sil" data-action="deleteRow">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <button class="action-btn restore hidden" title="Geri Yükle"
-                                            data-action="restoreRow">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
+
+                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="action-btn delete" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+
+
+                                    <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn restore hidden" title="Geri Yükle">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
                                 </div>
+                             
                             </td>
                         </tr>
 
