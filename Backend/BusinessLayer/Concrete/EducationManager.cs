@@ -39,6 +39,12 @@ namespace BusinessLayer.Concrete
 
         }
 
+        public async Task<List<EducationDto>> GetAllAdminAsync()
+        {
+            var entity = await _educationDal.GetAllAdminAsync(tracking: false);
+            return _mapper.Map<List<EducationDto>>(entity);
+        }
+
         public async Task<List<EducationDto>> GetAllAsync()
         {
             var entity = await _educationDal.GetAllAsync(tracking: false);

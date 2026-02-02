@@ -5,12 +5,12 @@
 
 .categories-page #categoryForm {
     margin-top: 25px;
-    display: none;
+  /*  display: none;*/
 }
 
-.categories-page #categoryForm.visible {
-    display: block;
-}
+    .categories-page #categoryForm.visible {
+        display: flex !important;
+    }
 
 .categories-page .category-item {
     display: flex;

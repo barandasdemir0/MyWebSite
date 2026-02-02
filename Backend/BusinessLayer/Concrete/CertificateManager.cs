@@ -38,6 +38,12 @@ public class CertificateManager : ICertificateService
         }
     }
 
+    public async Task<List<CertificateDto>> GetAllAdminAsync()
+    {
+        var entity = await _certificateDal.GetAllAdminAsync(tracking: false);
+        return _mapper.Map<List<CertificateDto>>(entity);
+    }
+
     public async Task<List<CertificateDto>> GetAllAsync()
     {
         var entity = await _certificateDal.GetAllAsync(tracking:false);

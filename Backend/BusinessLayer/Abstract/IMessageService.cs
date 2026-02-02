@@ -1,4 +1,5 @@
-﻿using DtoLayer.MessageDto;
+﻿using DtoLayer.GuestBookDto;
+using DtoLayer.MessageDto;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -9,5 +10,6 @@ namespace BusinessLayer.Abstract
     public interface IMessageService:IGenericService<Message,MessageListDto,CreateMessageDto,UpdateMessageDto>
     {
         Task<MessageDto?> GetDetailsByIdAsync(Guid guid);
+        Task<List<MessageListDto>> GetAllAdminAsync();
     }
 }

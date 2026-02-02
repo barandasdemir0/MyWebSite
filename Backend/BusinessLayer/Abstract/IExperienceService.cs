@@ -10,5 +10,6 @@ namespace BusinessLayer.Abstract
     public interface IExperienceService:IGenericService<Experience,ExperienceDto,CreateExperienceDto,UpdateExperienceDto>
     {
         Task<ExperienceDto?> RestoreAsync(Guid guid);
+        Task<List<ExperienceDto>> GetAllAdminAsync();
     }
 }

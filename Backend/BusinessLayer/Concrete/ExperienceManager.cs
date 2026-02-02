@@ -39,6 +39,12 @@ namespace BusinessLayer.Concrete
             }
         }
 
+        public async Task<List<ExperienceDto>> GetAllAdminAsync()
+        {
+            var entity = await _experienceDal.GetAllAdminAsync(tracking: false);
+            return _mapper.Map<List<ExperienceDto>>(entity);
+        }
+
         public async Task<List<ExperienceDto>> GetAllAsync()
         {
             var entity = await _experienceDal.GetAllAsync(tracking: false);

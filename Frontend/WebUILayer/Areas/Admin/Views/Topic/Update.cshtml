@@ -1,0 +1,40 @@
+﻿@model TopicDto
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/categories.css">
+}
+
+<!-- Add/Edit Category Form -->
+<div class="card" id="categoryForm">
+    <div class="card-header">
+        <h3 id="categoryFormTitle"> Kategori Güncelle</h3>
+    </div>
+
+    <form asp-action="Update"   method="post"> 
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label>Kategori Adı *</label>
+            <input type="text" class="form-control" asp-for="Name"
+                    required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Kaydet
+            </button>
+            <a asp-area="Admin" asp-controller="Topic" asp-action="Index" class="btn btn-outline">İptal</a>
+
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="/Mytheme/admin/js/modules/categories.js" defer></script>
+}
+

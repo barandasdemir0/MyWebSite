@@ -1,4 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
+using DtoLayer.CertificateDto;
 using DtoLayer.GuestBookDto;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace BusinessLayer.Abstract
         Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid);
 
         Task<GuestBookDto?> RestoreAsync(Guid guid);
+        Task<List<GuestBookListDto>> GetAllAdminAsync();
     }
 }

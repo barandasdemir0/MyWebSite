@@ -20,6 +20,11 @@ public static class ServiceExtension
         {
             client.BaseAddress = new Uri(baseurl!);
         });
+
+        services.AddHttpClient<ITopicApiService, TopicApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
     }
 
 

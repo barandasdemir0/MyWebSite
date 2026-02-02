@@ -141,5 +141,11 @@ namespace BusinessLayer.Concrete
 
             return _mapper.Map<ProjectListDto>(entity);
         }
+
+        public async Task<List<ProjectListDto>> GetAllAdminAsync()
+        {
+            var entity = await _projectDal.GetAllAdminAsync(tracking: false);
+            return _mapper.Map<List<ProjectListDto>>(entity);
+        }
     }
 }

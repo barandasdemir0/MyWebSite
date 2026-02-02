@@ -1,0 +1,149 @@
+﻿@model List< DtoLayer.TopicDto.TopicDto>
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "categories-page"; // <-- BUNU EKLE
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/categories.css">
+}
+
+
+
+
+    <!-- Categories Card -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-tags"></i>Tüm Kategoriler</h3>
+            <div id="categoriesConfig" class="hidden" data-text-new="Yeni Kategori Ekle"
+                 data-text-edit="Kategoriyi Düzenle" data-text-deleted="Silindi" data-text-active="Sitede Aktif"
+                 data-text-restore="Geri Yükle" data-text-delete="Sil" data-msg-delete-title="Silme İşlemi"
+                 data-msg-delete-body="Bu kategoriyi silmek istediğinizden emin misiniz? <br><small>Bu işlem geri alınabilir.</small>"
+                 data-msg-delete-confirm="Silmek istediğinize emin misiniz?"
+                 data-msg-deleted="Kategori silindi (Arşivlendi)." data-msg-restored="Kategori geri yüklendi."
+                 data-msg-updated="Kategori güncellendi." data-msg-added="Kategori eklendi."></div>
+           
+            <a asp-action="Create" class="btn btn-primary mr-15">
+                <i class="fas fa-plus"></i> Yeni Kategori
+            </a>
+        </div>
+
+        <div id="categoryList">
+
+            @foreach (var item in Model)
+                {
+                    if (item.IsDeleted == false)
+                    {
+                    <div class="category-item">
+                        <div class="category-info">
+                            <span class="category-name">@item.Name</span>
+                            <span class="status-badge active">Sitede Aktif</span>
+                        </div>
+                        <div class="category-actions">
+                        <a asp-action="Update" asp-route-id="@item.Id" class="action-btn edit" title="Düzenle"> <i class="fas fa-pen"></i></a>
+
+
+                        <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                            <button type="button" class="action-btn delete " title="Sil" data-action="deleteCategory">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+
+                        <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                            <button type="button" class="action-btn restore hidden" title="Geri Yükle" data-action="restoreCategory">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </form>
+                        </div>
+                    </div>
+                    }
+
+                    else if (item.IsDeleted == true)
+                    {
+
+                    <!-- Static Example: Deleted Category -->
+                    <div class="category-item deleted-item">
+                        <div class="category-info">
+                            <span class="category-name">@item.Name</span>
+                            <span class="status-badge danger">Silindi</span>
+                        </div>
+                        <div class="category-actions">
+                            <a asp-action="Update"  asp-route-id="@item.Id"  class="action-btn edit" title="Düzenle"> <i class="fas fa-pen"></i></a>
+                          
+                         
+                             <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                            <button type="button" class="action-btn delete hidden" title="Sil" data-action="deleteCategory">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                             </form>
+                           
+                        <form type="button" asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                            <button type="button" class="action-btn restore" title="Geri Yükle" data-action="restoreCategory">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                             </form>
+                          
+                        </div>
+                    </div>
+                    }
+                }
+
+
+        
+        
+
+
+        </div>
+    </div>
+
+
+
+    <!-- Category Item Template -->
+    <template id="categoryItemTemplate">
+        <div class="category-item">
+            <div class="category-info">
+                <span class="category-name"></span>
+                <span class="status-badge active">Sitede Aktif</span>
+            </div>
+            <div class="category-actions">
+                <button class="action-btn edit" title="Düzenle">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="action-btn delete" title="Sil" data-action="deleteCategory">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="action-btn restore hidden" title="Geri Yükle" data-action="restoreCategory">
+                    <i class="fas fa-undo"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Restore Modal Template -->
+    <div id="restoreModal" class="admin-modal-overlay">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <div class="modal-icon modal-icon-restore">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <div class="modal-title">Geri Yükle</div>
+            </div>
+            <div class="modal-body">
+                <strong id="restoreItemName"></strong> isimli kategori geri yüklenecek ve sitede tekrar yayına
+                alınacaktır.<br><br>
+                Bu işlem geri alınamaz (tekrar silmeniz gerekir).
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelRestore">İptal</button>
+                <button class="btn btn-warning" id="confirmRestore">Onayla ve Yükle</button>
+            </div>
+        </div>
+    </div>
+
+
+
+@section Scripts {
+    <script src="/Mytheme/admin/js/modules/categories.js" defer></script>
+}

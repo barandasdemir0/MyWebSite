@@ -40,6 +40,12 @@ namespace BusinessLayer.Concrete
             }
         }
 
+        public async Task<List<GuestBookListDto>> GetAllAdminAsync()
+        {
+            var entity = await _guestBookDal.GetAllAdminAsync(tracking: false);
+            return _mapper.Map<List<GuestBookListDto>>(entity);
+        }
+
         public async Task<List<GuestBookListDto>> GetAllAsync()
         {
             var entity = await _guestBookDal.GetAllAsync(tracking: false);

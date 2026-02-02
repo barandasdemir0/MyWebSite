@@ -40,6 +40,12 @@ namespace BusinessLayer.Concrete
 
         }
 
+        public async Task<List<TopicDto>> GetAllAdminAsync()
+        {
+            var entity = await _topicDal.GetAllAdminAsync(tracking: false);
+            return _mapper.Map<List<TopicDto>>(entity);
+        }
+
         public async Task<List<TopicDto>> GetAllAsync()
         {
             var entity = await _topicDal.GetAllAsync(tracking: false);

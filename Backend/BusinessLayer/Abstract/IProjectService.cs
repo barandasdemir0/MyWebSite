@@ -1,4 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
+using DtoLayer.GuestBookDto;
 using DtoLayer.ProjectDto;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace BusinessLayer.Abstract
         Task<ProjectDto?> GetBySlugAsync(string slug);
 
         Task<ProjectListDto?> RestoreAsync(Guid guid);
+        Task<List<ProjectListDto>> GetAllAdminAsync();
     }
 }

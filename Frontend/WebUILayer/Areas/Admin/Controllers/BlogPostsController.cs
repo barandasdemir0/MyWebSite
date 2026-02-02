@@ -1,6 +1,7 @@
 ﻿using DtoLayer.BlogpostDto;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Extension;
 
@@ -11,18 +12,24 @@ namespace WebUILayer.Areas.Admin.Controllers;
 public class BlogPostsController : Controller
 {
     private readonly IBlogPostApiService _blogPostApiService;
+    private readonly ITopicApiService _topicApiService;
 
-    public BlogPostsController(IBlogPostApiService blogPostApiService)
+    public BlogPostsController(IBlogPostApiService blogPostApiService, ITopicApiService topicApiService)
     {
         _blogPostApiService = blogPostApiService;
+        _topicApiService = topicApiService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var query = await _blogPostApiService.GetAllAdminAsync();
+        var model = new BlogPostIndexViewModel
+        {
+            blogPostDtos = await _blogPostApiService.GetAllAdminAsync(),
+            topicDtos = await _topicApiService.GetAllAsync()
+        };
 
-        return View(query);
+        return View(model);
     }
 
     [HttpGet]
