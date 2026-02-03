@@ -9,6 +9,6 @@ namespace DataAccessLayer.Abstract
     {
         Task<BlogPost?> RestoreDeletedByIdAsync(Guid guid);
 
-        Task<(List<BlogPost> Items,int TotalCount)> GetAdminListPagesAsync(int page, int size);
+        Task<(List<BlogPost> Items,int TotalCount)> GetAdminListPagesAsync(int page, int size,Guid? topicId);
     }
 }

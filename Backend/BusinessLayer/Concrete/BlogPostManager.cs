@@ -65,12 +65,12 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<List<BlogPostListDto>>(entity);
         }
 
-        public async Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(int page, int size)
+        public async Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query)
         {
             // DAL'daki özel metodunu çağırıyorsun.
             // Include ve Tracking işlemleri ZATEN O METODUN İÇİNDE YAPILDI.
-            var (items, totalCount) = await _repository.GetAdminListPagesAsync(page, size);
-           return _mapper.Map<List<BlogPostListDto>>(items).ToPagedResult(page,size,totalCount);
+            var (items, totalCount) = await _repository.GetAdminListPagesAsync(query.PageNumber, query.PageSize ,query.TopicId);
+           return _mapper.Map<List<BlogPostListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
           
         }
 

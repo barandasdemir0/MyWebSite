@@ -18,7 +18,8 @@ namespace BusinessLayer.Abstract
 
         Task<BlogPostListDto?> RestoreAsync(Guid guid);
 
-        Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(int page ,int size);
+        Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query);
+
 
 
     }

@@ -14,6 +14,10 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
         public async Task<PagedResult<BlogPostDto>> GetAllAdminAsync(PaginationQuery query)
         {
             var url = $"{_endpoint}/admin-all?PageNumber={query.PageNumber}&PageSize={query.PageSize}";
+            if (query.TopicId.HasValue)
+            {
+                url += $"&TopicId={query.TopicId}";
+            }
 
             var result = await _httpClient.GetFromJsonAsync<PagedResult<BlogPostDto>>(url);
             if (result == null)

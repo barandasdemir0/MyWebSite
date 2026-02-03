@@ -17,24 +17,35 @@
 <div class="card">
     <div class="card-header">
         <h3>Tüm Yazılar</h3>
-        <div class="filter-container">
-            <select class="form-control filter-select">
-                <option>Tüm Kategoriler</option>
-                @if (Model.topicDtos != null)
-                {
-                    @foreach (var item in Model.topicDtos)
+
+
+        <form method="get" asp-action="Index">
+            <div class="filter-container">
+                <select name="TopicId" class="form-control filter-select">
+                    <option>Tüm Kategoriler</option>
+                    @if (Model.topicDtos != null)
                     {
-                        <option value="@item.Id">@item.Name</option>
+                        @foreach (var item in Model.topicDtos)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
                     }
-                }
-               
-            </select>
-            <a href="blog-editor.html" class="btn btn-primary btn-gap">
-                <i class="fas fa-plus"></i>
-                Yeni Yazı
-            </a>
-            <input type="text" class="form-control filter-search" placeholder="Ara...">
-        </div>
+
+                </select>
+
+                <button type="submit" class="btn btn-secondary btn-sm" title="Filtrele">
+                    <i class="fas fa-filter"></i>
+                </button>
+                <a href="blog-editor.html" class="btn btn-primary btn-gap">
+                    <i class="fas fa-plus"></i>
+                    Yeni Yazı
+                </a>
+                <input type="text" class="form-control filter-search" placeholder="Ara...">
+            </div>
+
+        </form>
+
+
     </div>
 
     <div class="table-responsive">
@@ -91,7 +102,7 @@
                     {
                         <tr>
                             <td><strong>@item.Title</strong></td>
-                            <td>@string.Join(",",item.Topics)</td>
+                            <td>@string.Join(",", item.Topics)</td>
                             <td>5 dk</td>
                             <td><span class="status-badge draft">Sitede Aktif Değil</span></td>
                             <td><span class="status-badge draft">Taslak</span></td>
@@ -122,18 +133,18 @@
                             </td>
                         </tr>
                     }
-                    else if(item.IsDeleted == false)
+                    else if (item.IsDeleted == false)
                     {
                         <tr>
                             <td><strong>@item.Title</strong></td>
-                            <td>@string.Join(",",item.Topics)</td>
+                            <td>@string.Join(",", item.Topics)</td>
                             <td>5 dk</td>
                             <td><span class="status-badge active">Sitede Aktif</span></td>
                             <td><span class="status-badge active">Yayında</span></td>
                             <td>@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
 
                             <td>
-                               
+
                                 <div class="action-btns">
                                     <a href="blog-editor.html?view=true" class="action-btn" title="Görüntüle">
                                         <i class="fas fa-eye"></i>
@@ -158,7 +169,7 @@
                                         </button>
                                     </form>
                                 </div>
-                             
+
                             </td>
                         </tr>
 
@@ -181,8 +192,8 @@
     @await Component.InvokeAsync("_LayoutPaginationPartialComponent", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
 
 
-           
-  
+
+
 </div>
 
 <!-- Add/Edit Blog Post Form -->

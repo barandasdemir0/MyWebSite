@@ -28,7 +28,7 @@ namespace WebApiLayer.Controllers
         [HttpGet("admin-all")] // hepsini getirme 
         public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query)
         {
-            var result = await _blogPostService.GetAllAdminAsync(query.PageNumber,query.PageSize);
+            var result = await _blogPostService.GetAllAdminAsync(query);
             return Ok(result);
         }
 
