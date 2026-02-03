@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.GithubRepoDto;
-using DtoLayer.GuestBookDto;
+using DtoLayer.GithubRepoDtos;
+using DtoLayer.GuestBookDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

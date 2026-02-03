@@ -1,4 +1,4 @@
-﻿using DtoLayer.TopicDto;
+﻿using DtoLayer.TopicDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

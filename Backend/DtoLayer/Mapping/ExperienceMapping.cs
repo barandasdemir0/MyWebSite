@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.EducationDto;
-using DtoLayer.ExperienceDto;
+using DtoLayer.EducationDtos;
+using DtoLayer.ExperienceDtos;
 using Mapster;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ public sealed class ExperienceMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<Experience, ExperienceDto.ExperienceDto>();
+        config.NewConfig<Experience, ExperienceDtos.ExperienceDto>();
         config.NewConfig<CreateExperienceDto, Experience>().Ignore(x => x.Id);
         config.NewConfig<UpdateExperienceDto, Experience>().Ignore(x => x.Id);
     }

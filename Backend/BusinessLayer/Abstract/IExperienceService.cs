@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.CertificateDto;
-using DtoLayer.ExperienceDto;
+using DtoLayer.CertificateDtos;
+using DtoLayer.ExperienceDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

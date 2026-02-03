@@ -1,6 +1,6 @@
 ﻿
 using BusinessLayer.Abstract;
-using DtoLayer.CertificateDto;
+using DtoLayer.CertificateDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

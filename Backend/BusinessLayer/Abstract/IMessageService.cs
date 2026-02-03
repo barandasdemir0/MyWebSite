@@ -1,5 +1,5 @@
-﻿using DtoLayer.GuestBookDto;
-using DtoLayer.MessageDto;
+﻿using DtoLayer.GuestBookDtos;
+using DtoLayer.MessageDtos;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;

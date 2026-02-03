@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using DtoLayer.BlogpostDto;
+using DtoLayer.BlogpostDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

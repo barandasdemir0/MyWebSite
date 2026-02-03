@@ -2,8 +2,8 @@
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
-using DtoLayer.ProjectDto;
-using DtoLayer.SkillDto;
+using DtoLayer.ProjectDtos;
+using DtoLayer.SkillDtos;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;

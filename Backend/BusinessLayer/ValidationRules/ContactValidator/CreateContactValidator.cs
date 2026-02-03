@@ -1,5 +1,5 @@
-﻿using DtoLayer.CertificateDto;
-using DtoLayer.ContactDto;
+﻿using DtoLayer.CertificateDtos;
+using DtoLayer.ContactDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

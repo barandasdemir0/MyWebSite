@@ -1,6 +1,6 @@
 ﻿
 using BusinessLayer.Abstract;
-using DtoLayer.EducationDto;
+using DtoLayer.EducationDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

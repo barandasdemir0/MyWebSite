@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
-using DtoLayer.MessageDto;
+using DtoLayer.MessageDtos;
 using EntityLayer.Concrete;
 using MapsterMapper;
 using System;

@@ -1,4 +1,4 @@
-﻿using DtoLayer.BlogpostDto;
+﻿using DtoLayer.BlogpostDtos;
 using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -48,7 +48,8 @@ public class BlogPostsController : Controller
             return View(createBlogPostDto);
         }
         try
-        {
+        { 
+
             var query = await _blogPostApiService.AddAsync(createBlogPostDto);
             return RedirectToAction(nameof(Index));
         }

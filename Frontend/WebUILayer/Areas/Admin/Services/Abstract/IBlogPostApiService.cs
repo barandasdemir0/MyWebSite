@@ -1,4 +1,4 @@
-﻿using DtoLayer.BlogpostDto;
+﻿using DtoLayer.BlogpostDtos;
 using DtoLayer.Shared;
 
 namespace WebUILayer.Areas.Admin.Services.Abstract

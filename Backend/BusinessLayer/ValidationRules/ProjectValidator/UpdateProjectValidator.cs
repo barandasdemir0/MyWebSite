@@ -1,5 +1,5 @@
 ﻿using DataAccessLayer.Abstract;
-using DtoLayer.ProjectDto;
+using DtoLayer.ProjectDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

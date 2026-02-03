@@ -1,5 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.GithubRepoDto;
+using DtoLayer.GithubRepoDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

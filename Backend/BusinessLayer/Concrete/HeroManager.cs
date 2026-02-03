@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using DtoLayer.HeroDto;
+using DtoLayer.HeroDtos;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;

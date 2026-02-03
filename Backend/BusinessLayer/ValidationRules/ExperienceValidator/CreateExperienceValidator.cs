@@ -1,4 +1,4 @@
-﻿using DtoLayer.ExperienceDto;
+﻿using DtoLayer.ExperienceDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

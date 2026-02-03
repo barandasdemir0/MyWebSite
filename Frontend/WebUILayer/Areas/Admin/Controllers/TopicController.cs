@@ -1,4 +1,4 @@
-﻿using DtoLayer.TopicDto;
+﻿using DtoLayer.TopicDtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Services.Abstract;

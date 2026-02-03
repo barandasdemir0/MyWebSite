@@ -1,5 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.HeroDto;
+using DtoLayer.HeroDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

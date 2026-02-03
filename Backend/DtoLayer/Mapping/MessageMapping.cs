@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.HeroDto;
-using DtoLayer.MessageDto;
+using DtoLayer.HeroDtos;
+using DtoLayer.MessageDtos;
 using EntityLayer.Concrete;
 using Mapster;
 using System;
@@ -13,8 +13,8 @@ namespace DtoLayer.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Message, MessageDto.MessageDto>();
-            config.NewConfig<Message, MessageDto.MessageListDto>();
+            config.NewConfig<Message, MessageDtos.MessageDto>();
+            config.NewConfig<Message, MessageDtos.MessageListDto>();
             config.NewConfig<CreateMessageDto, Message>().Ignore(x => x.Id);
             config.NewConfig<UpdateMessageDto, Message>().Ignore(x => x.Id);
         }

@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.GithubRepoDto;
-using DtoLayer.HeroDto;
+using DtoLayer.GithubRepoDtos;
+using DtoLayer.HeroDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

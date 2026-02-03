@@ -1,4 +1,4 @@
-﻿using DtoLayer.SocialMediaDto;
+﻿using DtoLayer.SocialMediaDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

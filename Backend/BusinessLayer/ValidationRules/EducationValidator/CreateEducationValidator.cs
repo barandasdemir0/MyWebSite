@@ -1,5 +1,5 @@
-﻿using DtoLayer.ContactDto;
-using DtoLayer.EducationDto;
+﻿using DtoLayer.ContactDtos;
+using DtoLayer.EducationDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

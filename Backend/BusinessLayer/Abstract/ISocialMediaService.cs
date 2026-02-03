@@ -1,4 +1,4 @@
-﻿using DtoLayer.SocialMediaDto;
+﻿using DtoLayer.SocialMediaDtos;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;

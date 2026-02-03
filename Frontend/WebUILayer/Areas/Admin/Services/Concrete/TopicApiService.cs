@@ -1,4 +1,4 @@
-﻿using DtoLayer.TopicDto;
+﻿using DtoLayer.TopicDtos;
 using Mapster;
 using WebUILayer.Areas.Admin.Services.Abstract;
 

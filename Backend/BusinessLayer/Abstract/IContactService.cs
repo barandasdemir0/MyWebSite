@@ -1,5 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.ContactDto;
+using DtoLayer.ContactDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

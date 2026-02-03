@@ -1,4 +1,4 @@
-﻿using DtoLayer.AboutDto;
+﻿using DtoLayer.AboutDtos;
 using Humanizer;
 using Mapster;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;

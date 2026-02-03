@@ -1,4 +1,4 @@
-﻿using DtoLayer.GithubRepoDto;
+﻿using DtoLayer.GithubRepoDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

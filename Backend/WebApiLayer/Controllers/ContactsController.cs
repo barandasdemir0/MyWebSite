@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.ContactDto;
+using DtoLayer.ContactDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

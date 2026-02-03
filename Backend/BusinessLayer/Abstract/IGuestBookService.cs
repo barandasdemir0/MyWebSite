@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.CertificateDto;
-using DtoLayer.GuestBookDto;
+using DtoLayer.CertificateDtos;
+using DtoLayer.GuestBookDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

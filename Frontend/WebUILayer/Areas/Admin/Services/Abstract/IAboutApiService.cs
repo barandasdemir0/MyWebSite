@@ -1,4 +1,4 @@
-﻿using DtoLayer.AboutDto;
+﻿using DtoLayer.AboutDtos;
 
 
 namespace WebUILayer.Areas.Admin.Services.Abstract

@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
-using DtoLayer.SocialMediaDto;
+using DtoLayer.SocialMediaDtos;
 using EntityLayer.Concrete;
 using MapsterMapper;
 using System;

@@ -2,8 +2,8 @@
 using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using DtoLayer.AboutDto;
-using DtoLayer.BlogpostDto;
+using DtoLayer.AboutDtos;
+using DtoLayer.BlogpostDtos;
 using DtoLayer.Shared;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;

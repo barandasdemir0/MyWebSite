@@ -2,8 +2,8 @@
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
-using DtoLayer.GuestBookDto;
-using DtoLayer.TopicDto;
+using DtoLayer.GuestBookDtos;
+using DtoLayer.TopicDtos;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;

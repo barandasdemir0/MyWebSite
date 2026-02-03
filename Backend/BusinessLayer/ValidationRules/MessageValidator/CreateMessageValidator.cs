@@ -1,4 +1,4 @@
-﻿using DtoLayer.MessageDto;
+﻿using DtoLayer.MessageDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
-﻿using DtoLayer.BlogpostDto;
-using DtoLayer.TopicDto;
+﻿using DtoLayer.BlogpostDtos;
+using DtoLayer.TopicDtos;
 
 namespace WebUILayer.Areas.Admin.Models
 {

@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.HeroDto;
-using DtoLayer.SkillDto;
+using DtoLayer.HeroDtos;
+using DtoLayer.SkillDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

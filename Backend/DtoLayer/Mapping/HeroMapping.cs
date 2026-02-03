@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.GuestBookDto;
-using DtoLayer.HeroDto;
+using DtoLayer.GuestBookDtos;
+using DtoLayer.HeroDtos;
 using Mapster;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace DtoLayer.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Hero, HeroDto.HeroDto>();
+            config.NewConfig<Hero, HeroDtos.HeroDto>();
             config.NewConfig<CreateHeroDto, Hero>().Ignore(x => x.Id);
             config.NewConfig<UpdateHeroDto, Hero>().Ignore(x => x.Id);
         }

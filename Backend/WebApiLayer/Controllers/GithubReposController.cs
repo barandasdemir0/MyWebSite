@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.GithubRepoDto;
+using DtoLayer.GithubRepoDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

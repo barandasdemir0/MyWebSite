@@ -1,4 +1,4 @@
-﻿using DtoLayer.GuestBookDto;
+﻿using DtoLayer.GuestBookDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

@@ -1,0 +1,310 @@
+﻿@model CreateBlogPostDto
+@{
+    ViewData["Title"] = "Create";
+    ViewData["BodyClass"] = "blog-editor-page"; // <-- BUNU EKLE
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles {
+
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/editor.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog-editor.css">
+   
+}
+
+
+<!-- Editor Layout -->
+<div class="editor-layout">
+    <!-- Main Editor -->
+    <div>
+        <!-- Title Input -->
+        <div class="card editor-title-card">
+            <input type="text" asp-for="Title"  class="form-control editor-title-input" id="postTitle"
+                   placeholder="Yazı başlığını girin...">
+        </div>
+
+
+
+        <!-- Rich Text Editor -->
+        <div class="blog-editor">
+            <!-- Tabs -->
+            <div class="editor-tabs">
+                <button class="editor-tab active" data-action="switchTab" data-tab="edit">
+                    <i class="fas fa-edit"></i> Düzenle
+                </button>
+                <button class="editor-tab" data-action="switchTab" data-tab="preview">
+                    <i class="fas fa-eye"></i> Önizleme
+                </button>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="editor-toolbar" id="editorToolbar">
+                <!-- Text Formatting -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-action="formatText" data-command="bold"
+                            title="Kalın (Ctrl+B)">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="italic"
+                            title="İtalik (Ctrl+I)">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="underline"
+                            title="Altı Çizili (Ctrl+U)">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="strikeThrough"
+                            title="Üstü Çizili">
+                        <i class="fas fa-strikethrough"></i>
+                    </button>
+                </div>
+
+                <!-- Font Size -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-action="decreaseFontSize" title="Yazı Küçült">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <select class="form-control editor-font-size-select" id="fontSizeSelect">
+                        <option value="1">8</option>
+                        <option value="2">10</option>
+                        <option value="3" selected>12</option>
+                        <option value="4">14</option>
+                        <option value="5">18</option>
+                        <option value="6">24</option>
+                        <option value="7">36</option>
+                    </select>
+                    <button class="toolbar-btn" data-action="increaseFontSize" title="Yazı Büyüt">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <!-- Headings -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h1"
+                            title="Başlık 1">
+                        H1
+                    </button>
+                    <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h2"
+                            title="Başlık 2">
+                        H2
+                    </button>
+                    <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h3"
+                            title="Başlık 3">
+                        H3
+                    </button>
+                </div>
+
+                <!-- Colors -->
+                <div class="toolbar-group">
+                    <div class="color-picker">
+                        <button class="toolbar-btn color-picker-btn" title="Yazı Rengi">
+                            <i class="fas fa-font"></i>
+                            <span id="textColorIndicator" class="color-indicator"></span>
+                        </button>
+                        <input type="color" id="textColorPicker" value="#ef4444" class="color-input">
+                    </div>
+                    <div class="color-picker">
+                        <button class="toolbar-btn color-picker-btn" title="Arka Plan Rengi">
+                            <i class="fas fa-highlighter"></i>
+                        </button>
+                        <input type="color" id="bgColorPicker" value="#fef08a" class="color-input">
+                    </div>
+                    <button class="toolbar-btn" data-action="formatText" data-command="removeFormat"
+                            title="Biçimi Temizle (Renkleri Sıfırla)">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                </div>
+
+                <!-- Lists & Quote -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-action="formatText" data-command="insertUnorderedList"
+                            title="Madde İşaretli Liste">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="insertOrderedList"
+                            title="Numaralı Liste">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="insertQuote" title="Alıntı">
+                        <i class="fas fa-quote-left"></i>
+                    </button>
+                </div>
+
+                <!-- Media & Links -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-action="insertLink" title="Link Ekle">
+                        <i class="fas fa-link"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="insertImage" title="Resim Ekle">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="insertVideo" title="Video Ekle">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="insertCode" title="Kod Bloğu">
+                        <i class="fas fa-code"></i>
+                    </button>
+                </div>
+
+                <!-- Alignment -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-action="formatText" data-command="justifyLeft"
+                            title="Sola Hizala">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="justifyCenter"
+                            title="Ortala">
+                        <i class="fas fa-align-center"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="justifyRight"
+                            title="Sağa Hizala">
+                        <i class="fas fa-align-right"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="justifyFull"
+                            title="İki Yana Yasla">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                </div>
+
+                <!-- Extras -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-action="insertTable" title="Tablo Ekle">
+                        <i class="fas fa-table"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="insertHR" title="Yatay Çizgi">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="insertEmoji" title="Emoji">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                </div>
+
+                <!-- Undo/Redo -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-action="formatText" data-command="undo"
+                            title="Geri Al (Ctrl+Z)">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button class="toolbar-btn" data-action="formatText" data-command="redo"
+                            title="İleri Al (Ctrl+Y)">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="editor-content" id="editorContent" contenteditable="true"
+                 data-placeholder="Yazınızı buraya yazın...">
+            </div>
+
+            <!-- Preview Area (Hidden by default) -->
+            <div class="editor-content editor-preview" id="previewContent">
+            </div>
+
+            <!-- Footer -->
+            <div class="editor-footer">
+                <div class="editor-stats">
+                    <span><i class="fas fa-font"></i> <span id="wordCount">0</span> kelime</span>
+                    <span><i class="fas fa-clock"></i> <span id="readTime">0</span> dk okuma</span>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-outline" data-action="clearEditor">
+                        <i class="fas fa-eraser"></i> Temizle
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="editor-sidebar">
+        <!-- Featured Image -->
+        <div class="sidebar-section">
+            <h4><i class="fas fa-image"></i> Öne Çıkan Görsel</h4>
+            <div class="featured-image-upload" data-action="uploadFeaturedImage">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Görsel yükle</span>
+            </div>
+        </div>
+
+        <!-- Category -->
+        <div class="sidebar-section">
+            <h4><i class="fas fa-folder"></i> Kategori</h4>
+            <select class="form-control" id="postCategory">
+                <option value="">Kategori seçin</option>
+                <option value="yazilim">Yazılım</option>
+                <option value="kariyer">Kariyer</option>
+                <option value="saas">SaaS</option>
+                <option value="tasarim">Tasarım</option>
+            </select>
+        </div>
+
+        <!-- Tags -->
+        <div class="sidebar-section">
+            <h4><i class="fas fa-tags"></i> Etiketler</h4>
+            <div class="tags-input">
+                <input type="text" id="tagsInput" placeholder="Etiket ekle (Enter)">
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="sidebar-section">
+            <h4><i class="fas fa-toggle-on"></i> Yayın Durumu</h4>
+            <select class="form-control" id="postStatus">
+                <option value="draft">Taslak</option>
+                <option value="published">Yayında</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Form Actions (New Placement) -->
+<div class="form-actions">
+    <button class="btn btn-primary" data-action="savePost">
+        <i class="fas fa-save"></i> Kaydet
+    </button>
+    <a href="blog.html" class="btn btn-outline">İptal</a>
+    <button class="btn btn-outline" data-action="previewPost">
+        <i class="fas fa-eye"></i> Önizle
+    </button>
+</div>
+
+<div class="admin-modal-overlay" id="imageModal">
+    <div class="admin-modal image-modal">
+        <div class="modal-header">
+            <h3>Resim Ekle</h3>
+        </div>
+        <div class="modal-body">
+            <div class="image-upload-area" id="imageUploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Resim yüklemek için tıklayın</p>
+                <span class="upload-hint">PNG, JPG, GIF - Max 5MB</span>
+            </div>
+            <input type="file" id="imageFileInput" accept="image/*" class="hidden-input">
+            <div class="modal-separator">veya</div>
+            <input type="url" class="form-control" id="imageUrlInput" placeholder="Resim URL'si yapıştır...">
+
+            <div class="form-group mt-15">
+                <label>Görsel Boyutu</label>
+                <select class="form-control" id="imageSizeInput">
+                    <option value="100%">Tam Genişlik (%100)</option>
+                    <option value="75%">Büyük (%75)</option>
+                    <option value="50%" selected>Orta (%50)</option>
+                    <option value="25%">Küçük (%25)</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer modal-footer-actions">
+            <button class="btn btn-secondary" data-action="closeImageModal">İptal</button>
+            <button class="btn btn-success" data-action="confirmImageInsert">Ekle</button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="/Mytheme/admin/js/theme-init.js" defer></script>
+    <script src="/Mytheme/admin/js/modules/blog-editor.js" defer></script>
+
+
+}

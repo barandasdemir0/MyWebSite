@@ -1,4 +1,4 @@
-﻿using DtoLayer.ContactDto;
+﻿using DtoLayer.ContactDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

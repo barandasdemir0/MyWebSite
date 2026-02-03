@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.AboutDto;
-using DtoLayer.BlogpostDto;
+using DtoLayer.AboutDtos;
+using DtoLayer.BlogpostDtos;
 using DtoLayer.Shared;
 using System;
 using System.Collections.Generic;

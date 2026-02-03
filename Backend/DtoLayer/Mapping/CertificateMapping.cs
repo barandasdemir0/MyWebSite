@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.BlogpostDto;
-using DtoLayer.CertificateDto;
+using DtoLayer.BlogpostDtos;
+using DtoLayer.CertificateDtos;
 using Mapster;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace DtoLayer.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Certificate, CertificateDto.CertificateDto>();
+            config.NewConfig<Certificate, CertificateDtos.CertificateDto>();
             config.NewConfig<CreateCertificateDto, Certificate>().Ignore(x => x.Id);
             config.NewConfig<UpdateCertificateDto, Certificate>().Ignore(x => x.Id);
         }

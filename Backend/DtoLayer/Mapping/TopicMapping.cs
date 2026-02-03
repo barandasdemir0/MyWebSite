@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.SocialMediaDto;
-using DtoLayer.TopicDto;
+using DtoLayer.SocialMediaDtos;
+using DtoLayer.TopicDtos;
 using EntityLayer.Concrete;
 using Mapster;
 using System;
@@ -13,7 +13,7 @@ namespace DtoLayer.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Topic, TopicDto.TopicDto>();
+            config.NewConfig<Topic, TopicDtos.TopicDto>();
             config.NewConfig<CreateTopicDto, Topic>().Ignore(x => x.Id);
             config.NewConfig<UpdateTopicDto, Topic>().Ignore(x => x.Id);
         }

@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.HeroDto;
-using DtoLayer.SkillDto;
-using DtoLayer.SocialMediaDto;
+using DtoLayer.HeroDtos;
+using DtoLayer.SkillDtos;
+using DtoLayer.SocialMediaDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

@@ -1,4 +1,4 @@
-﻿using DtoLayer.HeroDto;
+﻿using DtoLayer.HeroDtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

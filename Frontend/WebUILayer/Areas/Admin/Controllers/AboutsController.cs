@@ -1,4 +1,4 @@
-﻿using DtoLayer.AboutDto;
+﻿using DtoLayer.AboutDtos;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Extension;

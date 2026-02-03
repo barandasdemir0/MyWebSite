@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.ExperienceDto;
+using DtoLayer.ExperienceDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;

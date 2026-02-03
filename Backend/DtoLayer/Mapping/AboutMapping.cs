@@ -1,5 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.AboutDto;
+using DtoLayer.AboutDtos;
 using Mapster;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ public sealed class AboutMapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<About, AboutDto.AboutDto>();
+        config.NewConfig<About, AboutDtos.AboutDto>();
         config.NewConfig<CreateAboutDto, About>().Ignore(dest=>dest.Id);
         config.NewConfig<UpdateAboutDto, About>().Ignore(dest=>dest.Id);
     }

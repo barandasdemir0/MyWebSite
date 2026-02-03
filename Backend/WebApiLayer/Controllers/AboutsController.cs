@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.AboutDto;
+using DtoLayer.AboutDtos;
 using Mapster;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
