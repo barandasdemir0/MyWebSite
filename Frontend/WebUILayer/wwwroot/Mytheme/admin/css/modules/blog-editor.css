@@ -1,4 +1,4 @@
-.blog-editor-page .editor-layout {
+﻿.blog-editor-page .editor-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
     gap: 25px;
@@ -149,4 +149,22 @@
 
 .mt-15 {
     margin-top: 15px;
+}
+.blog-editor-page .blog-editor {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 220px);
+}
+
+.blog-editor-page .editor-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--admin-bg);
+}
+
+.blog-editor-page .editor-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
 }

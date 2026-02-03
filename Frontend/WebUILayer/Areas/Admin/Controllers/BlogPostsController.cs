@@ -27,7 +27,7 @@ public class BlogPostsController : Controller
         var pagedResult = await _blogPostApiService.GetAllAdminAsync(query);
         var model = new BlogPostIndexViewModel
         {
-            
+
             blogPostDtos = pagedResult.Items,
             topicDtos = await _topicApiService.GetAllAsync(),
             CurrentPage = pagedResult.PageNumber, // BasePaginationViewModel'den geldi
@@ -38,56 +38,75 @@ public class BlogPostsController : Controller
     }
 
     [HttpGet]
-    public IActionResult Create() => View();
+    public async Task<IActionResult> Create()
+    {
+        var model = new CreateBlogPostDto();
+         model.topicList = await _topicApiService.GetAllAsync();
+        return View(model);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateBlogPostDto createBlogPostDto)
     {
         if (!ModelState.IsValid)
         {
+            createBlogPostDto.topicList = await _topicApiService.GetAllAsync();
             return View(createBlogPostDto);
+            
         }
         try
-        { 
+        {
 
             var query = await _blogPostApiService.AddAsync(createBlogPostDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
+
+
             ModelState.AddApiError(ex);
+            createBlogPostDto.topicList = await _topicApiService.GetAllAsync();
             return View(createBlogPostDto);
         }
-      
+
     }
 
 
     [HttpGet]
     public async Task<IActionResult> Update(Guid guid)
     {
+
+
         var query = await _blogPostApiService.GetByIdAsync(guid);
+        ViewBag.TopicList = await _topicApiService.GetAllAsync();
+
         return View(query);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(Guid guid, UpdateBlogPostDto updateBlogPostDto)
+    public async Task<IActionResult> Update(Guid guid, BlogPostDto dto)
     {
         if (!ModelState.IsValid)
         {
-            return View(updateBlogPostDto);
+            ViewBag.TopicList = await _topicApiService.GetAllAsync();
+
+            return View(dto);
+            
         }
         try
         {
-            var query = await _blogPostApiService.UpdateAsync(guid, updateBlogPostDto);
+            var query = await _blogPostApiService.UpdateAsync(guid, dto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
             ModelState.AddApiError(ex);
-            return View(updateBlogPostDto);
+            ViewBag.TopicList = await _topicApiService.GetAllAsync();
+
+            return View(dto);
         }
 
-        
+
     }
 
     [HttpPost]

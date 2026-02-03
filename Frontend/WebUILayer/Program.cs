@@ -3,10 +3,11 @@ using WebUILayer.Extension;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews();
 
 builder.Services.AddApiService(builder.Configuration);
 builder.Services.AddAutoValidate();
+//builder.Services.FluentController();
 
 var app = builder.Build();
 

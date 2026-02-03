@@ -22,11 +22,11 @@ namespace BusinessLayer.ValidationRules.BlogPostValidator
                .MaximumLength(200)
                .WithMessage("Bu Alan Maksimum 200 Karakter Olmalıdır");
 
-            RuleFor(x => x.CoverImage)
-               .MaximumLength(200)
-               .WithMessage("Bu Alan Maksimum 200 Karakter Olmalıdır");
+            RuleFor(x => x.Technologies)
+               .MaximumLength(50)
+               .WithMessage("Bu Alan Maksimum 50 Karakter Olmalıdır");
 
-            RuleFor(x => x.Title).NotEmpty()
+            RuleFor(x => x.Content).NotEmpty()
                .WithMessage("Bu Alanı Girmek Zorundasınız");
 
             RuleFor(x => x.TopicIds).NotEmpty()

@@ -8,6 +8,7 @@ namespace CV.EntityLayer.Entities
         public string Title { get; set; } = string.Empty;
         public string Slug { get;  set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
+        public string Technologies { get; set; } = string.Empty;
         public string? CoverImage { get; set; }
         public int ReadTime { get; set; }
         public bool IsPublished { get; set; } = false;

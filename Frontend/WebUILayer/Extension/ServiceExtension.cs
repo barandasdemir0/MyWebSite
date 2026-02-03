@@ -32,8 +32,19 @@ public static class ServiceExtension
     {
         services.AddControllersWithViews(options =>
         {
+            options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
             options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
         });
       
     }
+
+
+    //public static void FluentController(this IServiceCollection services)
+    //{
+    //    services.AddControllers(options =>
+    //    {
+    //        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    //    });
+    //}
+
 }

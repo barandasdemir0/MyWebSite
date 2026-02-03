@@ -14,11 +14,14 @@
         <h3 id="categoryFormTitle">Yeni Kategori Ekle</h3>
     </div>
 
-    <form id="categoryFormInner">
+    <form 
+          method="post">
+       
         <div class="form-group">
             <label>Kategori Adı *</label>
-            <input type="text" class="form-control" id="categoryName"
+            <input asp-for="Name" type="text" class="form-control" id="categoryName"
                    placeholder="Örn: Yazılım, Web Uygulama" required>
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="form-actions">

@@ -5,7 +5,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete
 {
-    public class BlogPostApiService : GenericApiService<BlogPostDto, CreateBlogPostDto, UpdateBlogPostDto>, IBlogPostApiService
+    public class BlogPostApiService : GenericApiService<BlogPostDto, CreateBlogPostDto, BlogPostDto>, IBlogPostApiService
     {
         public BlogPostApiService(HttpClient httpClient/*, string endpoint*/) : base(httpClient, "blogposts")
         {

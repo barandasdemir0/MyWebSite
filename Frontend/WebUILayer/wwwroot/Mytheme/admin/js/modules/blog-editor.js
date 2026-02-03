@@ -79,9 +79,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const wordCountEl = document.getElementById('wordCount');
         const readTimeEl = document.getElementById('readTime');
+        const readTimeInput = document.getElementById('readTimeInput');
 
         if (wordCountEl) wordCountEl.textContent = wordCount;
         if (readTimeEl) readTimeEl.textContent = readTime;
+        if (readTimeInput) readTimeInput.value = readTime;
     }
 
     // Color picker handlers
@@ -133,6 +135,34 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial stats update
     updateStats();
 
+    // === UPDATE SAYFASI İÇİN - BURAYA EKLE! ===
+    // 1. Content
+    const hiddenContent = document.getElementById('hiddenContentInput');
+    if (hiddenContent && hiddenContent.value.trim()) {
+        editor.innerHTML = hiddenContent.value;
+        updateStats();
+    }
+    // 2. Technologies
+    const hiddenTags = document.getElementById('hiddenTagsInput');
+    const tagsContainer = document.querySelector('.tags-input');
+    const tagsInputField = document.getElementById('tagsInput');
+    if (hiddenTags && hiddenTags.value && tagsContainer && tagsInputField) {
+        hiddenTags.value.split(',').filter(t => t.trim()).forEach(tag => {
+            const tagEl = document.createElement('span');
+            tagEl.className = 'tag-item';
+            tagEl.dataset.value = tag.trim();
+            tagEl.innerHTML = `<span>${tag.trim()}</span><button type="button">×</button>`;
+            tagEl.querySelector('button').addEventListener('click', () => tagEl.remove());
+            tagsContainer.insertBefore(tagEl, tagsInputField);
+        });
+    }
+    // 3. CoverImage
+    const hiddenImage = document.getElementById('featuredImageInput');
+    const imageContainer = document.querySelector('.featured-image-upload');
+    if (hiddenImage && hiddenImage.value && imageContainer) {
+        imageContainer.innerHTML = `<img src="${hiddenImage.value}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">`;
+        imageContainer.style.height = '180px';
+    }
     // Clear editor
     const clearBtn = document.querySelector('[data-action="clearEditor"]');
     if (clearBtn) {
@@ -164,6 +194,30 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+    // --- YENİ EKLENECEK KISIM BURASI --- (Form Submit Olduğunda Çalışır)
+    const form = document.getElementById('createPostForm'); // ID ile seçiyoruz!
+    // Eğer sayfada form varsa dinle
+    if (form) {
+        form.addEventListener('submit', function () {
+            // 1. İçeriği (HTML) al, gizli textarea'ya bas
+            const editorContent = document.getElementById('editorContent');
+            const hiddenInput = document.getElementById('hiddenContentInput');
+
+            if (editorContent && hiddenInput) {
+                hiddenInput.value = editorContent.innerHTML;
+            }
+            // 2. Etiketleri (Tags) al, gizli inputa bas (Bunu da yapman gerekecek)
+            const tagSpans = document.querySelectorAll('.tag-item');
+            const hiddenTags = document.getElementById('hiddenTagsInput'); // Bunu HTML'e eklemen lazım
+            if (hiddenTags) {
+                // Etiketleri virgülle birleştir: "yazilim,kodlama"
+                const tagsArray = Array.from(tagSpans).map(span => span.dataset.value);
+                hiddenTags.value = tagsArray.join(',');
+            }
+        });
+    }
+    // -----------------------------------
+
 });
 
 // Add tag to the tag list on Enter

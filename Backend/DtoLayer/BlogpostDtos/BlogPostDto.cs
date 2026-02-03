@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DtoLayer.TopicDtos;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,8 +17,11 @@ public class BlogPostDto
     public DateTime? PublishedAt { get; set; }
     public int ViewCount { get; set; }
     public bool IsDeleted { get; set; } = false;
+    public string Technologies { get; set; } = string.Empty;  // ← EKLE
 
     // İlişkiler (Okuma)
     public List<string> Topics { get; set; } = new();        // Topic isimleri
     public List<string> RelatedProjects { get; set; } = new(); // Proje isimleri
+    public List<Guid> TopicIds { get; set; } = new();  // ← EKLE (ID'ler)
+    public List<TopicDto>? topicList { get; set; }  // ← EKLE
 }

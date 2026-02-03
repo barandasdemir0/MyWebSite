@@ -1,8 +1,8 @@
 // ===== GLOBAL VARIABLES & CONFIG VALIDATION =====
-const GITHUB_USERNAME = 'baransel-k'; // GitHub kullanıcı adınız
-const REPO_NAME = 'my-portfolio'; // Repo adınız
-const FILE_PATH = 'data/profile.json'; // JSON dosya yolu
-const BRANCH_NAME = 'main'; // Branch adı
+//const GITHUB_USERNAME = 'baransel-k'; // GitHub kullanıcı adınız
+//const REPO_NAME = 'my-portfolio'; // Repo adınız
+//const FILE_PATH = 'data/profile.json'; // JSON dosya yolu
+//const BRANCH_NAME = 'main'; // Branch adı
 
 // ===== HELPER FUNCTIONS =====
 function getEditor() {
@@ -374,25 +374,45 @@ function uploadFeaturedImage() {
     const html = `
         <div class="image-upload-area" style="border: 2px dashed var(--admin-border); border-radius: 8px; padding: 30px; text-align: center; margin-bottom: 20px;">
             <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--admin-text-muted); margin-bottom: 10px;"></i>
-            <p style="margin: 0;">Kapak Görseli URL</p>
+            <p style="margin: 0;">Kapak görseli URL</p>
         </div>
         <div class="form-group">
             <input type="text" class="form-control" id="modalFeaturedUrl" placeholder="https://example.com/cover.jpg">
         </div>
     `;
-
     showEditorModal(window.I18N?.pages?.coverImage || 'Kapak Görseli', html, (modal) => {
         const url = modal.querySelector('#modalFeaturedUrl').value;
         if (url) {
+            // 1. Görsel önizlemesini göster
             const div = document.querySelector('.featured-image-upload');
             if (div) {
-                div.innerHTML = `<div style="position:relative;width:100%;height:100%;"><img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"><button style="position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:25px;height:25px;cursor:pointer;" onclick="this.closest('.featured-image-upload').innerHTML='<i class=\\'fas fa-cloud-upload-alt\\'></i><span>Görsel yükle</span>'; this.closest('.featured-image-upload').style.padding=''; this.closest('.featured-image-upload').style.border='';">×</button></div>`;
+                div.innerHTML = `
+                    <div style="position:relative; width:100%; height:100%;">
+                        <img src="${url}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                        <button type="button" class="remove-featured-btn" style="position:absolute; top:5px; right:5px; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:16px;">×</button>
+                    </div>
+                `;
                 div.style.border = 'none';
                 div.style.padding = '0';
                 div.style.height = '180px';
+                // Kaldır butonu event listener
+                const removeBtn = div.querySelector('.remove-featured-btn');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        div.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Görsel yükle</span>';
+                        div.style.border = '';
+                        div.style.padding = '';
+                        div.style.height = '';
+                        // Gizli input'u temizle
+                        const hiddenInput = document.getElementById('featuredImageInput');
+                        if (hiddenInput) hiddenInput.value = '';
+                    });
+                }
             }
-            const projInput = document.querySelector('input[placeholder*="Görsel URL"]');
-            if (projInput) projInput.value = url;
+            // 2. Gizli input'a URL'yi yaz (form submit için)
+            const hiddenInput = document.getElementById('featuredImageInput');
+            if (hiddenInput) hiddenInput.value = url;
             return true;
         }
         return false;
