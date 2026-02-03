@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AboutDto;
 using DtoLayer.BlogpostDto;
+using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers
@@ -25,10 +26,10 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpGet("admin-all")] // hepsini getirme 
-        public async Task<IActionResult> GetAllAdmin()
+        public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query)
         {
-            var query = await _blogPostService.GetAllAdminAsync();
-            return Ok(query);
+            var result = await _blogPostService.GetAllAdminAsync(query.PageNumber,query.PageSize);
+            return Ok(result);
         }
 
         //[HttpGet("{id}")] //idye göre getirme 

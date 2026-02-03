@@ -1,4 +1,5 @@
 ﻿using DtoLayer.BlogpostDto;
+using DtoLayer.Shared;
 
 namespace WebUILayer.Areas.Admin.Services.Abstract
 {
@@ -7,6 +8,6 @@ namespace WebUILayer.Areas.Admin.Services.Abstract
         Task<BlogPostListDto?> GetDetailById(Guid guid);
         Task<BlogPostListDto?> GetDetailBySlug(string slug);
         Task RestoreAsync(Guid guid);
-        Task<List<BlogPostDto>> GetAllAdminAsync();
+        Task<PagedResult<BlogPostDto>> GetAllAdminAsync(PaginationQuery query);
     }
 }

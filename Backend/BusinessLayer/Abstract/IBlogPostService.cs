@@ -1,6 +1,7 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.AboutDto;
 using DtoLayer.BlogpostDto;
+using DtoLayer.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +18,7 @@ namespace BusinessLayer.Abstract
 
         Task<BlogPostListDto?> RestoreAsync(Guid guid);
 
-        Task<List<BlogPostListDto>> GetAllAdminAsync();
+        Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(int page ,int size);
 
 
     }

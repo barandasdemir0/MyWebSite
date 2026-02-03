@@ -8,5 +8,7 @@ namespace DataAccessLayer.Abstract
     public interface IBlogPostDal:IGenericRepository<BlogPost>
     {
         Task<BlogPost?> RestoreDeletedByIdAsync(Guid guid);
+
+        Task<(List<BlogPost> Items,int TotalCount)> GetAdminListPagesAsync(int page, int size);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DtoLayer.BlogpostDto;
+using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Models;
@@ -21,12 +22,16 @@ public class BlogPostsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([FromQuery] PaginationQuery query)
     {
+        var pagedResult = await _blogPostApiService.GetAllAdminAsync(query);
         var model = new BlogPostIndexViewModel
         {
-            blogPostDtos = await _blogPostApiService.GetAllAdminAsync(),
-            topicDtos = await _topicApiService.GetAllAsync()
+            
+            blogPostDtos = pagedResult.Items,
+            topicDtos = await _topicApiService.GetAllAsync(),
+            CurrentPage = pagedResult.PageNumber, // BasePaginationViewModel'den geldi
+            TotalPages = pagedResult.TotalPages   // BasePaginationViewModel'den geldi
         };
 
         return View(model);

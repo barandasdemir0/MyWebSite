@@ -4,6 +4,7 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.AboutDto;
 using DtoLayer.BlogpostDto;
+using DtoLayer.Shared;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -64,14 +65,13 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<List<BlogPostListDto>>(entity);
         }
 
-        public async Task<List<BlogPostListDto>> GetAllAdminAsync()
+        public async Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(int page, int size)
         {
-            var entity = await _repository.GetAllAdminAsync(
-                tracking: false,
-                includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
-            return _mapper.Map<List<BlogPostListDto>>(entity);
-
-
+            // DAL'daki özel metodunu çağırıyorsun.
+            // Include ve Tracking işlemleri ZATEN O METODUN İÇİNDE YAPILDI.
+            var (items, totalCount) = await _repository.GetAdminListPagesAsync(page, size);
+           return _mapper.Map<List<BlogPostListDto>>(items).ToPagedResult(page,size,totalCount);
+          
         }
 
         public async Task<BlogPostListDto?> GetByIdAsync(Guid guid)

@@ -1,4 +1,4 @@
-﻿@model WebUILayer.Areas.Admin.Models.BlogPostIndexViewModel
+﻿@using WebUILayer.Areas.Admin.ViewComponents
 
 @{
     ViewData["Title"] = "Index";
@@ -178,21 +178,11 @@
     </div>
 
     <!-- Pagination -->
-    <div class="pagination-wrapper">
-        <div class="pagination">
-            <button class="pagination-btn" disabled>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="pagination-btn active">1</button>
-            <button class="pagination-btn">2</button>
-            <button class="pagination-btn">3</button>
-            <button class="pagination-btn">4</button>
-            <button class="pagination-btn">5</button>
-            <button class="pagination-btn">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    </div>
+    @await Component.InvokeAsync("_LayoutPaginationPartialComponent", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
+
+
+           
+  
 </div>
 
 <!-- Add/Edit Blog Post Form -->

@@ -1,0 +1,49 @@
+﻿@model WebUILayer.Areas.Admin.Models.PaginationViewModel
+
+<div class="pagination-wrapper">
+    <div class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <a href="@Url.Action(Model.Action, new { PageNumber = Model.CurrentPage - 1 })" class="pagination-btn"><i class="fas fa-chevron-left"></i></a>
+        }
+        else
+        {
+            <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+        }
+        @{
+            int start = Math.Max(1, Model.CurrentPage - 2);
+            int end = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+            if (Model.CurrentPage <= 3) end = Math.Min(5, Model.TotalPages);
+            if (Model.CurrentPage >= Model.TotalPages - 2) start = Math.Max(1, Model.TotalPages - 4);
+        }
+        @if (start > 1)
+        {
+            <a href="@Url.Action(Model.Action, new { PageNumber = 1 })" class="pagination-btn">1</a>
+            if (start > 2)
+            {
+
+                <span style="padding:0 10px; color:#888;">...</span>
+            }
+        }
+        @for (int i = start; i <= end; i++)
+        {
+            <a href="@Url.Action(Model.Action, new { PageNumber = i })" class="pagination-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
+        }
+        @if (end < Model.TotalPages)
+        {
+            if (end < Model.TotalPages - 1)
+            {
+                <span style="padding:0 10px; color:#888;">...</span>
+            }
+            <a href="@Url.Action(Model.Action, new { PageNumber = Model.TotalPages })" class="pagination-btn">@Model.TotalPages</a>
+        }
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <a href="@Url.Action(Model.Action, new { PageNumber = Model.CurrentPage + 1 })" class="pagination-btn"><i class="fas fa-chevron-right"></i></a>
+        }
+        else
+        {
+            <button class="pagination-btn" disabled><i class="fas fa-chevron-right"></i></button>
+        }
+    </div>
+</div>

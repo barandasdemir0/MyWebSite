@@ -1,5 +1,7 @@
 ﻿using DtoLayer.BlogpostDto;
+using DtoLayer.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete
 {
@@ -9,14 +11,16 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
         {
         }
 
-        public async Task<List<BlogPostDto>> GetAllAdminAsync()
+        public async Task<PagedResult<BlogPostDto>> GetAllAdminAsync(PaginationQuery query)
         {
-            var query = await _httpClient.GetFromJsonAsync<List<BlogPostDto>>($"{_endpoint}/admin-all");
-            if (query == null)
+            var url = $"{_endpoint}/admin-all?PageNumber={query.PageNumber}&PageSize={query.PageSize}";
+
+            var result = await _httpClient.GetFromJsonAsync<PagedResult<BlogPostDto>>(url);
+            if (result == null)
             {
-                return new List<BlogPostDto>();
+                return new PagedResult<BlogPostDto>();
             }
-            return query;
+            return result;
 
         }
 
