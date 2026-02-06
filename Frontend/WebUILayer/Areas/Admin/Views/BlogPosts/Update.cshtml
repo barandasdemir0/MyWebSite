@@ -6,10 +6,15 @@
 }
 
 @section Styles {
+
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/editor.css">
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog-editor.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 }
 <form asp-action="Update" asp-route-guid="@Model.Id" id="createPostForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
 
     <!-- Editor Layout -->
     <div class="editor-layout">
@@ -237,17 +242,21 @@
 
             </div>
 
-            <!-- Category -->
             <div class="sidebar-section">
-                <h4><i class="fas fa-folder"></i> Kategori</h4>
-                <select name="TopicIds" class="form-control" id="postCategory">
-                    <option value="" disabled >Kategori seçin</option>
-
+                <h4><i class="fas fa-folder"></i>Kategori</h4>
+                <select name="TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
                     @if (ViewBag.TopicList != null)
                     {
                         @foreach (var item in ViewBag.TopicList)
                         {
-                            <option value="@item.Id" selected="@(Model.TopicIds.Contains(item.Id))">@item.Name</option>
+                            @if (Model.TopicIds.Contains(item.Id))
+                            {
+                                <option value="@item.Id" selected>@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
                         }
                     }
                 </select>
@@ -321,7 +330,10 @@
 </form>
 
 @section Scripts {
-    <script src="/Mytheme/admin/js/theme-init.js" defer></script>
-    <script src="/Mytheme/admin/js/modules/blog-editor.js" defer></script>
+   
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/Mytheme/admin/js/modules/blog-editor.js"></script>
+ 
+
 }
 

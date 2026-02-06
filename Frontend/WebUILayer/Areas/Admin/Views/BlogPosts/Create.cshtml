@@ -7,6 +7,9 @@
 @section Styles {
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/editor.css">
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog-editor.css">  
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 }
 <form asp-action="Create" id="createPostForm" method="post" enctype="multipart/form-data">
   
@@ -238,15 +241,23 @@
 
         <!-- Category -->
         <div class="sidebar-section">
-            <h4><i class="fas fa-folder"></i> Kategori</h4>
-            <select name="TopicIds" class="form-control" id="postCategory">
-                    <option value="" disabled selected>Kategori seçin</option>
+            <h4><i class="fas fa-folder"></i>Kategori</h4>
+            <select name="TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
+                   
               
                 @if (Model.topicList != null)
                     {
                         @foreach (var item in Model.topicList)
                         {
-                        <option value="@item.Id">@item.Name</option>
+                            if (Model.TopicIds.Contains(item.Id))
+                                {
+                                <option value="@item.Id">@item.Name</option>
+                                }
+                                else
+                                {
+                                <option value="@item.Id">@item.Name</option>
+                                }
+                     
                         }
                     }
             </select>
@@ -322,4 +333,5 @@
 @section Scripts {
     <script src="/Mytheme/admin/js/theme-init.js" defer></script>
     <script src="/Mytheme/admin/js/modules/blog-editor.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 }

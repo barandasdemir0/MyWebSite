@@ -1,5 +1,7 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     const editor = document.getElementById('editorContent');
+
     if (!editor) return;
 
     // Track selected media element - use global for easy access
@@ -10,46 +12,31 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.selectedMediaElement) {
             window.selectedMediaElement.classList.remove('media-selected');
             window.selectedMediaElement = null;
-            // console.log('✗ Selection cleared');
         }
     }
 
     // Set media selection
     function selectMedia(element) {
-        // Clear previous
         clearMediaSelection();
-
-        // Set new
         window.selectedMediaElement = element;
         element.classList.add('media-selected');
-
-        // console.log('✓ Media SELECTED:', element.tagName, element);
     }
 
-    // Handle mousedown on media (more reliable than click)
+    // Handle mousedown on media
     editor.addEventListener('mousedown', function (e) {
         let target = e.target;
-        // console.log('Mousedown on:', target.tagName, target);
-
-        // Check if clicking on or near iframe/video
         let mediaElement = null;
 
-        // Direct hit on media
         if (target.tagName === 'IMG' || target.tagName === 'VIDEO' || target.tagName === 'IFRAME') {
             mediaElement = target;
-            // console.log('→ Direct media hit');
         } else {
-            // Check if clicked element CONTAINS media (for DIV/P around iframe)
             const childMedia = target.querySelector('iframe, video, img');
             if (childMedia) {
                 mediaElement = childMedia;
-                // console.log('→ Found media inside clicked element:', childMedia.tagName);
             } else {
-                // Check if we're inside a media wrapper
                 const wrapper = target.closest('.media-wrapper');
                 if (wrapper) {
                     mediaElement = wrapper.querySelector('iframe, video, img');
-                    // console.log('→ Found media in wrapper:', mediaElement ? mediaElement.tagName : 'none');
                 }
             }
         }
@@ -59,14 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
             e.stopPropagation();
             selectMedia(mediaElement);
         } else {
-            // console.log('→ No media found, clearing selection');
             clearMediaSelection();
         }
     }, true);
 
     // Expose for global access
     window.getSelectedMedia = function () {
-        // console.log('→ Getting selected media:', window.selectedMediaElement ? window.selectedMediaElement.tagName : 'NONE');
         return window.selectedMediaElement;
     };
 
@@ -75,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const rawText = editor.textContent || '';
         const text = rawText.replace(/\u00A0/g, ' ').trim();
         const wordCount = text ? text.split(/\s+/).length : 0;
-        const readTime = wordCount === 0 ? 0 : Math.ceil(wordCount / 200); // 200 kelime/dk
+        const readTime = wordCount === 0 ? 0 : Math.ceil(wordCount / 200);
 
         const wordCountEl = document.getElementById('wordCount');
         const readTimeEl = document.getElementById('readTime');
@@ -113,9 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Auto-highlight code blocks
         if (typeof hljs !== 'undefined') {
             editor.querySelectorAll('pre code').forEach((block) => {
-                // Remove old highlighting
                 block.className = '';
-                // Apply new highlighting
                 hljs.highlightElement(block);
             });
         }
@@ -135,13 +118,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial stats update
     updateStats();
 
-    // === UPDATE SAYFASI İÇİN - BURAYA EKLE! ===
+    // === UPDATE SAYFASI İÇİN ===
     // 1. Content
     const hiddenContent = document.getElementById('hiddenContentInput');
     if (hiddenContent && hiddenContent.value.trim()) {
         editor.innerHTML = hiddenContent.value;
         updateStats();
     }
+
     // 2. Technologies
     const hiddenTags = document.getElementById('hiddenTagsInput');
     const tagsContainer = document.querySelector('.tags-input');
@@ -156,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tagsContainer.insertBefore(tagEl, tagsInputField);
         });
     }
+
     // 3. CoverImage
     const hiddenImage = document.getElementById('featuredImageInput');
     const imageContainer = document.querySelector('.featured-image-upload');
@@ -163,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
         imageContainer.innerHTML = `<img src="${hiddenImage.value}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">`;
         imageContainer.style.height = '180px';
     }
+
     // Clear editor
     const clearBtn = document.querySelector('[data-action="clearEditor"]');
     if (clearBtn) {
@@ -194,11 +180,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    // --- YENİ EKLENECEK KISIM BURASI --- (Form Submit Olduğunda Çalışır)
-    const form = document.getElementById('createPostForm'); // ID ile seçiyoruz!
-    // Eğer sayfada form varsa dinle
+
+    // Form Submit Handler
+    const form = document.getElementById('createPostForm');
     if (form) {
         form.addEventListener('submit', function () {
+            // ✅ ReadTime'ı güncelle
+            updateStats();
+
             // 1. İçeriği (HTML) al, gizli textarea'ya bas
             const editorContent = document.getElementById('editorContent');
             const hiddenInput = document.getElementById('hiddenContentInput');
@@ -206,17 +195,41 @@ document.addEventListener('DOMContentLoaded', function () {
             if (editorContent && hiddenInput) {
                 hiddenInput.value = editorContent.innerHTML;
             }
-            // 2. Etiketleri (Tags) al, gizli inputa bas (Bunu da yapman gerekecek)
+
+            // 2. Etiketleri (Tags) al, gizli inputa bas
             const tagSpans = document.querySelectorAll('.tag-item');
-            const hiddenTags = document.getElementById('hiddenTagsInput'); // Bunu HTML'e eklemen lazım
-            if (hiddenTags) {
-                // Etiketleri virgülle birleştir: "yazilim,kodlama"
+            const hiddenTagsEl = document.getElementById('hiddenTagsInput');
+            if (hiddenTagsEl) {
                 const tagsArray = Array.from(tagSpans).map(span => span.dataset.value);
-                hiddenTags.value = tagsArray.join(',');
+                hiddenTagsEl.value = tagsArray.join(',');
             }
         });
     }
-    // -----------------------------------
+
+    // ✅ SELECT2 KATEGORİ - Gecikme ile timing sorununu çözer
+    setTimeout(function () {
+        if (typeof $ !== 'undefined' && $('#postCategory').length > 0) {
+            // Eğer daha önce başlatıldıysa yok et
+            if ($('#postCategory').hasClass('select2-hidden-accessible')) {
+                $('#postCategory').select2('destroy');
+            }
+
+            var categorySelect = $('#postCategory').select2({
+                placeholder: "Kategori seçin (Çoklu)",
+                allowClear: true,
+                width: '100%'
+            });
+
+            // Seçili değerleri zorla göster
+            var selectedVals = [];
+            $('#postCategory option[selected]').each(function () {
+                selectedVals.push($(this).val());
+            });
+            if (selectedVals.length > 0) {
+                categorySelect.val(selectedVals).trigger('change');
+            }
+        }
+    }, 100);
 
 });
 

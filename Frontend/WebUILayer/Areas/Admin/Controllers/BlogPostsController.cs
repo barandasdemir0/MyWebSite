@@ -89,9 +89,7 @@ public class BlogPostsController : Controller
         if (!ModelState.IsValid)
         {
             ViewBag.TopicList = await _topicApiService.GetAllAsync();
-
-            return View(dto);
-            
+            return View(dto);     
         }
         try
         {

@@ -71,7 +71,7 @@
                         <tr class="deleted-item">
                             <td><strong>@item.Title</strong></td>
                             <td>@string.Join(", ", item.Topics)</td>
-                            <td>4 dk</td>
+                            <td>@item.ReadTime dk</td>
                             <td><span class="status-badge danger">Silindi</span></td>
                             <td><span class="status-badge draft">Taslak</span></td>
                             <td>@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
@@ -103,7 +103,7 @@
                         <tr>
                             <td><strong>@item.Title</strong></td>
                             <td>@string.Join(",", item.Topics)</td>
-                            <td>5 dk</td>
+                            <td>@item.ReadTime dk</td>
                             <td><span class="status-badge draft">Sitede Aktif Değil</span></td>
                             <td><span class="status-badge draft">Taslak</span></td>
                             <td>@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
@@ -138,7 +138,7 @@
                         <tr>
                             <td><strong>@item.Title</strong></td>
                             <td>@string.Join(",", item.Topics)</td>
-                            <td>5 dk</td>
+                            <td>@item.ReadTime dk</td>
                             <td><span class="status-badge active">Sitede Aktif</span></td>
                             <td><span class="status-badge active">Yayında</span></td>
                             <td>@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>

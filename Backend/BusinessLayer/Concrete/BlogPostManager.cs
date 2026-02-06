@@ -24,7 +24,7 @@ namespace BusinessLayer.Concrete
             _mapper = mapper;
         }
 
-        public async Task<BlogPostListDto> AddAsync(CreateBlogPostDto dto)
+        public async Task<BlogPostDto> AddAsync(CreateBlogPostDto dto)
         {
             var entity = _mapper.Map<BlogPost>(dto);
             entity.Slug = await UniqueSlugAsync(dto.Title);
@@ -42,7 +42,7 @@ namespace BusinessLayer.Concrete
             }
             await _repository.AddAsync(entity);
             await _repository.SaveAsync();
-            return _mapper.Map<BlogPostListDto>(entity);
+            return _mapper.Map<BlogPostDto>(entity);
         }
 
         public async Task DeleteAsync(Guid guid)
@@ -55,14 +55,14 @@ namespace BusinessLayer.Concrete
             }
         }
 
-        public async Task<List<BlogPostListDto>> GetAllAsync()
+        public async Task<List<BlogPostDto>> GetAllAsync()
         {
             var entity = await _repository.GetAllAsync(
                 tracking: false,
                 includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
 
 
-            return _mapper.Map<List<BlogPostListDto>>(entity);
+            return _mapper.Map<List<BlogPostDto>>(entity);
         }
 
         public async Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query)
@@ -74,14 +74,14 @@ namespace BusinessLayer.Concrete
           
         }
 
-        public async Task<BlogPostListDto?> GetByIdAsync(Guid guid)
+        public async Task<BlogPostDto?> GetByIdAsync(Guid guid)
         {
-            var entity = await _repository.GetByIdAsync(guid, tracking: false);
+            var entity = await _repository.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
             if (entity == null)
             {
                 return null;
             }
-            return _mapper.Map<BlogPostListDto>(entity);
+            return _mapper.Map<BlogPostDto>(entity);
         }
 
         public async Task<BlogPostDto?> GetBySlugAsync(string slug)
@@ -101,7 +101,7 @@ namespace BusinessLayer.Concrete
         public async Task<BlogPostDto?> GetDetailsByIdAsync(Guid guid)
         {
             var entity = await _repository.GetByIdAsync(guid, 
-                tracking: false);
+                tracking: false, includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic));
             if (entity == null)
             {
                 return null;
@@ -123,7 +123,7 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<BlogPostListDto>(entity);
         }
 
-        public async Task<BlogPostListDto?> UpdateAsync(Guid id,UpdateBlogPostDto dto)
+        public async Task<BlogPostDto?> UpdateAsync(Guid id,UpdateBlogPostDto dto)
         {
             var entity = await _repository.GetAsync(x=>x.Id == id,tracking:true,includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic));
 
@@ -148,7 +148,7 @@ namespace BusinessLayer.Concrete
             }
             await _repository.UpdateAsync(entity);
             await _repository.SaveAsync();
-            return _mapper.Map<BlogPostListDto>(entity);
+            return _mapper.Map<BlogPostDto>(entity);
         }
 
 
