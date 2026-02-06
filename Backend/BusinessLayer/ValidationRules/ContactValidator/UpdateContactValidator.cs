@@ -52,10 +52,6 @@ namespace BusinessLayer.ValidationRules.ContactValidator
                 .MaximumLength(150)
                 .WithMessage("Başlık 150 Karakterden fazla olamaz");
 
-            RuleFor(x => x.WorkStatus).NotEmpty()
-                .WithMessage("Bu Alan Boş Geçilemez")
-                .MaximumLength(100)
-                .WithMessage("Başlık 100 Karakterden fazla olamaz");
         }
     }
 }

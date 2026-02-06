@@ -21,7 +21,6 @@ namespace DataAccessLayer.Configurations
             builder.Property(x=>x.ContactTitle).IsRequired().HasMaxLength(50);
             builder.Property(x=>x.ContactText).IsRequired().HasMaxLength(200);
             builder.Property(x=>x.SuccessMessageText).IsRequired().HasMaxLength(150);
-            builder.Property(x=>x.WorkStatus).IsRequired().HasMaxLength(100);
 
             
         }

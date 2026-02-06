@@ -31,7 +31,7 @@ public class AboutApiService : GenericApiService<AboutDto, CreateAboutDto, Updat
         {
             var create = updateAboutDto.Adapt<CreateAboutDto>();
             //updateaboutdto.adap diğyerek girilen yerleri createye atıyorum yani mantık şu updatede de createde aynısı var updatedekini al createye yapıştır   Update formundaki veriyi alıp, kayıt yoksa Create için kullanıyorsun.
-                        await AddAsync(create);
+            await AddAsync(create);
         }
         else
         {

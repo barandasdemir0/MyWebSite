@@ -20,8 +20,7 @@ public class AboutsController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        //var query = await _aboutApiService.GetAllAsync();
-        //return View(query);
+       
         var query = await _aboutApiService.GetAboutForEditAsync();
         return View(query);
     }
