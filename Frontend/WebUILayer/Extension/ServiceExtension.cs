@@ -25,6 +25,11 @@ public static class ServiceExtension
         {
             client.BaseAddress = new Uri(baseurl!);
         });
+
+        services.AddHttpClient<IHeroApiService, HeroApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
     }
 
 
@@ -39,12 +44,6 @@ public static class ServiceExtension
     }
 
 
-    //public static void FluentController(this IServiceCollection services)
-    //{
-    //    services.AddControllers(options =>
-    //    {
-    //        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-    //    });
-    //}
+ 
 
 }

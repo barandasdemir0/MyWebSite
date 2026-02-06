@@ -3,11 +3,25 @@ using WebUILayer.Extension;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//builder.Services.AddControllersWithViews();
+
+
+
+
+
+#region benim eklediklerim
 
 builder.Services.AddApiService(builder.Configuration);
 builder.Services.AddAutoValidate();
-//builder.Services.FluentController();
+
+#endregion
+
+
+
+
+
+
+
+
 
 var app = builder.Build();
 
@@ -27,16 +41,12 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.UseStaticFiles();
+
+#region area için özel kod
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapControllerRoute(
-//      name: "areas",
-//      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-//    );
-//});
+#endregion
 
 app.MapControllerRoute(
     name: "default",

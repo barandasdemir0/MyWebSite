@@ -1,0 +1,72 @@
+﻿@model UpdateHeroDto
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "profile-page"; // <-- BUNU EKLE
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles{
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/profile.css">
+}
+
+<div class="content-grid">
+    <!-- Hero Section Info -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-home"></i>Hero Bölümü</h3>
+        </div>
+
+        <form asp-action="Index" method="post">
+            <div class="form-row full">
+                <div class="form-group">
+                    <label>Ad Soyad</label>
+                    <input type="text" class="form-control" asp-for="FullName">
+                </div>
+               
+            </div>
+
+            <div class="form-row full">
+                <div class="form-group">
+                    <label>Ünvan / Başlık</label>
+                    <input type="text" class="form-control"
+                          asp-for="ProfessionalTitle">
+                </div>
+            </div>
+
+            <div class="form-row full">
+                <div class="form-group">
+                    <label>Hero Açıklama Metni</label>
+                    <textarea class="form-control" asp-for="HeroAbout"></textarea>
+                </div>
+            </div>
+
+           
+                <div class="card-header">
+                    <h3><i class="fas fa-keyboard"></i>Hero Yazı Efekti</h3>
+                </div>
+
+
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Dönen Başlıklar (Her satıra bir tane)</label>
+                        <textarea class="form-control typed-textarea" asp-for="ScrollingText"></textarea>
+                    </div>
+               
+
+
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i>
+                    Değişiklikleri Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Typed.js Titles -->
+  
+</div>
+
+
+

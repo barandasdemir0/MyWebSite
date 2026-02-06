@@ -17,6 +17,7 @@ namespace DataAccessLayer.Configurations
             builder.Property(x => x.FullName).IsRequired().HasMaxLength(50);
             builder.Property(x => x.ScrollingText).HasMaxLength(1000);
             builder.Property(x => x.HeroAbout).HasMaxLength(2000);
+            builder.Property(x => x.ProfessionalTitle).HasMaxLength(150);
         }
     }
 }
