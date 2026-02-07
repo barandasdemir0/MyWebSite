@@ -1,0 +1,947 @@
+/* Skill Categories Page Styles */
+
+/* ============================================
+   PREVIEW SECTION - Site Görünümü
+   ============================================ */
+.skill-categories-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 30px 20px;
+    background: var(--admin-bg);
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+/* Max 8 columns on large screens */
+@media (min-width: 1600px) {
+    .skill-categories-preview {
+        grid-template-columns: repeat(8, 1fr);
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .skill-categories-preview {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.preview-badge {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--admin-primary);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Category Card */
+.skill-category-card {
+    background: var(--admin-card);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.skill-category-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--admin-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Category Icon */
+.category-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+
+.category-icon.icon-frontend,
+.icon-frontend {
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+}
+
+.category-icon.icon-backend,
+.icon-backend {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.category-icon.icon-mobile,
+.icon-mobile {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+}
+
+.category-icon.icon-tools,
+.icon-tools {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+}
+
+/* Category Title & Description */
+.category-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--admin-text);
+}
+
+.category-description {
+    font-size: 0.85rem;
+    color: var(--admin-text-muted);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+/* Skills List in Card */
+.category-skills {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.skill-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.skill-name {
+    font-size: 0.9rem;
+    color: var(--admin-text);
+    font-weight: 500;
+}
+
+.skill-percent {
+    font-size: 0.85rem;
+    color: var(--admin-text-muted);
+    font-weight: 600;
+}
+
+/* Progress Bar */
+.skill-bar {
+    height: 6px;
+    background: var(--admin-border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.skill-progress {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    background: linear-gradient(90deg, #60a5fa, #818cf8);
+}
+
+/* Different progress colors based on parent card */
+.skill-category-card:nth-child(1) .skill-progress {
+    background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+}
+
+.skill-category-card:nth-child(2) .skill-progress {
+    background: linear-gradient(90deg, #34d399, #6ee7b7);
+}
+
+.skill-category-card:nth-child(3) .skill-progress {
+    background: linear-gradient(90deg, #60a5fa, #93c5fd);
+}
+
+.skill-category-card:nth-child(4) .skill-progress {
+    background: linear-gradient(90deg, #818cf8, #a5b4fc);
+}
+
+/* ============================================
+   TABLE STYLES
+   ============================================ */
+.mt-25 {
+    margin-top: 25px;
+}
+
+.table-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.skill-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--admin-primary);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Order Buttons */
+.order-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.order-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--admin-border);
+    border-radius: 6px;
+    background: var(--admin-card);
+    color: var(--admin-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.order-btn:hover:not(:disabled) {
+    background: var(--admin-primary);
+    color: #fff;
+    border-color: var(--admin-primary);
+}
+
+.order-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   MODAL STYLES
+   ============================================ */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.visible {
+    display: flex !important;
+}
+
+.modal-content {
+    background: var(--admin-card);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content.modal-lg {
+    max-width: 700px;
+}
+
+.modal-content.modal-sm {
+    max-width: 400px;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.modal-header-centered {
+    justify-content: center;
+    text-align: center;
+}
+
+.modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--admin-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: var(--admin-danger);
+    color: #fff;
+    border-color: var(--admin-danger);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 25px;
+    border-top: 1px solid var(--admin-border);
+}
+
+/* Modal Icon */
+.modal-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.modal-icon-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--admin-danger);
+}
+
+/* Centered Modal Styles */
+.modal-centered {
+    text-align: center;
+}
+
+.modal-header-icon {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 30px 25px 20px;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.modal-header-icon .modal-icon {
+    margin-right: 0;
+    width: 55px;
+    height: 55px;
+    font-size: 1.4rem;
+}
+
+.modal-header-icon h3 {
+    font-size: 1.25rem;
+}
+
+.modal-body-centered {
+    text-align: center;
+    padding: 25px 30px;
+}
+
+.modal-body-centered p {
+    font-size: 0.95rem;
+    color: var(--admin-text);
+    margin-bottom: 8px;
+}
+
+.delete-hint {
+    font-size: 0.85rem;
+    color: var(--admin-text-muted);
+}
+
+.modal-centered .modal-footer {
+    justify-content: center;
+    padding: 20px 25px 25px;
+}
+
+.btn-danger.btn-outline {
+    background: transparent;
+    border: 2px solid var(--admin-danger);
+    color: var(--admin-danger);
+}
+
+.btn-danger.btn-outline:hover {
+    background: var(--admin-danger);
+    color: #fff;
+}
+
+/* ============================================
+   SKILLS VIEW MODAL
+   ============================================ */
+.modal-content.modal-md {
+    max-width: 500px;
+}
+
+.modal-category-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.modal-category-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+    color: #fff;
+}
+
+.modal-category-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.modal-category-info p {
+    font-size: 0.85rem;
+    color: var(--admin-text-muted);
+    margin: 0;
+}
+
+.skills-view-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.skill-view-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.skill-view-item:hover {
+    border-color: var(--admin-primary);
+}
+
+.skill-view-info {
+    flex: 1;
+}
+
+.skill-view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.skill-view-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--admin-text);
+}
+
+.skill-view-percent {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--admin-primary);
+}
+
+.skill-view-bar {
+    height: 6px;
+    background: var(--admin-border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.skill-view-progress {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--admin-primary), #818cf8);
+    transition: width 0.5s ease;
+}
+
+.skill-view-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.skill-view-actions .action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--admin-border);
+    background: transparent;
+    color: var(--admin-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.skill-view-actions .action-btn.edit:hover {
+    background: var(--admin-primary);
+    border-color: var(--admin-primary);
+    color: #fff;
+}
+
+.skill-view-actions .action-btn.delete:hover {
+    background: var(--admin-danger);
+    border-color: var(--admin-danger);
+    color: #fff;
+}
+
+.btn-add-skill-full {
+    width: 100%;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.no-skills-msg {
+    text-align: center;
+    color: var(--admin-text-muted);
+    padding: 30px;
+    font-size: 0.9rem;
+}
+
+/* Deleted states - Skills in modal */
+.skill-view-item.deleted-item {
+    opacity: 0.5;
+    background: rgba(239, 68, 68, 0.05);
+    border-color: var(--admin-danger);
+}
+
+.skill-view-item.deleted-item .skill-view-name {
+    text-decoration: line-through;
+    color: var(--admin-text-muted);
+}
+
+.skill-view-item.deleted-item .skill-view-progress {
+    background: var(--admin-danger);
+}
+
+/* Deleted states - Preview cards */
+.deleted-card {
+    opacity: 0.6;
+    border-color: var(--admin-danger) !important;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.deleted-card .category-title {
+    text-decoration: line-through;
+    color: var(--admin-text-muted);
+}
+
+.deleted-card .category-description {
+    text-decoration: line-through;
+    color: var(--admin-text-muted);
+}
+
+.deleted-card .category-icon {
+    opacity: 0.5;
+}
+
+.deleted-card .skill-progress {
+    background: var(--admin-danger) !important;
+}
+
+.deleted-skill {
+    opacity: 0.5;
+}
+
+.deleted-skill .skill-name {
+    text-decoration: line-through;
+}
+
+/* Deleted states - Table rows (categories) */
+tr.deleted-item {
+    background: rgba(239, 68, 68, 0.05);
+}
+
+tr.deleted-item td {
+    opacity: 0.6;
+}
+
+tr.deleted-item td strong {
+    text-decoration: line-through;
+    color: var(--admin-text-muted);
+}
+
+tr.deleted-item td[data-label="Açıklama"] {
+    text-decoration: line-through;
+    color: var(--admin-text-muted);
+}
+
+tr.deleted-item .table-icon {
+    opacity: 0.5;
+}
+
+tr.deleted-item .action-btns {
+    opacity: 1;
+}
+
+/* Restore button */
+.action-btn.restore {
+    color: var(--admin-success);
+}
+
+.action-btn.restore:hover {
+    background: var(--admin-success);
+    border-color: var(--admin-success);
+    color: #fff;
+}
+
+/* Hidden utility */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================
+   FORM STYLES
+   ============================================ */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--admin-text-muted);
+}
+
+.form-hint {
+    font-size: 0.75rem;
+    color: var(--admin-text-muted);
+    margin-top: 5px;
+}
+
+.icon-input-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-input-wrapper .form-control {
+    flex: 1;
+}
+
+.btn-icon-search {
+    padding: 12px 16px;
+    white-space: nowrap;
+}
+
+/* Color Theme Selector */
+.color-theme-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.color-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.color-option:hover {
+    border-color: var(--admin-primary);
+}
+
+.color-option input[type="radio"] {
+    display: none;
+}
+
+.color-option input[type="radio"]:checked + .color-preview {
+    box-shadow: 0 0 0 3px var(--admin-primary);
+}
+
+.color-preview {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.theme-frontend {
+    background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+}
+
+.theme-backend {
+    background: linear-gradient(135deg, #34d399, #6ee7b7);
+}
+
+.theme-mobile {
+    background: linear-gradient(135deg, #60a5fa, #93c5fd);
+}
+
+.theme-tools {
+    background: linear-gradient(135deg, #818cf8, #a5b4fc);
+}
+
+.color-option span:last-child {
+    font-size: 0.85rem;
+    color: var(--admin-text);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--admin-border);
+    border-radius: 26px;
+    transition: 0.3s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+input:checked + .slider {
+    background: var(--admin-success);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+#statusLabel {
+    font-size: 0.9rem;
+    color: var(--admin-text);
+}
+
+/* ============================================
+   SKILLS MANAGEMENT MODAL
+   ============================================ */
+.skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.skill-list-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+}
+
+.skill-list-item .skill-info {
+    flex: 1;
+}
+
+.skill-list-item .skill-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.skill-list-item .skill-bar {
+    height: 5px;
+    margin-top: 8px;
+}
+
+.skill-list-item .skill-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-add-skill {
+    width: 100%;
+    padding: 15px;
+    border-style: dashed;
+}
+
+.btn-add-skill:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+}
+
+/* ============================================
+   RANGE INPUT
+   ============================================ */
+.range-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-range {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--admin-border);
+    border-radius: 3px;
+    outline: none;
+}
+
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--admin-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2);
+}
+
+.range-value {
+    min-width: 50px;
+    padding: 8px 12px;
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--admin-primary);
+}
+
+/* Skill Preview */
+.skill-preview {
+    padding: 20px;
+    background: var(--admin-bg);
+    border-radius: 10px;
+    border: 1px solid var(--admin-border);
+}
+
+.skill-preview .skill-bar {
+    margin-top: 10px;
+}
+
+.skill-preview .skill-progress {
+    background: linear-gradient(90deg, #60a5fa, #818cf8);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .skill-categories-preview {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .skill-categories-preview {
+        grid-template-columns: 1fr;
+    }
+    
+    .color-theme-selector {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .modal-content {
+        width: 95%;
+        max-height: 85vh;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-footer {
+        padding: 15px 20px;
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+    
+    .skill-category-card {
+        padding: 20px;
+    }
+    
+    .category-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+}

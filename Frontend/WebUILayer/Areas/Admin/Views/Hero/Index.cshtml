@@ -21,6 +21,7 @@
                 <div class="form-group">
                     <label>Ad Soyad</label>
                     <input type="text" class="form-control" asp-for="FullName">
+                    <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
                
             </div>
@@ -30,6 +31,8 @@
                     <label>Ünvan / Başlık</label>
                     <input type="text" class="form-control"
                           asp-for="ProfessionalTitle">
+                    <span asp-validation-for="ProfessionalTitle" class="text-danger"></span>
+
                 </div>
             </div>
 
@@ -37,6 +40,7 @@
                 <div class="form-group">
                     <label>Hero Açıklama Metni</label>
                     <textarea class="form-control" asp-for="HeroAbout"></textarea>
+                    <span asp-validation-for="HeroAbout" class="text-danger"></span>
                 </div>
             </div>
 
@@ -50,6 +54,7 @@
                     <div class="form-group">
                         <label>Dönen Başlıklar (Her satıra bir tane)</label>
                         <textarea class="form-control typed-textarea" asp-for="ScrollingText"></textarea>
+                    <span asp-validation-for="ScrollingText" class="text-danger"></span>
                     </div>
                
 

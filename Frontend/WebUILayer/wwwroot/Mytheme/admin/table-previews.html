@@ -2,394 +2,1000 @@
 <html lang="tr">
 
 <head>
+    <script src="js/theme-init.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10 Farklı Tablo Tasarımı (Clean Code) | Portfolio Admin</title>
+    <title>Tablo Tasarımları | Portfolio Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-    <!-- Theme CSS -->
     <link rel="stylesheet" href="css/modules/variables.css">
     <link rel="stylesheet" href="css/modules/global.css">
     <link rel="stylesheet" href="css/modules/layout.css">
     <link rel="stylesheet" href="css/modules/components.css">
-    <!-- Custom Table CSS -->
+    <link rel="stylesheet" href="css/modules/notifications.css">
+    <link rel="stylesheet" href="css/modules/login.css">
     <link rel="stylesheet" href="css/modules/table-variations.css">
-
-    <!-- Custom Table JS (Head içinde çünkü tema kontrolü var) -->
-    <script src="js/modules/table-previews.js"></script>
+    <link rel="stylesheet" href="css/modules/preloader.css">
 </head>
 
-<body class="blank-page">
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader-container">
+            <div class="loader-logo"><span>B</span>aran<span>.</span></div>
+            <div class="loader"></div>
+            <div class="loader-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="loader-progress"></div>
+            <div class="loader-text">Yükleniyor</div>
+        </div>
+    </div>
     <div class="admin-wrapper">
+        <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="sidebar-header">
                 <h2><span>Admin</span> Panel</h2>
+                <p>Portfolio Yönetimi</p>
             </div>
+
             <nav class="sidebar-menu">
-                <a href="#" class="menu-item active"><i class="fas fa-layer-group"></i> 10 Tablo Tasarımı</a>
+                <div class="menu-section">
+                    <p class="menu-section-title">Sayfa Yönetimi</p>
+                    <a href="profile.html" class="menu-item">
+                        <i class="fas fa-home"></i>
+                        <span>Hero & Profil</span>
+                    </a>
+                    <a href="about.html" class="menu-item">
+                        <i class="fas fa-user"></i>
+                        <span>Hakkımda</span>
+                    </a>
+                    <a href="resume.html" class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Özgeçmiş</span>
+                    </a>
+                    <a href="contact.html" class="menu-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>İletişim</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <p class="menu-section-title">İçerik Yönetimi</p>
+                    <a href="dashboard.html" class="menu-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="messages.html" class="menu-item">
+                        <i class="fas fa-inbox"></i>
+                        <span>Mesajlar</span>
+                    </a>
+                    <a href="projects.html" class="menu-item">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projeler</span>
+                    </a>
+                    <a href="blog.html" class="menu-item">
+                        <i class="fas fa-blog"></i>
+                        <span>Blog Yazıları</span>
+                    </a>
+                    <a href="guestbook.html" class="menu-item">
+                        <i class="fas fa-comments"></i>
+                        <span>Ziyaretçi Defteri</span>
+                    </a>
+                </div>
+
+                <div class="menu-section">
+                    <p class="menu-section-title">Ayarlar</p>
+                    <a href="categories.html" class="menu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>Kategoriler</span>
+                    </a>
+                    <a href="skills.html" class="menu-item">
+                        <i class="fas fa-code"></i>
+                        <span>Yetenekler</span>
+                    </a>
+                    <a href="github.html" class="menu-item">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub Repoları</span>
+                    </a>
+                    <a href="settings.html" class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Site Ayarları</span>
+                    </a>
+                    <a href="table-previews.html" class="menu-item active">
+                        <i class="fas fa-table"></i>
+                        <span>Tablo Tasarımları</span>
+                    </a>
+                    <a href="dashboard.html" class="menu-item">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Çıkış Yap</span>
+                    </a>
+                </div>
             </nav>
         </aside>
 
+        <!-- Main Content -->
         <main class="admin-main">
+            <!-- Header -->
             <header class="admin-header">
+                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
                 <div class="page-title">
-                    <h1>10 Farklı Tablo Yapısı (Tertemiz)</h1>
-                    <p>Inline CSS ve Inline JS tamamen kaldırıldı. %100 External.</p>
+                    <h1>Tablo Tasarımları</h1>
+                    <p>10 farklı tablo yapısı örneği</p>
                 </div>
 
                 <div class="header-actions">
-                    <!-- THEME TOGGLE BUTTON -->
-                    <button class="btn-icon theme-toggle" title="Temayı Değiştir" onclick="toggleTheme()">
+                    <button class="btn-icon theme-toggle" title="Temayı Değiştir">
                         <i class="fas fa-moon"></i>
                     </button>
 
                     <a href="../index.html" target="_blank" class="btn-icon" title="Siteye Git">
                         <i class="fas fa-external-link-alt"></i>
                     </a>
+                    <button class="btn-icon notification-btn" data-mobile-href="notifications.html">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+
+                    <div class="user-profile" data-action="navigateTo" data-href="profile.html">
+                        <img src="https://ui-avatars.com/api/?name=Baran+D&background=6366f1&color=fff" alt="Admin">
+                        <div class="user-info">
+                            <h4>Baran Dasdemir</h4>
+                            <span>Administrator</span>
+                        </div>
+                    </div>
                 </div>
             </header>
 
-            <div class="content-grid preview-grid">
-
-                <!-- 1. KLASİK & İKONLU (Restore İkonlu) -->
-                <h3 class="preview-header">1. Klasik Liste (İkonlu & İkon Buton)</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th width="50">#</th>
-                                    <th>Başlık</th>
-                                    <th>Kategori</th>
-                                    <th>Durum</th>
-                                    <th>İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Normal -->
-                                <tr>
-                                    <td data-label="#"><i class="fas fa-file-alt text-primary"></i></td>
-                                    <td data-label="Başlık"><strong class="font-bold">Hakkımda Yazısı</strong></td>
-                                    <td data-label="Kategori">Genel</td>
-                                    <td data-label="Durum"><span class="status-badge active">Aktif</span></td>
-                                    <td data-label="İşlemler">
-                                        <div class="action-btns">
-                                            <button class="action-btn edit" title="Düzenle"><i
-                                                    class="fas fa-pen"></i></button>
-                                            <button class="action-btn delete" title="Sil"><i
-                                                    class="fas fa-trash"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Silinmiş -->
-                                <tr class="tr-deleted">
-                                    <td data-label="#"><i class="fas fa-trash-alt text-danger"></i></td>
-                                    <td data-label="Başlık" class="text-deleted"><strong class="font-bold">Eski
-                                            Hakkımda</strong></td>
-                                    <td data-label="Kategori">Genel</td>
-                                    <td data-label="Durum"><span class="status-badge danger">Silindi</span></td>
-                                    <td data-label="İşlemler">
-                                        <div class="action-btns">
-                                            <button class="action-btn restore" title="Geri Yükle"><i
-                                                    class="fas fa-undo"></i></button>
-                                            <button class="action-btn delete" title="Kalıcı Sil"><i
-                                                    class="fas fa-times"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <!-- 1. BLOG TARZI TABLO -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>1. Blog Yazıları Tablosu</h3>
+                    <div class="filter-container">
+                        <select class="form-control filter-select">
+                            <option>Tüm Kategoriler</option>
+                            <option>Yazılım</option>
+                            <option>Kariyer</option>
+                            <option>SaaS</option>
+                        </select>
+                        <input type="text" class="form-control filter-search" placeholder="Ara...">
                     </div>
                 </div>
 
-                <!-- 10. SİLİNMİŞ ÖĞE ÖZEL (RESTORE TEXT) -->
-                <h3 class="preview-header">10. Arşiv/Silinen (Geniş Butonlu)</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Kayıt</th>
-                                    <th>Silinme Tarihi</th>
-                                    <th>Durum</th>
-                                    <th>Kurtar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="tr-deleted">
-                                    <td data-label="Kayıt" class="text-deleted"><strong class="font-bold">Eski Hakkımda
-                                            Yazısı</strong></td>
-                                    <td data-label="Silinme Tarihi">Bugün, 10:00</td>
-                                    <td data-label="Durum"><span class="status-badge danger">Silindi</span></td>
-                                    <td data-label="Kurtar">
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Başlık</th>
+                                <th>Kategori</th>
+                                <th>Okuma Süresi</th>
+                                <th>Görünürlük</th>
+                                <th>Durum</th>
+                                <th>Yayın Tarihi</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Başlık"><strong>React 18'in Yeni Özellikleri</strong></td>
+                                <td data-label="Kategori">Yazılım</td>
+                                <td data-label="Okuma Süresi">5 dk</td>
+                                <td data-label="Görünürlük"><span class="status-badge active">Sitede Aktif</span></td>
+                                <td data-label="Durum"><span class="status-badge active">Yayında</span></td>
+                                <td data-label="Yayın Tarihi">20 Ara 2024</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <a href="#" class="action-btn" title="Görüntüle"><i class="fas fa-eye"></i></a>
+                                        <a href="#" class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></a>
+                                        <button class="action-btn delete" title="Sil" data-action="deleteRow"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn restore hidden" title="Geri Yükle" data-action="restoreRow"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Başlık"><strong>Junior'dan Senior'a Yolculuk</strong></td>
+                                <td data-label="Kategori">Kariyer</td>
+                                <td data-label="Okuma Süresi">7 dk</td>
+                                <td data-label="Görünürlük"><span class="status-badge active">Sitede Aktif</span></td>
+                                <td data-label="Durum"><span class="status-badge active">Yayında</span></td>
+                                <td data-label="Yayın Tarihi">15 Ara 2024</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <a href="#" class="action-btn" title="Görüntüle"><i class="fas fa-eye"></i></a>
+                                        <a href="#" class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></a>
+                                        <button class="action-btn delete" title="Sil" data-action="deleteRow"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn restore hidden" title="Geri Yükle" data-action="restoreRow"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Başlık"><strong>Eski Blog Yazım</strong></td>
+                                <td data-label="Kategori">Yazılım</td>
+                                <td data-label="Okuma Süresi">4 dk</td>
+                                <td data-label="Görünürlük"><span class="status-badge danger">Silindi</span></td>
+                                <td data-label="Durum"><span class="status-badge draft">Taslak</span></td>
+                                <td data-label="Yayın Tarihi">10 Kas 2023</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <a href="#" class="action-btn" title="Görüntüle"><i class="fas fa-eye"></i></a>
+                                        <a href="#" class="action-btn edit" title="Detaylar"><i class="fas fa-pen"></i></a>
+                                        <button class="action-btn delete hidden" title="Sil" data-action="deleteRow"><i class="fas fa-trash"></i></button>
+                                        <button class="action-btn restore" title="Geri Yükle" data-action="restoreRow"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. PROJE TABLOSU (GÖRSEL İLE) -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>2. Proje Tablosu (Görsel ile)</h3>
+                    <div class="filter-container">
+                        <select class="form-control filter-select">
+                            <option>Tüm Kategoriler</option>
+                            <option>Web Uygulama</option>
+                            <option>Mobil Uygulama</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Görsel</th>
+                                <th>Proje Adı</th>
+                                <th>Kategori</th>
+                                <th>Teknolojiler</th>
+                                <th>Görünürlük</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Görsel">
+                                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=60&h=40&fit=crop" class="table-img">
+                                </td>
+                                <td data-label="Proje Adı"><strong>E-Ticaret Platformu</strong></td>
+                                <td data-label="Kategori">Web Uygulama</td>
+                                <td data-label="Teknolojiler">
+                                    <div class="tech-tags">
+                                        <span class="tech-tag">React</span>
+                                        <span class="tech-tag">Node.js</span>
+                                        <span class="tech-tag">MongoDB</span>
+                                    </div>
+                                </td>
+                                <td data-label="Görünürlük"><span class="status-badge active">Sitede Aktif</span></td>
+                                <td data-label="Durum"><span class="status-badge active">Yayında</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <a href="#" target="_blank" class="action-btn" title="Siteyi Görüntüle"><i class="fas fa-eye"></i></a>
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Görsel">
+                                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=60&h=40&fit=crop" class="table-img">
+                                </td>
+                                <td data-label="Proje Adı"><strong>Fitness Tracker App</strong></td>
+                                <td data-label="Kategori">Mobil Uygulama</td>
+                                <td data-label="Teknolojiler">
+                                    <div class="tech-tags">
+                                        <span class="tech-tag">Flutter</span>
+                                        <span class="tech-tag">Firebase</span>
+                                    </div>
+                                </td>
+                                <td data-label="Görünürlük"><span class="status-badge active">Sitede Aktif</span></td>
+                                <td data-label="Durum"><span class="status-badge active">Yayında</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <a href="#" target="_blank" class="action-btn" title="Siteyi Görüntüle"><i class="fas fa-eye"></i></a>
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Görsel">
+                                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=60&h=40&fit=crop" class="table-img">
+                                </td>
+                                <td data-label="Proje Adı"><strong>Legacy CRM System</strong></td>
+                                <td data-label="Kategori">Web Uygulama</td>
+                                <td data-label="Teknolojiler">
+                                    <div class="tech-tags">
+                                        <span class="tech-tag">PHP</span>
+                                        <span class="tech-tag">MySQL</span>
+                                    </div>
+                                </td>
+                                <td data-label="Görünürlük"><span class="status-badge danger">Silindi</span></td>
+                                <td data-label="Durum"><span class="status-badge draft">Taslak</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <a href="#" class="action-btn disabled" title="Siteyi Görüntüle"><i class="fas fa-eye"></i></a>
+                                        <button class="action-btn edit" title="Detaylar"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn restore" title="Geri Yükle" data-action="restoreItem"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. KULLANICI / PROFİL TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>3. Kullanıcı Yönetimi Tablosu</h3>
+                    <input type="text" class="form-control filter-search" placeholder="Kullanıcı ara...">
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Kullanıcı</th>
+                                <th>E-posta</th>
+                                <th>Rol</th>
+                                <th>Son Giriş</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Kullanıcı">
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Baran+D&background=6366f1&color=fff" class="avatar-md avatar-rounded">
+                                        <div class="user-cell-info">
+                                            <div class="font-bold">Baran Dasdemir</div>
+                                            <div class="text-xs text-muted">Administrator</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-label="E-posta">baran@example.com</td>
+                                <td data-label="Rol"><span class="status-badge role-admin">Admin</span></td>
+                                <td data-label="Son Giriş">Bugün, 14:30</td>
+                                <td data-label="Durum"><span class="status-badge active">Aktif</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Kullanıcı">
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Ali+V&background=10b981&color=fff" class="avatar-md avatar-rounded">
+                                        <div class="user-cell-info">
+                                            <div class="font-bold">Ali Veli</div>
+                                            <div class="text-xs text-muted">Editor</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-label="E-posta">ali@example.com</td>
+                                <td data-label="Rol"><span class="status-badge role-editor">Editör</span></td>
+                                <td data-label="Son Giriş">Dün, 09:15</td>
+                                <td data-label="Durum"><span class="status-badge active">Aktif</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Kullanıcı">
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Mehmet+K&background=ef4444&color=fff" class="avatar-md avatar-rounded">
+                                        <div class="user-cell-info">
+                                            <div class="font-bold text-deleted">Mehmet Kaya</div>
+                                            <div class="text-xs text-muted">Kullanıcı</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-label="E-posta">mehmet@example.com</td>
+                                <td data-label="Rol"><span class="status-badge role-user">Kullanıcı</span></td>
+                                <td data-label="Son Giriş">-</td>
+                                <td data-label="Durum"><span class="status-badge danger">Pasif</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn restore" title="Geri Yükle"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. MESAJ TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>4. Mesaj Kutusu Tablosu</h3>
+                    <div class="filter-container">
+                        <select class="form-control filter-select">
+                            <option>Tümü</option>
+                            <option>Okunmamış</option>
+                            <option>Okunmuş</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Gönderen</th>
+                                <th>Konu</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="unread-row">
+                                <td data-label="Gönderen">
+                                    <div class="sender-cell">
+                                        <span class="unread-dot"></span>
+                                        <strong>Ahmet Yılmaz</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Konu">Proje teklifi hakkında</td>
+                                <td data-label="Tarih">Bugün, 10:30</td>
+                                <td data-label="Durum"><span class="status-badge solid-danger">Yeni</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="Oku"><i class="fas fa-envelope-open"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Gönderen"><strong>Ayşe Demir</strong></td>
+                                <td data-label="Konu">İş birliği önerisi</td>
+                                <td data-label="Tarih">Dün, 15:45</td>
+                                <td data-label="Durum"><span class="status-badge solid-success">Okundu</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="Görüntüle"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Gönderen"><strong class="text-deleted">Spam Gönderici</strong></td>
+                                <td data-label="Konu" class="text-deleted">İstenmeyen içerik</td>
+                                <td data-label="Tarih">3 gün önce</td>
+                                <td data-label="Durum"><span class="status-badge danger">Silindi</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn restore" title="Geri Yükle"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. İSTATİSTİK TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>5. İstatistik & Metrik Tablosu</h3>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Sayfa</th>
+                                <th>Görüntülenme</th>
+                                <th>Benzersiz Ziyaretçi</th>
+                                <th>Ortalama Süre</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Sayfa">
+                                    <div class="page-cell">
+                                        <i class="fas fa-home text-primary"></i>
+                                        <strong>Ana Sayfa</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Görüntülenme">
+                                    <span class="metric-value">12,450</span>
+                                </td>
+                                <td data-label="Benzersiz Ziyaretçi">
+                                    <span class="metric-value">8,230</span>
+                                </td>
+                                <td data-label="Ortalama Süre">2:45</td>
+                                <td data-label="Trend">
+                                    <span class="trend-up"><i class="fas fa-arrow-up"></i> 12%</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Sayfa">
+                                    <div class="page-cell">
+                                        <i class="fas fa-folder text-warning"></i>
+                                        <strong>Projeler</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Görüntülenme">
+                                    <span class="metric-value">5,820</span>
+                                </td>
+                                <td data-label="Benzersiz Ziyaretçi">
+                                    <span class="metric-value">3,150</span>
+                                </td>
+                                <td data-label="Ortalama Süre">4:12</td>
+                                <td data-label="Trend">
+                                    <span class="trend-up"><i class="fas fa-arrow-up"></i> 8%</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Sayfa">
+                                    <div class="page-cell">
+                                        <i class="fas fa-blog text-secondary"></i>
+                                        <strong>Blog</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Görüntülenme">
+                                    <span class="metric-value">3,240</span>
+                                </td>
+                                <td data-label="Benzersiz Ziyaretçi">
+                                    <span class="metric-value">2,100</span>
+                                </td>
+                                <td data-label="Ortalama Süre">5:30</td>
+                                <td data-label="Trend">
+                                    <span class="trend-down"><i class="fas fa-arrow-down"></i> 3%</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. GÖREV / TODO TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>6. Görev Takip Tablosu</h3>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Yeni Görev
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Görev</th>
+                                <th>Atanan</th>
+                                <th>Son Tarih</th>
+                                <th>İlerleme</th>
+                                <th>Öncelik</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Görev">
+                                    <div class="task-cell">
+                                        <input type="checkbox" class="task-checkbox">
+                                        <strong>Web sitesi tasarımını tamamla</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Atanan">
+                                    <img src="https://ui-avatars.com/api/?name=B+D&background=6366f1&color=fff" class="avatar-sm avatar-circle">
+                                </td>
+                                <td data-label="Son Tarih">25 Ara 2024</td>
+                                <td data-label="İlerleme">
+                                    <div class="progress-wrapper">
+                                        <div class="progress-track">
+                                            <div class="progress-fill progress-75"></div>
+                                        </div>
+                                        <span class="progress-label">75%</span>
+                                    </div>
+                                </td>
+                                <td data-label="Öncelik"><span class="priority-badge priority-high">Yüksek</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Görev">
+                                    <div class="task-cell">
+                                        <input type="checkbox" class="task-checkbox">
+                                        <strong>API entegrasyonu</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Atanan">
+                                    <img src="https://ui-avatars.com/api/?name=A+V&background=10b981&color=fff" class="avatar-sm avatar-circle">
+                                </td>
+                                <td data-label="Son Tarih">30 Ara 2024</td>
+                                <td data-label="İlerleme">
+                                    <div class="progress-wrapper">
+                                        <div class="progress-track">
+                                            <div class="progress-fill progress-40"></div>
+                                        </div>
+                                        <span class="progress-label">40%</span>
+                                    </div>
+                                </td>
+                                <td data-label="Öncelik"><span class="priority-badge priority-medium">Orta</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Görev">
+                                    <div class="task-cell">
+                                        <input type="checkbox" class="task-checkbox" checked disabled>
+                                        <strong class="text-deleted">Eski görev</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Atanan">-</td>
+                                <td data-label="Son Tarih">-</td>
+                                <td data-label="İlerleme">
+                                    <div class="progress-wrapper">
+                                        <div class="progress-track">
+                                            <div class="progress-fill progress-100"></div>
+                                        </div>
+                                        <span class="progress-label">100%</span>
+                                    </div>
+                                </td>
+                                <td data-label="Öncelik"><span class="priority-badge priority-low">Düşük</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn restore" title="Geri Yükle"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 7. LOG / AKTİVİTE TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>7. Aktivite Log Tablosu</h3>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table log-table">
+                        <tbody>
+                            <tr>
+                                <td class="log-time-cell">
+                                    <span class="log-time">14:30</span>
+                                    <span class="log-date">Bugün</span>
+                                </td>
+                                <td>
+                                    <div class="log-dot-indicator bg-success"></div>
+                                </td>
+                                <td data-label="İşlem">
+                                    <div class="log-content">
+                                        <strong>Profil Güncellendi</strong>
+                                        <span class="text-muted">Baran Dasdemir tarafından</span>
+                                    </div>
+                                </td>
+                                <td data-label="IP" class="text-muted">192.168.1.1</td>
+                            </tr>
+                            <tr>
+                                <td class="log-time-cell">
+                                    <span class="log-time">12:15</span>
+                                    <span class="log-date">Bugün</span>
+                                </td>
+                                <td>
+                                    <div class="log-dot-indicator bg-primary"></div>
+                                </td>
+                                <td data-label="İşlem">
+                                    <div class="log-content">
+                                        <strong>Yeni Blog Yazısı Eklendi</strong>
+                                        <span class="text-muted">React 18'in Yeni Özellikleri</span>
+                                    </div>
+                                </td>
+                                <td data-label="IP" class="text-muted">192.168.1.1</td>
+                            </tr>
+                            <tr>
+                                <td class="log-time-cell">
+                                    <span class="log-time">09:00</span>
+                                    <span class="log-date">Dün</span>
+                                </td>
+                                <td>
+                                    <div class="log-dot-indicator bg-danger"></div>
+                                </td>
+                                <td data-label="İşlem">
+                                    <div class="log-content">
+                                        <strong>Başarısız Giriş Denemesi</strong>
+                                        <span class="text-muted">Bilinmeyen kullanıcı</span>
+                                    </div>
+                                </td>
+                                <td data-label="IP" class="text-muted">45.33.21.10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 8. DOSYA YÖNETİMİ TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>8. Dosya Yönetimi Tablosu</h3>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fas fa-upload"></i> Yükle
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Önizleme</th>
+                                <th>Dosya Adı</th>
+                                <th>Tür</th>
+                                <th>Boyut</th>
+                                <th>Yüklenme Tarihi</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Önizleme">
+                                    <div class="file-preview file-image">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                </td>
+                                <td data-label="Dosya Adı"><strong>hero-banner.png</strong></td>
+                                <td data-label="Tür"><span class="file-type type-image">PNG</span></td>
+                                <td data-label="Boyut">2.4 MB</td>
+                                <td data-label="Yüklenme Tarihi">20 Ara 2024</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="İndir"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Önizleme">
+                                    <div class="file-preview file-pdf">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                </td>
+                                <td data-label="Dosya Adı"><strong>cv-2024.pdf</strong></td>
+                                <td data-label="Tür"><span class="file-type type-pdf">PDF</span></td>
+                                <td data-label="Boyut">156 KB</td>
+                                <td data-label="Yüklenme Tarihi">18 Ara 2024</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="İndir"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Önizleme">
+                                    <div class="file-preview file-doc">
+                                        <i class="fas fa-file-word"></i>
+                                    </div>
+                                </td>
+                                <td data-label="Dosya Adı"><strong class="text-deleted">eski-dosya.docx</strong></td>
+                                <td data-label="Tür"><span class="file-type type-doc">DOC</span></td>
+                                <td data-label="Boyut">89 KB</td>
+                                <td data-label="Yüklenme Tarihi">10 Kas 2023</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn restore" title="Geri Yükle"><i class="fas fa-undo"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 9. TAKIM TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>9. Takım Üyeleri Tablosu</h3>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Takım Lideri</th>
+                                <th>Üyeler</th>
+                                <th>Proje</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Takım Lideri">
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Baran+D&background=6366f1&color=fff" class="avatar-md avatar-circle">
+                                        <span class="font-bold">Baran D.</span>
+                                    </div>
+                                </td>
+                                <td data-label="Üyeler">
+                                    <div class="avatar-group">
+                                        <img src="https://ui-avatars.com/api/?name=A&background=10b981&color=fff" class="avatar-xs avatar-circle avatar-group-item">
+                                        <img src="https://ui-avatars.com/api/?name=B&background=f59e0b&color=fff" class="avatar-xs avatar-circle avatar-group-item">
+                                        <img src="https://ui-avatars.com/api/?name=C&background=ef4444&color=fff" class="avatar-xs avatar-circle avatar-group-item">
+                                        <span class="avatar-more">+3</span>
+                                    </div>
+                                </td>
+                                <td data-label="Proje"><strong>Portfolio v2</strong></td>
+                                <td data-label="Durum"><span class="status-badge active">Aktif</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="Görüntüle"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-label="Takım Lideri">
+                                    <div class="user-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Ali+V&background=8b5cf6&color=fff" class="avatar-md avatar-circle">
+                                        <span class="font-bold">Ali V.</span>
+                                    </div>
+                                </td>
+                                <td data-label="Üyeler">
+                                    <div class="avatar-group">
+                                        <img src="https://ui-avatars.com/api/?name=D&background=3b82f6&color=fff" class="avatar-xs avatar-circle avatar-group-item">
+                                        <img src="https://ui-avatars.com/api/?name=E&background=ec4899&color=fff" class="avatar-xs avatar-circle avatar-group-item">
+                                        <span class="avatar-more">+1</span>
+                                    </div>
+                                </td>
+                                <td data-label="Proje"><strong>Mobile App</strong></td>
+                                <td data-label="Durum"><span class="status-badge draft">Beklemede</span></td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="Görüntüle"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Düzenle"><i class="fas fa-pen"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 10. ARŞİV / SİLİNENLER TABLOSU -->
+            <div class="card mt-25">
+                <div class="card-header">
+                    <h3>10. Arşiv / Silinen Öğeler</h3>
+                    <button class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Tümünü Sil
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table archive-table">
+                        <thead>
+                            <tr>
+                                <th>Öğe</th>
+                                <th>Tür</th>
+                                <th>Silinme Tarihi</th>
+                                <th>Silen Kişi</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="deleted-item">
+                                <td data-label="Öğe">
+                                    <div class="archive-item">
+                                        <i class="fas fa-file-alt text-muted"></i>
+                                        <strong class="text-deleted">Eski Blog Yazısı</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Tür"><span class="status-badge">Blog</span></td>
+                                <td data-label="Silinme Tarihi">Bugün, 10:00</td>
+                                <td data-label="Silen Kişi">Baran D.</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
                                         <button class="btn btn-sm btn-restore">
                                             <i class="fas fa-undo"></i> Geri Yükle
                                         </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        <button class="action-btn delete" title="Kalıcı Sil"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Öğe">
+                                    <div class="archive-item">
+                                        <i class="fas fa-folder text-muted"></i>
+                                        <strong class="text-deleted">Legacy CRM System</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Tür"><span class="status-badge">Proje</span></td>
+                                <td data-label="Silinme Tarihi">Dün, 15:30</td>
+                                <td data-label="Silen Kişi">Ali V.</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="btn btn-sm btn-restore">
+                                            <i class="fas fa-undo"></i> Geri Yükle
+                                        </button>
+                                        <button class="action-btn delete" title="Kalıcı Sil"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="deleted-item">
+                                <td data-label="Öğe">
+                                    <div class="archive-item">
+                                        <i class="fas fa-image text-muted"></i>
+                                        <strong class="text-deleted">eski-banner.png</strong>
+                                    </div>
+                                </td>
+                                <td data-label="Tür"><span class="status-badge">Dosya</span></td>
+                                <td data-label="Silinme Tarihi">3 gün önce</td>
+                                <td data-label="Silen Kişi">Baran D.</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="btn btn-sm btn-restore">
+                                            <i class="fas fa-undo"></i> Geri Yükle
+                                        </button>
+                                        <button class="action-btn delete" title="Kalıcı Sil"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Restore Modal Template -->
+            <div id="restoreModal" class="admin-modal-overlay">
+                <div class="admin-modal">
+                    <div class="modal-header">
+                        <div class="modal-icon modal-icon-restore">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div class="modal-title">Geri Yükle</div>
+                    </div>
+                    <div class="modal-body">
+                        <strong id="restoreItemName"></strong> isimli öğe geri yüklenecek ve sitede tekrar yayına
+                        alınacaktır.<br><br>
+                        Bu işlem geri alınamaz (tekrar silmeniz gerekir).
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="cancelRestore">İptal</button>
+                        <button class="btn btn-warning" id="confirmRestore">Onayla ve Yükle</button>
                     </div>
                 </div>
-
-                <!-- 2. PROFİL DETAYLI -->
-                <h3 class="preview-header">2. Profil & Detay Odaklı</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Profil</th>
-                                    <th>Biyografi</th>
-                                    <th>Konum</th>
-                                    <th>Yönet</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Profil">
-                                        <div class="d-flex align-items-center gap-10">
-                                            <img src="https://ui-avatars.com/api/?name=Baran+D&background=6366f1&color=fff"
-                                                class="avatar-md avatar-rounded">
-                                            <div>
-                                                <div class="font-bold">Baran Dasdemir</div>
-                                                <div class="text-xs text-muted">Admin</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td data-label="Biyografi">Full Stack Geliştirici, 5 yıl deneyim...</td>
-                                    <td data-label="Konum"><i class="fas fa-map-marker-alt text-danger"></i> İstanbul
-                                    </td>
-                                    <td data-label="Yönet"><button class="btn btn-sm btn-outline">Düzenle</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 3. İSTATİSTİK & ROZETLİ -->
-                <h3 class="preview-header">3. İstatistik & Badge Gösterimli</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Bölüm</th>
-                                    <th>Metrikler</th>
-                                    <th>Son Güncelleme</th>
-                                    <th>Durum</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Bölüm"><strong>Projeler</strong></td>
-                                    <td data-label="Metrikler">
-                                        <span class="status-badge"
-                                            style="background:rgba(99,102,241,0.1); color:#6366f1; border:none;">50
-                                            Adet</span>
-                                        <span class="status-badge"
-                                            style="background:rgba(16,185,129,0.1); color:#10b981; border:none;">5
-                                            Aktif</span>
-                                    </td>
-                                    <td data-label="Son Güncelleme">10 dakika önce</td>
-                                    <td data-label="Durum"><span class="status-badge active"><i
-                                                class="fas fa-check"></i></span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 4. PROGRESS BARLI (İLERLEME) -->
-                <h3 class="preview-header">4. İlerleme Çubuklu (Progress)</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Görev</th>
-                                    <th>Tamamlanma</th>
-                                    <th>Öncelik</th>
-                                    <th>Aksiyon</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Görev">Web Tasarımı</td>
-                                    <td data-label="Tamamlanma" class="progress-wrapper">
-                                        <div class="progress-track">
-                                            <div class="progress-fill" style="width:75%;"></div>
-                                        </div>
-                                        <div class="progress-label">%75</div>
-                                    </td>
-                                    <td data-label="Öncelik"><span class="text-danger font-bold">Yüksek</span></td>
-                                    <td data-label="Aksiyon"><button class="action-btn edit"><i
-                                                class="fas fa-play"></i></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 5. TİMELINE / LOG TARZI -->
-                <h3 class="preview-header">5. Log / Zaman Çizelgesi Listesi</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <tbody>
-                                <tr>
-                                    <td class="log-dot-cell">
-                                        <div class="log-dot bg-purple"></div>
-                                    </td>
-                                    <td data-label="İşlem">
-                                        <div class="font-bold">Profil Güncellendi</div>
-                                        <div class="text-xs text-muted">Admin tarafından</div>
-                                    </td>
-                                    <td data-label="Zaman" class="text-right font-monospace">14:30</td>
-                                </tr>
-                                <tr>
-                                    <td class="log-dot-cell">
-                                        <div class="log-dot bg-red"></div>
-                                    </td>
-                                    <td data-label="İşlem">
-                                        <div class="font-bold">Hata Oluştu</div>
-                                        <div class="text-xs text-muted">Login servisi</div>
-                                    </td>
-                                    <td data-label="Zaman" class="text-right font-monospace">12:15</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 6. RESİM ODAKLI (BÜYÜK) -->
-                <h3 class="preview-header">6. Medya / Görsel Odaklı</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Önizleme</th>
-                                    <th>Dosya Adı</th>
-                                    <th>Boyut</th>
-                                    <th>İndir</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Önizleme">
-                                        <img src="https://ui-avatars.com/api/?name=P+1&background=random"
-                                            class="img-preview-sm">
-                                    </td>
-                                    <td data-label="Dosya Adı"><strong>Landing_Page_v2.png</strong></td>
-                                    <td data-label="Boyut">2.4 MB</td>
-                                    <td data-label="İndir"><button class="action-btn"><i
-                                                class="fas fa-download"></i></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 7. MİNİMAL (BAŞLIKSIZ) -->
-                <h3 class="preview-header">7. Minimalist (Sadece İçerik)</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <tbody>
-                                <tr style="border-bottom:1px solid #333;">
-                                    <td style="padding:15px;"><i class="fas fa-circle text-success dot-indicator"></i>
-                                        Sistem Aktif</td>
-                                    <td class="text-right"><button class="btn btn-sm btn-secondary">Yönet</button></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:15px;"><i class="fas fa-circle text-danger dot-indicator"></i>
-                                        Bakım Modu Kapalı</td>
-                                    <td class="text-right"><button class="btn btn-sm btn-secondary">Yönet</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 8. DETAYLI AKSİYONLAR (Çoklu Buton) -->
-                <h3 class="preview-header">8. Detaylı Aksiyon Grubu</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Öğe</th>
-                                    <th>Hızlı İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="ID">#1024</td>
-                                    <td data-label="Öğe"><strong>Ana Sayfa Slider</strong></td>
-                                    <td data-label="Hızlı İşlemler">
-                                        <div class="action-btns">
-                                            <button class="btn btn-sm btn-success"><i class="fas fa-eye"></i></button>
-                                            <button class="btn btn-sm btn-primary"><i class="fas fa-pen"></i></button>
-                                            <button class="btn btn-sm btn-warning"><i class="fas fa-copy"></i></button>
-                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 9. TEAM / TAKIM TABLOSU -->
-                <h3 class="preview-header">9. Takım / Çoklu Kullanıcı</h3>
-                <div class="card preview-card-spacer">
-                    <div class="table-responsive">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Takım Lideri</th>
-                                    <th>Üyeler</th>
-                                    <th>Proje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Lider">
-                                        <div class="d-flex align-items-center gap-8">
-                                            <img src="https://ui-avatars.com/api/?name=Ali&background=random"
-                                                class="avatar-sm avatar-circle">
-                                            Ali V.
-                                        </div>
-                                    </td>
-                                    <td data-label="Üyeler">
-                                        <div class="d-flex pl-10">
-                                            <img src="https://ui-avatars.com/api/?name=A&background=random"
-                                                class="avatar-xs avatar-circle avatar-group-item">
-                                            <img src="https://ui-avatars.com/api/?name=B&background=random"
-                                                class="avatar-xs avatar-circle avatar-group-item">
-                                            <img src="https://ui-avatars.com/api/?name=C&background=random"
-                                                class="avatar-xs avatar-circle avatar-group-item">
-                                            <div class="avatar-more">+3</div>
-                                        </div>
-                                    </td>
-                                    <td data-label="Proje">Portfolio v2</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
 
             <footer class="admin-footer">
-                <div>&copy; 2024 Baran Dasdemir.</div>
+                <div>&copy; 2024 Baran Dasdemir. Tüm hakları saklıdır.</div>
+                <div>v1.0.0</div>
             </footer>
         </main>
     </div>
+
+    <script src="js/modules/pages.js"></script>
+    <script src="js/modules/notifications.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script src="js/modules/ui.js"></script>
+    <script src="js/modules/table-previews.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 
 </html>

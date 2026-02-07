@@ -1,6 +1,12 @@
 /* Table Variations CSS Module - Theme Compatible */
 
-/* Layout & Spacing */
+/* ============================================
+   LAYOUT & SPACING
+   ============================================ */
+.mt-25 {
+    margin-top: 25px;
+}
+
 .preview-grid {
     display: block !important;
 }
@@ -18,42 +24,73 @@
     font-weight: 600;
 }
 
-/* Visual Icon Box (Design 1) */
-.visual-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+/* ============================================
+   FILTER CONTAINER (Blog/Projects Style)
+   ============================================ */
+.filter-container {
     display: flex;
+    gap: 10px;
     align-items: center;
-    justify-content: center;
 }
 
-/* Note: Using rgba for transparency is okay as it overlays on theme bg */
-.visual-box.blue {
+.filter-select {
+    min-width: 160px;
+}
+
+.filter-search {
+    min-width: 180px;
+}
+
+@media (max-width: 640px) {
+    .filter-container {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .filter-select,
+    .filter-search {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+/* ============================================
+   TABLE IMAGE STYLES
+   ============================================ */
+.table-img {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--admin-border);
+}
+
+/* ============================================
+   TECHNOLOGY TAGS
+   ============================================ */
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tech-tag {
+    display: inline-block;
+    padding: 3px 8px;
     background: rgba(99, 102, 241, 0.1);
     color: var(--admin-primary);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 
-.visual-box.green {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--admin-success);
-}
-
-.visual-box.orange {
-    background: rgba(245, 158, 11, 0.1);
-    color: var(--admin-warning);
-}
-
-.visual-box.red {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--admin-danger);
-}
-
-/* Deleted Row Styling */
+/* ============================================
+   DELETED ROW STYLING
+   ============================================ */
+.deleted-item,
 .tr-deleted {
     opacity: 0.75;
     background: rgba(239, 68, 68, 0.05);
-    /* Slight red tint works on both dark/light */
 }
 
 .text-deleted {
@@ -62,7 +99,9 @@
     opacity: 0.8;
 }
 
-/* Restore Buttons */
+/* ============================================
+   RESTORE BUTTONS
+   ============================================ */
 .action-btn.restore {
     color: var(--admin-warning);
     border-color: rgba(245, 158, 11, 0.3);
@@ -79,6 +118,15 @@
     background-color: rgba(245, 158, 11, 0.1);
     color: var(--admin-warning);
     border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
 }
 
 .btn-restore:hover {
@@ -86,10 +134,38 @@
     color: #fff !important;
 }
 
-/* Profile Images & Avatars */
+/* ============================================
+   USER CELL (Avatar + Info)
+   ============================================ */
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-cell-info {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================
+   AVATAR STYLES
+   ============================================ */
 .avatar-md {
     width: 40px;
     height: 40px;
+    object-fit: cover;
+}
+
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.avatar-xs {
+    width: 25px;
+    height: 25px;
     object-fit: cover;
 }
 
@@ -101,9 +177,15 @@
     border-radius: 50%;
 }
 
+/* Avatar Group */
+.avatar-group {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
 .avatar-group-item {
     border: 2px solid var(--admin-card);
-    /* Border matches card bg to create 'cutout' effect */
     margin-left: -10px;
 }
 
@@ -119,32 +201,112 @@
     justify-content: center;
     border: 2px solid var(--admin-card);
     margin-left: -10px;
+    font-weight: 600;
 }
 
-/* Minimal & Status Dots */
-.dot-indicator {
-    font-size: 8px;
-    margin-right: 10px;
+/* ============================================
+   ROLE BADGES
+   ============================================ */
+.role-admin {
+    color: var(--admin-primary) !important;
+    border-color: var(--admin-primary) !important;
 }
 
-/* Image Previews */
-.img-preview-sm {
-    width: 80px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid var(--admin-border);
+.role-editor {
+    color: var(--admin-secondary) !important;
+    border-color: var(--admin-secondary) !important;
+}
+
+.role-user {
+    color: var(--admin-text-muted) !important;
+    border-color: var(--admin-border) !important;
+}
+
+/* ============================================
+   MESSAGE TABLE STYLES
+   ============================================ */
+.unread-row {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.sender-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.unread-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--admin-danger);
+    flex-shrink: 0;
+}
+
+/* ============================================
+   STATISTICS TABLE
+   ============================================ */
+.page-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-cell i {
+    font-size: 1rem;
+}
+
+.metric-value {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.trend-up {
+    color: var(--admin-success);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.trend-down {
+    color: var(--admin-danger);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.trend-up i,
+.trend-down i {
+    margin-right: 3px;
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   TASK TABLE STYLES
+   ============================================ */
+.task-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--admin-primary);
+    cursor: pointer;
 }
 
 /* Progress Bars */
 .progress-wrapper {
-    width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 120px;
 }
 
 .progress-track {
+    flex: 1;
     height: 6px;
     background: var(--admin-border);
-    /* Adaptive track color */
     border-radius: 3px;
     overflow: hidden;
 }
@@ -152,39 +314,208 @@
 .progress-fill {
     height: 100%;
     background: var(--admin-success);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-fill.progress-75 {
+    width: 75%;
+}
+
+.progress-fill.progress-40 {
+    width: 40%;
+    background: var(--admin-warning);
+}
+
+.progress-fill.progress-100 {
+    width: 100%;
 }
 
 .progress-label {
     font-size: 0.75rem;
-    margin-top: 3px;
+    color: var(--admin-text-muted);
+    min-width: 35px;
     text-align: right;
+}
+
+/* Priority Badges */
+.priority-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.priority-high {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--admin-danger);
+}
+
+.priority-medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--admin-warning);
+}
+
+.priority-low {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--admin-success);
+}
+
+/* ============================================
+   LOG TABLE STYLES
+   ============================================ */
+.log-table tbody tr {
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.log-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.log-time-cell {
+    width: 80px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.log-time {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--admin-text);
+}
+
+.log-date {
+    display: block;
+    font-size: 0.7rem;
     color: var(--admin-text-muted);
 }
 
-/* Timeline/Logs */
-.log-dot-cell {
-    width: 50px;
-    text-align: center;
-}
-
-.log-dot {
+.log-dot-indicator {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    margin: auto;
+    margin: 0 auto;
+}
+
+.log-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.log-content strong {
+    font-weight: 600;
+}
+
+.log-content .text-muted {
+    font-size: 0.8rem;
+}
+
+/* Log Dot Colors */
+.bg-success {
+    background: var(--admin-success);
+}
+
+.bg-primary {
+    background: var(--admin-primary);
+}
+
+.bg-danger {
+    background: var(--admin-danger);
+}
+
+.bg-warning {
+    background: var(--admin-warning);
 }
 
 .bg-purple {
-    background: var(--admin-primary);
+    background: var(--admin-secondary);
 }
 
 .bg-red {
     background: var(--admin-danger);
 }
 
-/* Utility Text */
+/* ============================================
+   FILE TABLE STYLES
+   ============================================ */
+.file-preview {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.file-image {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--admin-primary);
+}
+
+.file-pdf {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--admin-danger);
+}
+
+.file-doc {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--admin-info);
+}
+
+.file-type {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.type-image {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--admin-primary);
+}
+
+.type-pdf {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--admin-danger);
+}
+
+.type-doc {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--admin-info);
+}
+
+/* ============================================
+   ARCHIVE TABLE STYLES
+   ============================================ */
+.archive-table tbody tr {
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.archive-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.archive-item i {
+    font-size: 1rem;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
 .text-primary {
     color: var(--admin-primary) !important;
+}
+
+.text-secondary {
+    color: var(--admin-secondary) !important;
 }
 
 .text-warning {
@@ -227,6 +558,10 @@
     gap: 8px;
 }
 
+.gap-5 {
+    gap: 5px;
+}
+
 .pl-10 {
     padding-left: 10px;
 }
@@ -235,6 +570,184 @@
     font-size: 0.75rem;
 }
 
+.text-sm {
+    font-size: 0.85rem;
+}
+
 .text-right {
     text-align: right;
+}
+
+/* ============================================
+   IMAGE PREVIEWS (Legacy Support)
+   ============================================ */
+.img-preview-sm {
+    width: 80px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--admin-border);
+}
+
+/* ============================================
+   VISUAL ICON BOX (Design Elements)
+   ============================================ */
+.visual-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.visual-box.blue {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--admin-primary);
+}
+
+.visual-box.green {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--admin-success);
+}
+
+.visual-box.orange {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--admin-warning);
+}
+
+.visual-box.red {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--admin-danger);
+}
+
+/* ============================================
+   MINIMAL TABLE / STATUS DOTS (Legacy)
+   ============================================ */
+.dot-indicator {
+    font-size: 8px;
+    margin-right: 10px;
+}
+
+/* ============================================
+   TIMELINE/LOGS (Legacy Support)
+   ============================================ */
+.log-dot-cell {
+    width: 50px;
+    text-align: center;
+}
+
+.log-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: auto;
+}
+
+/* ============================================
+   MODAL STYLES
+   ============================================ */
+.admin-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-modal-overlay.active {
+    display: flex;
+}
+
+.admin-modal {
+    background: var(--admin-card);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    overflow: hidden;
+}
+
+.admin-modal .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-modal .modal-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.modal-icon-restore {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--admin-warning);
+}
+
+.admin-modal .modal-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.admin-modal .modal-body {
+    padding: 20px;
+    color: var(--admin-text);
+    line-height: 1.6;
+}
+
+.admin-modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid var(--admin-border);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 768px) {
+    .progress-wrapper {
+        min-width: 100px;
+    }
+    
+    .tech-tags {
+        max-width: 150px;
+    }
+    
+    .avatar-group {
+        padding-left: 5px;
+    }
+}
+
+@media (max-width: 640px) {
+    .log-table tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 15px;
+    }
+    
+    .log-time-cell {
+        width: auto;
+        text-align: left;
+        margin-right: 10px;
+    }
+    
+    .log-content {
+        flex: 1;
+    }
 }

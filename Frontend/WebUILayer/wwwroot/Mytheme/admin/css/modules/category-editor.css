@@ -1,0 +1,97 @@
+/* Category Editor Page Styles */
+
+/* ============================================
+   EDITOR CARD - Full width
+   ============================================ */
+.category-editor-card {
+    width: 100%;
+    max-width: 100%;
+}
+
+.card-body {
+    padding: 25px;
+}
+
+/* ============================================
+   FORM STYLES
+   ============================================ */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--admin-text-muted);
+}
+
+.form-hint {
+    font-size: 0.75rem;
+    color: var(--admin-text-muted);
+    margin-top: 8px;
+}
+
+/* Icon Input */
+.icon-input-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-input-wrapper .form-control {
+    flex: 1;
+}
+
+.btn-icon-search {
+    padding: 14px 18px;
+    white-space: nowrap;
+}
+
+/* ============================================
+   FORM ACTIONS
+   ============================================ */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid var(--admin-border);
+}
+
+.form-actions .btn {
+    flex: 1;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+    .category-editor-card {
+        max-width: 100%;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .color-theme-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    .icon-input-wrapper {
+        flex-direction: column;
+    }
+    
+    .btn-icon-search {
+        width: 100%;
+    }
+}
