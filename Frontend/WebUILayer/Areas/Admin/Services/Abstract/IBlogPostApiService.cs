@@ -3,7 +3,7 @@ using DtoLayer.Shared;
 
 namespace WebUILayer.Areas.Admin.Services.Abstract
 {
-    public interface IBlogPostApiService:IGenericApiService<BlogPostDto,CreateBlogPostDto, BlogPostDto>
+    public interface IBlogPostApiService:IGenericApiService<BlogPostDto,CreateBlogPostDto, UpdateBlogPostDto>
     {
         Task<BlogPostListDto?> GetDetailById(Guid guid);
         Task<BlogPostListDto?> GetDetailBySlug(string slug);

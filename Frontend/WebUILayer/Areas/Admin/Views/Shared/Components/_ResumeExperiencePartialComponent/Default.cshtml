@@ -1,0 +1,121 @@
+﻿@using System.Globalization
+@model List<DtoLayer.ExperienceDtos.ExperienceDto>
+
+<!-- Work Experience -->
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-briefcase briefcase-icon"></i>İş Deneyimi</h3>
+        <a asp-action="CreateExperience" class="btn btn-sm btn-outline">
+            <i class="fas fa-plus"></i> Ekle
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Pozisyon</th>
+                    <th>Şirket</th>
+                    <th>Tarih</th>
+                    <th>Görünürlük</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    if (item.IsDeleted == true)
+                    {
+                        <tr class="deleted-item">
+                            <td><strong>@item.ExperienceTitle</strong></td>
+                            <td>@item.ExperienceCompanyName</td>
+                            <td>
+                                @item.ExperienceStartDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR"))-
+                                @(item.ExperienceFinishDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR")) ?? "Devam Ediyor")
+                            </td>
+                            <td><span class="status-badge danger">Silindi</span></td>
+                            <td><span class="status-badge draft">Geçmiş</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <a asp-action="UpdateExperience" asp-route-guid="@item.Id" class="action-btn edit"
+                                       title="Detaylar">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="DeleteExperience" asp-route-guid="@item.Id">
+                                        <button class="action-btn delete hidden" title="Sil" data-action="deleteRow">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-action="RestoreExperience" asp-route-guid="@item.Id">
+                                        <button class="action-btn restore" title="Geri Yükle" data-action="restoreRow">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.IsDeleted == false)
+                    {
+                        <tr>
+                            <td><strong>@item.ExperienceTitle</strong></td>
+                            <td>@item.ExperienceCompanyName</td>
+                            <td>
+                                @item.ExperienceStartDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR"))-
+                                @(item.ExperienceFinishDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR")) ?? "Devam Ediyor")
+                            </td>
+                            <td><span class="status-badge active">Sitede Aktif</span></td>
+                            <td><span class="status-badge active">Devam Ediyor</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <a asp-action="UpdateExperience" asp-route-guid="@item.Id" class="action-btn edit"
+                                       title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="DeleteExperience" asp-route-guid="@item.Id">
+                                        <button class="action-btn delete" title="Sil" data-action="deleteRow">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-action="RestoreExperience" asp-route-guid="@item.Id">
+                                        <button class="action-btn restore hidden" title="Geri Yükle" data-action="restoreRow">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+                @*  
+                <tr>
+                    <td><strong>Frontend Developer</strong></td>
+                    <td>Digital Agency</td>
+                    <td>2019 - 2020</td>
+                    <td><span class="status-badge active">Sitede Aktif</span></td>
+                    <td><span class="status-badge draft">Geçmiş</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <a href="resume-editor.html?type=job&id=3" class="action-btn edit"
+                               title="Düzenle">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <button class="action-btn delete" title="Sil" data-action="deleteRow">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="action-btn restore hidden" title="Geri Yükle"
+                                    data-action="restoreRow">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr> *@
+            </tbody>
+        </table>
+    </div>
+</div>

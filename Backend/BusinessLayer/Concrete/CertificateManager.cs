@@ -82,6 +82,7 @@ public class CertificateManager : ICertificateService
         {
             return null;
         }
+        _mapper.Map(dto, entity);
         await _certificateDal.UpdateAsync(entity);
         await _certificateDal.SaveAsync();
         return _mapper.Map<CertificateDto>(entity);

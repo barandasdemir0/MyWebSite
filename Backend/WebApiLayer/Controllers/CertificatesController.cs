@@ -24,6 +24,14 @@ public sealed class CertificatesController:ControllerBase
         return Ok(values);
     }
 
+    [HttpGet("admin-all")]
+    public async Task<IActionResult> GetAllAdmin()
+    {
+        var values = await _certificateService.GetAllAdminAsync();
+        return Ok(values);
+    }
+
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {

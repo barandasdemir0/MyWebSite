@@ -1,0 +1,80 @@
+﻿@model CreateExperienceDto
+@{
+    ViewData["Title"] = "CreateExperience";
+    ViewData["BodyClass"] = "resume-editor-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card editor-card">
+    <div class="card-header">
+        <h3 id="formTitle">Deneyim Bilgileri</h3>
+    </div>
+
+    <form asp-action="CreateExperience" method="post" id="resumeForm">
+        <!-- Hidden input to store type (Experience/Education/Certificate) -->
+        <input type="hidden" id="entryType" value="İş Deneyimi">
+        <input type="hidden" id="entryId" value="">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Tür</label>
+                <input type="text" class="form-control" id="displayType" value="İş Deneyimi" disabled>
+            </div>
+            <div class="form-group">
+                <label>Sıralama</label>
+                <input type="number" asp-for="DisplayOrder" class="form-control" id="displayOrder" placeholder="0" min="0">
+                <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label id="labelPosition">Pozisyon / Bölüm *</label>
+                <input type="text" class="form-control" id="inputPosition" asp-for="ExperienceTitle"
+                       placeholder="Örn: Full Stack Developer">
+                <span asp-validation-for="ExperienceTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label id="labelCompany">Şirket / Okul / Kurum *</label>
+                <input type="text" asp-for="ExperienceCompanyName" class="form-control" id="inputCompany" placeholder="Örn: TechCorp">
+                <span asp-validation-for="ExperienceCompanyName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Başlangıç Tarihi *</label>
+                <input type="month" asp-for="ExperienceStartDate" class="form-control" id="inputStartDate" lang="tr">
+                <span asp-validation-for="ExperienceStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Bitiş Tarihi</label>
+                <input type="month" asp-for="ExperienceFinishDate" class="form-control" id="inputEndDate"
+                       placeholder="Boş bırakılırsa 'Devam Ediyor'" lang="tr">
+                <small class="form-text text-muted">Devam ediyorsa boş bırakınız.</small>
+            </div>
+        </div>
+
+        <div class="form-row full">
+            <div class="form-group">
+                <label>Açıklama</label>
+                <textarea class="form-control min-h-150" asp-for="ExperienceDescription" id="inputDescription"
+                          placeholder="Görev ve sorumluluklarınız..."></textarea>
+                <span asp-validation-for="ExperienceDescription" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+            <a asp-action="Index" class="btn btn-outline">İptal</a>
+
+            <!-- Restore button only shows up when editing a deleted item (logic in JS) -->
+            <button type="button" class="btn btn-warning hidden" id="btnRestore">
+                <i class="fas fa-undo"></i> Geri Yükle
+            </button>
+        </div>
+    </form>
+</div>
+

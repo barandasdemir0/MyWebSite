@@ -8,6 +8,6 @@ public class GithubRepoDto
 {
     public Guid Id { get; set; }
     public string RepoName { get; set; } = string.Empty;
-    public int DisplayOrder { get; set; }
+    public int? DisplayOrder { get; set; }
     public bool IsVisible { get; set; }
 }

@@ -1,0 +1,90 @@
+﻿@model List<DtoLayer.CertificateDtos.CertificateDto>
+@using System.Globalization
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-certificate certificate-icon"></i>Sertifikalar</h3>
+       
+
+        <a asp-action="CreateCertificates"  class="btn btn-sm btn-outline">
+            <i class="fas fa-plus"></i> Ekle
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Sertifika Adı</th>
+                    <th>Kurum</th>
+                    <th>Tarih</th>
+                    <th>Görünürlük</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    if (item.IsDeleted == true)
+                    {
+                        <tr class="deleted-item">
+                            <td><strong>@item.CertificateName</strong></td>
+                            <td>@item.IssuingCompany</td>
+                            <td>@item.IssueDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR"))</td>
+                            <td><span class="status-badge danger">Silindi</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <a asp-action="UpdateCertificates" asp-route-guid="@item.Id" class="action-btn edit"
+                                       title="Detaylar">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="DeleteCertificates" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn delete hidden" title="Sil" data-action="deleteRow">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-action="RestoreCertificates" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit"  class="action-btn restore" title="Geri Yükle" data-action="restoreRow">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                   </form>
+                                   
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.IsDeleted == false)
+                    {
+                        <tr>
+                            <td><strong>@item.CertificateName</strong></td>
+                            <td>@item.IssuingCompany</td>
+                            <td>@item.IssueDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR"))</td>
+                            <td><span class="status-badge active">Sitede Aktif</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <a asp-action="UpdateCertificates" asp-route-guid="@item.Id" class="action-btn edit"
+                                       title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="DeleteCertificates" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn delete" title="Sil" data-action="deleteRow">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-action="RestoreCertificates" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn restore hidden" title="Geri Yükle" data-action="restoreRow">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                   </form>
+                                  
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

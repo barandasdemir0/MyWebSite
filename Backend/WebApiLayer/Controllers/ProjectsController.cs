@@ -22,6 +22,14 @@ public sealed class ProjectsController : ControllerBase
         return Ok(query);
     }
 
+
+    [HttpGet("admin-all")]
+    public async Task<IActionResult> GetAllAdmin()
+    {
+        var query = await _projectService.GetAllAdminAsync();
+        return Ok(query);
+    }
+
     [HttpGet("slug/{slug}")]
     public async Task<IActionResult> GetDetails(string slug)
     {

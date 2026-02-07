@@ -7,7 +7,7 @@ namespace DtoLayer.BlogpostDtos;
 
 public class UpdateBlogPostDto
 {
-    //public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
+    public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public string CoverImage { get; set; } = string.Empty;

@@ -1,0 +1,82 @@
+﻿@model CreateCertificateDto
+@{
+    ViewData["Title"] = "CreateCertificates";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card editor-card">
+    <div class="card-header">
+        <h3 id="formTitle">Deneyim Bilgileri</h3>
+    </div>
+
+    <form method="post" asp-action="CreateCertificates" id="resumeForm">
+        <!-- Hidden input to store type (Experience/Education/Certificate) -->
+        <input type="hidden" id="entryType" value="Sertifika">
+        <input type="hidden" id="entryId" value="">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Tür</label>
+                <input type="text" class="form-control" id="displayType" value="Sertifika" disabled>
+            </div>
+            <div class="form-group">
+                <label>Sıralama</label>
+                <input type="number" class="form-control" id="displayOrder" asp-for="DisplayOrder" placeholder="0" min="0">
+                <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label id="labelPosition">Sertifikayı Adı  *</label>
+                <input type="text" class="form-control" id="inputPosition"
+                       asp-for="CertificateName">
+                <span asp-validation-for="CertificateName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label id="labelCompany">Şirket / Okul / Kurum *</label>
+                <input type="text" class="form-control" id="inputCompany" asp-for="IssuingCompany">
+                <span asp-validation-for="IssuingCompany" class="text-danger"></span>
+            </div>
+        </div>
+
+      
+        <div class="form-row">
+            <div class="form-group">
+                <label>Başlangıç Tarihi *</label>
+                <input type="month" class="form-control" id="inputStartDate" asp-for="IssueDate" lang="tr">
+                <span asp-validation-for="IssueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Bitiş Tarihi</label>
+                <input type="month" class="form-control" id="inputEndDate"
+                       asp-for="ExpiryDate" lang="tr">
+                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                <small class="form-text text-muted">Devam ediyorsa boş bırakınız.</small>
+            </div>
+        </div>
+
+        <div class="form-row full">
+            <div class="form-group">
+                <label>Açıklama</label>
+                <textarea class="form-control min-h-150" id="inputDescription"
+                         asp-for="CertificateDescription"></textarea>
+                <span asp-validation-for="CertificateDescription" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+            <a asp-action="Index" class="btn btn-outline">İptal</a>
+
+            <!-- Restore button only shows up when editing a deleted item (logic in JS) -->
+            <button type="button" class="btn btn-warning hidden" id="btnRestore">
+                <i class="fas fa-undo"></i> Geri Yükle
+            </button>
+        </div>
+    </form>
+</div>
+
+

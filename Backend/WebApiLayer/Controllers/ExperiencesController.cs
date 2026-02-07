@@ -25,6 +25,12 @@ public sealed class ExperiencesController:ControllerBase
         return Ok(query);
     }
 
+    [HttpGet("admin-all")]
+    public async Task<IActionResult> GetAllAdmin()
+    {
+        var query = await _experienceService.GetAllAdminAsync();
+        return Ok(query);
+    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)

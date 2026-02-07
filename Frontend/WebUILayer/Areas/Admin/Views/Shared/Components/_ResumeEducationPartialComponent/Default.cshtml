@@ -1,0 +1,95 @@
+﻿@using System.Globalization
+@model List<DtoLayer.EducationDtos.EducationDto>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-graduation-cap graduation-icon"></i>Eğitim</h3>
+        <a asp-action="CreateEducation" class="btn btn-sm btn-outline">
+            <i class="fas fa-plus"></i> Ekle
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Bölüm</th>
+                    <th>Okul</th>
+                    <th>Tarih</th>
+                    <th>Görünürlük</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    if (item.IsDeleted == true)
+                    {
+                        <tr class="deleted-item">
+                            <td><strong>@item.EducationDegree</strong></td>
+                            <td>@item.EducationSchoolName</td>
+                            <td>
+                                @item.EducationStartDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR")) - 
+                                @(item.EducationFinishDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR")) ?? "Devam Ediyor")
+                            </td>
+                            <td><span class="status-badge danger">Silindi</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <a asp-action="UpdateEducation" asp-route-guid="@item.Id" class="action-btn edit"
+                                       title="Detaylar">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="DeleteEducation" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn delete hidden" title="Sil" data-action="deleteRow">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    <form asp-route-guid="@item.Id" asp-action="RestoreEducation" method="post">
+                                        <button type="submit"  class="action-btn restore" title="Geri Yükle"  data-action="restoreRow">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
+                                 
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.IsDeleted == false)
+                    {
+                        <tr>
+                            <td><strong>@item.EducationDegree</strong></td>
+                            <td>@item.EducationSchoolName</td>
+                            <td> @item.EducationStartDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR")) - @(item.EducationFinishDate?.ToString("MMMM yyyy", new CultureInfo("tr-TR")) ?? "Devam Ediyor")</td>
+                            <td><span class="status-badge active">Sitede Aktif</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <a asp-action="UpdateEducation" asp-route-guid="@item.Id" class="action-btn edit"
+                                       title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-route-guid="@item.Id" asp-action="DeleteEducation" method="post">
+                                        <button   class="action-btn delete" title="Sil" data-action="deleteRow">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <form asp-route-guid="@item.Id" asp-action="RestoreEducation" method="post">
+                                        <button formmethod="post" class="action-btn restore hidden" title="Geri Yükle"
+                                                data-action="restoreRow">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                  </form >
+                                  
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+
+              
+               
+         
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "resume-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/badges.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/resume.css">
+}
+
+@await Component.InvokeAsync("_ResumeExperiencePartialComponent")
+@await Component.InvokeAsync("_ResumeEducationPartialComponent")
+@await Component.InvokeAsync("_ResumeCertificatePartialComponent")
+
+
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/resume.js"></script>
+}

@@ -31,10 +31,30 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
-        services.AddHttpClient<IContactApiService, ContactApiService>(client =>
+        services.AddHttpClient<ICertificateApiService, CertificateApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
         });
+
+        services.AddHttpClient<IEducationApiService, EducationApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IExperienceApiService, ExperienceApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+
+
+
+
+
+
+
+
+
     }
 
 

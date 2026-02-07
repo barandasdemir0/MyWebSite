@@ -1,4 +1,5 @@
 ﻿using DtoLayer.TopicDtos;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Services.Abstract;
@@ -31,18 +32,32 @@ public class TopicController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateTopicDto createTopicDto)
     {
-        var query = await _topicApiService.AddAsync(createTopicDto);
-        return RedirectToAction(nameof(Index));
+        if (!ModelState.IsValid)
+        {
+            return View(createTopicDto);
+        }
+        try
+        {
+            var query = await _topicApiService.AddAsync(createTopicDto);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+
+            ModelState.AddApiError(ex);
+            return View(createTopicDto);
+        }    
+      
 
     }
     [HttpGet]
     public async Task<IActionResult> Update(Guid id)
     {
         var query = await _topicApiService.GetByIdAsync(id);
-        return View(query);
+        return View(query.Adapt<UpdateTopicDto>());
     }
     [HttpPost]
-    public async Task<IActionResult> Update(Guid id, UpdateTopicDto updateTopicDto)
+    public async Task<IActionResult> Update( UpdateTopicDto updateTopicDto)
     {
         if (!ModelState.IsValid)
         {
@@ -50,7 +65,7 @@ public class TopicController : Controller
         }
         try
         {
-            var query = await _topicApiService.UpdateAsync(id, updateTopicDto);
+            var query = await _topicApiService.UpdateAsync(updateTopicDto.Id, updateTopicDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)

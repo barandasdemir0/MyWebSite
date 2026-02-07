@@ -1,4 +1,4 @@
-﻿@model TopicDto
+﻿@model UpdateTopicDto
 @{
     ViewData["Title"] = "Update";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -17,10 +17,13 @@
 
     <form asp-action="Update"   method="post"> 
         @Html.AntiForgeryToken()
+        <input type="hidden" class="form-control" asp-for="Id"
+               required>
         <div class="form-group">
             <label>Kategori Adı *</label>
             <input type="text" class="form-control" asp-for="Name"
                     required>
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="form-actions">

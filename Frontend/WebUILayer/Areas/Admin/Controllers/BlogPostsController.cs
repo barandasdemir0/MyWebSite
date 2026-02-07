@@ -1,5 +1,6 @@
 ﻿using DtoLayer.BlogpostDtos;
 using DtoLayer.Shared;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Models;
@@ -41,7 +42,7 @@ public class BlogPostsController : Controller
     public async Task<IActionResult> Create()
     {
         var model = new CreateBlogPostDto();
-         model.topicList = await _topicApiService.GetAllAsync();
+        model.topicList = await _topicApiService.GetAllAsync();
         return View(model);
     }
 
@@ -52,7 +53,7 @@ public class BlogPostsController : Controller
         {
             createBlogPostDto.topicList = await _topicApiService.GetAllAsync();
             return View(createBlogPostDto);
-            
+
         }
         try
         {
@@ -80,20 +81,20 @@ public class BlogPostsController : Controller
         var query = await _blogPostApiService.GetByIdAsync(guid);
         ViewBag.TopicList = await _topicApiService.GetAllAsync();
 
-        return View(query);
+        return View(query.Adapt<UpdateBlogPostDto>());
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(Guid guid, BlogPostDto dto)
+    public async Task<IActionResult> Update(UpdateBlogPostDto updateBlogPostDto)
     {
         if (!ModelState.IsValid)
         {
             ViewBag.TopicList = await _topicApiService.GetAllAsync();
-            return View(dto);     
+            return View(updateBlogPostDto);
         }
         try
         {
-            var query = await _blogPostApiService.UpdateAsync(guid, dto);
+            var query = await _blogPostApiService.UpdateAsync(updateBlogPostDto.Id, updateBlogPostDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
@@ -101,7 +102,7 @@ public class BlogPostsController : Controller
             ModelState.AddApiError(ex);
             ViewBag.TopicList = await _topicApiService.GetAllAsync();
 
-            return View(dto);
+            return View(updateBlogPostDto);
         }
 
 
