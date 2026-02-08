@@ -76,11 +76,8 @@ public class BlogPostsController : Controller
     [HttpGet]
     public async Task<IActionResult> Update(Guid guid)
     {
-
-
         var query = await _blogPostApiService.GetByIdAsync(guid);
         ViewBag.TopicList = await _topicApiService.GetAllAsync();
-
         return View(query.Adapt<UpdateBlogPostDto>());
     }
 

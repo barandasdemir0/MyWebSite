@@ -19,8 +19,6 @@ namespace CV.EntityLayer.Entities
 
         // Detaylı Açıklamalar
         public string? Goals { get; set; }
-        public string? Features { get; set; }
-        public string? Results { get; set; }
 
         // Linkler
         public string? WebsiteUrl { get; set; }
@@ -30,8 +28,8 @@ namespace CV.EntityLayer.Entities
         public string Technologies { get; set; } = string.Empty;
 
         // Diğer
-        public bool IsFeatured { get; set; } = false;
-        public int DisplayOrder { get; set; }
+        public bool IsPublished { get; set; } = false;
+        public DateTime? PublishedAt { get; set; }
 
         // Many-to-Many Navigation
         public ICollection<ProjectTopic> ProjectTopics { get; set; } = new List<ProjectTopic>();

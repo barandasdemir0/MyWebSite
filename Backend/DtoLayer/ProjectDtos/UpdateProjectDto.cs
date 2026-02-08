@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DtoLayer.TopicDtos;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,14 +16,13 @@ public class UpdateProjectDto
     public string? Duration { get; set; }
     public string? Role { get; set; }
     public string? Goals { get; set; }
-    public string? Features { get; set; }
-    public string? Results { get; set; }
     public string? WebsiteUrl { get; set; }
     public string? GithubUrl { get; set; }
     public string Technologies { get; set; } = string.Empty;
-    public bool IsFeatured { get; set; }
-    public int DisplayOrder { get; set; }
+    public bool IsPublished { get; set; } = false;
+    public DateTime? PublishedAt { get; set; }
 
     // İlişkiler (Seçim)
     public List<Guid> TopicIds { get; set; } = new();
+    public List<TopicDto>? topicList { get; set; }
 }

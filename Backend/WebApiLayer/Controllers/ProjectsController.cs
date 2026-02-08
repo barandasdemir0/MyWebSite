@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.ProjectDtos;
+using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
@@ -24,10 +25,10 @@ public sealed class ProjectsController : ControllerBase
 
 
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin()
+    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query)
     {
-        var query = await _projectService.GetAllAdminAsync();
-        return Ok(query);
+        var result = await _projectService.GetAllAdminAsync(query);
+        return Ok(result);
     }
 
     [HttpGet("slug/{slug}")]

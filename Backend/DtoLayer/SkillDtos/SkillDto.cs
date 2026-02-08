@@ -12,4 +12,5 @@ public class SkillDto
     public string SkillIcon { get; set; } = string.Empty;
     public int Percentage { get; set; }
     public int DisplayOrder { get; set; }
+
 }

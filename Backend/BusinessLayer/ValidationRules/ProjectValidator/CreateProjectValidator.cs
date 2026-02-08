@@ -33,6 +33,11 @@ namespace BusinessLayer.ValidationRules.ProjectValidator
                 .Must(x => !string.IsNullOrWhiteSpace(x))
                 .WithMessage("Başlık sadece boşluklardan oluşamaz");
 
+            RuleFor(x => x.Technologies)
+                .NotEmpty()
+                .WithMessage("Açıklama Boş Geçilemez");
+
+
             RuleFor(x => x.ImageUrl)
                 .MaximumLength(200)
                 .WithMessage("200 Karakterden daha fazla bir resim linki olamaz olamaz");
@@ -52,14 +57,6 @@ namespace BusinessLayer.ValidationRules.ProjectValidator
             RuleFor(x => x.Goals)
                 .MaximumLength(3000)
                 .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz");
-
-            RuleFor(x => x.Features)
-                .MaximumLength(3000)
-                .WithMessage("3000 Karakterden daha fazla bir özellikleri konusu olamaz");
-
-            RuleFor(x => x.Results)
-                .MaximumLength(3000)
-                .WithMessage("3000 Karakterden daha fazla bir sonuç çıktısı olamaz");
 
             RuleFor(x => x.WebsiteUrl)
                 .MaximumLength(300)

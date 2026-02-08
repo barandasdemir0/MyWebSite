@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DtoLayer.TopicDtos;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,18 +22,19 @@ public class ProjectDto
 
     // Detaylar
     public string? Goals { get; set; }
-    public string? Features { get; set; }
-    public string? Results { get; set; }
 
     // Linkler & Tech
     public string? WebsiteUrl { get; set; }
     public string? GithubUrl { get; set; }
     public string Technologies { get; set; } = string.Empty;
 
-    public bool IsFeatured { get; set; }
-    public int DisplayOrder { get; set; }
+    public bool IsPublished { get; set; } = false;
+    public DateTime? PublishedAt { get; set; }
 
+    public bool IsDeleted { get; set; } = false;
     // İlişkiler (Okuma)
     public List<string> Topics { get; set; } = new();        // Topic isimleri
     public List<string> RelatedBlogs { get; set; } = new();  // Blog başlıkları
+    public List<Guid> TopicIds { get; set; } = new();  // ← EKLE (ID'ler)
+    public List<TopicDto>? topicList { get; set; }  // ← EKLE
 }

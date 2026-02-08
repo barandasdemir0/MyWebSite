@@ -19,8 +19,9 @@ public class ProjectListDto
     public string? WebsiteUrl { get; set; } // "Demo" butonu
     public string? GithubUrl { get; set; }  // "GitHub" butonu
     public string Technologies { get; set; } = string.Empty; // Badge'ler için
-
-    public bool IsFeatured { get; set; }
+    public DateTime? PublishedAt { get; set; }
+    public bool IsPublished { get; set; } = false;
+    public bool IsDeleted { get; set; } = false;
 
     // Topic listesi (Navigation'dan gelecek isimler)
     public List<string> Topics { get; set; } = new();

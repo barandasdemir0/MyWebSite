@@ -1,132 +1,125 @@
 /**
- * Project Editor Script
- * Handles toolbar buttons for the project description editor
+ * Project Editor Script - Düzeltilmiş
  */
 document.addEventListener('DOMContentLoaded', function () {
-    const toolbar = document.querySelector('#projectForm [style*="flex-wrap"]');
-    if (!toolbar) return;
 
-    const editorDiv = document.querySelector('#projectForm [contenteditable="true"]');
-    if (!editorDiv) return;
+    const form = document.getElementById('createProjectForm') || document.getElementById('updateProjectForm');
+    const SUBMIT_KEY = 'projectFormLastSubmit';
+    let submitBlocked = false;
 
-    editorDiv.id = 'projectEditorContent';
+    // ✅ SAYFA YÜKLENME KORUMASI - ama return yok!
+    if (form) {
+        const lastSubmit = parseInt(sessionStorage.getItem(SUBMIT_KEY) || '0');
+        if (Date.now() - lastSubmit < 3000) {
+            console.log('🛑 Auto-submit will be blocked');
+            submitBlocked = true;
+            setTimeout(() => {
+                sessionStorage.removeItem(SUBMIT_KEY);
+                submitBlocked = false;
+            }, 3000);
+        }
+    }
 
-    // Highlight.js integration for project editor
-    if (typeof hljs !== 'undefined') {
-        editorDiv.addEventListener('input', function() {
-            // Highlight all code blocks in the editor
-            this.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightElement(block);
+    // ✅ SELECT2 KATEGORİ - Her zaman çalışır
+    setTimeout(function () {
+        const categorySelector = '#projectCategory';
+        if (typeof $ !== 'undefined' && $(categorySelector).length > 0) {
+            if ($(categorySelector).hasClass('select2-hidden-accessible')) {
+                $(categorySelector).select2('destroy');
+            }
+            var categorySelect = $(categorySelector).select2({
+                placeholder: "Kategori seçin",
+                allowClear: true,
+                width: '100%'
             });
+            var selectedVals = [];
+            $(categorySelector + ' option[selected]').each(function () {
+                selectedVals.push($(this).val());
+            });
+            if (selectedVals.length > 0) {
+                categorySelect.val(selectedVals).trigger('change');
+            }
+        }
+    }, 100);
+
+    // ✅ EDITOR CONTENT YÜKLEME - Her zaman çalışır
+    const editorContent = document.getElementById('editorContent');
+    const hiddenInput = document.getElementById('hiddenContentInput');
+    if (editorContent && hiddenInput) {
+        if (hiddenInput.value && hiddenInput.value.trim() !== '') {
+            editorContent.innerHTML = hiddenInput.value;
+        }
+        editorContent.addEventListener('input', function () {
+            hiddenInput.value = this.innerHTML;
         });
     }
 
-    const buttons = toolbar.querySelectorAll('button.btn');
+    // ✅ TEKNOLOJİ TAG SİSTEMİ - Her zaman çalışır
+    const techTagInput = document.getElementById('techTagInput');
+    const techTagsContainer = document.getElementById('techTagsContainer');
+    const hiddenTech = document.getElementById('hiddenTechnologies');
 
-    buttons.forEach(btn => {
-        const title = btn.getAttribute('title') || '';
-
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            editorDiv.focus();
-
-            // Text formatting
-            if (title.includes('Kalın')) document.execCommand('bold');
-            else if (title.includes('İtalik')) document.execCommand('italic');
-            else if (title.includes('Altı Çizili')) document.execCommand('underline');
-            else if (title.includes('Üstü Çizili')) document.execCommand('strikeThrough');
-
-            // Headings
-            else if (btn.textContent === 'H1') document.execCommand('formatBlock', false, '<h1>');
-            else if (btn.textContent === 'H2') document.execCommand('formatBlock', false, '<h2>');
-            else if (btn.textContent === 'H3') document.execCommand('formatBlock', false, '<h3>');
-
-            // Lists
-            else if (title.includes('Madde')) document.execCommand('insertUnorderedList');
-            else if (title.includes('Numaralı')) document.execCommand('insertOrderedList');
-            else if (title.includes('Alıntı')) document.execCommand('insertHTML', false, '<blockquote>Alıntı...</blockquote><p></p>');
-
-            // Links & Media - with modals
-            else if (title.includes('Link')) showInputModal('Link URL:', url => url && document.execCommand('createLink', false, url));
-            else if (title.includes('Resim')) showInputModal('Resim URL:', url => url && document.execCommand('insertHTML', false, '<img src="' + url + '" style="max-width:100%"><p></p>'));
-            else if (title.includes('Video')) showInputModal('Video URL:', url => url && document.execCommand('insertHTML', false, '<iframe src="' + url + '" width="560" height="315" frameborder="0"></iframe><p></p>'));
-            else if (title.includes('Kod')) showInputModal('Kod:', code => code && document.execCommand('insertHTML', false, '<pre><code>' + code + '</code></pre><p></p>'));
-
-            // Alignment
-            else if (title.includes('Sola')) document.execCommand('justifyLeft');
-            else if (title.includes('Ortala')) document.execCommand('justifyCenter');
-            else if (title.includes('Sağa')) document.execCommand('justifyRight');
-            else if (title.includes('Yana')) document.execCommand('justifyFull');
-
-            // Extras
-            else if (title.includes('Tablo')) document.execCommand('insertHTML', false, '<table border="1" style="width:100%;border-collapse:collapse;"><tr><td style="padding:8px;">1</td><td style="padding:8px;">2</td></tr><tr><td style="padding:8px;">3</td><td style="padding:8px;">4</td></tr></table><p></p>');
-            else if (title.includes('Yatay')) document.execCommand('insertHTML', false, '<hr><p></p>');
-            else if (title.includes('Emoji')) {
-                const emojis = ['😀', '👍', '❤️', '🎉', '🚀', '✅', '⭐', '🔥'];
-                document.execCommand('insertText', false, emojis[Math.floor(Math.random() * emojis.length)]);
-            }
-
-            // Undo/Redo
-            else if (title.includes('Geri Al')) document.execCommand('undo');
-            else if (title.includes('İleri')) document.execCommand('redo');
+    function addTag(text) {
+        if (!text || !techTagsContainer || !techTagInput) return;
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.innerHTML = text + ' <span class="tag-remove">×</span>';
+        tag.querySelector('.tag-remove').addEventListener('click', function () {
+            tag.remove();
         });
-    });
+        techTagsContainer.insertBefore(tag, techTagInput);
+    }
 
-    // Color pickers
-    toolbar.querySelectorAll('input[type="color"]').forEach((input, i) => {
-        input.addEventListener('change', function () {
-            editorDiv.focus();
-            document.execCommand(i === 0 ? 'foreColor' : 'hiliteColor', false, this.value);
+    // Mevcut tag'ları yükle
+    if (hiddenTech && hiddenTech.value && hiddenTech.value.trim() !== '') {
+        hiddenTech.value.split(',').forEach(tagText => {
+            if (tagText.trim()) addTag(tagText.trim());
         });
-    });
+    }
 
-    // Modal helper function
-    function showInputModal(label, callback) {
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.style.display = 'flex';
-        modal.innerHTML = `
-            <div class="modal-content" style="max-width: 400px;">
-                <div class="modal-header">
-                    <h3>${label.split(':')[0]}</h3>
-                    <button class="btn btn-sm btn-outline close-modal"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>${label}</label>
-                        <input type="text" class="form-control modal-input" value="https://">
-                    </div>
-                </div>
-                <div class="modal-footer" style="display:flex;gap:10px;justify-content:flex-end;padding:15px 20px;border-top:1px solid var(--admin-border);">
-                    <button class="btn btn-outline close-modal">İptal</button>
-                    <button class="btn btn-primary confirm-modal">Ekle</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-
-        const input = modal.querySelector('.modal-input');
-        setTimeout(() => input.select(), 100);
-
-        modal.querySelectorAll('.close-modal').forEach(btn => {
-            btn.addEventListener('click', () => modal.remove());
-        });
-
-        modal.querySelector('.confirm-modal').addEventListener('click', () => {
-            callback(input.value);
-            modal.remove();
-        });
-
-        input.addEventListener('keydown', (e) => {
+    if (techTagInput) {
+        techTagInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
-                callback(input.value);
-                modal.remove();
+                e.preventDefault();
+                const value = this.value.trim();
+                if (value) {
+                    addTag(value);
+                    this.value = '';
+                }
             }
         });
+    }
 
-        // Close on backdrop click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.remove();
+    // ✅ FORM SUBMIT - Koruma burada
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            // Bloklandıysa engelle
+            if (submitBlocked) {
+                console.log('❌ Submit blocked');
+                e.preventDefault();
+                return false;
+            }
+
+            e.preventDefault();
+            sessionStorage.setItem(SUBMIT_KEY, Date.now().toString());
+
+            // Sync
+            const editor = document.getElementById('editorContent');
+            const hidden = document.getElementById('hiddenContentInput');
+            if (editor && hidden) {
+                hidden.value = editor.innerHTML;
+            }
+
+            if (techTagsContainer && hiddenTech) {
+                const tags = techTagsContainer.querySelectorAll('.tag');
+                const values = [];
+                tags.forEach(tag => {
+                    values.push(tag.textContent.replace('×', '').trim());
+                });
+                hiddenTech.value = values.join(',');
+            }
+
+            HTMLFormElement.prototype.submit.call(this);
         });
     }
 });

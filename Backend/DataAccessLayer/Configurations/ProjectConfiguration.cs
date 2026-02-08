@@ -27,8 +27,6 @@ namespace DataAccessLayer.Configurations
             builder.Property(x => x.Role).HasMaxLength(100);
             // Detaylı Açıklamalar
             builder.Property(x => x.Goals).HasMaxLength(3000);
-            builder.Property(x => x.Features).HasMaxLength(3000);
-            builder.Property(x => x.Results).HasMaxLength(3000);
             // Linkler
             builder.Property(x => x.WebsiteUrl).HasMaxLength(300);
             builder.Property(x => x.GithubUrl).HasMaxLength(300);

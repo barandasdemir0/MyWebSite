@@ -5,8 +5,8 @@ using System.Text;
 
 namespace DataAccessLayer.Abstract
 {
-    public interface ITopicDal:IGenericRepository<Topic>
+    public interface ITopicDal : IGenericRepository<Topic>
     {
-        Task<Topic?> GetDeleteByIdAsync(Guid guid);
+        Task<Topic?> RestoreDeleteByIdAsync(Guid guid);
     }
 }

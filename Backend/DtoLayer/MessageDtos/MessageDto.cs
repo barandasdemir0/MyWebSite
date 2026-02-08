@@ -17,6 +17,7 @@ public class MessageDto
     public bool IsRead { get; set; }
     public bool IsStarred { get; set; }
     public string Folder { get; set; } = string.Empty; // Enum string olarak gelecek
+    public bool IsDeleted { get; set; } = false;
 
     public DateTime CreatedAt { get; set; }  // CreatedAt BaseEntity'den geliyor
 }

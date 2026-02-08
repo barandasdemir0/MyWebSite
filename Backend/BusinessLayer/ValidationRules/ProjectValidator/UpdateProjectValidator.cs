@@ -23,6 +23,9 @@ namespace BusinessLayer.ValidationRules.ProjectValidator
                 .WithMessage("Kısa Açıklama Boş Geçilemez")
                 .MaximumLength(1000)
                 .WithMessage("1000 Karakterden daha fazla bir Kısa Açıklama olamaz");
+            RuleFor(x => x.Technologies)
+              .NotEmpty()
+              .WithMessage("Açıklama Boş Geçilemez");
 
             RuleFor(x => x.Description)
                 .NotEmpty()
@@ -47,14 +50,6 @@ namespace BusinessLayer.ValidationRules.ProjectValidator
             RuleFor(x => x.Goals)
                 .MaximumLength(3000)
                 .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz");
-
-            RuleFor(x => x.Features)
-                .MaximumLength(3000)
-                .WithMessage("3000 Karakterden daha fazla bir özellikleri konusu olamaz");
-
-            RuleFor(x => x.Results)
-                .MaximumLength(3000)
-                .WithMessage("3000 Karakterden daha fazla bir sonuç çıktısı olamaz");
 
             RuleFor(x => x.WebsiteUrl)
                 .MaximumLength(300)

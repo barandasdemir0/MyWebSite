@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const showFormBtns = document.querySelectorAll('[data-action="showForm"]');
     showFormBtns.forEach(btn => {
         btn.addEventListener('click', function () {
-            projectForm.classList.add('visible');
+            if (projectForm) projectForm.classList.add('visible');
         });
     });
 
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const hideFormBtns = document.querySelectorAll('[data-action="hideForm"]');
     hideFormBtns.forEach(btn => {
         btn.addEventListener('click', function () {
-            projectForm.classList.remove('visible');
+            if (projectForm) projectForm.classList.remove('visible');
         });
     });
 
@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const textColorPicker = document.getElementById('projectTextColorPicker');
     if (textColorPicker) {
         textColorPicker.addEventListener('change', function () {
-            // Keep dynamic indicator color as inline style is necessary here
             document.getElementById('projectTextColorIndicator').style.background = this.value;
             const editor = document.getElementById('projectEditor');
             if (editor) editor.focus();
@@ -52,16 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Preview project
-    const previewBtns = document.querySelectorAll('[data-action="previewProject"]');
-    previewBtns.forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const config = document.getElementById('projectsConfig');
-            alert(config?.dataset.msgPreview || 'Proje önizlemesi burada gösterilecektir');
-        });
-    });
-
     // Add tag input handler
     const tagInput = document.querySelector('[data-action="addTag"]');
     if (tagInput) {
@@ -69,6 +58,104 @@ document.addEventListener('DOMContentLoaded', function () {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 addProjectTag(event);
+            }
+        });
+    }
+
+    // ====================================
+    // RESTORE MODAL
+    // ====================================
+    let restoreForm = null;
+    const restoreModal = document.getElementById('restoreModal');
+    const cancelRestore = document.getElementById('cancelRestore');
+    const confirmRestore = document.getElementById('confirmRestore');
+
+    document.querySelectorAll('[data-action="restoreItem"]').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            restoreForm = this.closest('form');
+            const row = this.closest('tr');
+            const itemName = row.querySelector('td[data-label="Proje Adı"] strong')?.textContent || 'Bu öğe';
+
+            if (restoreModal) {
+                document.getElementById('restoreItemName').textContent = itemName;
+                restoreModal.classList.add('active');
+            }
+        });
+    });
+
+    if (cancelRestore) {
+        cancelRestore.addEventListener('click', function () {
+            restoreModal.classList.remove('active');
+            restoreForm = null;
+        });
+    }
+
+    if (confirmRestore) {
+        confirmRestore.addEventListener('click', function () {
+            restoreModal.classList.remove('active');
+            if (restoreForm) {
+                restoreForm.submit();
+            }
+        });
+    }
+
+    if (restoreModal) {
+        restoreModal.addEventListener('click', function (e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                restoreForm = null;
+            }
+        });
+    }
+
+    // ====================================
+    // DELETE MODAL
+    // ====================================
+    let deleteForm = null;
+    const deleteModal = document.getElementById('deleteModal');
+    const cancelDelete = document.getElementById('cancelDelete');
+    const confirmDelete = document.getElementById('confirmDelete');
+
+    document.querySelectorAll('[data-action="deleteItem"]').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            deleteForm = this.closest('form');
+            const row = this.closest('tr');
+            const itemName = row.querySelector('td[data-label="Proje Adı"] strong')?.textContent || 'Bu öğe';
+
+            if (deleteModal) {
+                document.getElementById('deleteItemName').textContent = itemName;
+                deleteModal.classList.add('active');
+            }
+        });
+    });
+
+    if (cancelDelete) {
+        cancelDelete.addEventListener('click', function () {
+            deleteModal.classList.remove('active');
+            deleteForm = null;
+        });
+    }
+
+    if (confirmDelete) {
+        confirmDelete.addEventListener('click', function () {
+            deleteModal.classList.remove('active');
+            if (deleteForm) {
+                deleteForm.submit();
+            }
+        });
+    }
+
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function (e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                deleteForm = null;
             }
         });
     }
@@ -93,129 +180,3 @@ function addProjectTag(event) {
         input.value = '';
     }
 }
-
-// Pagination functionality for projects
-document.addEventListener('DOMContentLoaded', function () {
-    const paginationBtns = document.querySelectorAll('.pagination-btn');
-
-    paginationBtns.forEach((btn) => {
-        btn.addEventListener('click', function () {
-            if (this.disabled || this.classList.contains('active')) return;
-
-            const isNumber = !this.querySelector('i');
-
-            if (isNumber) {
-                document.querySelectorAll('.pagination-btn').forEach(b => {
-                    if (!b.querySelector('i')) {
-                        b.classList.remove('active');
-                    }
-                });
-
-                this.classList.add('active');
-                const pageNumber = parseInt(this.textContent);
-                console.log('Projeler - Sayfa:', pageNumber);
-
-            } else {
-                const currentActive = document.querySelector('.pagination-btn.active');
-                const currentPage = parseInt(currentActive?.textContent || 1);
-                const isNext = this.querySelector('.fa-chevron-right');
-
-                if (isNext) {
-                    const nextBtn = Array.from(paginationBtns).find(b =>
-                        !b.querySelector('i') && parseInt(b.textContent) === currentPage + 1
-                    );
-                    if (nextBtn) nextBtn.click();
-                } else {
-                    const prevBtn = Array.from(paginationBtns).find(b =>
-                        !b.querySelector('i') && parseInt(b.textContent) === currentPage - 1
-                    );
-                    if (prevBtn) prevBtn.click();
-                }
-            }
-
-            updatePaginationArrows();
-        });
-    });
-
-    function updatePaginationArrows() {
-        const currentActive = document.querySelector('.pagination-btn.active');
-        const currentPage = parseInt(currentActive?.textContent || 1);
-        const allPages = Array.from(document.querySelectorAll('.pagination-btn'))
-            .filter(b => !b.querySelector('i'))
-            .map(b => parseInt(b.textContent));
-
-        const minPage = Math.min(...allPages);
-        const maxPage = Math.max(...allPages);
-
-        const prevBtn = document.querySelector('.pagination-btn .fa-chevron-left')?.parentElement;
-        const nextBtn = document.querySelector('.pagination-btn .fa-chevron-right')?.parentElement;
-
-        if (prevBtn) prevBtn.disabled = currentPage <= minPage;
-        if (nextBtn) nextBtn.disabled = currentPage >= maxPage;
-    }
-
-    updatePaginationArrows();
-});
-// Restore Item Functionality
-// Restore Item Functionality
-document.addEventListener('click', function (e) {
-    if (e.target.closest('[data-action="restoreItem"]')) {
-        const btn = e.target.closest('[data-action="restoreItem"]');
-        const row = btn.closest('tr');
-        const itemName = row.querySelector('td[data-label="Proje Adı"] strong').textContent;
-
-        // Static Restore Modal Logic
-        const modal = document.getElementById('restoreModal');
-        const itemNameSpan = document.getElementById('restoreItemName');
-        const confirmBtn = document.getElementById('confirmRestore');
-        const cancelBtn = document.getElementById('cancelRestore');
-
-        if (modal && itemNameSpan) {
-            itemNameSpan.textContent = itemName;
-            modal.classList.add('active');
-
-            const closeModal = () => {
-                modal.classList.remove('active');
-            };
-
-            cancelBtn.onclick = closeModal;
-            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-
-            confirmBtn.onclick = function () {
-                // Restore Action
-                row.classList.remove('deleted-item');
-                const visibilityCell = row.querySelector('td[data-label="Görünürlük"]');
-                if (visibilityCell) {
-                    const badge = visibilityCell.querySelector('.status-badge');
-                    if (badge) {
-                        const config = document.getElementById('projectsConfig');
-                        badge.className = 'status-badge active';
-                        badge.textContent = config?.dataset.textActive || 'Sitede Aktif';
-                    }
-                }
-
-                // Remove restore button
-                btn.remove();
-
-                // Add Delete button back
-                const actionsDiv = row.querySelector('.action-btns');
-                if (actionsDiv && !actionsDiv.querySelector('.delete')) {
-                    const config = document.getElementById('projectsConfig');
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'action-btn delete';
-                    deleteBtn.title = config?.dataset.textDelete || 'Sil';
-                    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-                    actionsDiv.appendChild(deleteBtn);
-                }
-
-                closeModal();
-
-                if (window.adminApp && window.adminApp.notifications) {
-                    const config = document.getElementById('projectsConfig');
-                    const msg = config?.dataset.msgRestored || 'Öğe başarıyla geri yüklendi.';
-                    window.adminApp.notifications.showToast('Başarılı', msg, 'success');
-                }
-            };
-        }
-    }
-});

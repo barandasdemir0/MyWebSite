@@ -14,4 +14,5 @@ public class GuestBookDto
     public string Message { get; set; } = string.Empty;
     public bool IsApproved { get; set; }
     public DateTime CreatedAt { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }

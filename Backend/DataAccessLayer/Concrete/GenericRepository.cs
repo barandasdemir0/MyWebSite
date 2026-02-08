@@ -71,7 +71,7 @@ namespace DataAccessLayer.Concrete
 
             if (!tracking)
             {
-                query = query.AsNoTracking();
+                query = query.AsNoTrackingWithIdentityResolution();
             }
             return await query.ToListAsync();
         }
@@ -84,7 +84,7 @@ namespace DataAccessLayer.Concrete
             query = query.IgnoreQueryFilters();
             if (!tracking)
             {
-                query = query.AsNoTracking();
+                query = query.AsNoTrackingWithIdentityResolution();
             }
             if (includes != null)
             {
@@ -111,7 +111,7 @@ namespace DataAccessLayer.Concrete
 
             if (!tracking)
             {
-                query = query.AsNoTracking();
+                query = query.AsNoTrackingWithIdentityResolution();
             }
 
             return await query.FirstOrDefaultAsync(filter);
@@ -135,7 +135,7 @@ namespace DataAccessLayer.Concrete
             }
             if (!tracking)
             {
-                query = query.AsNoTracking();
+                query = query.AsNoTrackingWithIdentityResolution();
             }
             return await query.FirstOrDefaultAsync(x=> x.Id == guid);
 

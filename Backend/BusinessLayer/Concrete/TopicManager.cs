@@ -64,7 +64,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<TopicDto?> RestoreAsync(Guid guid)
         {
-            var entity = await _topicDal.GetDeleteByIdAsync(guid);
+            var entity = await _topicDal.RestoreDeleteByIdAsync(guid);
             if (entity == null)
             {
                 return null;

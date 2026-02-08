@@ -13,7 +13,6 @@ namespace CV.EntityLayer.Entities
         public int ReadTime { get; set; }
         public bool IsPublished { get; set; } = false;
         public DateTime? PublishedAt { get; set; } 
-        public int ViewCount { get; set; } = 0;
 
         //// Many-to-Many Navigation
         public ICollection<BlogTopic> BlogTopics { get; set; } = new List<BlogTopic>();

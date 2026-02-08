@@ -5,6 +5,7 @@ using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DtoLayer.GuestBookDtos;
 using DtoLayer.ProjectDtos;
+using DtoLayer.Shared;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,11 +25,15 @@ namespace BusinessLayer.Concrete
             _mapper = mapper;
         }
 
-        public async Task<ProjectListDto> AddAsync(CreateProjectDto dto)
+        public async Task<ProjectDto> AddAsync(CreateProjectDto dto)
         {
             var entity = _mapper.Map<Project>(dto);
             entity.Slug = await UniqueSlugAsync(dto.Name);
-            if (dto.TopicIds!=null)
+            if (entity.IsPublished && entity.PublishedAt == null)
+            {
+                entity.PublishedAt = DateTime.UtcNow;
+            }
+            if (dto.TopicIds != null)
             {
                 foreach (var topic in dto.TopicIds)
                 {
@@ -37,7 +42,7 @@ namespace BusinessLayer.Concrete
             }
             await _projectDal.AddAsync(entity);
             await _projectDal.SaveAsync();
-            return _mapper.Map<ProjectListDto>(entity);
+            return _mapper.Map<ProjectDto>(entity);
         }
 
         public async Task DeleteAsync(Guid guid)
@@ -50,25 +55,25 @@ namespace BusinessLayer.Concrete
             }
         }
 
-        public async Task<List<ProjectListDto>> GetAllAsync()
+        public async Task<List<ProjectDto>> GetAllAsync()
         {
-            var entity = await _projectDal.GetAllAsync(tracking: false, includes: source => source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
-            return _mapper.Map<List<ProjectListDto>>(entity);
+            var entity = await _projectDal.GetAllAsync(tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic));
+            return _mapper.Map<List<ProjectDto>>(entity);
         }
 
-        public async Task<ProjectListDto?> GetByIdAsync(Guid guid)
+        public async Task<ProjectDto?> GetByIdAsync(Guid guid)
         {
-            var entity = await _projectDal.GetByIdAsync(guid, tracking: false);
+            var entity = await _projectDal.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
             if (entity == null)
             {
                 return null;
             }
-            return _mapper.Map<ProjectListDto>(entity);
+            return _mapper.Map<ProjectDto>(entity);
         }
 
         public async Task<ProjectDto?> GetBySlugAsync(string slug)
         {
-            var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: source => source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
+            var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic));
             if (entity == null)
             {
                 return null;
@@ -79,7 +84,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<ProjectDto?> GetDetailsByIdAsync(Guid guid)
         {
-            var entity = await _projectDal.GetByIdAsync(guid, tracking: false);
+            var entity = await _projectDal.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
             if (entity == null)
             {
                 return null;
@@ -87,18 +92,22 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ProjectDto>(entity);
         }
 
-        public async Task<ProjectListDto?> UpdateAsync(Guid guid, UpdateProjectDto dto)
+        public async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto)
         {
             var entity = await _projectDal.GetAsync(x => x.Id == guid,
             tracking: true,
-            includes: source => source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
+            includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic));
             if (entity == null)
             {
                 return null;
             }
             _mapper.Map(dto, entity);
+            if (entity.IsPublished && entity.PublishedAt == null)
+            {
+                entity.PublishedAt = DateTime.UtcNow;
+            }
             entity.ProjectTopics.Clear();
-            if (dto.TopicIds!=null)
+            if (dto.TopicIds != null)
             {
                 foreach (var topic in dto.TopicIds)
                 {
@@ -108,7 +117,7 @@ namespace BusinessLayer.Concrete
             }
             await _projectDal.UpdateAsync(entity);
             await _projectDal.SaveAsync();
-            return _mapper.Map<ProjectListDto>(entity);
+            return _mapper.Map<ProjectDto>(entity);
         }
 
         public async Task<string> UniqueSlugAsync(string name)
@@ -142,10 +151,17 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ProjectListDto>(entity);
         }
 
-        public async Task<List<ProjectListDto>> GetAllAdminAsync()
+        public async Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query)
         {
-            var entity = await _projectDal.GetAllAdminAsync(tracking: false);
-            return _mapper.Map<List<ProjectListDto>>(entity);
+            //var entity = await _projectDal.GetAllAdminAsync(tracking: false);
+            //return _mapper.Map<PagedResult<ProjectListDto>>(entity);
+            var (items, totalCount) = await _projectDal.GetAdminListPagesAsync(
+                query.PageNumber,
+                query.PageSize,
+                query.TopicId
+                );
+
+            return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
         }
     }
 }

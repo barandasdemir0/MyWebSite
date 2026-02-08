@@ -1,0 +1,339 @@
+﻿@model UpdateProjectDto
+@{
+    ViewData["Title"] = "Update";
+    ViewData["BodyClass"] = "projects-page blog-editor-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/editor.css">
+    @*     <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css"> *@
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/projects.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog-editor.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+}
+
+<div class="card editor-card" id="projectForm">
+    <div class="card-header">
+        <h3>Proje Düzenle</h3>
+    </div>
+    <form asp-action="Update" method="post" enctype="multipart/form-data" id="updateProjectForm">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-row">
+            <div class="form-group">
+                <label>Proje Adı *</label>
+                <input asp-for="Name" type="text" class="form-control" id="projectName" placeholder="Proje adını girin">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Kategori *</label>
+                <select asp-for="TopicIds" class="form-control select2-multiple" id="projectCategory" multiple="multiple" style="width: 100%">
+                    @if (Model.topicList != null)
+                    {
+                        foreach (var item in Model.topicList)
+                        {
+                            @if (Model.TopicIds.Contains(item.Id))
+                            {
+                                <option value="@item.Id" selected>@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    }
+                </select>
+                <span asp-validation-for="TopicIds" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Kısa Açıklama *</label>
+                <input asp-for="ShortDescription" type="text" class="form-control"
+                       placeholder="Proje kartlarında görünecek kısa açıklama">
+                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row full">
+            <div class="form-group">
+                <label><i class="fas fa-image"></i>Proje Görseli</label>
+                <div class="upload-wrapper">
+                    <input asp-for="ImageUrl" type="url" class="form-control" placeholder="Görsel URL'si girin">
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-row full">
+            <div class="form-group">
+                <label><i class="fas fa-align-left"></i>Proje Açıklaması *</label>
+                <!-- Blog Editor Birebir Kopya Başlangıcı -->
+                <div class="blog-editor">
+                    <!-- Tabs -->
+                    <div class="editor-tabs">
+                        <button type="button" class="editor-tab active" data-action="switchTab" data-tab="edit">
+                            <i class="fas fa-edit"></i> Düzenle
+                        </button>
+                        <button type="button" class="editor-tab" data-action="switchTab" data-tab="preview">
+                            <i class="fas fa-eye"></i> Önizleme
+                        </button>
+                    </div>
+
+                    <!-- Toolbar -->
+                    <div class="editor-toolbar" id="editorToolbar">
+                        <!-- Text Formatting -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="bold"
+                                    title="Kalın (Ctrl+B)">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="italic"
+                                    title="İtalik (Ctrl+I)">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="underline"
+                                    title="Altı Çizili (Ctrl+U)">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText"
+                                    data-command="strikeThrough" title="Üstü Çizili">
+                                <i class="fas fa-strikethrough"></i>
+                            </button>
+                        </div>
+
+                        <!-- Font Size -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="decreaseFontSize" title="Yazı Küçült">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <select class="form-control editor-font-size-select" id="fontSizeSelect">
+                                <option value="1">8</option>
+                                <option value="2">10</option>
+                                <option value="3" selected>12</option>
+                                <option value="4">14</option>
+                                <option value="5">18</option>
+                                <option value="6">24</option>
+                                <option value="7">36</option>
+                            </select>
+                            <button type="button" class="toolbar-btn" data-action="increaseFontSize" title="Yazı Büyüt">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+
+                        <!-- Headings -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock"
+                                    data-block="h1" title="Başlık 1">
+                                H1
+                            </button>
+                            <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock"
+                                    data-block="h2" title="Başlık 2">
+                                H2
+                            </button>
+                            <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock"
+                                    data-block="h3" title="Başlık 3">
+                                H3
+                            </button>
+                        </div>
+
+                        <!-- Colors -->
+                        <div class="toolbar-group">
+                            <div class="color-picker">
+                                <button type="button" class="toolbar-btn color-picker-btn" title="Yazı Rengi">
+                                    <i class="fas fa-font"></i>
+                                    <span id="textColorIndicator" class="color-indicator"></span>
+                                </button>
+                                <input type="color" id="textColorPicker" value="#ef4444"
+                                       class="color-input">
+                            </div>
+                            <div class="color-picker">
+                                <button type="button" class="toolbar-btn color-picker-btn" title="Arka Plan Rengi">
+                                    <i class="fas fa-highlighter"></i>
+                                </button>
+                                <input type="color" id="bgColorPicker" value="#fef08a" class="color-input">
+                            </div>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="removeFormat"
+                                    title="Biçimi Temizle (Renkleri Sıfırla)">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                        </div>
+
+                        <!-- Lists & Quote -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText"
+                                    data-command="insertUnorderedList" title="Madde İşaretli Liste">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText"
+                                    data-command="insertOrderedList" title="Numaralı Liste">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="insertQuote" title="Alıntı">
+                                <i class="fas fa-quote-left"></i>
+                            </button>
+                        </div>
+
+                        <!-- Media & Links -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="insertLink" title="Link Ekle">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="insertImage" title="Resim Ekle">
+                                <i class="fas fa-image"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="insertVideo" title="Video Ekle">
+                                <i class="fas fa-video"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="insertCode" title="Kod Bloğu">
+                                <i class="fas fa-code"></i>
+                            </button>
+                        </div>
+
+                        <!-- Alignment -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyLeft"
+                                    title="Sola Hizala">
+                                <i class="fas fa-align-left"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText"
+                                    data-command="justifyCenter" title="Ortala">
+                                <i class="fas fa-align-center"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyRight"
+                                    title="Sağa Hizala">
+                                <i class="fas fa-align-right"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyFull"
+                                    title="İki Yana Yasla">
+                                <i class="fas fa-align-justify"></i>
+                            </button>
+                        </div>
+
+                        <!-- Extras -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="insertTable" title="Tablo Ekle">
+                                <i class="fas fa-table"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="insertHR" title="Yatay Çizgi">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="insertEmoji" title="Emoji">
+                                <i class="fas fa-smile"></i>
+                            </button>
+                        </div>
+
+                        <!-- Undo/Redo -->
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="undo"
+                                    title="Geri Al (Ctrl+Z)">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="redo"
+                                    title="İleri Al (Ctrl+Y)">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <textarea asp-for="Description" id="hiddenContentInput" style="display:none;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <!-- Content Area -->
+                    <div class="editor-content" id="editorContent" contenteditable="true"
+                         data-placeholder="Yazınızı buraya yazın...">
+                    </div>
+
+                    <!-- Preview Area (Hidden by default) -->
+                    <div class="editor-content editor-preview" id="previewContent">
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="editor-footer">
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline" data-action="clearEditor">
+                                <i class="fas fa-eraser"></i> Temizle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Blog Editor Birebir Kopya Sonu -->
+            </div>
+        </div>
+        <div class="form-row full">
+            <div class="form-group">
+                <label><i class="fas fa-code"></i>Kullanılan Teknolojiler *</label>
+                <div class="tags-input-container editor-tags" id="techTagsContainer">
+                    <input type="text" placeholder="Teknoloji ekle (Enter)" id="techTagInput">
+                    <input asp-for="Technologies" type="hidden" id="hiddenTechnologies">
+                </div>
+                <span asp-validation-for="Technologies" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="project-links-section">
+            <h4><i class="fas fa-link"></i>Proje Linkleri</h4>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-external-link-alt"></i>Demo / Canlı Site URL</label>
+                    <input asp-for="WebsiteUrl" type="url" class="form-control" placeholder="https://...">
+                    <span asp-validation-for="WebsiteUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label><i class="fab fa-github"></i>GitHub URL</label>
+                    <input asp-for="GithubUrl" type="url" class="form-control" placeholder="https://github.com/...">
+                    <span asp-validation-for="GithubUrl" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-links-section">
+            <h4><i class="fas fa-link"></i>Proje Bilgileri</h4>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-client"></i>Müşteri</label>
+                    <input asp-for="ClientName" type="text" class="form-control" placeholder="Müşteri">
+                    <span asp-validation-for="ClientName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-time"></i>Proje Yapım Süresi</label>
+                    <input asp-for="Duration" type="text" class="form-control" placeholder="Süre">
+                    <span asp-validation-for="Duration" class="text-danger"></span>
+                </div>
+                <div class="form-group full">
+                    <label><i class="fas fa-role"></i>Projede Aktif Alınan Rol</label>
+                    <input asp-for="Role" type="text" class="form-control" placeholder="Rol">
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row status-row">
+            <div class="form-group">
+                <label>Durum</label>
+                <select asp-for="IsPublished" class="form-control">
+                    <option value="true">Yayında</option>
+                    <option value="false">Taslak</option>
+                </select>
+            </div>
+            <!-- 'Ana sayfada göster' kaldırıldı -->
+        </div>
+
+        <div class="form-actions editor-form-actions">
+            <button type="submit" class="btn btn-primary" @* data-action="savePost" *@>
+                <i class="fas fa-save me-2"></i> Kaydet
+            </button>
+            <a asp-action="Index" class="btn btn-outline">İptal</a>
+        </div>
+
+
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @*   <script src="/Mytheme/admin/js/modules/projects.js" ></script>
+    <script src="/Mytheme/admin/js/modules/blog-editor.js" ></script> *@
+    <script src="/Mytheme/admin/js/modules/project-editor.js"></script>
+
+}
+

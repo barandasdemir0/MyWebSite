@@ -14,7 +14,7 @@ namespace DataAccessLayer.Concrete
         {
         }
 
-        public async Task<Topic?> GetDeleteByIdAsync(Guid guid)
+        public async Task<Topic?> RestoreDeleteByIdAsync(Guid guid)
         {
             return await _context.Topics.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
         }

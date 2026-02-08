@@ -4,6 +4,7 @@ using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260208153159_viewcountDeletedBlogPostAndAddingProjectpublished")]
+    partial class viewcountDeletedBlogPostAndAddingProjectpublished
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -497,6 +500,10 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Features")
+                        .HasMaxLength(3000)
+                        .HasColumnType("nvarchar(3000)");
+
                     b.Property<string>("GithubUrl")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
@@ -522,6 +529,10 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Results")
+                        .HasMaxLength(3000)
+                        .HasColumnType("nvarchar(3000)");
 
                     b.Property<string>("Role")
                         .HasMaxLength(100)

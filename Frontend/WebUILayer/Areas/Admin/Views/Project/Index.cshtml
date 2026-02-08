@@ -1,0 +1,209 @@
+﻿@using System.Globalization
+@model WebUILayer.Areas.Admin.Models.ProjectIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "projects-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/projects.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog.css">
+}
+<!-- Projects Table -->
+<div class="card">
+    <div class="card-header">
+        <h3>Tüm Projeler</h3>
+        <form asp-action="Index" method="get">
+            <div class="filter-container">
+
+                <select name="TopicId" class="form-control filter-select">
+                    <option value="">Tüm Kategoriler</option>
+                    @foreach (var item in Model.topicDtos)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+
+                <button type="submit" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-filter"></i>
+                </button>
+
+                <a asp-action="Create" class="btn btn-primary btn-gap">
+                    <i class="fas fa-plus"></i>
+                    Yeni Proje
+                </a>
+
+                <input type="text" class="form-control filter-search" placeholder="Ara..." />
+
+            </div>
+        </form>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Görsel</th>
+                    <th>Proje Adı</th>
+                    <th>Kategori</th>
+                    <th>Teknolojiler</th>
+                    <th>Görünürlük</th>
+                    <th>Durum</th>
+                    <th>Tarih</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.projectDtos)
+                {
+                    if (item.IsDeleted == true)
+                    {
+                        <tr class="deleted-item">
+                            <td data-label="Görsel">
+                                <img src="@item.ImageUrl">
+                            </td>
+                            <td data-label="Proje Adı"><strong>@item.Name</strong></td>
+                            <td data-label="Kategori">@string.Join(",", item.Topics)</td>
+                            <td data-label="Teknolojiler">@string.Join(",", item.Technologies)</td>
+                            <td data-label="Görünürlük"><span class="status-badge danger">Silindi</span></td>
+                            <td data-label="Durum"><span class="status-badge draft">Taslak</span></td>
+                            <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
+                            <td data-label="İşlemler">
+                                <div class="action-btns">
+                                    <a href="#" class="action-btn disabled" title="Siteyi Görüntüle">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit hidden" title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" class="action-btn restore" title="Geri Yükle"
+                                                data-action="restoreItem">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
+                                    <!-- Delete button removed -->
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.IsPublished == false)
+                    {
+                        <tr>
+                            <td data-label="Görsel">
+                                <img src="@item.ImageUrl">
+                            </td>
+                            <td data-label="Proje Adı"><strong>@item.Name</strong></td>
+                            <td data-label="Kategori">@string.Join(",", item.Topics)</td>
+                            <td data-label="Teknolojiler">@string.Join(",", item.Technologies)</td>
+                            <td data-label="Görünürlük"><span class="status-badge draft">Sitede Aktif Değil</span></td>
+                            <td data-label="Durum"><span class="status-badge draft">Taslak</span></td>
+                            <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
+                            <td data-label="İşlemler">
+                                <div class="action-btns">
+                                    <a href="#" class="action-btn disabled" title="Siteyi Görüntüle">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit" title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" data-action="deleteItem" class="action-btn delete" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.IsDeleted == false)
+                    {
+                        <tr>
+                            <td data-label="Görsel">
+                                <img src="@item.ImageUrl">
+                            </td>
+                            <td data-label="Proje Adı"><strong>@item.Name</strong></td>
+                            <td data-label="Kategori">@string.Join(",", item.Topics)</td>
+                            <td data-label="Teknolojiler">@string.Join(",", item.Technologies)</td>
+                            <td data-label="Görünürlük"><span class="status-badge active">Sitede Aktif</span></td>
+                            <td data-label="Durum"><span class="status-badge active">Yayında</span></td>
+                            <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
+                            <td data-label="İşlemler">
+                                <div class="action-btns">
+                                    <a href="https://demo-eticaret.com" target="_blank" class="action-btn"
+                                       title="Siteyi Görüntüle"><i class="fas fa-eye"></i></a>
+                                    <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit" title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                        <button type="submit" data-action="deleteItem" class="action-btn delete" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    @await Component.InvokeAsync("_LayoutPaginationPartialComponent", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
+</div>
+
+
+<!-- Restore Modal Template -->
+<div id="restoreModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-restore">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div class="modal-title">Geri Yükle</div>
+        </div>
+        <div class="modal-body">
+            <strong id="restoreItemName"></strong> isimli öğe geri yüklenecek ve sitede tekrar yayına
+            alınacaktır.<br><br>
+            Bu işlem geri alınamaz (tekrar silmeniz gerekir).
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelRestore">İptal</button>
+            <button class="btn btn-warning" id="confirmRestore">Onayla ve Yükle</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal Template -->
+<div id="deleteModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-delete">
+                <i class="fas fa-trash"></i>
+            </div>
+            <div class="modal-title">Silme Onayı</div>
+        </div>
+        <div class="modal-body">
+            <strong id="deleteItemName"></strong> isimli öğe silinecektir.<br><br>
+            Bu işlem geri alınabilir (çöp kutusundan geri yükleyebilirsiniz).
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelDelete">İptal</button>
+            <button class="btn btn-danger" id="confirmDelete">Sil</button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="/Mytheme/admin/js/theme-init.js" defer></script>
+    <script src="/Mytheme/admin/js/modules/projects.js" defer></script>
+}

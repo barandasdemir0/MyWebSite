@@ -10,4 +10,5 @@ public class GithubRepoDto
     public string RepoName { get; set; } = string.Empty;
     public int? DisplayOrder { get; set; }
     public bool IsVisible { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }

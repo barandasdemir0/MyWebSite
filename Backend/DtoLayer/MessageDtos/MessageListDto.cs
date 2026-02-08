@@ -12,4 +12,5 @@ public class MessageListDto
     public bool IsRead { get; set; }
     public bool IsStarred { get; set; }
     public DateTime CreatedAt { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }

@@ -16,7 +16,7 @@ namespace DataAccessLayer.Concrete
 
         public async Task<(List<BlogPost> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size,Guid? topicId)
         {
-            IQueryable<BlogPost> query = _context.BlogPosts.AsNoTracking().IgnoreQueryFilters().Include(x => x.BlogTopics).ThenInclude(y => y.Topic);
+            IQueryable<BlogPost> query = _context.BlogPosts.AsNoTrackingWithIdentityResolution().IgnoreQueryFilters().Include(x => x.BlogTopics).ThenInclude(y => y.Topic);
 
             if (topicId.HasValue) // bu işlem topicId != null ile aynı işlemdir
             {

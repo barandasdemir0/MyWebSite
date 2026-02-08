@@ -1,20 +1,65 @@
-.projects-page .card-header>div {
+﻿/* Filter Container - TEK SATIR */
+.projects-page .card-header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+    .projects-page .card-header h3 {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .projects-page .card-header form {
+        flex: 1;
+    }
+
+.projects-page .filter-container {
+    display: flex;
+    align-items: center;
     gap: 10px;
+    justify-content: flex-end;
 }
 
-.projects-page .card-header select {
-    min-width: 180px;
-    padding: 10px;
+    .projects-page .filter-container select {
+        min-width: 180px;
+    }
+
+    .projects-page .filter-container input {
+        width: 200px;
+    }
+
+/* Mobil */
+@media (max-width: 768px) {
+    .projects-page .card-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .projects-page .filter-container {
+        flex-direction: column;
+    }
+
+        .projects-page .filter-container select,
+        .projects-page .filter-container input,
+        .projects-page .filter-container .btn {
+            width: 100%;
+        }
 }
 
-.projects-page .card-header input {
-    width: 200px;
-    padding: 10px;
-}
+
 
 .projects-page .admin-table img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
     border-radius: 6px;
+}
+/* Görsel hücresini sınırla */
+.projects-page .admin-table td:first-child {
+    width: 100px;
+    max-width: 100px;
 }
 
 .projects-page .action-btn.disabled {
@@ -70,12 +115,17 @@
 
 
 .projects-page .tags-input-container {
+    width: 100%; /* 🔥 ASIL OLAY BU */
     height: auto;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     align-items: center;
     padding: 6px 10px;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    background: var(--admin-input-bg);
+    min-height: 44px;
 }
 
 .projects-page .tags-input-container input[type="text"] {
@@ -125,45 +175,7 @@
     margin-top: 15px;
 }
 
-@media (max-width: 768px) {
-    .projects-page .card-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
 
-    .projects-page .card-header>div {
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
-    }
-
-    .projects-page .card-header select,
-    .projects-page .card-header input {
-        width: 100%;
-        min-width: 0 !important;
-        max-width: 100%;
-        box-sizing: border-box;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .projects-page .form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .projects-page .form-actions {
-        flex-direction: column-reverse;
-        gap: 10px;
-    }
-
-    .projects-page .form-actions .btn {
-        width: 100%;
-        margin: 0 !important;
-    }
-}
 
 /* Editor Specific Refined Styles */
 .projects-page .admin-main.editor-page {
@@ -180,13 +192,12 @@
 }
 
 .projects-page .tags-input-container.editor-tags {
-    max-width: 400px;
+    max-width: 100%;
 }
 
-.projects-page .tags-input-container.editor-tags input {
-    width: 100%;
-    max-width: 350px;
-}
+    .projects-page .tags-input-container.editor-tags input {
+        max-width: none;
+    }
 
 .projects-page .editor-form-actions {
     margin-top: 30px;
@@ -215,5 +226,206 @@
 
     .projects-page .tags-input-container {
         padding: 8px;
+    }
+}
+
+
+/* ============================================
+   SELECT2 STYLING - DROPDOWN STYLE
+   ============================================ */
+.select2-container--default .select2-selection--multiple {
+    background-color: var(--admin-input-bg, #1e293b) !important;
+    border: 1px solid var(--admin-border, #334155) !important;
+    border-radius: 8px !important;
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+    .select2-container--default .select2-selection--multiple:hover {
+        border-color: #475569 !important;
+    }
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+    outline: none !important;
+}
+
+/* Selected tags */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #3b82f6 !important;
+    border: none !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    margin: 2px 6px 2px 0 !important;
+    font-size: 0.875rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff !important;
+    margin-right: 8px !important;
+    margin-left: 0 !important;
+    font-size: 1.2rem !important;
+    font-weight: normal !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #ef4444 !important;
+        background: transparent !important;
+    }
+
+/* Search input inside select */
+.select2-search--inline {
+    line-height: 1.5 !important;
+}
+
+    .select2-search--inline .select2-search__field {
+        background: transparent !important;
+        border: none !important;
+        color: var(--admin-text) !important;
+        padding: 0 4px !important;
+        margin: 0 !important;
+        outline: none !important;
+        line-height: 1.5 !important;
+    }
+
+        .select2-search--inline .select2-search__field::placeholder {
+            color: var(--admin-text-muted, #94a3b8) !important;
+        }
+
+/* Placeholder when empty */
+.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: var(--admin-text-muted, #94a3b8) !important;
+    line-height: 1.5 !important;
+    padding: 0 !important;
+}
+
+/* Dropdown panel - BU KISIM ÇOK ÖNEMLİ */
+.select2-dropdown {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+    margin-top: 4px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Results container */
+.select2-results {
+    background-color: #1e293b !important;
+}
+
+.select2-results__options {
+    background-color: #1e293b !important;
+}
+
+/* Options in dropdown */
+.select2-results__option {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    padding: 10px 12px !important;
+    cursor: pointer !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #3b82f6 !important;
+    color: #fff !important;
+}
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    color: #e2e8f0 !important;
+}
+
+.select2-container--default .select2-results__option--selected {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Search field in dropdown */
+.select2-search--dropdown {
+    background-color: #1e293b !important;
+    padding: 8px !important;
+}
+
+    .select2-search--dropdown .select2-search__field {
+        background-color: #0f172a !important;
+        border: 1px solid #334155 !important;
+        color: #e2e8f0 !important;
+        border-radius: 6px !important;
+        padding: 8px 12px !important;
+    }
+
+        .select2-search--dropdown .select2-search__field:focus {
+            border-color: #3b82f6 !important;
+            outline: none !important;
+        }
+
+/* Container width */
+.editor-sidebar .select2-container {
+    width: 100% !important;
+}
+
+/* Clear rendered items styling */
+.select2-selection__rendered {
+    padding: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+}
+
+/* Arrow icon */
+.select2-container--default .select2-selection--multiple .select2-selection__arrow {
+    display: none !important;
+}
+
+/* Kod blokları için responsive */
+.editor-content pre,
+.editor-preview pre {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+    .editor-content pre code,
+    .editor-preview pre code {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+/* Mobil için */
+@media (max-width: 768px) {
+    .editor-content pre,
+    .editor-preview pre {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .editor-content,
+    .editor-preview {
+        overflow-x: hidden;
+    }
+}
+/* Badge - Tek satırda kalsın */
+.projects-page .status-badge {
+    white-space: nowrap;
+    display: inline-block;
+}
+/* Mobilde status badge */
+@media (max-width: 768px) {
+    .projects-page .status-badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
     }
 }
