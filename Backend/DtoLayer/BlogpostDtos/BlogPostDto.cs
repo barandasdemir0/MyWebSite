@@ -21,6 +21,8 @@ public class BlogPostDto
 
     // İlişkiler (Okuma)
     public List<string> RelatedProjects { get; set; } = new(); // Proje isimleri
+    public List<Guid> TopicIds { get; set; } = new();
     public List<string> Topics { get; set; } = new();        // Topic isimleri
+
 
 }

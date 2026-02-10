@@ -35,7 +35,7 @@ public class ProjectDto
     // İlişkiler (Okuma)
 
     public List<string> RelatedBlogs { get; set; } = new();  // Blog başlıkları
-
+    public List<Guid> TopicIds { get; set; } = new();
     public List<string> Topics { get; set; } = new();        // Topic isimleri
 
 }

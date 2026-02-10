@@ -35,10 +35,10 @@
             <div class="blog-editor">
                 <!-- Tabs -->
                 <div class="editor-tabs">
-                    <button class="editor-tab active" data-action="switchTab" data-tab="edit">
+                     <button type="button" class="editor-tab active" data-action="switchTab" data-tab="edit">
                         <i class="fas fa-edit"></i> Düzenle
                     </button>
-                    <button class="editor-tab" data-action="switchTab" data-tab="preview">
+                     <button type="button" class="editor-tab" data-action="switchTab" data-tab="preview">
                         <i class="fas fa-eye"></i> Önizleme
                     </button>
                 </div>
@@ -47,19 +47,19 @@
                 <div class="editor-toolbar" id="editorToolbar">
                     <!-- Text Formatting -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-action="formatText" data-command="bold"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="bold"
                                 title="Kalın (Ctrl+B)">
                             <i class="fas fa-bold"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="italic"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="italic"
                                 title="İtalik (Ctrl+I)">
                             <i class="fas fa-italic"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="underline"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="underline"
                                 title="Altı Çizili (Ctrl+U)">
                             <i class="fas fa-underline"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="strikeThrough"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="strikeThrough"
                                 title="Üstü Çizili">
                             <i class="fas fa-strikethrough"></i>
                         </button>
@@ -67,7 +67,7 @@
 
                     <!-- Font Size -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-action="decreaseFontSize" title="Yazı Küçült">
+                         <button type="button" class="toolbar-btn" data-action="decreaseFontSize" title="Yazı Küçült">
                             <i class="fas fa-minus"></i>
                         </button>
                         <select class="form-control editor-font-size-select" id="fontSizeSelect">
@@ -79,22 +79,22 @@
                             <option value="6">24</option>
                             <option value="7">36</option>
                         </select>
-                        <button class="toolbar-btn" data-action="increaseFontSize" title="Yazı Büyüt">
+                         <button type="button" class="toolbar-btn" data-action="increaseFontSize" title="Yazı Büyüt">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
 
                     <!-- Headings -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h1"
+                         <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h1"
                                 title="Başlık 1">
                             H1
                         </button>
-                        <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h2"
+                         <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h2"
                                 title="Başlık 2">
                             H2
                         </button>
-                        <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h3"
+                         <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h3"
                                 title="Başlık 3">
                             H3
                         </button>
@@ -103,19 +103,19 @@
                     <!-- Colors -->
                     <div class="toolbar-group">
                         <div class="color-picker">
-                            <button class="toolbar-btn color-picker-btn" title="Yazı Rengi">
+                             <button type="button" class="toolbar-btn color-picker-btn" title="Yazı Rengi">
                                 <i class="fas fa-font"></i>
                                 <span id="textColorIndicator" class="color-indicator"></span>
                             </button>
                             <input type="color" id="textColorPicker" value="#ef4444" class="color-input">
                         </div>
                         <div class="color-picker">
-                            <button class="toolbar-btn color-picker-btn" title="Arka Plan Rengi">
+                             <button type="button" class="toolbar-btn color-picker-btn" title="Arka Plan Rengi">
                                 <i class="fas fa-highlighter"></i>
                             </button>
                             <input type="color" id="bgColorPicker" value="#fef08a" class="color-input">
                         </div>
-                        <button class="toolbar-btn" data-action="formatText" data-command="removeFormat"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="removeFormat"
                                 title="Biçimi Temizle (Renkleri Sıfırla)">
                             <i class="fas fa-eraser"></i>
                         </button>
@@ -123,50 +123,50 @@
 
                     <!-- Lists & Quote -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-action="formatText" data-command="insertUnorderedList"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="insertUnorderedList"
                                 title="Madde İşaretli Liste">
                             <i class="fas fa-list-ul"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="insertOrderedList"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="insertOrderedList"
                                 title="Numaralı Liste">
                             <i class="fas fa-list-ol"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="insertQuote" title="Alıntı">
+                         <button type="button" class="toolbar-btn" data-action="insertQuote" title="Alıntı">
                             <i class="fas fa-quote-left"></i>
                         </button>
                     </div>
 
                     <!-- Media & Links -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-action="insertLink" title="Link Ekle">
+                         <button type="button" class="toolbar-btn" data-action="insertLink" title="Link Ekle">
                             <i class="fas fa-link"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="insertImage" title="Resim Ekle">
+                         <button type="button" class="toolbar-btn" data-action="insertImage" title="Resim Ekle">
                             <i class="fas fa-image"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="insertVideo" title="Video Ekle">
+                         <button type="button" class="toolbar-btn" data-action="insertVideo" title="Video Ekle">
                             <i class="fas fa-video"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="insertCode" title="Kod Bloğu">
+                         <button type="button" class="toolbar-btn" data-action="insertCode" title="Kod Bloğu">
                             <i class="fas fa-code"></i>
                         </button>
                     </div>
 
                     <!-- Alignment -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-action="formatText" data-command="justifyLeft"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyLeft"
                                 title="Sola Hizala">
                             <i class="fas fa-align-left"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="justifyCenter"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyCenter"
                                 title="Ortala">
                             <i class="fas fa-align-center"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="justifyRight"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyRight"
                                 title="Sağa Hizala">
                             <i class="fas fa-align-right"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="justifyFull"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyFull"
                                 title="İki Yana Yasla">
                             <i class="fas fa-align-justify"></i>
                         </button>
@@ -174,24 +174,24 @@
 
                     <!-- Extras -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-action="insertTable" title="Tablo Ekle">
+                         <button type="button" class="toolbar-btn" data-action="insertTable" title="Tablo Ekle">
                             <i class="fas fa-table"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="insertHR" title="Yatay Çizgi">
+                         <button type="button" class="toolbar-btn" data-action="insertHR" title="Yatay Çizgi">
                             <i class="fas fa-minus"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="insertEmoji" title="Emoji">
+                         <button type="button" class="toolbar-btn" data-action="insertEmoji" title="Emoji">
                             <i class="fas fa-smile"></i>
                         </button>
                     </div>
 
                     <!-- Undo/Redo -->
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-action="formatText" data-command="undo"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="undo"
                                 title="Geri Al (Ctrl+Z)">
                             <i class="fas fa-undo"></i>
                         </button>
-                        <button class="toolbar-btn" data-action="formatText" data-command="redo"
+                         <button type="button" class="toolbar-btn" data-action="formatText" data-command="redo"
                                 title="İleri Al (Ctrl+Y)">
                             <i class="fas fa-redo"></i>
                         </button>
@@ -217,7 +217,7 @@
 
                     </div>
                     <div>
-                        <button class="btn btn-sm btn-outline" data-action="clearEditor">
+                         <button type="button" class="btn btn-sm btn-outline" data-action="clearEditor">
                             <i class="fas fa-eraser"></i> Temizle
                         </button>
                     </div>
@@ -244,7 +244,7 @@
 
             <div class="sidebar-section">
                 <h4><i class="fas fa-folder"></i>Kategori</h4>
-                <select name="TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
+                <select name="updateBlogPostDto.TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
                     @if (Model.topicDtos != null)
                     {
                         @foreach (var item in Model.topicDtos)
@@ -291,7 +291,7 @@
             <i class="fas fa-save"></i> Kaydet
         </button>
         <a href="blog.html" class="btn btn-outline">İptal</a>
-        <button class="btn btn-outline" data-action="previewPost">
+         <button type="button" class="btn btn-outline" data-action="previewPost">
             <i class="fas fa-eye"></i> Önizle
         </button>
     </div>
@@ -322,8 +322,8 @@
                 </div>
             </div>
             <div class="modal-footer modal-footer-actions">
-                <button class="btn btn-secondary" data-action="closeImageModal">İptal</button>
-                <button class="btn btn-success" data-action="confirmImageInsert">Ekle</button>
+                 <button type="button" class="btn btn-secondary" data-action="closeImageModal">İptal</button>
+                <button type="button" class="btn btn-success" data-action="confirmImageInsert">Ekle</button>
             </div>
         </div>
     </div>
