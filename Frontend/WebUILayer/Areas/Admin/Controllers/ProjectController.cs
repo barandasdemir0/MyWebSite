@@ -40,29 +40,31 @@ public class ProjectController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var model = new CreateProjectDto();
-        model.topicList = await _topicApiService.GetAllAsync();
-        // sırf topiclisti gönderebilmek adına  newledik
+        var model = new ProjectCreateViewModel
+        {
+            topicDtos = await _topicApiService.GetAllAsync()
+        };
+
         return View(model);
     }
     [HttpPost]
-    public async Task<IActionResult> Create(CreateProjectDto createProjectDto)
+    public async Task<IActionResult> Create(ProjectCreateViewModel createViewModel)
     {
         if (!ModelState.IsValid)
         {
-            createProjectDto.topicList = await _topicApiService.GetAllAsync();
-            return View(createProjectDto);
+            createViewModel.topicDtos = await _topicApiService.GetAllAsync();
+            return View(createViewModel);
         }
         try
         {
-            await _projectApiService.AddAsync(createProjectDto);
+            await _projectApiService.AddAsync(createViewModel.CreateProjectDtos);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
-            ModelState.AddApiError(ex);
-            createProjectDto.topicList = await _topicApiService.GetAllAsync();
-            return View(createProjectDto);
+            ModelState.AddApiError(ex, "CreateProjectDtos");
+            createViewModel.topicDtos = await _topicApiService.GetAllAsync();
+            return View(createViewModel);
         }
     }
 
@@ -70,28 +72,39 @@ public class ProjectController : Controller
     [HttpGet]
     public async Task<IActionResult> Update(Guid guid)
     {
-        var query = await _projectApiService.GetByIdAsync(guid);
-        query?.topicList = await _topicApiService.GetAllAsync();
-        return View(query.Adapt<UpdateProjectDto>());
+        var project = await _projectApiService.GetByIdAsync(guid);
+        if (project == null)
+        {
+            return NotFound();
+        }
+        var model = new ProjectUpdateViewModel
+        {
+            UpdateProjectDto = project.Adapt<UpdateProjectDto>(),
+            topicDtos =  await _topicApiService.GetAllAsync()
+        };
+        return View(model);
     }
+
     [HttpPost]
-    public async Task<IActionResult> Update(UpdateProjectDto updateProjectDto)
+    public async Task<IActionResult> Update(ProjectUpdateViewModel projectUpdateView)
     {
         if (!ModelState.IsValid)
         {
-            updateProjectDto.topicList = await _topicApiService.GetAllAsync();
-            return View(updateProjectDto);
+            projectUpdateView.topicDtos = await _topicApiService.GetAllAsync();
+            return View(projectUpdateView);
         }
         try
         {
-            var query = await _projectApiService.UpdateAsync(updateProjectDto.Id, updateProjectDto);
+            var query = await _projectApiService.UpdateAsync(
+                projectUpdateView.UpdateProjectDto.Id, 
+                projectUpdateView.UpdateProjectDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
-            ModelState.AddApiError(ex);
-            updateProjectDto.topicList = await _topicApiService.GetAllAsync();
-            return View(updateProjectDto);
+            ModelState.AddApiError(ex, "UpdateProjectDto");
+            projectUpdateView.topicDtos = await _topicApiService.GetAllAsync();
+            return View(projectUpdateView);
         }
     }
 

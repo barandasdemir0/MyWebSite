@@ -17,5 +17,4 @@ public class CreateBlogPostDto
 
     // İlişkiler (Seçim)
     public List<Guid> TopicIds { get; set; } = new();     // Seçilen topic ID'leri
-    public List<TopicDto>? topicList { get; set; }
 }

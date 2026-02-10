@@ -1,4 +1,4 @@
-﻿@model UpdateProjectDto
+﻿@model WebUILayer.Areas.Admin.Models.ProjectUpdateViewModel
 @{
     ViewData["Title"] = "Update";
     ViewData["BodyClass"] = "projects-page blog-editor-page";
@@ -7,11 +7,9 @@
 
 @section Styles {
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/editor.css">
-    @*     <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css"> *@
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/projects.css">
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog-editor.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 }
 
 <div class="card editor-card" id="projectForm">
@@ -19,21 +17,21 @@
         <h3>Proje Düzenle</h3>
     </div>
     <form asp-action="Update" method="post" enctype="multipart/form-data" id="updateProjectForm">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="UpdateProjectDto.Id" />
         <div class="form-row">
             <div class="form-group">
                 <label>Proje Adı *</label>
-                <input asp-for="Name" type="text" class="form-control" id="projectName" placeholder="Proje adını girin">
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <input asp-for="UpdateProjectDto.Name" type="text" class="form-control" id="projectName" placeholder="Proje adını girin">
+                <span asp-validation-for="UpdateProjectDto.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label>Kategori *</label>
-                <select asp-for="TopicIds" class="form-control select2-multiple" id="projectCategory" multiple="multiple" style="width: 100%">
-                    @if (Model.topicList != null)
+                <select asp-for="UpdateProjectDto.TopicIds" class="form-control select2-multiple" id="projectCategory" multiple="multiple" style="width: 100%">
+                    @if (Model.topicDtos != null)
                     {
-                        foreach (var item in Model.topicList)
+                        foreach (var item in Model.topicDtos)
                         {
-                            @if (Model.TopicIds.Contains(item.Id))
+                            @if (Model.UpdateProjectDto.TopicIds.Contains(item.Id))
                             {
                                 <option value="@item.Id" selected>@item.Name</option>
                             }
@@ -44,24 +42,24 @@
                         }
                     }
                 </select>
-                <span asp-validation-for="TopicIds" class="text-danger"></span>
+                <span asp-validation-for="UpdateProjectDto.TopicIds" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
                 <label>Kısa Açıklama *</label>
-                <input asp-for="ShortDescription" type="text" class="form-control"
+                <input asp-for="UpdateProjectDto.ShortDescription" type="text" class="form-control"
                        placeholder="Proje kartlarında görünecek kısa açıklama">
-                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                <span asp-validation-for="UpdateProjectDto.ShortDescription" class="text-danger"></span>
             </div>
         </div>
         <div class="form-row full">
             <div class="form-group">
                 <label><i class="fas fa-image"></i>Proje Görseli</label>
                 <div class="upload-wrapper">
-                    <input asp-for="ImageUrl" type="url" class="form-control" placeholder="Görsel URL'si girin">
-                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    <input asp-for="UpdateProjectDto.ImageUrl" type="url" class="form-control" placeholder="Görsel URL'si girin">
+                    <span asp-validation-for="UpdateProjectDto.ImageUrl" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -236,8 +234,8 @@
                         </div>
                     </div>
 
-                    <textarea asp-for="Description" id="hiddenContentInput" style="display:none;"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <textarea asp-for="UpdateProjectDto.Description" id="hiddenContentInput" style="display:none;"></textarea>
+                    <span asp-validation-for="UpdateProjectDto.Description" class="text-danger"></span>
                     <!-- Content Area -->
                     <div class="editor-content" id="editorContent" contenteditable="true"
                          data-placeholder="Yazınızı buraya yazın...">
@@ -264,9 +262,9 @@
                 <label><i class="fas fa-code"></i>Kullanılan Teknolojiler *</label>
                 <div class="tags-input-container editor-tags" id="techTagsContainer">
                     <input type="text" placeholder="Teknoloji ekle (Enter)" id="techTagInput">
-                    <input asp-for="Technologies" type="hidden" id="hiddenTechnologies">
+                    <input asp-for="UpdateProjectDto.Technologies" type="hidden" id="hiddenTechnologies">
                 </div>
-                <span asp-validation-for="Technologies" class="text-danger"></span>
+                <span asp-validation-for="UpdateProjectDto.Technologies" class="text-danger"></span>
             </div>
         </div>
 
@@ -275,13 +273,13 @@
             <div class="form-row">
                 <div class="form-group">
                     <label><i class="fas fa-external-link-alt"></i>Demo / Canlı Site URL</label>
-                    <input asp-for="WebsiteUrl" type="url" class="form-control" placeholder="https://...">
-                    <span asp-validation-for="WebsiteUrl" class="text-danger"></span>
+                    <input asp-for="UpdateProjectDto.WebsiteUrl" type="url" class="form-control" placeholder="https://...">
+                    <span asp-validation-for="UpdateProjectDto.WebsiteUrl" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label><i class="fab fa-github"></i>GitHub URL</label>
-                    <input asp-for="GithubUrl" type="url" class="form-control" placeholder="https://github.com/...">
-                    <span asp-validation-for="GithubUrl" class="text-danger"></span>
+                    <input asp-for="UpdateProjectDto.GithubUrl" type="url" class="form-control" placeholder="https://github.com/...">
+                    <span asp-validation-for="UpdateProjectDto.GithubUrl" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -291,18 +289,18 @@
             <div class="form-row">
                 <div class="form-group">
                     <label><i class="fas fa-client"></i>Müşteri</label>
-                    <input asp-for="ClientName" type="text" class="form-control" placeholder="Müşteri">
-                    <span asp-validation-for="ClientName" class="text-danger"></span>
+                    <input asp-for="UpdateProjectDto.ClientName" type="text" class="form-control" placeholder="Müşteri">
+                    <span asp-validation-for="UpdateProjectDto.ClientName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-time"></i>Proje Yapım Süresi</label>
-                    <input asp-for="Duration" type="text" class="form-control" placeholder="Süre">
-                    <span asp-validation-for="Duration" class="text-danger"></span>
+                    <input asp-for="UpdateProjectDto.Duration" type="text" class="form-control" placeholder="Süre">
+                    <span asp-validation-for="UpdateProjectDto.Duration" class="text-danger"></span>
                 </div>
                 <div class="form-group full">
                     <label><i class="fas fa-role"></i>Projede Aktif Alınan Rol</label>
-                    <input asp-for="Role" type="text" class="form-control" placeholder="Rol">
-                    <span asp-validation-for="Role" class="text-danger"></span>
+                    <input asp-for="UpdateProjectDto.Role" type="text" class="form-control" placeholder="Rol">
+                    <span asp-validation-for="UpdateProjectDto.Role" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -310,7 +308,7 @@
         <div class="form-row status-row">
             <div class="form-group">
                 <label>Durum</label>
-                <select asp-for="IsPublished" class="form-control">
+                <select asp-for="UpdateProjectDto.IsPublished" class="form-control">
                     <option value="true">Yayında</option>
                     <option value="false">Taslak</option>
                 </select>
@@ -331,9 +329,6 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    @*   <script src="/Mytheme/admin/js/modules/projects.js" ></script>
-    <script src="/Mytheme/admin/js/modules/blog-editor.js" ></script> *@
     <script src="/Mytheme/admin/js/modules/project-editor.js"></script>
-
 }
 

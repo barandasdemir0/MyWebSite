@@ -33,8 +33,9 @@ public class ProjectDto
 
     public bool IsDeleted { get; set; } = false;
     // İlişkiler (Okuma)
-    public List<string> Topics { get; set; } = new();        // Topic isimleri
+
     public List<string> RelatedBlogs { get; set; } = new();  // Blog başlıkları
-    public List<Guid> TopicIds { get; set; } = new();  // ← EKLE (ID'ler)
-    public List<TopicDto>? topicList { get; set; }  // ← EKLE
+
+    public List<string> Topics { get; set; } = new();        // Topic isimleri
+
 }

@@ -1,4 +1,4 @@
-﻿@model CreateProjectDto
+﻿@model WebUILayer.Areas.Admin.Models.ProjectCreateViewModel
 @{
     ViewData["Title"] = "Create";
     ViewData["BodyClass"] = "projects-page blog-editor-page";
@@ -22,17 +22,17 @@
         <div class="form-row">
             <div class="form-group">
                 <label>Proje Adı *</label>
-                <input asp-for="Name" type="text" class="form-control" id="projectName" placeholder="Proje adını girin">
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <input asp-for="CreateProjectDtos.Name" type="text" class="form-control" id="projectName" placeholder="Proje adını girin">
+                <span asp-validation-for="CreateProjectDtos.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label>Kategori *</label>
-                <select asp-for="TopicIds" class="form-control select2-multiple" id="projectCategory" multiple="multiple" style="width: 100%">
-                    @if (Model.topicList != null)
+                <select asp-for="CreateProjectDtos.TopicIds" class="form-control select2-multiple" id="projectCategory" multiple="multiple" style="width: 100%">
+                    @if (Model.topicDtos != null)
                     {
-                        foreach (var item in Model.topicList)
+                        foreach (var item in Model.topicDtos)
                         {
-                            @if (Model.TopicIds.Contains(item.Id))
+                            @if (Model.CreateProjectDtos.TopicIds.Contains(item.Id))
                             {
                                 <option value="@item.Id" selected>@item.Name</option>
                             }
@@ -43,24 +43,24 @@
                         }
                     }
                 </select>
-                <span asp-validation-for="TopicIds" class="text-danger"></span>
+                <span asp-validation-for="CreateProjectDtos.TopicIds" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
                 <label>Kısa Açıklama *</label>
-                <input asp-for="ShortDescription" type="text" class="form-control"
+                <input asp-for="CreateProjectDtos.ShortDescription" type="text" class="form-control"
                        placeholder="Proje kartlarında görünecek kısa açıklama">
-                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                <span asp-validation-for="CreateProjectDtos.ShortDescription" class="text-danger"></span>
             </div>
         </div>
         <div class="form-row full">
             <div class="form-group">
                 <label><i class="fas fa-image"></i>Proje Görseli</label>
                 <div class="upload-wrapper">
-                    <input asp-for="ImageUrl" type="url" class="form-control" placeholder="Görsel URL'si girin">
-                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    <input asp-for="CreateProjectDtos.ImageUrl" type="url" class="form-control" placeholder="Görsel URL'si girin">
+                    <span asp-validation-for="CreateProjectDtos.ImageUrl" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -235,8 +235,8 @@
                         </div>
                     </div>
 
-                    <textarea asp-for="Description" id="hiddenContentInput" style="display:none;"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
+                    <textarea asp-for="CreateProjectDtos.Description" id="hiddenContentInput" style="display:none;"></textarea>
+                    <span asp-validation-for="CreateProjectDtos.Description" class="text-danger"></span>
                     <!-- Content Area -->
                     <div class="editor-content" id="editorContent" contenteditable="true"
                          data-placeholder="Yazınızı buraya yazın...">
@@ -263,9 +263,9 @@
                 <label><i class="fas fa-code"></i>Kullanılan Teknolojiler *</label>
                 <div class="tags-input-container editor-tags" id="techTagsContainer">
                     <input type="text" placeholder="Teknoloji ekle (Enter)" id="techTagInput">
-                    <input asp-for="Technologies" type="hidden" id="hiddenTechnologies">
+                    <input asp-for="CreateProjectDtos.Technologies" type="hidden" id="hiddenTechnologies">
                 </div>
-                <span asp-validation-for="Technologies" class="text-danger"></span>
+                <span asp-validation-for="CreateProjectDtos.Technologies" class="text-danger"></span>
             </div>
         </div>
 
@@ -274,13 +274,13 @@
             <div class="form-row">
                 <div class="form-group">
                     <label><i class="fas fa-external-link-alt"></i>Demo / Canlı Site URL</label>
-                    <input asp-for="WebsiteUrl" type="url" class="form-control" placeholder="https://...">
-                    <span asp-validation-for="WebsiteUrl" class="text-danger"></span>
+                    <input asp-for="CreateProjectDtos.WebsiteUrl" type="url" class="form-control" placeholder="https://...">
+                    <span asp-validation-for="CreateProjectDtos.WebsiteUrl" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label><i class="fab fa-github"></i>GitHub URL</label>
-                    <input asp-for="GithubUrl" type="url" class="form-control" placeholder="https://github.com/...">
-                    <span asp-validation-for="GithubUrl" class="text-danger"></span>
+                    <input asp-for="CreateProjectDtos.GithubUrl" type="url" class="form-control" placeholder="https://github.com/...">
+                    <span asp-validation-for="CreateProjectDtos.GithubUrl" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -290,18 +290,18 @@
             <div class="form-row">
                 <div class="form-group">
                     <label><i class="fas fa-client"></i>Müşteri</label>
-                    <input asp-for="ClientName" type="text" class="form-control" placeholder="Müşteri">
-                    <span asp-validation-for="ClientName" class="text-danger"></span>
+                    <input asp-for="CreateProjectDtos.ClientName" type="text" class="form-control" placeholder="Müşteri">
+                    <span asp-validation-for="CreateProjectDtos.ClientName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-time"></i>Proje Yapım Süresi</label>
-                    <input asp-for="Duration" type="text" class="form-control" placeholder="Süre">
-                    <span asp-validation-for="Duration" class="text-danger"></span>
+                    <input asp-for="CreateProjectDtos.Duration" type="text" class="form-control" placeholder="Süre">
+                    <span asp-validation-for="CreateProjectDtos.Duration" class="text-danger"></span>
                 </div>
                 <div class="form-group full">
                     <label><i class="fas fa-role"></i>Projede Aktif Alınan Rol</label>
-                    <input asp-for="Role" type="text" class="form-control" placeholder="Rol">
-                    <span asp-validation-for="Role" class="text-danger"></span>
+                    <input asp-for="CreateProjectDtos.Role" type="text" class="form-control" placeholder="Rol">
+                    <span asp-validation-for="CreateProjectDtos.Role" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -309,7 +309,7 @@
         <div class="form-row status-row">
             <div class="form-group">
                 <label>Durum</label>
-                <select asp-for="IsPublished" class="form-control">
+                <select asp-for="CreateProjectDtos.IsPublished" class="form-control">
                     <option value="true">Yayında</option>
                     <option value="false">Taslak</option>
                 </select>

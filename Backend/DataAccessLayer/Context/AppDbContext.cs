@@ -24,6 +24,8 @@ namespace DataAccessLayer.Context
         public DbSet<GithubRepo> GithubRepos { get; set; }
         public DbSet<GuestBook> GuestBooks { get; set; }
         public DbSet<Hero> Heroes { get; set; }
+        public DbSet<JobSkill> JobSkills { get; set; }
+        public DbSet<JobSkillCategory> jobSkillCategories { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectTopic> ProjectTopics { get; set; }
         public DbSet<Skill> Skills { get; set; }

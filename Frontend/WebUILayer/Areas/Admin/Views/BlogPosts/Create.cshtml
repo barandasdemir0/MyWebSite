@@ -1,4 +1,4 @@
-﻿@model CreateBlogPostDto
+﻿@model WebUILayer.Areas.Admin.Models.BlogCreateViewModel
 @{
     ViewData["Title"] = "Create";
     ViewData["BodyClass"] = "blog-editor-page"; // <-- BUNU EKLE
@@ -18,9 +18,9 @@
     <div>
         <!-- Title Input -->
         <div class="card editor-title-card">
-            <input type="text" asp-for="Title"  class="form-control editor-title-input" id="postTitle"
+            <input type="text" asp-for="createBlogPostDto.Title"  class="form-control editor-title-input" id="postTitle"
                    placeholder="Yazı başlığını girin...">
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <span asp-validation-for="createBlogPostDto.Title" class="text-danger"></span>
 
 
         </div>
@@ -31,10 +31,10 @@
         <div class="blog-editor">
             <!-- Tabs -->
             <div class="editor-tabs">
-                <button class="editor-tab active" data-action="switchTab" data-tab="edit">
+                    <button type="button" class="editor-tab active" data-action="switchTab" data-tab="edit">
                     <i class="fas fa-edit"></i> Düzenle
                 </button>
-                <button class="editor-tab" data-action="switchTab" data-tab="preview">
+                    <button type="button" class="editor-tab" data-action="switchTab" data-tab="preview">
                     <i class="fas fa-eye"></i> Önizleme
                 </button>
             </div>
@@ -43,19 +43,19 @@
             <div class="editor-toolbar" id="editorToolbar">
                 <!-- Text Formatting -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" data-action="formatText" data-command="bold"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="bold"
                             title="Kalın (Ctrl+B)">
                         <i class="fas fa-bold"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="italic"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="italic"
                             title="İtalik (Ctrl+I)">
                         <i class="fas fa-italic"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="underline"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="underline"
                             title="Altı Çizili (Ctrl+U)">
                         <i class="fas fa-underline"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="strikeThrough"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="strikeThrough"
                             title="Üstü Çizili">
                         <i class="fas fa-strikethrough"></i>
                     </button>
@@ -63,7 +63,7 @@
 
                 <!-- Font Size -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" data-action="decreaseFontSize" title="Yazı Küçült">
+                        <button type="button" class="toolbar-btn" data-action="decreaseFontSize" title="Yazı Küçült">
                         <i class="fas fa-minus"></i>
                     </button>
                     <select class="form-control editor-font-size-select" id="fontSizeSelect">
@@ -75,22 +75,22 @@
                         <option value="6">24</option>
                         <option value="7">36</option>
                     </select>
-                    <button class="toolbar-btn" data-action="increaseFontSize" title="Yazı Büyüt">
+                        <button type="button" class="toolbar-btn" data-action="increaseFontSize" title="Yazı Büyüt">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
 
                 <!-- Headings -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h1"
+                        <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h1"
                             title="Başlık 1">
                         H1
                     </button>
-                    <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h2"
+                        <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h2"
                             title="Başlık 2">
                         H2
                     </button>
-                    <button class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h3"
+                        <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h3"
                             title="Başlık 3">
                         H3
                     </button>
@@ -99,19 +99,19 @@
                 <!-- Colors -->
                 <div class="toolbar-group">
                     <div class="color-picker">
-                        <button class="toolbar-btn color-picker-btn" title="Yazı Rengi">
+                            <button type="button" class="toolbar-btn color-picker-btn" title="Yazı Rengi">
                             <i class="fas fa-font"></i>
                             <span id="textColorIndicator" class="color-indicator"></span>
                         </button>
                         <input type="color" id="textColorPicker" value="#ef4444" class="color-input">
                     </div>
                     <div class="color-picker">
-                        <button class="toolbar-btn color-picker-btn" title="Arka Plan Rengi">
+                            <button type="button" class="toolbar-btn color-picker-btn" title="Arka Plan Rengi">
                             <i class="fas fa-highlighter"></i>
                         </button>
                         <input type="color" id="bgColorPicker" value="#fef08a" class="color-input">
                     </div>
-                    <button class="toolbar-btn" data-action="formatText" data-command="removeFormat"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="removeFormat"
                             title="Biçimi Temizle (Renkleri Sıfırla)">
                         <i class="fas fa-eraser"></i>
                     </button>
@@ -119,50 +119,50 @@
 
                 <!-- Lists & Quote -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" data-action="formatText" data-command="insertUnorderedList"
+                    <button type="button" class="toolbar-btn" data-action="formatText" data-command="insertUnorderedList"
                             title="Madde İşaretli Liste">
                         <i class="fas fa-list-ul"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="insertOrderedList"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="insertOrderedList"
                             title="Numaralı Liste">
                         <i class="fas fa-list-ol"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="insertQuote" title="Alıntı">
+                        <button type="button" class="toolbar-btn" data-action="insertQuote" title="Alıntı">
                         <i class="fas fa-quote-left"></i>
                     </button>
                 </div>
 
                 <!-- Media & Links -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" data-action="insertLink" title="Link Ekle">
+                        <button type="button" class="toolbar-btn" data-action="insertLink" title="Link Ekle">
                         <i class="fas fa-link"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="insertImage" title="Resim Ekle">
+                        <button type="button" class="toolbar-btn" data-action="insertImage" title="Resim Ekle">
                         <i class="fas fa-image"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="insertVideo" title="Video Ekle">
+                        <button type="button" class="toolbar-btn" data-action="insertVideo" title="Video Ekle">
                         <i class="fas fa-video"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="insertCode" title="Kod Bloğu">
+                        <button type="button" class="toolbar-btn" data-action="insertCode" title="Kod Bloğu">
                         <i class="fas fa-code"></i>
                     </button>
                 </div>
 
                 <!-- Alignment -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" data-action="formatText" data-command="justifyLeft"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyLeft"
                             title="Sola Hizala">
                         <i class="fas fa-align-left"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="justifyCenter"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyCenter"
                             title="Ortala">
                         <i class="fas fa-align-center"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="justifyRight"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyRight"
                             title="Sağa Hizala">
                         <i class="fas fa-align-right"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="justifyFull"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyFull"
                             title="İki Yana Yasla">
                         <i class="fas fa-align-justify"></i>
                     </button>
@@ -170,31 +170,31 @@
 
                 <!-- Extras -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" data-action="insertTable" title="Tablo Ekle">
+                        <button type="button" class="toolbar-btn" data-action="insertTable" title="Tablo Ekle">
                         <i class="fas fa-table"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="insertHR" title="Yatay Çizgi">
+                        <button type="button" class="toolbar-btn" data-action="insertHR" title="Yatay Çizgi">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="insertEmoji" title="Emoji">
+                        <button type="button" class="toolbar-btn" data-action="insertEmoji" title="Emoji">
                         <i class="fas fa-smile"></i>
                     </button>
                 </div>
 
                 <!-- Undo/Redo -->
                 <div class="toolbar-group">
-                    <button class="toolbar-btn" data-action="formatText" data-command="undo"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="undo"
                             title="Geri Al (Ctrl+Z)">
                         <i class="fas fa-undo"></i>
                     </button>
-                    <button class="toolbar-btn" data-action="formatText" data-command="redo"
+                        <button type="button" class="toolbar-btn" data-action="formatText" data-command="redo"
                             title="İleri Al (Ctrl+Y)">
                         <i class="fas fa-redo"></i>
                     </button>
                 </div>
             </div>
-             <textarea asp-for="Content" id="hiddenContentInput" style="display:none;"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
+                <textarea asp-for="createBlogPostDto.Content" id="hiddenContentInput" style="display:none;"></textarea>
+                <span asp-validation-for="createBlogPostDto.Content" class="text-danger"></span>
             <!-- Content Area -->
             <div class="editor-content" id="editorContent" contenteditable="true"
                  data-placeholder="Yazınızı buraya yazın...">
@@ -209,11 +209,11 @@
                 <div class="editor-stats">
                     <span><i class="fas fa-font"></i> <span id="wordCount">0</span> kelime</span>
                     <span><i class="fas fa-clock"></i> <span id="readTime">0</span> dk okuma</span>
-                    <input type="hidden" asp-for="ReadTime" id="readTimeInput" />
+                        <input type="hidden" asp-for="createBlogPostDto.ReadTime" id="readTimeInput" />
 
                 </div>
                 <div>
-                    <button class="btn btn-sm btn-outline" data-action="clearEditor">
+                        <button type="button" class="btn btn-sm btn-outline" data-action="clearEditor">
                         <i class="fas fa-eraser"></i> Temizle
                     </button>
                 </div>
@@ -226,7 +226,7 @@
         <!-- Featured Image -->
         <div class="sidebar-section">
             <h4><i class="fas fa-image"></i> Öne Çıkan Görsel</h4>
-                <input type="hidden" asp-for="CoverImage" id="featuredImageInput" />
+                <input type="hidden" asp-for="createBlogPostDto.CoverImage" id="featuredImageInput" />
               
                 <div  class="featured-image-upload" data-action="uploadFeaturedImage">
 
@@ -234,21 +234,21 @@
                 <span >Görsel yükle</span>
                    
             </div>
-                <span asp-validation-for="CoverImage" class="text-danger"></span>
+                <span asp-validation-for="createBlogPostDto.CoverImage" class="text-danger"></span>
 
         </div>
 
         <!-- Category -->
         <div class="sidebar-section">
             <h4><i class="fas fa-folder"></i>Kategori</h4>
-            <select name="TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
+            <select name="createBlogPostDto.TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
                    
               
-                @if (Model.topicList != null)
+                @if (Model.topicDtos != null)
                     {
-                        foreach (var item in Model.topicList)
+                        foreach (var item in Model.topicDtos)
                         {
-                            if (Model.TopicIds.Contains(item.Id))
+                            if (Model.createBlogPostDto.TopicIds.Contains(item.Id))
                                 {
                                 <option value="@item.Id">@item.Name</option>
                                 }
@@ -260,24 +260,24 @@
                         }
                     }
             </select>
-                <span asp-validation-for="TopicIds" class="text-danger"></span>
+                <span asp-validation-for="createBlogPostDto.TopicIds" class="text-danger"></span>
         </div>
 
         <!-- Tags -->
         <div class="sidebar-section">
             <h4><i class="fas fa-tags"></i> Teknolojiler</h4>
-                <input type="hidden" asp-for="Technologies" id="hiddenTagsInput" />
+                <input type="hidden" asp-for="createBlogPostDto.Technologies" id="hiddenTagsInput" />
               
             <div class="tags-input">
                 <input type="text" id="tagsInput" placeholder="Etiket ekle (Enter)">
             </div>
-                <span asp-validation-for="Technologies" class="text-danger"></span>
+                <span asp-validation-for="createBlogPostDto.Technologies" class="text-danger"></span>
         </div>
 
         <!-- Status -->
         <div class="sidebar-section">
             <h4><i class="fas fa-toggle-on"></i> Yayın Durumu</h4>
-            <select asp-for="IsPublished" class="form-control" id="postStatus">
+                <select asp-for="createBlogPostDto.IsPublished" class="form-control" id="postStatus">
                 <option value="false">Taslak</option>
                 <option value="true">Yayında</option>
             </select>
@@ -291,7 +291,7 @@
         <i class="fas fa-save"></i> Kaydet
     </button>
     <a href="blog.html" class="btn btn-outline">İptal</a>
-    <button class="btn btn-outline" data-action="previewPost">
+        <button type="button" class="btn btn-outline" data-action="previewPost">
         <i class="fas fa-eye"></i> Önizle
     </button>
 </div>
@@ -322,8 +322,8 @@
             </div>
         </div>
         <div class="modal-footer modal-footer-actions">
-            <button class="btn btn-secondary" data-action="closeImageModal">İptal</button>
-            <button class="btn btn-success" data-action="confirmImageInsert">Ekle</button>
+                <button type="button" class="btn btn-secondary" data-action="closeImageModal">İptal</button>
+                <button type="button" class="btn btn-success" data-action="confirmImageInsert">Ekle</button>
         </div>
     </div>
 </div>

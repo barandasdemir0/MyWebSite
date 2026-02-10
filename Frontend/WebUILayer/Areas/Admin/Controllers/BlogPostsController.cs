@@ -41,33 +41,32 @@ public class BlogPostsController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var model = new CreateBlogPostDto();
-        model.topicList = await _topicApiService.GetAllAsync();
+        var model = new BlogCreateViewModel
+        {
+            topicDtos = await _topicApiService.GetAllAsync()
+        };
         return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateBlogPostDto createBlogPostDto)
+    public async Task<IActionResult> Create(BlogCreateViewModel blogCreateViewModel)
     {
         if (!ModelState.IsValid)
         {
-            createBlogPostDto.topicList = await _topicApiService.GetAllAsync();
-            return View(createBlogPostDto);
+            blogCreateViewModel.topicDtos = await _topicApiService.GetAllAsync();
+            return View(blogCreateViewModel);
 
         }
         try
         {
-
-            var query = await _blogPostApiService.AddAsync(createBlogPostDto);
+            await _blogPostApiService.AddAsync(blogCreateViewModel.createBlogPostDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
-
-
-            ModelState.AddApiError(ex);
-            createBlogPostDto.topicList = await _topicApiService.GetAllAsync();
-            return View(createBlogPostDto);
+            ModelState.AddApiError(ex, "createBlogPostDto");
+            blogCreateViewModel.topicDtos = await _topicApiService.GetAllAsync();
+            return View(blogCreateViewModel);
         }
 
     }
@@ -76,31 +75,39 @@ public class BlogPostsController : Controller
     [HttpGet]
     public async Task<IActionResult> Update(Guid guid)
     {
-        var query = await _blogPostApiService.GetByIdAsync(guid);
-        query?.topicList = await _topicApiService.GetAllAsync();
-        //ViewBag.TopicList = await _topicApiService.GetAllAsync();
-        return View(query.Adapt<UpdateBlogPostDto>());
+        var blog = await _blogPostApiService.GetByIdAsync(guid);
+        if (blog== null)
+        {
+            return NotFound();
+        }
+        var model = new BlogUpdateViewModel
+        {
+            updateBlogPostDto = blog.Adapt<UpdateBlogPostDto>(),
+            topicDtos = await _topicApiService.GetAllAsync()
+        };
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(UpdateBlogPostDto updateBlogPostDto)
+    public async Task<IActionResult> Update(BlogUpdateViewModel updateViewModel)
     {
         if (!ModelState.IsValid)
         {
-            updateBlogPostDto.topicList = await _topicApiService.GetAllAsync();
-            return View(updateBlogPostDto);
+            updateViewModel.topicDtos = await _topicApiService.GetAllAsync();
+            return View(updateViewModel);
         }
         try
         {
-            var query = await _blogPostApiService.UpdateAsync(updateBlogPostDto.Id, updateBlogPostDto);
+            var query = await _blogPostApiService.UpdateAsync(
+                updateViewModel.updateBlogPostDto.Id,
+                updateViewModel.updateBlogPostDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
-            ModelState.AddApiError(ex);
-            updateBlogPostDto.topicList = await _topicApiService.GetAllAsync();
-
-            return View(updateBlogPostDto);
+            ModelState.AddApiError(ex, "updateBlogPostDto");
+            updateViewModel.topicDtos = await _topicApiService.GetAllAsync();
+            return View(updateViewModel);
         }
 
 

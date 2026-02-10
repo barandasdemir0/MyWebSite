@@ -1,4 +1,4 @@
-﻿@model UpdateBlogPostDto
+﻿@model WebUILayer.Areas.Admin.Models.BlogUpdateViewModel
 @{
     ViewData["Title"] = "Update";
     ViewData["BodyClass"] = "blog-editor-page"; // <-- BUNU EKLE
@@ -12,8 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 }
-<form asp-action="Update" asp-route-guid="@Model.Id" id="createPostForm" method="post" enctype="multipart/form-data">
-    <input type="hidden" asp-for="Id" />
+<form asp-action="Update" id="createPostForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="updateBlogPostDto.Id" />
 
 
     <!-- Editor Layout -->
@@ -22,9 +22,9 @@
         <div>
             <!-- Title Input -->
             <div class="card editor-title-card">
-                <input type="text" asp-for="Title" class="form-control editor-title-input" id="postTitle"
+                <input type="text" asp-for="updateBlogPostDto.Title" class="form-control editor-title-input" id="postTitle"
                        placeholder="Yazı başlığını girin...">
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <span asp-validation-for="updateBlogPostDto.Title" class="text-danger"></span>
 
 
             </div>
@@ -197,8 +197,8 @@
                         </button>
                     </div>
                 </div>
-                <textarea asp-for="Content" id="hiddenContentInput" style="display:none;"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
+                <textarea asp-for="updateBlogPostDto.Content" id="hiddenContentInput" style="display:none;"></textarea>
+                <span asp-validation-for="updateBlogPostDto.Content" class="text-danger"></span>
                 <!-- Content Area -->
                 <div class="editor-content" id="editorContent" contenteditable="true"
                      data-placeholder="Yazınızı buraya yazın...">
@@ -213,7 +213,7 @@
                     <div class="editor-stats">
                         <span><i class="fas fa-font"></i> <span id="wordCount">0</span> kelime</span>
                         <span><i class="fas fa-clock"></i> <span id="readTime">0</span> dk okuma</span>
-                        <input type="hidden" asp-for="ReadTime" id="readTimeInput" />
+                        <input type="hidden" asp-for="updateBlogPostDto.ReadTime" id="readTimeInput" />
 
                     </div>
                     <div>
@@ -230,7 +230,7 @@
             <!-- Featured Image -->
             <div class="sidebar-section">
                 <h4><i class="fas fa-image"></i> Öne Çıkan Görsel</h4>
-                <input type="hidden" asp-for="CoverImage" id="featuredImageInput" />
+                <input type="hidden" asp-for="updateBlogPostDto.CoverImage" id="featuredImageInput" />
 
                 <div class="featured-image-upload" data-action="uploadFeaturedImage">
 
@@ -238,18 +238,18 @@
                     <span>Görsel yükle</span>
 
                 </div>
-                <span asp-validation-for="CoverImage" class="text-danger"></span>
+                <span asp-validation-for="updateBlogPostDto.CoverImage" class="text-danger"></span>
 
             </div>
 
             <div class="sidebar-section">
                 <h4><i class="fas fa-folder"></i>Kategori</h4>
                 <select name="TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
-                    @if (Model.topicList != null)
+                    @if (Model.topicDtos != null)
                     {
-                        @foreach (var item in Model.topicList)
+                        @foreach (var item in Model.topicDtos)
                         {
-                            @if (Model.TopicIds.Contains(item.Id))
+                            @if (Model.updateBlogPostDto.TopicIds.Contains(item.Id))
                             {
                                 <option value="@item.Id" selected>@item.Name</option>
                             }
@@ -260,24 +260,24 @@
                         }
                     }
                 </select>
-                <span asp-validation-for="TopicIds" class="text-danger"></span>
+                <span asp-validation-for="updateBlogPostDto.TopicIds" class="text-danger"></span>
             </div>
 
             <!-- Tags -->
             <div class="sidebar-section">
                 <h4><i class="fas fa-tags"></i> Teknolojiler</h4>
-                <input type="hidden" asp-for="Technologies" id="hiddenTagsInput" />
+                <input type="hidden" asp-for="updateBlogPostDto.Technologies" id="hiddenTagsInput" />
 
                 <div class="tags-input">
                     <input type="text" id="tagsInput" placeholder="Etiket ekle (Enter)">
                 </div>
-                <span asp-validation-for="Technologies" class="text-danger"></span>
+                <span asp-validation-for="updateBlogPostDto.Technologies" class="text-danger"></span>
             </div>
 
             <!-- Status -->
             <div class="sidebar-section">
                 <h4><i class="fas fa-toggle-on"></i> Yayın Durumu</h4>
-                <select asp-for="IsPublished" class="form-control" id="postStatus">
+                <select asp-for="updateBlogPostDto.IsPublished" class="form-control" id="postStatus">
                     <option value="false">Taslak</option>
                     <option value="true">Yayında</option>
                 </select>
