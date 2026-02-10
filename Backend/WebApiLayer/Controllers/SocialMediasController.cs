@@ -24,6 +24,13 @@ public sealed class SocialMediasController:ControllerBase
         return Ok(query);
     }
 
+    [HttpGet("admin-all")]
+    public async Task<IActionResult> GetAllAdminAsync()
+    {
+        var query = await _socialMediaService.GetAllAdminAsync();
+        return Ok(query);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -66,6 +73,13 @@ public sealed class SocialMediasController:ControllerBase
             return NotFound();
         }
         await _socialMediaService.DeleteAsync(id);
+        return Ok(query);
+    }
+
+    [HttpPut("restore/{id}")]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        var query = await _socialMediaService.RestoreAsync(id);
         return Ok(query);
     }
 

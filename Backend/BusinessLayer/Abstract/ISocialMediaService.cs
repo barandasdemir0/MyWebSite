@@ -8,5 +8,7 @@ namespace BusinessLayer.Abstract
 {
     public interface ISocialMediaService:IGenericService<SocialMedia,SocialMediaDto,CreateSocialMediaDto,UpdateSocialMediaDto>
     {
+        Task<SocialMediaDto?> RestoreAsync(Guid guid);
+        Task<List<SocialMediaDto>> GetAllAdminAsync();
     }
 }

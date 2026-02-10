@@ -39,6 +39,12 @@ namespace BusinessLayer.Concrete
             }
         }
 
+        public async Task<List<SocialMediaDto>> GetAllAdminAsync()
+        {
+            var entity = await _socialMediaDal.GetAllAdminAsync(tracking: false);
+            return _mapper.Map<List<SocialMediaDto>>(entity);
+        }
+
         public async Task<List<SocialMediaDto>> GetAllAsync()
         {
             var entity = await _socialMediaDal.GetAllAsync(tracking: false);
@@ -53,6 +59,20 @@ namespace BusinessLayer.Concrete
                 return null;
             }
             return _mapper.Map<SocialMediaDto>(entity);
+        }
+
+        public async Task<SocialMediaDto?> RestoreAsync(Guid guid)
+        {
+            var query = await _socialMediaDal.RestoreDeleteByIdAsync(guid);
+            if (query == null)
+            {
+                return null;
+            }
+            query.IsDeleted = false;
+            query.DeletedAt = null;
+            await _socialMediaDal.UpdateAsync(query);
+            await _socialMediaDal.SaveAsync();
+            return _mapper.Map<SocialMediaDto>(query);
         }
 
         public async Task<SocialMediaDto?> UpdateAsync(Guid guid, UpdateSocialMediaDto dto)

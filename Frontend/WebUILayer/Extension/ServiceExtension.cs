@@ -56,6 +56,11 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
+        services.AddHttpClient<ISocialMediaApiService, SocialMediaApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
 
 
 

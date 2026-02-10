@@ -1,0 +1,40 @@
+﻿@model UpdateSocialMediaDto
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- Social Media Links -->
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-share-alt mr-10"></i>Sosyal Medya</h3>
+    </div>
+
+    <form asp-action="Update" method="post">
+        <input  type="hidden" asp-for="Id"/>
+        <div class="form-group">
+            <label>Sosyal Medya İsmi</label>
+            <input asp-for="SocialMediaName" type="text" class="form-control" >
+            <span asp-validation-for="SocialMediaName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Sosyal Medya Linki</label>
+            <input asp-for="SocialMediaUrl" type="url" class="form-control" placeholder="https://github.com/barandasdemir0">
+            <span asp-validation-for="SocialMediaName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Sosyal Medya İconu</label>
+            <input asp-for="SocialMediaIcon" type="text" class="form-control" placeholder="logos:instagram">
+            <span asp-validation-for="SocialMediaIcon" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i>
+                Değişiklikleri Kaydet
+            </button>
+        </div>
+    </form>
+</div>
+
+
