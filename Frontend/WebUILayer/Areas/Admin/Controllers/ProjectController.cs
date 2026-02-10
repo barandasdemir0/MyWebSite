@@ -71,10 +71,6 @@ public class ProjectController : Controller
     public async Task<IActionResult> Update(Guid guid)
     {
         var query = await _projectApiService.GetByIdAsync(guid);
-        //if (query==null)
-        //{
-        //    return NotFound();
-        //}
         query?.topicList = await _topicApiService.GetAllAsync();
         return View(query.Adapt<UpdateProjectDto>());
     }

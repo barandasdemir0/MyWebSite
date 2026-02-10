@@ -48,7 +48,7 @@ namespace BusinessLayer.Concrete
         public async Task<List<EducationDto>> GetAllAsync()
         {
             var entity = await _educationDal.GetAllAsync(tracking: false);
-            return _mapper.Map<List<EducationDto>>(entity);
+            return _mapper.Map<List<EducationDto>>(entity.OrderBy(x => x.DisplayOrder));
         }
 
         public async Task<EducationDto?> GetByIdAsync(Guid guid)

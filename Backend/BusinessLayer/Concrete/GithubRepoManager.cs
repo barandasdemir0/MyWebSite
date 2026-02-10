@@ -42,7 +42,7 @@ namespace BusinessLayer.Concrete
         public async Task<List<GithubRepoDto>> GetAllAsync()
         {
             var entity = await _githubRepoDal.GetAllAsync(tracking: false);
-            return _mapper.Map<List<GithubRepoDto>>(entity);
+            return _mapper.Map<List<GithubRepoDto>>(entity.OrderBy(x => x.DisplayOrder));
         }
 
         public async Task<GithubRepoDto?> GetByIdAsync(Guid guid)

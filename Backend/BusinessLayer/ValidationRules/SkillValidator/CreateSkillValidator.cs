@@ -16,13 +16,13 @@ namespace BusinessLayer.ValidationRules.SkillValidator
                 .MaximumLength(100)
                 .WithMessage("100 Karakterden daha fazla yetenek ismi olamaz");
 
-            RuleFor(x => x.SkillUrl)
-                .MaximumLength(200)
-                .WithMessage("200 Karakterden daha fazla yetenek resim linki olamaz");
+            RuleFor(x => x.IconifyIcon)
+                .NotEmpty()
+                .WithMessage("İcon Boş geçilemez")
+                .MaximumLength(50)
+                .WithMessage("50 Karakterden daha fazla yetenek resim linki olamaz");
 
-            RuleFor(x => x.SkillIcon)
-                .MaximumLength(200)
-                .WithMessage("200 Karakterden daha fazla yetenek iconu linki olamaz");
+
         }
     }
 }

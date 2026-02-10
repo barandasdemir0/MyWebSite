@@ -1,252 +1,113 @@
-// Skills page functionality
 document.addEventListener('DOMContentLoaded', function () {
     let selectedSkillElement = null;
 
-    // Get all modal elements
-    const skillModal = document.getElementById('skillModal');
-    const skillOptionsModal = document.getElementById('skillOptionsModal');
-    const deleteConfirmModal = document.getElementById('deleteConfirmModal');
-    const alertModal = document.getElementById('alertModal');
+    // --- MODALLAR ---
+    const addModal = document.getElementById('skillModal');
+    const updateModal = document.getElementById('updateSkillModal');
+    const optionsModal = document.getElementById('skillOptionsModal');
+    const deleteModal = document.getElementById('deleteConfirmModal');
 
-    const addSkillForm = document.getElementById('addSkillForm');
-    const skillNameInput = document.getElementById('skillNameInput');
-    const skillModalTitle = document.getElementById('skillModalTitle');
-    const iconInputGroup = document.getElementById('iconInputGroup');
-    const imageInputGroup = document.getElementById('imageInputGroup');
-    const iconClassInput = document.getElementById('iconClassInput');
-    const imageUrlInput = document.getElementById('imageUrlInput');
-    const selectedSkillName = document.getElementById('selectedSkillName');
-    const alertMessage = document.getElementById('alertMessage');
-    const techStackGrid = document.getElementById('techStackGrid');
+    // --- TEXT ALANLARI ---
+    const selectedSkillNameEl = document.getElementById('selectedSkillName');
     const deleteConfirmText = document.getElementById('deleteConfirmText');
 
-    // Bind tech items to open options modal
     bindTechItemClicks();
 
-    // Add Skill button
-    const addSkillBtn = document.querySelector('[data-action="addSkill"]');
-    if (addSkillBtn) {
-        addSkillBtn.addEventListener('click', showAddSkillModal);
-    }
-
-    // Modal control buttons
-    document.querySelectorAll('[data-action="closeSkillModal"]').forEach(btn => {
-        btn.addEventListener('click', closeSkillModal);
-    });
-
-    document.querySelectorAll('[data-action="saveSkill"]').forEach(btn => {
-        btn.addEventListener('click', saveSkill);
-    });
-
-    document.querySelectorAll('[data-action="closeSkillOptionsModal"]').forEach(btn => {
-        btn.addEventListener('click', closeSkillOptionsModal);
-    });
-
-    document.querySelectorAll('[data-action="editSkill"]').forEach(btn => {
-        btn.addEventListener('click', editSelectedSkill);
-    });
-
-    document.querySelectorAll('[data-action="deleteSkill"]').forEach(btn => {
-        btn.addEventListener('click', deleteSelectedSkill);
-    });
-
-    document.querySelectorAll('[data-action="closeDeleteConfirm"]').forEach(btn => {
-        btn.addEventListener('click', closeDeleteConfirmModal);
-    });
-
-    document.querySelectorAll('[data-action="confirmDelete"]').forEach(btn => {
-        btn.addEventListener('click', confirmDeleteSkill);
-    });
-
-    document.querySelectorAll('[data-action="closeAlert"]').forEach(btn => {
-        btn.addEventListener('click', closeAlert);
-    });
-
-    // Icon type radio buttons
-    const iconTypeRadios = document.querySelectorAll('input[name="iconType"]');
-    iconTypeRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            toggleIconInput(this.value);
+    // 1. EKLEME İŞLEMLERİ
+    const addBtn = document.querySelector('[data-action="addSkill"]');
+    if (addBtn) {
+        addBtn.addEventListener('click', () => {
+            document.getElementById('addSkillForm').reset();
+            addModal.classList.add('visible');
         });
-    });
-
-    // Public functions
-
-    function showAddSkillModal() {
-        const config = document.getElementById('skillsConfig');
-        skillModalTitle.textContent = config?.dataset.textAdd || "Yeni Yetenek Ekle";
-        addSkillForm.reset();
-        toggleIconInput('icon');
-        selectedSkillElement = null;
-        skillModal.classList.add('visible');
     }
 
-    function closeSkillModal() {
-        skillModal.classList.remove('visible');
+    // 2. KAPATMA İŞLEMLERİ (Her modal için ayrı)
+    // Create kapat
+    document.querySelectorAll('[data-action="closeSkillModal"]').forEach(btn =>
+        btn.addEventListener('click', () => addModal.classList.remove('visible')));
+
+    // Update kapat
+    document.querySelectorAll('[data-action="closeUpdateModal"]').forEach(btn =>
+        btn.addEventListener('click', () => updateModal.classList.remove('visible')));
+
+    // Options kapat
+    document.querySelectorAll('[data-action="closeSkillOptionsModal"]').forEach(btn =>
+        btn.addEventListener('click', () => optionsModal.classList.remove('visible')));
+
+    // Delete kapat
+    document.querySelectorAll('[data-action="closeDeleteConfirm"]').forEach(btn =>
+        btn.addEventListener('click', () => deleteModal.classList.remove('visible')));
+
+
+    // 3. DÜZENLEME İŞLEMİ (Options Modal -> Update Modal)
+    const editBtn = document.querySelector('[data-action="editSkill"]');
+    if (editBtn) {
+        editBtn.addEventListener('click', function () {
+            if (!selectedSkillElement) return;
+
+            // Options modalını kapat
+            optionsModal.classList.remove('visible');
+
+            // Verileri HTML elementinden al
+            const id = selectedSkillElement.getAttribute('data-skill-id');
+            const name = selectedSkillElement.querySelector('span:not(.iconify)').textContent.trim();
+            const iconSpan = selectedSkillElement.querySelector('.iconify');
+            const icon = iconSpan ? iconSpan.getAttribute('data-icon') : '';
+
+            // Update Modal ID'lerini bul ve doldur
+            document.getElementById('updateSkillId').value = id;
+            document.getElementById('updateSkillName').value = name;
+            document.getElementById('updateSkillIcon').value = icon;
+
+            // Update modalını aç
+            updateModal.classList.add('visible');
+        });
     }
 
-    function toggleIconInput(type) {
-        if (type === 'icon') {
-            iconInputGroup.style.display = 'block';
-            imageInputGroup.style.display = 'none';
-        } else {
-            iconInputGroup.style.display = 'none';
-            imageInputGroup.style.display = 'block';
-        }
-    }
+   
+    // 4. SİLME İŞLEMİ
+    const deleteBtn = document.querySelector('[data-action="deleteSkill"]');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function () {
+            if (!selectedSkillElement) return;
 
-    function openSkillOptions(element, skillName) {
-        selectedSkillElement = element;
-        if (!skillName) {
-            skillName = element.querySelector('span').textContent;
-        }
-        selectedSkillName.textContent = skillName;
-        skillOptionsModal.classList.add('visible');
-    }
+            // Options modalını kapat
+            document.getElementById('skillOptionsModal').classList.remove('visible');
 
-    function closeSkillOptionsModal() {
-        skillOptionsModal.classList.remove('visible');
-    }
+            // Kutudan ID'yi ve İsmi Al
+            const id = selectedSkillElement.getAttribute('data-skill-id'); // ✅
 
-    function deleteSelectedSkill() {
-        if (selectedSkillElement) {
-            const config = document.getElementById('skillsConfig');
-            const skillName = selectedSkillName.textContent;
-            const suffix = config?.dataset.msgDeleteConfirmSuffix || "silinsin mi?";
-            deleteConfirmText.textContent = `${skillName} ${suffix}`;
-            skillOptionsModal.classList.remove('visible');
-            deleteConfirmModal.classList.add('visible');
-        }
-    }
+            const name = selectedSkillElement.querySelector('span:not(.iconify)').textContent.trim();
 
-    function closeDeleteConfirmModal() {
-        deleteConfirmModal.classList.remove('visible');
-        selectedSkillElement = null;
-    }
+            // İsmi Yaz
+            document.getElementById('deleteConfirmText').textContent = `"${name}" silinsin mi?`;
 
-    function confirmDeleteSkill() {
-        if (selectedSkillElement) {
-            selectedSkillElement.remove();
-            closeDeleteConfirmModal();
-        }
-    }
-
-    function editSelectedSkill() {
-        if (selectedSkillElement) {
-            const config = document.getElementById('skillsConfig');
-            const name = selectedSkillName.textContent;
-            skillModalTitle.textContent = config?.dataset.textEdit || "Yetenek Düzenle";
-            skillNameInput.value = name;
-
-            const img = selectedSkillElement.querySelector('img');
-            const i = selectedSkillElement.querySelector('i');
-
-            if (img) {
-                toggleIconInput('image');
-                document.querySelector('input[name="iconType"][value="image"]').checked = true;
-                imageUrlInput.value = img.src;
-            } else if (i) {
-                toggleIconInput('icon');
-                document.querySelector('input[name="iconType"][value="icon"]').checked = true;
-                iconClassInput.value = i.className;
+            // ID'yi Gizli Inputa Yaz (Input adı ne olursa olsun, formun içindeki İLK gizli inputa yazar)
+            const hiddenInput = document.getElementById('deleteForm').querySelector('input[type="hidden"]');
+            if (hiddenInput) {
+                hiddenInput.value = id;
             }
 
-            // Set Display Order
-            const displayOrderInput = document.getElementById('displayOrderInput');
-            if (displayOrderInput) {
-                displayOrderInput.value = selectedSkillElement.dataset.order || '0';
-            }
-
-            skillModal.classList.add('visible');
-            skillOptionsModal.classList.remove('visible');
-        }
+            // Modalı Aç
+            document.getElementById('deleteConfirmModal').classList.add('visible');
+        });
     }
 
-    function saveSkill() {
-        const name = skillNameInput.value.trim();
-        if (!name) {
-            const config = document.getElementById('skillsConfig');
-            showCustomAlert(config?.dataset.msgEnterName || 'Lütfen bir isim girin.');
-            return;
-        }
 
-        const displayOrderInput = document.getElementById('displayOrderInput');
-        const displayOrder = displayOrderInput ? displayOrderInput.value : '0';
 
-        const type = document.querySelector('input[name="iconType"]:checked').value;
-        let iconHtml = '';
-        if (type === 'icon') {
-            const iconClass = iconClassInput.value.trim() || 'fas fa-code';
-            iconHtml = `<i class="${iconClass}"></i>`;
-        } else {
-            const imgUrl = imageUrlInput.value.trim() || 'https://via.placeholder.com/48';
-            iconHtml = `<img src="${imgUrl}" alt="${name}">`;
-        }
-
-        const config = document.getElementById('skillsConfig');
-        const editTitle = config?.dataset.textEdit || "Yetenek Düzenle";
-        if (selectedSkillElement && skillModalTitle.textContent === editTitle) {
-            // Edit existing
-            selectedSkillElement.innerHTML = `
-                ${iconHtml}
-                <span>${name}</span>
-            `;
-            selectedSkillElement.setAttribute('data-skill-name', name);
-            selectedSkillElement.setAttribute('data-order', displayOrder);
-            bindTechItemClicks();
-        } else {
-            // Add new
-            const newItem = document.createElement('div');
-            newItem.className = 'tech-item';
-            newItem.setAttribute('data-skill-name', name);
-            newItem.setAttribute('data-order', displayOrder);
-            newItem.innerHTML = `
-                ${iconHtml}
-                <span>${name}</span>
-            `;
-            techStackGrid.appendChild(newItem);
-
-            newItem.addEventListener('click', function () {
-                openSkillOptions(this, name);
-            });
-        }
-
-        closeSkillModal();
-    }
-
-    function showCustomAlert(msg) {
-        alertMessage.textContent = msg;
-        alertModal.classList.add('visible');
-    }
-
-    function closeAlert() {
-        alertModal.classList.remove('visible');
-    }
-
+    // Helper: Tıklama olaylarını bağla
     function bindTechItemClicks() {
-        const techItems = document.querySelectorAll('.tech-item');
-        techItems.forEach(item => {
-            // Remove old listeners by cloning
+        document.querySelectorAll('.tech-item').forEach(item => {
             const newItem = item.cloneNode(true);
             item.parentNode.replaceChild(newItem, item);
 
             newItem.addEventListener('click', function () {
-                const skillName = this.getAttribute('data-skill-name') || this.querySelector('span').textContent;
-                openSkillOptions(this, skillName);
+                selectedSkillElement = this;
+                const name = this.querySelector('span:not(.iconify)').textContent.trim();
+                selectedSkillNameEl.textContent = name;
+                optionsModal.classList.add('visible');
             });
         });
     }
-
-    // Expose public API
-    window.showAddSkillModal = showAddSkillModal;
-    window.closeSkillModal = closeSkillModal;
-    window.toggleIconInput = toggleIconInput;
-    window.openSkillOptions = openSkillOptions;
-    window.closeSkillOptionsModal = closeSkillOptionsModal;
-    window.deleteSelectedSkill = deleteSelectedSkill;
-    window.closeDeleteConfirmModal = closeDeleteConfirmModal;
-    window.confirmDeleteSkill = confirmDeleteSkill;
-    window.editSelectedSkill = editSelectedSkill;
-    window.saveSkill = saveSkill;
-    window.showCustomAlert = showCustomAlert;
 });

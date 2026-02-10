@@ -1,0 +1,178 @@
+﻿@model List<SkillDto>
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "skills-page";
+
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/skills.css">
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3>— Kullandığım Teknolojiler —</h3>
+    </div>
+    <div class="card-body">
+        <div class="tech-stack-grid" id="techStackGrid">
+            <!-- Static Examples -->
+            @foreach (var item in Model)
+            {
+                <div class="tech-item" data-skill-id="@item.Id">
+                    <span class="iconify"
+                          data-icon="@item.IconifyIcon"
+                          data-width="48"
+                          data-height="48"></span>
+
+                    <span>@item.SkillName</span>
+                </div>
+            }
+
+        </div>
+    </div>
+    <button class="btn btn-primary mr-15" data-action="addSkill">
+        <i class="fas fa-plus"></i>
+        Yeni Yetenek
+    </button>
+</div>
+
+
+
+
+<!-- Add Skill Modal -->
+<div class="modal" id="skillModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="skillModalTitle">Yeni Yetenek Ekle</h3>
+        </div>
+        <form asp-action="Create" method="post" id="addSkillForm">
+        <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Teknoloji Adı</label>
+                    <input type="text" name="SkillName" id="skillNameInput" class="form-control" placeholder="Örn: Python" required>
+                </div>
+                <div class="form-group" id="iconInputGroup">
+                    <label>İkon Sınıfı</label>
+                    <div class="icon-input-group">
+                        <input name="IconifyIcon" type="text" id="iconClassInput" class="form-control"
+                               placeholder="Örn: logos:react " required>
+                        <a href="https://zappyedit.com/freeicons" target="_blank"
+                           class="btn btn-outline icon-search-btn" title="İkon Ara">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </div>
+                    <p class="fontawesome-hint">İconify sınıflarını kullanın.</p>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-action="closeSkillModal">İptal</button>
+            <button type="submit" class="btn btn-success" data-action="saveSkill">Kaydet</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Update Skill Modal -->
+<div class="modal" id="updateSkillModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Yetenek Düzenle</h3>
+        </div>
+        <!-- Form action="Update" ve ID="updateSkillForm" oldu -->
+        <form asp-action="Update" method="post" id="updateSkillForm">
+            <div class="modal-body">
+
+                <!-- ID Inputu (DTO'daki isimle aynı: Name="Id") -->
+                <input type="hidden" name="Id" id="updateSkillId">
+                <div class="form-group">
+                    <label>Teknoloji Adı</label>
+                    <!-- ID: updateSkillName yaptık (Create ile karışmasın) -->
+                    <input type="text" name="SkillName" id="updateSkillName" class="form-control" placeholder="Örn: Python" required>
+ 
+                </div>
+                <div class="form-group">
+                    <label>İkon Sınıfı</label>
+                    <div class="icon-input-group">
+                        <!-- ID: updateSkillIcon yaptık -->
+                        <input name="IconifyIcon" type="text" id="updateSkillIcon" class="form-control"
+                               placeholder="Örn: logos:react" required>
+                        <a href="https://zappyedit.com/freeicons" target="_blank"
+                           class="btn btn-outline icon-search-btn" title="İkon Ara">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </div>
+                    <p class="fontawesome-hint">Iconify sınıflarını kullanın.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- data-action="closeUpdateModal" ve type="button" -->
+                <button type="button" class="btn btn-secondary" data-action="closeUpdateModal">İptal</button>
+                <button type="submit" class="btn btn-primary">Güncelle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Skill Options Action Modal -->
+<div class="modal" id="skillOptionsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="selectedSkillName">Teknoloji Adı</h3>
+        </div>
+        <div class="modal-body">
+            <p>Bu teknoloji ile ne yapmak istersiniz?</p>
+            <br />
+            <div class="skill-action-buttons">
+                <button class="btn btn-primary" data-action="editSkill">
+                    <i class="fas fa-edit"></i> Düzenle
+                </button>
+                <button class="btn btn-danger" data-action="deleteSkill">
+                    <i class="fas fa-trash"></i> Sil
+                </button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-action="closeSkillOptionsModal">İptal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteConfirmModal">
+    <form asp-action="Delete" method="post" id="deleteForm">
+        <div class="modal-content">
+            <input type="hidden" name="Id" id="deleteIdInput">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Silme Onayı</h3>
+            </div>
+            <div class="modal-body">
+                <p id="deleteConfirmText">Bu yeteneği silmek istediğinize emin misiniz?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-action="closeDeleteConfirm">İptal</button>
+                <button type="submit" class="btn btn-danger" data-action="confirmDelete">Evet, Sil</button>
+            </div>
+        </div>
+    </form>
+   
+</div>
+
+<!-- Alert Modal (Generic) -->
+<div class="modal" id="alertModal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <i class="fas fa-info-circle"></i>
+            <p id="alertMessage">Mesaj</p>
+            <button class="btn btn-primary" data-action="closeAlert">Tamam</button>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/skills.js"></script>
+}
+

@@ -51,6 +51,11 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
+        services.AddHttpClient<ISkillApiService, SkillApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
 
 
 

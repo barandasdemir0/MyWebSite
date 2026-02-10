@@ -77,7 +77,8 @@ public class BlogPostsController : Controller
     public async Task<IActionResult> Update(Guid guid)
     {
         var query = await _blogPostApiService.GetByIdAsync(guid);
-        ViewBag.TopicList = await _topicApiService.GetAllAsync();
+        query?.topicList = await _topicApiService.GetAllAsync();
+        //ViewBag.TopicList = await _topicApiService.GetAllAsync();
         return View(query.Adapt<UpdateBlogPostDto>());
     }
 
@@ -86,7 +87,7 @@ public class BlogPostsController : Controller
     {
         if (!ModelState.IsValid)
         {
-            ViewBag.TopicList = await _topicApiService.GetAllAsync();
+            updateBlogPostDto.topicList = await _topicApiService.GetAllAsync();
             return View(updateBlogPostDto);
         }
         try
@@ -97,7 +98,7 @@ public class BlogPostsController : Controller
         catch (Exception ex)
         {
             ModelState.AddApiError(ex);
-            ViewBag.TopicList = await _topicApiService.GetAllAsync();
+            updateBlogPostDto.topicList = await _topicApiService.GetAllAsync();
 
             return View(updateBlogPostDto);
         }

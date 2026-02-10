@@ -14,8 +14,8 @@ namespace DataAccessLayer.Configurations
             builder.ToTable("Skills");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.SkillName).IsRequired().HasMaxLength(100);
-            builder.Property(x => x.SkillUrl).HasMaxLength(200);
-            builder.Property(x => x.SkillIcon).HasMaxLength(200);
+            builder.Property(x => x.IconifyIcon).IsRequired().HasMaxLength(50);
+        
         }
     }
 }

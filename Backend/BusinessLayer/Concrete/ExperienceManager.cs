@@ -42,13 +42,13 @@ namespace BusinessLayer.Concrete
         public async Task<List<ExperienceDto>> GetAllAdminAsync()
         {
             var entity = await _experienceDal.GetAllAdminAsync(tracking: false);
-            return _mapper.Map<List<ExperienceDto>>(entity);
+            return _mapper.Map<List<ExperienceDto>>(entity.OrderBy(x => x.DisplayOrder));
         }
 
         public async Task<List<ExperienceDto>> GetAllAsync()
         {
             var entity = await _experienceDal.GetAllAsync(tracking: false);
-            return _mapper.Map<List<ExperienceDto>>(entity);
+            return _mapper.Map<List<ExperienceDto>>(entity.OrderBy(x => x.DisplayOrder));
         }
 
         public async Task<ExperienceDto?> GetByIdAsync(Guid guid)

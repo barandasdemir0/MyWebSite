@@ -245,9 +245,9 @@
             <div class="sidebar-section">
                 <h4><i class="fas fa-folder"></i>Kategori</h4>
                 <select name="TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
-                    @if (ViewBag.TopicList != null)
+                    @if (Model.topicList != null)
                     {
-                        @foreach (var item in ViewBag.TopicList)
+                        @foreach (var item in Model.topicList)
                         {
                             @if (Model.TopicIds.Contains(item.Id))
                             {
