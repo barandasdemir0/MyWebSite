@@ -144,6 +144,12 @@ namespace BusinessLayer.Container
             services.AddScoped<ITopicDal, EfTopicDal>();
             services.AddScoped<ITopicService, TopicManager>();
 
+            services.AddScoped<IJobSkillCategoryDal, EfJobSkillCategoryDal>();
+            services.AddScoped<IJobSkillCategoryService, JobSkillCategoryManager>();
+
+            services.AddScoped<IJobSkillDal, EfJobSkillDal>();
+            services.AddScoped<IJobSkillService, JobSkillManager>();
+
 
         }
 
