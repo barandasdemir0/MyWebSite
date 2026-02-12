@@ -14,9 +14,9 @@ namespace DataAccessLayer.Concrete
         {
         }
 
-        public Task<Certificate?> RestoreDeleteByIdAsync(Guid guid)
+        public Task<Certificate?> RestoreDeleteByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            return _context.Certificates.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
+            return _context.Certificates.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid,cancellationToken);
         }
     }
 }

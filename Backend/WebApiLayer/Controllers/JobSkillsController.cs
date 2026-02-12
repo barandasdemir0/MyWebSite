@@ -16,21 +16,21 @@ public class JobSkillsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var query = await _jobSkillService.GetAllAsync();
+        var query = await _jobSkillService.GetAllAsync(cancellationToken);
         return Ok(query);
     }
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin()
+    public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
     {
-        var query = await _jobSkillService.GetAdminAllAsync();
+        var query = await _jobSkillService.GetAdminAllAsync(cancellationToken);
         return Ok(query);
     }
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _jobSkillService.GetByIdAsync(id);
+        var query = await _jobSkillService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -38,38 +38,38 @@ public class JobSkillsController : ControllerBase
         return Ok(query);
     }
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateJobSkillDto createJobSkillDto)
+    public async Task<IActionResult> Create([FromBody] CreateJobSkillDto createJobSkillDto, CancellationToken cancellationToken)
     {
-        var query = await _jobSkillService.AddAsync(createJobSkillDto);
+        var query = await _jobSkillService.AddAsync(createJobSkillDto, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id,[FromBody] UpdateJobSkillDto updateJobSkillDto)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateJobSkillDto updateJobSkillDto, CancellationToken cancellationToken)
     {
-        var query = await _jobSkillService.UpdateAsync(id, updateJobSkillDto);
+        var query = await _jobSkillService.UpdateAsync(id, updateJobSkillDto, cancellationToken);
         if (query == null)
         {
             return NotFound();
         }
         return Ok(query);
-       
+
     }
 
     [HttpPut("restore/{id}")]
-    public async Task <IActionResult> Restore(Guid id)
+    public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _jobSkillService.RestoreAsync(id);
+        var query = await _jobSkillService.RestoreAsync(id, cancellationToken);
         return Ok(query);
     }
     [HttpDelete("{id}")]
-    public async Task <IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _jobSkillService.GetByIdAsync(id);
+        var query = await _jobSkillService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
         }
-        await _jobSkillService.DeleteAsync(id);
+        await _jobSkillService.DeleteAsync(id, cancellationToken);
         return Ok(query);
     }
 

@@ -18,16 +18,16 @@ public sealed class AboutsController : ControllerBase
     }
 
     [HttpGet] //listeleme
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var values = await _aboutService.GetAllAsync();
+        var values = await _aboutService.GetAllAsync(cancellationToken);
         return Ok(values);
     }
 
     [HttpGet("{id}")] //idye göre getirme
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var values = await _aboutService.GetByIdAsync(id);
+        var values = await _aboutService.GetByIdAsync(id, cancellationToken);
         if (values == null)
         {
             return NotFound();
@@ -36,17 +36,17 @@ public sealed class AboutsController : ControllerBase
     }
 
     [HttpPost] //ekleme
-    public async Task<IActionResult> Create([FromBody] CreateAboutDto createAboutDto)
+    public async Task<IActionResult> Create([FromBody] CreateAboutDto createAboutDto, CancellationToken cancellationToken)
     {
-        var result = await _aboutService.AddAsync(createAboutDto);
+        var result = await _aboutService.AddAsync(createAboutDto, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result); //bunu çağırarak ne kaydedildiğimi görmek istiyorum dedik yani başarılar kaydedildi yerine bize direkt o kaydı gösteriyor
     }
 
     [HttpPut("{id}")] //güncelleme
-    public async Task<IActionResult> Update(Guid id,[FromBody] UpdateAboutDto updateAboutDto)
+    public async Task<IActionResult> Update(Guid id,[FromBody] UpdateAboutDto updateAboutDto, CancellationToken cancellationToken)
     {
         //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
-        var result = await _aboutService.UpdateAsync(id,updateAboutDto);
+        var result = await _aboutService.UpdateAsync(id,updateAboutDto, cancellationToken);
         if (result == null)
         {
             return NotFound();
@@ -56,14 +56,14 @@ public sealed class AboutsController : ControllerBase
     }
 
     [HttpDelete("{id}")] //silme
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var existing = await _aboutService.GetByIdAsync(id);
+        var existing = await _aboutService.GetByIdAsync(id, cancellationToken);
         if (existing==null)
         {
             return NotFound();
         }
-        await _aboutService.DeleteAsync(id);
+        await _aboutService.DeleteAsync(id, cancellationToken);
         return Ok(existing);
 
     }

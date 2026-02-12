@@ -22,39 +22,39 @@ namespace BusinessLayer.Concrete
             _mapper = mapper;
         }
 
-        public async Task<GuestBookListDto> AddAsync(CreateGuestBookDto dto)
+        public async Task<GuestBookListDto> AddAsync(CreateGuestBookDto dto, CancellationToken cancellationToken = default)
         {
             var entity = _mapper.Map<GuestBook>(dto);
-            await _guestBookDal.AddAsync(entity);
-            await _guestBookDal.SaveAsync();
+            await _guestBookDal.AddAsync(entity, cancellationToken);
+            await _guestBookDal.SaveAsync(cancellationToken);
             return _mapper.Map<GuestBookListDto>(entity);
         }
 
-        public async Task DeleteAsync(Guid guid)
+        public async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _guestBookDal.GetByIdAsync(guid);
+            var entity = await _guestBookDal.GetByIdAsync(guid, cancellationToken:cancellationToken);
             if (entity != null)
             {
-                await _guestBookDal.DeleteAsync(entity);
-                await _guestBookDal.SaveAsync();
+                await _guestBookDal.DeleteAsync(entity, cancellationToken);
+                await _guestBookDal.SaveAsync(cancellationToken);
             }
         }
 
-        public async Task<List<GuestBookListDto>> GetAllAdminAsync()
+        public async Task<List<GuestBookListDto>> GetAllAdminAsync( CancellationToken cancellationToken = default)
         {
-            var entity = await _guestBookDal.GetAllAdminAsync(tracking: false);
+            var entity = await _guestBookDal.GetAllAdminAsync(tracking: false,cancellationToken:cancellationToken);
             return _mapper.Map<List<GuestBookListDto>>(entity);
         }
 
-        public async Task<List<GuestBookListDto>> GetAllAsync()
+        public async Task<List<GuestBookListDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var entity = await _guestBookDal.GetAllAsync(tracking: false);
+            var entity = await _guestBookDal.GetAllAsync(tracking: false,cancellationToken:cancellationToken);
             return _mapper.Map<List<GuestBookListDto>>(entity);
         }
 
-        public async Task<GuestBookListDto?> GetByIdAsync(Guid guid)
+        public async Task<GuestBookListDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _guestBookDal.GetByIdAsync(guid, tracking: false);
+            var entity = await _guestBookDal.GetByIdAsync(guid, tracking: false,cancellationToken:cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -62,9 +62,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<GuestBookListDto>(entity);
         }
 
-        public async Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid)
+        public async Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _guestBookDal.GetByIdAsync(guid, tracking: false);
+            var entity = await _guestBookDal.GetByIdAsync(guid, tracking: false,cancellationToken:cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -72,9 +72,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<GuestBookDto>(entity);
         }
 
-        public async Task<GuestBookDto?> RestoreAsync(Guid guid)
+        public async Task<GuestBookDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _guestBookDal.RestoreDeleteByIdAsync(guid);
+            var entity = await _guestBookDal.RestoreDeleteByIdAsync(guid,cancellationToken:cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -82,13 +82,13 @@ namespace BusinessLayer.Concrete
             entity.IsDeleted = false;
             entity.DeletedAt = null;
 
-            await _guestBookDal.UpdateAsync(entity);
-            await _guestBookDal.SaveAsync();
+            await _guestBookDal.UpdateAsync(entity, cancellationToken);
+            await _guestBookDal.SaveAsync(cancellationToken);
 
             return _mapper.Map<GuestBookDto>(entity);
         }
 
-        public Task<GuestBookListDto?> UpdateAsync(Guid guid, UpdateGuestBookDto dto)
+        public Task<GuestBookListDto?> UpdateAsync(Guid guid, UpdateGuestBookDto dto, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException("Ziyaretçi Mesajları güncellenemez!");
         }

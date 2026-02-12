@@ -3,6 +3,7 @@ using DtoLayer.AboutDtos;
 using DtoLayer.BlogpostDtos;
 using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 namespace WebApiLayer.Controllers
 {
@@ -19,23 +20,23 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpGet] // hepsini getirme 
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll( CancellationToken cancellationToken)
         {
-            var query = await _blogPostService.GetAllAsync();
+            var query = await _blogPostService.GetAllAsync(cancellationToken);
             return Ok(query);
         }
 
         [HttpGet("admin-all")] // hepsini getirme 
-        public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query)
+        public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
         {
-            var result = await _blogPostService.GetAllAdminAsync(query);
+            var result = await _blogPostService.GetAllAdminAsync(query, cancellationToken);
             return Ok(result);
         }
 
         //[HttpGet("{id}")] //idye göre getirme 
-        //public async Task<IActionResult> GetById(Guid id)
+        //public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         //{
-        //    var query = await _blogPostService.GetByIdAsync(id);
+        //    var query = await _blogPostService.GetByIdAsync(id,cancellationToken);
         //    if (query == null)
         //    {
         //        return NotFound();
@@ -44,9 +45,9 @@ namespace WebApiLayer.Controllers
         //}
 
         [HttpGet("slug/{slug}")] //burası kullanıcıya gösterilecek yazan yazı
-        public async Task<IActionResult> GetDetail(string slug)
+        public async Task<IActionResult> GetDetail(string slug, CancellationToken cancellationToken)
         {
-            var query = await _blogPostService.GetBySlugAsync(slug);
+            var query = await _blogPostService.GetBySlugAsync(slug, cancellationToken);
             if (query == null)
             {
                 return NotFound();
@@ -55,9 +56,9 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpGet("{id}")]//burasıda admine gösterilecek yazan yazı id ile çekiliyorki tüm veri gelsin
-        public async Task<IActionResult> GetDetailById(Guid id)
+        public async Task<IActionResult> GetDetailById(Guid id, CancellationToken cancellationToken)
         {
-            var query = await _blogPostService.GetDetailsByIdAsync(id);
+            var query = await _blogPostService.GetDetailsByIdAsync(id, cancellationToken);
             if (query == null)
             {
                 return NotFound();
@@ -67,9 +68,9 @@ namespace WebApiLayer.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateBlogPostDto createBlogPostDto)
+        public async Task<IActionResult> Create([FromBody] CreateBlogPostDto createBlogPostDto, CancellationToken cancellationToken)
         {
-            var query = await _blogPostService.AddAsync(createBlogPostDto);
+            var query = await _blogPostService.AddAsync(createBlogPostDto, cancellationToken);
             return CreatedAtAction(  // HTTP 201 Created + body'de result + Location header
                 nameof(GetDetailById)   //  Hangi action'a yönlendirilecek
                 , new { id = query.Id } //  O action'ın parametreleri
@@ -78,10 +79,10 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBlogPostDto updateBlogPostDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBlogPostDto updateBlogPostDto, CancellationToken cancellationToken)
         {
             //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
-            var query = await _blogPostService.UpdateAsync(id, updateBlogPostDto);
+            var query = await _blogPostService.UpdateAsync(id, updateBlogPostDto, cancellationToken);
             if (query == null)
             {
                 return NotFound();
@@ -90,21 +91,21 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            var query = await _blogPostService.GetByIdAsync(id);
+            var query = await _blogPostService.GetByIdAsync(id, cancellationToken);
             if (query == null)
             {
                 return NotFound();
             }
-            await _blogPostService.DeleteAsync(id);
+            await _blogPostService.DeleteAsync(id, cancellationToken);
             return Ok(query);
         }
 
         [HttpPut("restore/{id}")]
-        public async Task<IActionResult> Restore(Guid id)
+        public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken )
         {
-            var entity = await _blogPostService.RestoreAsync(id);
+            var entity = await _blogPostService.RestoreAsync(id, cancellationToken);
             return Ok(entity);
         }
 

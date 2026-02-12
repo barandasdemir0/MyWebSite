@@ -14,9 +14,10 @@ namespace DataAccessLayer.Concrete
         {
         }
 
-        public async Task<SocialMedia?> RestoreDeleteByIdAsync(Guid guid)
+        public async Task<SocialMedia?> RestoreDeleteByIdAsync(Guid guid,
+    CancellationToken cancellationToken = default)
         {
-            return await _context.SocialMedias.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
+            return await _context.SocialMedias.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
         }
     }
 }

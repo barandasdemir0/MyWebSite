@@ -9,7 +9,7 @@ namespace BusinessLayer.Abstract
 {
     public interface IMessageService:IGenericService<Message,MessageListDto,CreateMessageDto,UpdateMessageDto>
     {
-        Task<MessageDto?> GetDetailsByIdAsync(Guid guid);
-        Task<List<MessageListDto>> GetAllAdminAsync();
+        Task<MessageDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default);
+        Task<List<MessageListDto>> GetAllAdminAsync( CancellationToken cancellationToken = default);
     }
 }

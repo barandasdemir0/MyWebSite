@@ -8,6 +8,6 @@ namespace BusinessLayer.Abstract;
 
 public interface IJobSkillService:IGenericService<JobSkill,JobSkillDto,CreateJobSkillDto,UpdateJobSkillDto>
 {
-    Task<JobSkillDto?> RestoreAsync(Guid guid);
-    Task<List<JobSkillDto>> GetAdminAllAsync();
+    Task<JobSkillDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+    Task<List<JobSkillDto>> GetAdminAllAsync( CancellationToken cancellationToken = default);
 }

@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class MessagesController:ControllerBase
+public sealed class MessagesController : ControllerBase
 {
     private readonly IMessageService _messageService;
 
@@ -17,23 +17,23 @@ public sealed class MessagesController:ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var query = await _messageService.GetAllAsync();
+        var query = await _messageService.GetAllAsync(cancellationToken);
         return Ok(query);
     }
 
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin()
+    public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
     {
-        var query = await _messageService.GetAllAdminAsync();
+        var query = await _messageService.GetAllAdminAsync(cancellationToken);
         return Ok(query);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _messageService.GetByIdAsync(id);
+        var query = await _messageService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -43,19 +43,19 @@ public sealed class MessagesController:ControllerBase
 
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateMessageDto createMessageDto)
+    public async Task<IActionResult> Create([FromBody] CreateMessageDto createMessageDto, CancellationToken cancellationToken)
     {
-        var query = await _messageService.AddAsync(createMessageDto);
+        var query = await _messageService.AddAsync(createMessageDto, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
 
 
     //gelen ve giden mesajlar güncellenemez
     //[HttpPut("{id}")]
-    //public async Task<IActionResult> Update(Guid id, [FromBody] UpdateMessageDto updateMessageDto)
+    //public async Task<IActionResult> Update(Guid id, [FromBody] UpdateMessageDto updateMessageDto, CancellationToken cancellationToken)
     //{
     //    updateMessageDto.Id = id;
-    //    var query = await _messageService.UpdateAsync(updateMessageDto);
+    //    var query = await _messageService.UpdateAsync(updateMessageDto, cancellationToken);
     //    if (query == null)
     //    {
     //        return NotFound();
@@ -65,14 +65,14 @@ public sealed class MessagesController:ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _messageService.GetByIdAsync(id);
+        var query = await _messageService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
         }
-        await _messageService.DeleteAsync(id);
+        await _messageService.DeleteAsync(id, cancellationToken);
         return Ok(query);
     }
 }

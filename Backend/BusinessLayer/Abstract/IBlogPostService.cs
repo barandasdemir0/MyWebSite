@@ -11,14 +11,14 @@ namespace BusinessLayer.Abstract
     public interface IBlogPostService : IGenericService<BlogPost, BlogPostDto, CreateBlogPostDto, UpdateBlogPostDto>
     {
         //bu metot blogpostDto(full içerik details içindir)
-        Task<BlogPostDto?> GetDetailsByIdAsync(Guid guid); // --> ama bu yöntemi sadece admin paneli için kullanacağız  sebebide idye göre getireceği için ama biz sluga göre çekmek istiyoruz
+        Task<BlogPostDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default); // --> ama bu yöntemi sadece admin paneli için kullanacağız  sebebide idye göre getireceği için ama biz sluga göre çekmek istiyoruz
 
         //bu yöntem ile slug ile çektik daha sağlıklı bir yöntem oldu
-        Task<BlogPostDto?> GetBySlugAsync(string slug);
+        Task<BlogPostDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default);
 
-        Task<BlogPostListDto?> RestoreAsync(Guid guid);
+        Task<BlogPostListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
 
-        Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query);
+        Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default);
 
 
 

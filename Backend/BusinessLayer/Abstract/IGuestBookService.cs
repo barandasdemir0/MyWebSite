@@ -9,9 +9,9 @@ namespace BusinessLayer.Abstract
 {
     public interface IGuestBookService:IGenericService<GuestBook,GuestBookListDto,CreateGuestBookDto,UpdateGuestBookDto>
     {
-        Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid);
+        Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default);
 
-        Task<GuestBookDto?> RestoreAsync(Guid guid);
-        Task<List<GuestBookListDto>> GetAllAdminAsync();
+        Task<GuestBookDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+        Task<List<GuestBookListDto>> GetAllAdminAsync( CancellationToken cancellationToken = default);
     }
 }

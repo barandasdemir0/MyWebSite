@@ -19,34 +19,34 @@ public class AboutManager : IAboutService
         _mapper = mapper;
     }
 
-    public async Task<AboutDto> AddAsync(CreateAboutDto dto)
+    public async Task<AboutDto> AddAsync(CreateAboutDto dto, CancellationToken cancellationToken = default)
     {
         var entity = _mapper.Map<About>(dto); // Create -> Entity yani elimdeki dto nesnesini al about entitysine çevir
-        await _repository.AddAsync(entity);
-        await _repository.SaveAsync();
+        await _repository.AddAsync(entity,cancellationToken);
+        await _repository.SaveAsync(cancellationToken);
         return _mapper.Map<AboutDto>(entity); // Entity -> Read (ID var artık)  yani elimdeki aentity nesnesini al onu aboutdto tipine çevir 
     }
 
-    public async Task DeleteAsync(Guid guid)
+    public async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        var entity = await _repository.GetByIdAsync(guid);
+        var entity = await _repository.GetByIdAsync(guid,cancellationToken:cancellationToken);
         if (entity != null)
         {
-            await _repository.DeleteAsync(entity);
-            await _repository.SaveAsync();
+            await _repository.DeleteAsync(entity, cancellationToken);
+            await _repository.SaveAsync(cancellationToken);
         }
 
     }
 
-    public async Task<List<AboutDto>> GetAllAsync()
+    public async Task<List<AboutDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var entity = await _repository.GetAllAsync(tracking: false);
+        var entity = await _repository.GetAllAsync(tracking: false,cancellationToken:cancellationToken);
         return _mapper.Map<List<AboutDto>>(entity);
     }
 
-    public async Task<AboutDto?> GetByIdAsync(Guid guid)
+    public async Task<AboutDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        var entity = await _repository.GetByIdAsync(guid, tracking: false);
+        var entity = await _repository.GetByIdAsync(guid, tracking: false, cancellationToken: cancellationToken);
         if (entity == null)
         {
             return null;
@@ -54,16 +54,16 @@ public class AboutManager : IAboutService
         return _mapper.Map<AboutDto>(entity);
     }
 
-    public async Task<AboutDto?> UpdateAsync(Guid guid,UpdateAboutDto dto)
+    public async Task<AboutDto?> UpdateAsync(Guid guid,UpdateAboutDto dto, CancellationToken cancellationToken = default)
     {
-        var entity = await _repository.GetByIdAsync(guid);
+        var entity = await _repository.GetByIdAsync(guid, cancellationToken: cancellationToken);
         if (entity == null)
         {
             return null;
         }
         _mapper.Map(dto, entity);
-        await _repository.UpdateAsync(entity);
-        await _repository.SaveAsync();
+        await _repository.UpdateAsync(entity,cancellationToken);
+        await _repository.SaveAsync(cancellationToken);
         return _mapper.Map<AboutDto>(entity);
     }
 

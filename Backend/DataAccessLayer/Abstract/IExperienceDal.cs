@@ -7,6 +7,7 @@ namespace DataAccessLayer.Abstract
 {
     public interface IExperienceDal:IGenericRepository<Experience>
     {
-        Task<Experience?> RestoreDeleteByIdAsync(Guid guid);
+        Task<Experience?> RestoreDeleteByIdAsync(Guid guid,
+        CancellationToken cancellationToken = default);
     }
 }

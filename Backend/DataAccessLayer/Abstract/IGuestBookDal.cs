@@ -7,6 +7,7 @@ namespace DataAccessLayer.Abstract
 {
     public interface IGuestBookDal:IGenericRepository<GuestBook>
     {
-        Task<GuestBook?> RestoreDeleteByIdAsync(Guid guid);
+        Task<GuestBook?> RestoreDeleteByIdAsync(Guid guid,
+        CancellationToken cancellationToken = default);
     }
 }

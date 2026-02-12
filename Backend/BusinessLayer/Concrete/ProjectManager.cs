@@ -25,10 +25,10 @@ namespace BusinessLayer.Concrete
             _mapper = mapper;
         }
 
-        public async Task<ProjectDto> AddAsync(CreateProjectDto dto)
+        public async Task<ProjectDto> AddAsync(CreateProjectDto dto, CancellationToken cancellationToken = default)
         {
             var entity = _mapper.Map<Project>(dto);
-            entity.Slug = await UniqueSlugAsync(dto.Name);
+            entity.Slug = await UniqueSlugAsync(dto.Name, cancellationToken);
             if (entity.IsPublished && entity.PublishedAt == null)
             {
                 entity.PublishedAt = DateTime.UtcNow;
@@ -40,30 +40,30 @@ namespace BusinessLayer.Concrete
                     entity.ProjectTopics.Add(new ProjectTopic { TopicId = topic });
                 }
             }
-            await _projectDal.AddAsync(entity);
-            await _projectDal.SaveAsync();
+            await _projectDal.AddAsync(entity, cancellationToken);
+            await _projectDal.SaveAsync(cancellationToken);
             return _mapper.Map<ProjectDto>(entity);
         }
 
-        public async Task DeleteAsync(Guid guid)
+        public async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _projectDal.GetByIdAsync(guid);
+            var entity = await _projectDal.GetByIdAsync(guid, cancellationToken: cancellationToken);
             if (entity != null)
             {
-                await _projectDal.DeleteAsync(entity);
-                await _projectDal.SaveAsync();
+                await _projectDal.DeleteAsync(entity, cancellationToken);
+                await _projectDal.SaveAsync(cancellationToken);
             }
         }
 
-        public async Task<List<ProjectDto>> GetAllAsync()
+        public async Task<List<ProjectDto>> GetAllAsync( CancellationToken cancellationToken = default)
         {
-            var entity = await _projectDal.GetAllAsync(tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic));
+            var entity = await _projectDal.GetAllAsync(tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
             return _mapper.Map<List<ProjectDto>>(entity);
         }
 
-        public async Task<ProjectDto?> GetByIdAsync(Guid guid)
+        public async Task<ProjectDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _projectDal.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
+            var entity = await _projectDal.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic), cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -71,9 +71,9 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ProjectDto>(entity);
         }
 
-        public async Task<ProjectDto?> GetBySlugAsync(string slug)
+        public async Task<ProjectDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
-            var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic));
+            var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -82,9 +82,9 @@ namespace BusinessLayer.Concrete
 
         }
 
-        public async Task<ProjectDto?> GetDetailsByIdAsync(Guid guid)
+        public async Task<ProjectDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _projectDal.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic));
+            var entity = await _projectDal.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic), cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -92,11 +92,11 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<ProjectDto>(entity);
         }
 
-        public async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto)
+        public async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto, CancellationToken cancellationToken = default)
         {
             var entity = await _projectDal.GetAsync(x => x.Id == guid,
             tracking: true,
-            includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic));
+            includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -115,18 +115,18 @@ namespace BusinessLayer.Concrete
 
                 }
             }
-            await _projectDal.UpdateAsync(entity);
-            await _projectDal.SaveAsync();
+            await _projectDal.UpdateAsync(entity, cancellationToken: cancellationToken);
+            await _projectDal.SaveAsync(cancellationToken);
             return _mapper.Map<ProjectDto>(entity);
         }
 
-        public async Task<string> UniqueSlugAsync(string name)
+        public async Task<string> UniqueSlugAsync(string name, CancellationToken cancellationToken = default)
         {
             string slug = name.AutoSlug();
 
             string originalslug = slug;
             int counter = 1;
-            while (await _projectDal.GetAsync(x => x.Slug == slug) != null)
+            while (await _projectDal.GetAsync(x => x.Slug == slug, cancellationToken: cancellationToken) != null)
             {
                 counter++;
                 slug = $"{originalslug}-{counter}";
@@ -135,9 +135,9 @@ namespace BusinessLayer.Concrete
 
         }
 
-        public async Task<ProjectListDto?> RestoreAsync(Guid guid)
+        public async Task<ProjectListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _projectDal.RestoreDeleteByIdAsync(guid);
+            var entity = await _projectDal.RestoreDeleteByIdAsync(guid, cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -145,13 +145,13 @@ namespace BusinessLayer.Concrete
             entity.IsDeleted = false;
             entity.DeletedAt = null;
 
-            await _projectDal.UpdateAsync(entity);
-            await _projectDal.SaveAsync();
+            await _projectDal.UpdateAsync(entity, cancellationToken);
+            await _projectDal.SaveAsync(cancellationToken);
 
             return _mapper.Map<ProjectListDto>(entity);
         }
 
-        public async Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query)
+        public async Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
         {
             //var entity = await _projectDal.GetAllAdminAsync(tracking: false);
             //return _mapper.Map<PagedResult<ProjectListDto>>(entity);
@@ -159,7 +159,7 @@ namespace BusinessLayer.Concrete
                 query.PageNumber,
                 query.PageSize,
                 query.TopicId
-                );
+                , cancellationToken);
 
             return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
         }

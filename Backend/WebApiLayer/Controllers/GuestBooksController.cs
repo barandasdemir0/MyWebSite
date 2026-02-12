@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class GuestBooksController:ControllerBase
+public sealed class GuestBooksController : ControllerBase
 {
 
     private readonly IGuestBookService _guestBookService;
@@ -19,23 +19,23 @@ public sealed class GuestBooksController:ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.GetAllAsync();
+        var query = await _guestBookService.GetAllAsync(cancellationToken);
         return Ok(query);
     }
 
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin()
+    public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.GetAllAdminAsync();
+        var query = await _guestBookService.GetAllAdminAsync(cancellationToken);
         return Ok(query);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.GetByIdAsync(id);
+        var query = await _guestBookService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -45,18 +45,18 @@ public sealed class GuestBooksController:ControllerBase
 
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateGuestBookDto createGuestBookDto)
+    public async Task<IActionResult> Create([FromBody] CreateGuestBookDto createGuestBookDto, CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.AddAsync(createGuestBookDto);
+        var query = await _guestBookService.AddAsync(createGuestBookDto, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
 
 
     //[HttpPut("{id}")] //Güncelleme Fonksiyonu bulunmamaktadır ziyaretçi mesajları güncellenemez
-    //public async Task<IActionResult> Update(Guid id, [FromBody] UpdateGuestBookDto updateGuestBookDto)
+    //public async Task<IActionResult> Update(Guid id, [FromBody] UpdateGuestBookDto updateGuestBookDto, CancellationToken cancellationToken)
     //{
     //    updateGuestBookDto.ıd = id;
-    //    var query = await _guestBookService.UpdateAsync(updateGuestBookDto);
+    //    var query = await _guestBookService.UpdateAsync(updateGuestBookDto, cancellationToken);
     //    if (query == null)
     //    {
     //        return NotFound();
@@ -66,21 +66,21 @@ public sealed class GuestBooksController:ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.GetByIdAsync(id);
+        var query = await _guestBookService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
         }
-        await _guestBookService.DeleteAsync(id);
+        await _guestBookService.DeleteAsync(id, cancellationToken);
         return Ok(query);
     }
 
     [HttpPut("restore/{id}")]
-    public async Task<IActionResult> Restore(Guid id)
+    public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
-        var entity = await _guestBookService.RestoreAsync(id);
+        var entity = await _guestBookService.RestoreAsync(id, cancellationToken);
         return Ok(entity);
     }
 }

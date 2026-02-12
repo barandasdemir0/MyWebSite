@@ -14,7 +14,8 @@ namespace DataAccessLayer.Concrete
         {
         }
 
-        public async Task<(List<BlogPost> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size,Guid? topicId)
+        public async Task<(List<BlogPost> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size,Guid? topicId,
+    CancellationToken cancellationToken = default)
         {
             IQueryable<BlogPost> query = _context.BlogPosts.AsNoTrackingWithIdentityResolution().IgnoreQueryFilters().Include(x => x.BlogTopics).ThenInclude(y => y.Topic);
 
@@ -25,7 +26,7 @@ namespace DataAccessLayer.Concrete
 
 
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
 
             var items = await query
                 .OrderByDescending(x => x.CreatedAt)
@@ -35,9 +36,10 @@ namespace DataAccessLayer.Concrete
             return (items, totalCount);
         }
 
-        public async Task<BlogPost?> RestoreDeletedByIdAsync(Guid guid)
+        public async Task<BlogPost?> RestoreDeletedByIdAsync(Guid guid,
+    CancellationToken cancellationToken = default)
         {
-            return await _context.BlogPosts.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
+            return await _context.BlogPosts.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
         }
     }
 }

@@ -17,24 +17,24 @@ public sealed class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var query = await _projectService.GetAllAsync();
+        var query = await _projectService.GetAllAsync(cancellationToken);
         return Ok(query);
     }
 
 
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query)
+    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
     {
-        var result = await _projectService.GetAllAdminAsync(query);
+        var result = await _projectService.GetAllAdminAsync(query, cancellationToken);
         return Ok(result);
     }
 
     [HttpGet("slug/{slug}")]
-    public async Task<IActionResult> GetDetails(string slug)
+    public async Task<IActionResult> GetDetails(string slug, CancellationToken cancellationToken)
     {
-        var query = await _projectService.GetBySlugAsync(slug);
+        var query = await _projectService.GetBySlugAsync(slug, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -44,9 +44,9 @@ public sealed class ProjectsController : ControllerBase
 
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetDetailById(Guid id)
+    public async Task<IActionResult> GetDetailById(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _projectService.GetDetailsByIdAsync(id);
+        var query = await _projectService.GetDetailsByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -55,18 +55,18 @@ public sealed class ProjectsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateProjectDto createProjectDto)
+    public async Task<IActionResult> Create([FromBody] CreateProjectDto createProjectDto, CancellationToken cancellationToken)
     {
-        var query = await _projectService.AddAsync(createProjectDto);
+        var query = await _projectService.AddAsync(createProjectDto, cancellationToken);
         return CreatedAtAction(nameof(GetDetailById), new { id = query.Id }, query);
 
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProjectDto updateProjectDto)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProjectDto updateProjectDto, CancellationToken cancellationToken)
     {
         //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
-        var query = await _projectService.UpdateAsync(id,updateProjectDto);
+        var query = await _projectService.UpdateAsync(id, updateProjectDto, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -75,22 +75,22 @@ public sealed class ProjectsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _projectService.GetByIdAsync(id);
+        var query = await _projectService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
         }
-        await _projectService.DeleteAsync(id);
+        await _projectService.DeleteAsync(id, cancellationToken);
         return Ok(query);
     }
 
 
     [HttpPut("restore/{id}")]
-    public async Task<IActionResult> Restore(Guid id)
+    public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
-        var entity = await _projectService.RestoreAsync(id);
+        var entity = await _projectService.RestoreAsync(id, cancellationToken);
         return Ok(entity);
     }
 

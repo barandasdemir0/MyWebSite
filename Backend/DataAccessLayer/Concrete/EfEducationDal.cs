@@ -14,9 +14,10 @@ namespace DataAccessLayer.Concrete
         {
         }
 
-        public async Task<Education?> RestoreDeleteByIdAsync(Guid guid)
+        public async Task<Education?> RestoreDeleteByIdAsync(Guid guid,
+    CancellationToken cancellationToken = default)
         {
-            return await _context.Educations.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
+            return await _context.Educations.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
         }
     }
 }

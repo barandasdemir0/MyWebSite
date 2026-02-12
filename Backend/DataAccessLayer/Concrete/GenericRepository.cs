@@ -25,23 +25,26 @@ namespace DataAccessLayer.Concrete
 
         #region CRUD İŞLEMLERİ
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity,
+    CancellationToken cancellationToken = default)
         {
-            await _dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity, cancellationToken);
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity,
+    CancellationToken cancellationToken = default)
         {
             _dbSet.Remove(entity);
             await Task.CompletedTask;  // async uyumluluğu için
         }
 
-        public async Task<int> SaveAsync()
+        public async Task<int> SaveAsync(
+    CancellationToken cancellationToken = default)
         {
-            return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             _dbSet.Update(entity);
             await Task.CompletedTask;
@@ -55,7 +58,8 @@ namespace DataAccessLayer.Concrete
 
 
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
+    CancellationToken cancellationToken = default)
         {
 
             //  Başlangıç sorgusu oluştur
@@ -89,7 +93,7 @@ namespace DataAccessLayer.Concrete
             }
 
             //  Sorguyu çalıştır ve sonuçları listele
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
             // BURADA SQL gerçekten veritabanına gider ve çalışır
 
 
@@ -102,7 +106,8 @@ namespace DataAccessLayer.Concrete
         }
 
 
-        public async Task<List<T>> GetAllAdminAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+        public async Task<List<T>> GetAllAdminAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
+    CancellationToken cancellationToken = default)
         {
             var query = _dbSet.AsQueryable();
 
@@ -120,7 +125,7 @@ namespace DataAccessLayer.Concrete
 
             }
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
 
@@ -129,7 +134,8 @@ namespace DataAccessLayer.Concrete
         #region  getirme
 
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
+    CancellationToken cancellationToken = default)
         {
             var query = _dbSet.AsQueryable();
             if (includes != null)
@@ -142,7 +148,7 @@ namespace DataAccessLayer.Concrete
                 query = query.AsNoTrackingWithIdentityResolution();
             }
 
-            return await query.FirstOrDefaultAsync(filter);
+            return await query.FirstOrDefaultAsync(filter, cancellationToken);
 
 
         }
@@ -154,7 +160,8 @@ namespace DataAccessLayer.Concrete
 
 
 
-        public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null)
+        public async Task<T?> GetByIdAsync(Guid guid, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
+    CancellationToken cancellationToken = default)
         {
             var query = _dbSet.AsQueryable();
             if (includes != null)
@@ -165,7 +172,7 @@ namespace DataAccessLayer.Concrete
             {
                 query = query.AsNoTrackingWithIdentityResolution();
             }
-            return await query.FirstOrDefaultAsync(x => x.Id == guid);
+            return await query.FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
             // SQL: SELECT TOP 1 * FROM JobSkills WHERE Id = 'guid' AND IsDeleted = 0
             // Bulunamazsa NULL döner
 

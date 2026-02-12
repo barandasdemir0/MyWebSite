@@ -14,8 +14,9 @@ public class EfJobSkillDal : GenericRepository<JobSkill>, IJobSkillDal
     {
     }
 
-    public async Task<JobSkill?> RestoreDeleteByIdAsync(Guid guid)
+    public async Task<JobSkill?> RestoreDeleteByIdAsync(Guid guid,
+    CancellationToken cancellationToken = default)
     {
-        return await _context.JobSkills.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id== guid);
+        return await _context.JobSkills.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id== guid, cancellationToken);
     }
 }

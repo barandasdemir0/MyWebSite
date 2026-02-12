@@ -20,33 +20,33 @@ namespace BusinessLayer.Concrete
             _mapper = mapper;
         }
 
-        public async Task<HeroDto> AddAsync(CreateHeroDto dto)
+        public async Task<HeroDto> AddAsync(CreateHeroDto dto, CancellationToken cancellationToken = default)
         {
             var entity = _mapper.Map<Hero>(dto);
-            await _heroDal.AddAsync(entity);
-            await _heroDal.SaveAsync();
+            await _heroDal.AddAsync(entity, cancellationToken);
+            await _heroDal.SaveAsync(cancellationToken);
             return _mapper.Map<HeroDto>(entity);
         }
 
-        public async Task DeleteAsync(Guid guid)
+        public async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _heroDal.GetByIdAsync(guid);
+            var entity = await _heroDal.GetByIdAsync(guid, cancellationToken:cancellationToken);
             if (entity != null)
             {
-                await _heroDal.DeleteAsync(entity);
-                await _heroDal.SaveAsync();
+                await _heroDal.DeleteAsync(entity, cancellationToken);
+                await _heroDal.SaveAsync(cancellationToken);
             }
         }
 
-        public async Task<List<HeroDto>> GetAllAsync()
+        public async Task<List<HeroDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var entity = await _heroDal.GetAllAsync(tracking: false);
+            var entity = await _heroDal.GetAllAsync(tracking: false,cancellationToken:cancellationToken);
             return _mapper.Map<List<HeroDto>>(entity);
         }
 
-        public async Task<HeroDto?> GetByIdAsync(Guid guid)
+        public async Task<HeroDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _heroDal.GetByIdAsync(guid, tracking: false);
+            var entity = await _heroDal.GetByIdAsync(guid, tracking: false,cancellationToken:cancellationToken);
             if (entity==null)
             {
                 return null;
@@ -54,16 +54,16 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<HeroDto>(entity);
         }
 
-        public async Task<HeroDto?> UpdateAsync(Guid guid, UpdateHeroDto dto)
+        public async Task<HeroDto?> UpdateAsync(Guid guid, UpdateHeroDto dto, CancellationToken cancellationToken = default)
         {
-            var entity = await _heroDal.GetByIdAsync(guid);
+            var entity = await _heroDal.GetByIdAsync(guid, cancellationToken:cancellationToken);
             if (entity == null)
             {
                 return null;
             }
             _mapper.Map(dto, entity);
-            await _heroDal.UpdateAsync(entity);
-            await _heroDal.SaveAsync();
+            await _heroDal.UpdateAsync(entity, cancellationToken);
+            await _heroDal.SaveAsync(cancellationToken);
             return _mapper.Map<HeroDto>(entity);
         }
     }

@@ -7,5 +7,6 @@ namespace DataAccessLayer.Abstract;
 
 public interface IJobSkillCategoryDal:IGenericRepository<JobSkillCategory>
 {
-    Task<JobSkillCategory?> RestoreDeleteByIdAsync(Guid guid);
+    Task<JobSkillCategory?> RestoreDeleteByIdAsync(Guid guid,
+        CancellationToken cancellationToken = default);
 }

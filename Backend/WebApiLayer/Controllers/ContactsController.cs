@@ -17,16 +17,16 @@ public sealed class ContactsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var query = await _contactService.GetAllAsync();
+        var query = await _contactService.GetAllAsync( cancellationToken);
         return Ok(query);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _contactService.GetByIdAsync(id);
+        var query = await _contactService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -35,17 +35,17 @@ public sealed class ContactsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateContactDto createContactDto)
+    public async Task<IActionResult> Create([FromBody] CreateContactDto createContactDto, CancellationToken cancellationToken)
     {
-        var query = await _contactService.AddAsync(createContactDto);
+        var query = await _contactService.AddAsync(createContactDto, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContactDto updateContactDto)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContactDto updateContactDto, CancellationToken cancellationToken)
     {
         //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
-        var query = await _contactService.UpdateAsync(id,updateContactDto);
+        var query = await _contactService.UpdateAsync(id,updateContactDto, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -54,14 +54,14 @@ public sealed class ContactsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _contactService.GetByIdAsync(id);
+        var query = await _contactService.GetByIdAsync(id, cancellationToken);
         if (query==null)
         {
             return NotFound();
         }
-        await _contactService.DeleteAsync(id);
+        await _contactService.DeleteAsync(id, cancellationToken);
         return Ok(query);
 
     }

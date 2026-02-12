@@ -5,11 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BusinessLayer.Abstract
+namespace BusinessLayer.Abstract;
+
+public interface ICertificateService : IGenericService<Certificate, CertificateDto, CreateCertificateDto, UpdateCertificateDto>
 {
-    public interface ICertificateService:IGenericService<Certificate,CertificateDto,CreateCertificateDto,UpdateCertificateDto>
-    {
-        Task<CertificateDto?> RestoreAsync(Guid guid);
-        Task<List<CertificateDto>> GetAllAdminAsync();
-    }
+    Task<CertificateDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+    Task<List<CertificateDto>> GetAllAdminAsync(CancellationToken cancellationToken = default);
 }

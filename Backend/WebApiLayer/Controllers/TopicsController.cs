@@ -7,7 +7,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class TopicsController:ControllerBase
+public sealed class TopicsController : ControllerBase
 {
     private readonly ITopicService _topicService;
 
@@ -17,23 +17,23 @@ public sealed class TopicsController:ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var query = await _topicService.GetAllAsync();
+        var query = await _topicService.GetAllAsync(cancellationToken);
         return Ok(query);
     }
 
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin()
+    public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
     {
-        var query = await _topicService.GetAllAdminAsync();
+        var query = await _topicService.GetAllAdminAsync(cancellationToken);
         return Ok(query);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _topicService.GetByIdAsync(id);
+        var query = await _topicService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -43,18 +43,18 @@ public sealed class TopicsController:ControllerBase
 
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateTopicDto createTopicDto)
+    public async Task<IActionResult> Create([FromBody] CreateTopicDto createTopicDto, CancellationToken cancellationToken)
     {
-        var query = await _topicService.AddAsync(createTopicDto);
+        var query = await _topicService.AddAsync(createTopicDto, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
 
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTopicDto updateTopicDto)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTopicDto updateTopicDto, CancellationToken cancellationToken)
     {
         //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
-        var query = await _topicService.UpdateAsync(id,updateTopicDto);
+        var query = await _topicService.UpdateAsync(id, updateTopicDto, cancellationToken);
         if (query == null)
         {
             return NotFound();
@@ -63,21 +63,21 @@ public sealed class TopicsController:ControllerBase
     }
 
     [HttpPut("restore/{id}")]
-    public async Task<IActionResult> Restore(Guid id)
+    public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
-        var entity = await _topicService.RestoreAsync(id);
+        var entity = await _topicService.RestoreAsync(id, cancellationToken);
         return Ok(entity);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var query = await _topicService.GetByIdAsync(id);
+        var query = await _topicService.GetByIdAsync(id, cancellationToken);
         if (query == null)
         {
             return NotFound();
         }
-        await _topicService.DeleteAsync(id);
+        await _topicService.DeleteAsync(id, cancellationToken);
         return Ok(query);
     }
 

@@ -13,7 +13,8 @@ namespace DataAccessLayer.Concrete
         public EfProjectDal(AppDbContext context) : base(context)
         {
         }
-        public async Task<(List<Project> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, Guid? topicId)
+        public async Task<(List<Project> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, Guid? topicId,
+    CancellationToken cancellationToken = default)
         {
             ////AsNoTracking, aynı Id’ye sahip entity’leri bellekte birden fazla nesne olarak oluşturabilir.
             //AsNoTrackingWithIdentityResolution ise tracking kapalıyken bile aynı entity’nin tek bir instance olarak kullanılmasını sağlar ve ilişkili verileri koleksiyonlar altında toplar.
@@ -23,7 +24,7 @@ namespace DataAccessLayer.Concrete
             {
                 query = query.Where(x => x.ProjectTopics.Any(y => y.TopicId == topicId.Value));
             }
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
 
             var items = await query.OrderByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * size)
@@ -31,9 +32,10 @@ namespace DataAccessLayer.Concrete
                 .ToListAsync();
             return (items, totalCount);
         }
-        public async Task<Project?> RestoreDeleteByIdAsync(Guid guid)
+        public async Task<Project?> RestoreDeleteByIdAsync(Guid guid,
+    CancellationToken cancellationToken = default)
         {
-            return await _context.Projects.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
+            return await _context.Projects.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
         }
     }
 }
