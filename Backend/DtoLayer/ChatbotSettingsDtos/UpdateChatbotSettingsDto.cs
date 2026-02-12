@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DtoLayer.ChatbotSettingsDtos;
 
-public class ChatbotSettingsDto
+public class UpdateChatbotSettingsDto
 {
     public Guid Id { get; set; }
     public string AssistantName { get; set; } = string.Empty;

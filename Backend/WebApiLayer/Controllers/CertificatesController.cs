@@ -79,6 +79,10 @@ public sealed class CertificatesController:ControllerBase
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _certificateService.RestoreAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            return NotFound();
+        }
         return Ok(entity);
     }
 

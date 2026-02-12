@@ -91,6 +91,10 @@ public sealed class ProjectsController : ControllerBase
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
         var entity = await _projectService.RestoreAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            return NotFound();
+        }
         return Ok(entity);
     }
 

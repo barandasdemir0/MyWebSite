@@ -59,6 +59,10 @@ public class JobSkillsController : ControllerBase
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
         var query = await _jobSkillService.RestoreAsync(id, cancellationToken);
+        if (query == null)
+        {
+            return NotFound();
+        }
         return Ok(query);
     }
     [HttpDelete("{id}")]

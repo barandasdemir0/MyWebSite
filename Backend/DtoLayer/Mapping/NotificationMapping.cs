@@ -12,7 +12,5 @@ public class NotificationMapping : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<Notification, NotificationDtos.NotificationDto>();
-        config.NewConfig<CreateNotificationDto, Notification>().Ignore(x => x.Id);
-        config.NewConfig<UpdateNotificationDto, Notification>().Ignore(x => x.Id);
     }
 }

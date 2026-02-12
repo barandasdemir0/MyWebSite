@@ -80,6 +80,10 @@ public sealed class SocialMediasController : ControllerBase
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
         var query = await _socialMediaService.RestoreAsync(id);
+        if (query == null)
+        {
+            return NotFound();
+        }
         return Ok(query);
     }
 

@@ -150,6 +150,15 @@ namespace BusinessLayer.Container
             services.AddScoped<IJobSkillDal, EfJobSkillDal>();
             services.AddScoped<IJobSkillService, JobSkillManager>();
 
+            services.AddScoped<ISiteSettingsDal, EfSiteSettingsDal>();
+            services.AddScoped<ISiteSettingsService, SiteSettingsManager>();
+
+            services.AddScoped<IChatbotSettingsDal, EfChatbotSettingsDal>();
+            services.AddScoped<IChatbotSettingsService, ChatbotSettingsManager>();
+
+            services.AddScoped<INotificationDal, EfNotificationDal>();
+            services.AddScoped<INotificationService, NotificationManager>();
+
 
         }
 

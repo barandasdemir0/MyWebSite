@@ -106,6 +106,10 @@ namespace WebApiLayer.Controllers
         public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken )
         {
             var entity = await _blogPostService.RestoreAsync(id, cancellationToken);
+            if (entity == null)
+            {
+                return NotFound();
+            }
             return Ok(entity);
         }
 

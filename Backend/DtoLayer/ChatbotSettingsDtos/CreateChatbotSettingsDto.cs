@@ -4,9 +4,8 @@ using System.Text;
 
 namespace DtoLayer.ChatbotSettingsDtos;
 
-public class ChatbotSettingsDto
+public class CreateChatbotSettingsDto
 {
-    public Guid Id { get; set; }
     public string AssistantName { get; set; } = string.Empty;
     public string WelcomeMessage { get; set; } = string.Empty;
     public string SystemPrompt { get; set; } = string.Empty;

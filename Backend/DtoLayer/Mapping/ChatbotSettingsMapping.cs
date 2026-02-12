@@ -12,7 +12,7 @@ public class ChatbotSettingsMapping : IRegister
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<ChatbotSettings, ChatbotSettingsDtos.ChatbotSettingsDto>();
-        config.NewConfig<CreateChatbotSetttingsDto , ChatbotSettings>().Ignore(x=>x.Id);
-        config.NewConfig<UpdateChatbotSetttingsDto , ChatbotSettings>().Ignore(x=>x.Id);
+        config.NewConfig<CreateChatbotSettingsDto , ChatbotSettings>().Ignore(x=>x.Id);
+        config.NewConfig<UpdateChatbotSettingsDto , ChatbotSettings>().Ignore(x=>x.Id);
     }
 }
