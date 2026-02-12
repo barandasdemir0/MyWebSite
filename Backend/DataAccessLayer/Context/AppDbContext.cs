@@ -33,6 +33,9 @@ namespace DataAccessLayer.Context
         public DbSet<Message> Messages { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Topic> Topics { get; set; }
+        public DbSet<SiteSettings> SiteSettings { get; set; }
+        public DbSet<ChatbotSettings> ChatbotSettings { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
 
         //global query filter otomatik soft delete filtresi
