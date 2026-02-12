@@ -14,7 +14,7 @@ public sealed class JobSkillConfiguration : IEntityTypeConfiguration<JobSkill>
         builder.ToTable("JobSkill");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.JobSkillName).IsRequired().HasMaxLength(50);
-        builder.Property(x => x.JobSkillPercentange).IsRequired();
+        builder.Property(x => x.JobSkillPercentage).IsRequired();
 
         builder.HasOne(x => x.JobSkillCategory).WithMany(y => y.JobSkills).HasForeignKey(x => x.JobSkillCategoryId).OnDelete(DeleteBehavior.Cascade);
     }

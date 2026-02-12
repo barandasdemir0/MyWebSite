@@ -70,7 +70,11 @@ namespace WebApiLayer.Controllers
         public async Task<IActionResult> Create([FromBody] CreateBlogPostDto createBlogPostDto)
         {
             var query = await _blogPostService.AddAsync(createBlogPostDto);
-            return CreatedAtAction(nameof(GetDetailById), new { id = query.Id }, query);
+            return CreatedAtAction(  // HTTP 201 Created + body'de result + Location header
+                nameof(GetDetailById)   //  Hangi action'a yönlendirilecek
+                , new { id = query.Id } //  O action'ın parametreleri
+                , query);   //  Response body'deki veri
+
         }
 
         [HttpPut("{id}")]

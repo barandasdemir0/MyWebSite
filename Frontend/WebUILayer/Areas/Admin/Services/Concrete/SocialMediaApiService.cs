@@ -25,6 +25,7 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(error);
             }
         }
     }

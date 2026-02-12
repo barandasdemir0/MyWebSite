@@ -60,7 +60,7 @@ function loadCategoryData(categoryId) {
  * Handle form submission
  */
 function handleFormSubmit(e) {
-    e.preventDefault();
+    /*e.preventDefault();*/
 
     const name = document.getElementById('categoryName').value.trim();
     const description = document.getElementById('categoryDescription').value.trim();

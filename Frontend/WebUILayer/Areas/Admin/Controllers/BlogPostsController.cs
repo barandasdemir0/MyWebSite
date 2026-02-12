@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
@@ -43,7 +44,8 @@ public class BlogPostsController : Controller
     {
         var model = new BlogCreateViewModel
         {
-            topicDtos = await _topicApiService.GetAllAsync()
+            topicDtos = await _topicApiService.GetAllAsync() // Dropdown için topic listesi
+                                                             // createBlogPostDto boş kalıyor — form boş açılacak
         };
         return View(model);
     }
@@ -53,18 +55,21 @@ public class BlogPostsController : Controller
     {
         if (!ModelState.IsValid)
         {
+            // Topic listesi form POST'unda GELMİYOR (sadece seçilen id gelir)
+            // Bu yüzden tekrar API'den çekerek eklememiz lazım
             blogCreateViewModel.topicDtos = await _topicApiService.GetAllAsync();
             return View(blogCreateViewModel);
 
         }
         try
         {
+            // ViewModel'in İÇİNDEKİ DTO'yu gönder, ViewModel'in kendisini DEĞİL
             await _blogPostApiService.AddAsync(blogCreateViewModel.createBlogPostDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
-            ModelState.AddApiError(ex, "createBlogPostDto");
+            ModelState.AddApiError(ex, "createBlogPostDto");// prefix belirtiliyor
             blogCreateViewModel.topicDtos = await _topicApiService.GetAllAsync();
             return View(blogCreateViewModel);
         }
@@ -113,19 +118,40 @@ public class BlogPostsController : Controller
 
     }
 
+
     [HttpPost]
-    public async Task<IActionResult> Delete(Guid guid)
+    public async Task<IActionResult> Delete(Guid id)
     {
-        await _blogPostApiService.DeleteAsync(guid);
+        try
+        {
+            await _blogPostApiService.DeleteAsync(id);
+            TempData["Success"] = "Silme işlemi başarılı.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Silme işlemi başarısız oldu.";
+        }
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpPost]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+        try
+        {
+            await _blogPostApiService.RestoreAsync(id);
+            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
+        }
+
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Restore(Guid guid)
-    {
-        await _blogPostApiService.RestoreAsync(guid);
-        return RedirectToAction(nameof(Index));
-    }
+
+
+   
 
 
 }

@@ -1,8 +1,10 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.JobSkillsDtos;
 using EntityLayer.Concrete;
 using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -40,19 +42,19 @@ public class JobSkillManager : IJobSkillService
 
     public async Task<List<JobSkillDto>> GetAdminAllAsync()
     {
-        var entity = await _jobSkillDal.GetAllAdminAsync(tracking: false);
+        var entity = await _jobSkillDal.GetAllAdminAsync(tracking: false,includes:source=>source.Include(x=>x.JobSkillCategory));
         return _mapper.Map<List<JobSkillDto>>(entity);
     }
 
     public async Task<List<JobSkillDto>> GetAllAsync()
     {
-        var entity = await _jobSkillDal.GetAllAsync(tracking: false);
+        var entity = await _jobSkillDal.GetAllAsync(tracking: false,includes:source=>source.Include(x=>x.JobSkillCategory));
         return _mapper.Map<List<JobSkillDto>>(entity);
     }
 
     public async Task<JobSkillDto?> GetByIdAsync(Guid guid)
     {
-        var entity = await _jobSkillDal.GetByIdAsync(guid,tracking:false);
+        var entity = await _jobSkillDal.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.JobSkillCategory));
         if (entity == null)
         {
             return null;

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 
 namespace DataAccessLayer.Context
@@ -25,7 +26,7 @@ namespace DataAccessLayer.Context
         public DbSet<GuestBook> GuestBooks { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<JobSkill> JobSkills { get; set; }
-        public DbSet<JobSkillCategory> jobSkillCategories { get; set; }
+        public DbSet<JobSkillCategory> JobSkillCategories { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectTopic> ProjectTopics { get; set; }
         public DbSet<Skill> Skills { get; set; }
@@ -33,23 +34,32 @@ namespace DataAccessLayer.Context
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Topic> Topics { get; set; }
 
+
+        //global query filter otomatik soft delete filtresi
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            //bu configurasyon dosyalarımızı bulup otomatik uygular hani biz fluentapi yaptık ya
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                //Bu entity BaseEntity'den türüyor mu?" kontrolü. eğer türemiyorsaki join tabloları gibi atla çünkü ara tabloda soft delete gerek yok
                 {
                     var parameter = Expression.Parameter(entityType.ClrType, ("entity"));
-                    var property = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
-                    var falseConstant  = Expression.Constant(false);
+                    //Sonuç: entity => kısmı oluştu.  Lambda'nın parametresini oluştur.
+                    var property = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));// güvenli
+                    //entity.IsDeleted property erişimini oluştur.
+                    // nameof ile yazarsan, derleme zamanında kontrol edilir:  
+                    var falseConstant  = Expression.Constant(false);//false değerini oluştur. Karşılaştırmada kullanılacak.
                     var condition = Expression.Equal(property, falseConstant);
-                    var lambda = Expression.Lambda(condition, parameter)
-;
-
+                    //entity.IsDeleted == false karşılaştırmasını oluştur.
+                    var lambda = Expression.Lambda(condition, parameter);
+                    //Her şeyi lambda expression olarak paketle
                     modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+                    //Oluşturulan lambda'yı bu entity'nin global filtresi olarak ata.
+
 
                 }
             }
@@ -61,17 +71,17 @@ namespace DataAccessLayer.Context
             {
                 switch (entry.State)
                 {
-                    case EntityState.Added:
-                        entry.Entity.CreatedAt = DateTime.UtcNow;
+                    case EntityState.Added:  // YENİ KAYIT
+                        entry.Entity.CreatedAt = DateTime.UtcNow;// Oluşturulma tarihi ata
                         break;
-                    case EntityState.Modified:
-                        entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    case EntityState.Modified:// GÜNCELLEME
+                        entry.Entity.UpdatedAt = DateTime.UtcNow;// Güncellenme tarihi ata
                         break;
 
-                    case EntityState.Deleted:
-                        entry.State = EntityState.Modified;
-                        entry.Entity.IsDeleted = true;
-                        entry.Entity.DeletedAt = DateTime.UtcNow;
+                    case EntityState.Deleted:   // SİLME (Remove çağrıldığında)
+                        entry.State = EntityState.Modified; // ❗ Silme → Güncelleme'ye çevir
+                        entry.Entity.IsDeleted = true;// IsDeleted = true yap
+                        entry.Entity.DeletedAt = DateTime.UtcNow; // Silinme tarihi ata
                         break;
                 }
             }

@@ -1,8 +1,8 @@
-/* Skill Editor Page Styles */
-
 /* ============================================
-   EDITOR LAYOUT
+   SKILL EDITOR PAGE
    ============================================ */
+
+/* Editor Layout */
 .editor-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -14,10 +14,6 @@
     height: fit-content;
 }
 
-.card-body {
-    padding: 25px;
-}
-
 /* ============================================
    FORM STYLES
    ============================================ */
@@ -25,13 +21,13 @@
     margin-bottom: 24px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--admin-text-muted);
-}
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: var(--admin-text-muted);
+    }
 
 /* Range Input */
 .range-input-wrapper {
@@ -50,31 +46,31 @@
     outline: none;
 }
 
-.form-range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    background: var(--admin-primary);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
-}
+    .form-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 22px;
+        height: 22px;
+        background: var(--admin-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+    }
 
-.form-range::-webkit-slider-thumb:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.15);
-}
+        .form-range::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.15);
+        }
 
-.form-range::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    background: var(--admin-primary);
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-}
+    .form-range::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+        background: var(--admin-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+    }
 
 .range-value {
     min-width: 60px;
@@ -95,67 +91,10 @@
     padding: 0 5px;
 }
 
-.range-labels span {
-    font-size: 0.75rem;
-    color: var(--admin-text-muted);
-}
-
-/* Toggle Switch */
-.toggle-switch {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.switch {
-    position: relative;
-    width: 50px;
-    height: 26px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--admin-border);
-    border-radius: 26px;
-    transition: 0.3s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 4px;
-    bottom: 4px;
-    background: #fff;
-    border-radius: 50%;
-    transition: 0.3s;
-}
-
-input:checked + .slider {
-    background: var(--admin-success);
-}
-
-input:checked + .slider:before {
-    transform: translateX(24px);
-}
-
-#statusLabel {
-    font-size: 0.9rem;
-    color: var(--admin-text);
-    font-weight: 500;
-}
+    .range-labels span {
+        font-size: 0.75rem;
+        color: var(--admin-text-muted);
+    }
 
 /* Form Actions */
 .form-actions {
@@ -166,9 +105,9 @@ input:checked + .slider:before {
     border-top: 1px solid var(--admin-border);
 }
 
-.form-actions .btn {
-    flex: 1;
-}
+    .form-actions .btn {
+        flex: 1;
+    }
 
 /* ============================================
    PREVIEW SECTION
@@ -185,18 +124,23 @@ input:checked + .slider:before {
     gap: 6px;
 }
 
-.preview-badge::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: var(--admin-success);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
+    .preview-badge::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        background: var(--admin-success);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .preview-container {
@@ -218,42 +162,10 @@ input:checked + .slider:before {
     transition: all 0.3s ease;
 }
 
-.preview-category-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-/* Category Icon */
-.category-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-}
-
-.category-icon.icon-frontend {
-    background: rgba(139, 92, 246, 0.15);
-    color: #a78bfa;
-}
-
-.category-icon.icon-backend {
-    background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
-}
-
-.category-icon.icon-mobile {
-    background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-}
-
-.category-icon.icon-tools {
-    background: rgba(99, 102, 241, 0.15);
-    color: #818cf8;
-}
+    .preview-category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
 
 /* Category Title & Description */
 .category-title {
@@ -316,23 +228,6 @@ input:checked + .slider:before {
     background: linear-gradient(90deg, #34d399, #6ee7b7);
 }
 
-/* Different colors based on category */
-.preview-category-card.frontend .skill-progress {
-    background: linear-gradient(90deg, #a78bfa, #c4b5fd);
-}
-
-.preview-category-card.backend .skill-progress {
-    background: linear-gradient(90deg, #34d399, #6ee7b7);
-}
-
-.preview-category-card.mobile .skill-progress {
-    background: linear-gradient(90deg, #60a5fa, #93c5fd);
-}
-
-.preview-category-card.tools .skill-progress {
-    background: linear-gradient(90deg, #818cf8, #a5b4fc);
-}
-
 /* Preview Hint */
 .preview-hint {
     display: flex;
@@ -347,9 +242,9 @@ input:checked + .slider:before {
     color: var(--admin-text-muted);
 }
 
-.preview-hint i {
-    color: var(--admin-primary);
-}
+    .preview-hint i {
+        color: var(--admin-primary);
+    }
 
 /* ============================================
    RESPONSIVE
@@ -358,33 +253,29 @@ input:checked + .slider:before {
     .editor-layout {
         grid-template-columns: 1fr;
     }
-    
+
     .editor-preview-card {
         order: -1;
     }
 }
 
 @media (max-width: 640px) {
-    .card-body {
-        padding: 20px;
-    }
-    
     .form-actions {
         flex-direction: column;
     }
-    
-    .form-actions .btn {
-        width: 100%;
-    }
-    
+
+        .form-actions .btn {
+            width: 100%;
+        }
+
     .preview-container {
         padding: 20px;
     }
-    
+
     .preview-category-card {
         max-width: 100%;
     }
-    
+
     .range-labels {
         display: none;
     }

@@ -49,6 +49,13 @@ public class AboutsController : Controller
       
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _aboutApiService.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
+    }
+
     #region eski güncelleme ve update komutları yukarııda tek komutta yapıldı
     //[HttpGet]
     //public IActionResult Create() => View();
@@ -76,10 +83,5 @@ public class AboutsController : Controller
 
     #endregion
 
-    [HttpPost]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        await _aboutApiService.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
-    }
+
 }

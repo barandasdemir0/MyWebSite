@@ -1,0 +1,66 @@
+﻿@model UpdateJobSkillCategoryDto
+@{
+    ViewData["Title"] = "Update";
+    ViewData["BodyClass"] = "category-editor-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/category-editor.css">
+}
+<div class="card category-editor-card">
+    <div class="card-header">
+        <h3>Kategori Bilgileri</h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="Update" method="post" id="categoryEditorForm">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label>Kategori Adı *</label>
+                <input type="text" asp-for="CategoryName" class="form-control" placeholder="Örn: Frontend" required>
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Açıklama</label>
+                <input type="text" asp-for="CategoryDescription" class="form-control" placeholder="Kısa açıklama...">
+                <span asp-validation-for="CategoryDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>İkon Sınıfı</label>
+                <div class="icon-input-wrapper">
+                    <input type="text" asp-for="CategoryIcon" class="form-control" placeholder="logos:docker">
+
+                    <a href="https://iconify.design/" target="_blank" class="btn btn-outline btn-icon-search" title="İkon Ara">
+                        <i class="fas fa-search"></i>
+                    </a>
+
+                </div>
+
+                <p class="form-hint">iconify ikon sınıfı kullanın</p>
+                <span asp-validation-for="CategoryIcon" class="text-danger"></span>
+            </div>
+
+
+
+            <!-- Hidden input for Razor to populate edit data -->
+            <input type="hidden" id="categoryData" data-name="" data-description="" data-icon="" data-image="">
+
+            <div class="form-actions">
+                <a href="skill-categories.html" class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    İptal
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i>
+                    Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/category-editor.js"></script>
+}
+

@@ -1,0 +1,270 @@
+﻿@model List<JobSkillCategoryDto>
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "skill-categories-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/skill-categories.css">
+}
+
+<!-- Preview Section -->
+<div class="card">
+    <div class="card-header">
+        <h3>Önizleme</h3>
+        <span class="preview-badge">Site Görünümü</span>
+    </div>
+    <div class="skill-categories-preview" id="skillCategoriesPreview">
+        @foreach (var category in Model)
+        {
+            @if (category.IsDeleted == true)
+            {
+                <div class="skill-category-card deleted-card" data-category-id="@category.Id">
+                    <div class="@category.CategoryIcon">
+                        <span class="iconify"
+                              data-icon="@category.CategoryIcon"
+                              data-width="48"
+                              data-height="48"></span>
+                    </div>
+                    <h4 class="category-title">@category.CategoryName</h4>
+                    <p class="category-description">@category.CategoryDescription</p>
+                    <div class="category-skills">
+                        @foreach (var item in category.JobSkills)
+                        {
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name">@item.JobSkillName</span>
+                                    <span class="skill-percent">@item.JobSkillPercentage%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" data-progress="@item.JobSkillPercentage"></div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            }
+            else if (category.IsDeleted == false)
+            {
+                <div class="skill-category-card" data-category-id="@category.Id">
+                    <div class="@category.CategoryIcon">
+                        <span class="iconify"
+                              data-icon="@category.CategoryIcon"
+                              data-width="48"
+                              data-height="48"></span>
+                    </div>
+                    <h4 class="category-title">@category.CategoryName</h4>
+                    <p class="category-description">@category.CategoryDescription</p>
+                    <div class="category-skills">
+                        @foreach (var item in category.JobSkills)
+                        {
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name">@item.JobSkillName</span>
+                                    <span class="skill-percent">@item.JobSkillPercentage%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" data-progress="@item.JobSkillPercentage"></div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            }
+
+        }
+
+    </div>
+</div>
+
+<!-- Categories Management Table -->
+<div class="card mt-25">
+    <div class="card-header">
+        <h3>Kategori Yönetimi</h3>
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus"></i> Yeni Kategori
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="admin-table" id="categoriesTable">
+            <thead>
+                <tr>
+                    <th>İkon</th>
+                    <th>Kategori Adı</th>
+                    <th>Açıklama</th>
+                    <th>Yetenek Sayısı</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    if (item.IsDeleted == true)
+                    {
+                        <tr data-category-id="@item.Id" class="deleted-item">
+                            <td data-label="İkon">
+                                <div class="@item.CategoryIcon">
+                                    <span class="iconify"
+                                          data-icon="@item.CategoryIcon"
+                                          data-width="48"
+                                          data-height="48"></span>
+                                </div>
+                            </td>
+                            <td data-label="Kategori Adı"><strong>@item.CategoryName</strong></td>
+                            <td data-label="Açıklama">@item.CategoryDescription</td>
+                            <td data-label="Yetenek Sayısı"><span class="skill-count">@item.JobSkills.Count</span></td>
+                            <td data-label="İşlemler">
+                                <div class="action-btns">
+                                    <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                                        <button class="action-btn restore" title="Geri Yükle" data-action="restoreCategory"><i class="fas fa-undo"></i></button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else if (item.IsDeleted == false)
+                    {
+                        <tr data-category-id="@item.Id">
+                            <td data-label="İkon">
+                                <div class="@item.CategoryIcon">
+                                    <span class="iconify"
+                                          data-icon="@item.CategoryIcon"
+                                          data-width="48"
+                                          data-height="48"></span>
+                                </div>
+                            </td>
+                            <td data-label="Kategori Adı"><strong>@item.CategoryName</strong></td>
+                            <td data-label="Açıklama">@item.CategoryDescription</td>
+                            <td data-label="Yetenek Sayısı"><span class="skill-count">@item.JobSkills.Count</span></td>
+                            <td data-label="İşlemler">
+                                <div class="action-btns">
+                                    <button class="action-btn" title="Yetenekleri Yönet" data-action="manageSkills"><i class="fas fa-list"></i></button>
+                                    <a asp-action="Update" asp-route-guid="@item.Id" method="post" class="action-btn edit" title="Düzenle" data-action="editCategory"><i class="fas fa-pen"></i></a>
+                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                        <button class="action-btn delete" title="Sil" data-action="deleteCategory"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Skills View Modal (Görüntüleme) -->
+
+<div class="modal" id="skillsViewModal">
+
+    <div class="modal-content modal-md">
+       
+        <div class="modal-body">
+
+            @foreach (var category in Model)
+            {
+                <div class="skills-panel hidden" data-panel-id="@category.Id">
+                <div class="modal-header">
+                    <div class="modal-category-info">
+                        <div class="@category.CategoryIcon">
+                            <span class="iconify"
+                                  data-icon="@category.CategoryIcon"
+                                  data-width="48"
+                                  data-height="48"></span>
+                        </div>
+                        <div>
+                            <h3>@category.CategoryName</h3>
+                            <p>@category.CategoryDescription</p>
+                        </div>
+                    </div>
+                </div>
+               
+                    @if (category.JobSkills.Count == 0)
+                    {
+                        <p class="no-skills-msg">Bu kategoride henüz yetenek yok.</p>
+                    }
+                    @foreach (var item in category.JobSkills)
+                    {
+                        @if (item.IsDeleted == true)
+                        {
+                            <div class="skill-view-item">
+                                <div class="skill-view-info deleted-card">
+                                    <div class="skill-view-header">
+                                        <span class="skill-view-name">@item.JobSkillName</span>
+                                        <span class="skill-percent">@item.JobSkillPercentage %</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-progress="@item.JobSkillPercentage"></div>
+                                    </div>
+                                </div>
+                                <div class="skill-view-actions">
+
+                                    <form asp-controller="JobSkills" asp-action="Restore" asp-route-id="@item.Id" method="post">
+                                        <button type="submit" class="action-btn restore" title="Sil">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else if (item.IsDeleted == false)
+                        {
+                            <div class="skill-view-item">
+                                <div class="skill-view-info">
+                                    <div class="skill-view-header">
+                                        <span class="skill-view-name">@item.JobSkillName</span>
+                                        <span class="skill-percent">@item.JobSkillPercentage%</span>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="skill-progress" data-progress="@item.JobSkillPercentage"></div>
+                                    </div>
+                                </div>
+                                <div class="skill-view-actions">
+                                    <a asp-controller="JobSkills" asp-action="Update" asp-route-id="@item.Id" class="action-btn edit" title="Düzenle">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <form asp-controller="JobSkills" asp-action="Delete" asp-route-id="@item.Id" method="post">
+                                        <button type="submit" class="action-btn delete" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+
+
+                    }
+                    <!-- Yeni Yetenek Ekle -->
+                    <a asp-controller="JobSkills" asp-action="Create" asp-route-id="@category.Id" class="btn btn-primary btn-add-skill-full">
+                        <i class="fas fa-plus"></i> Yeni Yetenek Ekle
+                    </a>
+                </div>
+            }
+
+   
+
+
+
+
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-action="closeSkillsViewModal">Kapat</button>
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/skill-categories.js"></script>
+}
+

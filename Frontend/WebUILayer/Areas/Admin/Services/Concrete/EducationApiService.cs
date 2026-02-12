@@ -24,7 +24,8 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
             var response = await _httpClient.PutAsync($"{_endpoint}/restore/{guid}", null);
             if (!response.IsSuccessStatusCode)
             {
-                var error = response.Content.ReadAsStringAsync();
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(error);
             }
         }
     }

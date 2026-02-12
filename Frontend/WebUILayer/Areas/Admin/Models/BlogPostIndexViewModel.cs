@@ -5,7 +5,7 @@ namespace WebUILayer.Areas.Admin.Models
 {
     public class BlogPostIndexViewModel:BasePaginationViewModel
     {
-        public List<BlogPostDto> blogPostDtos { get; set; } = new List<BlogPostDto>();
-        public List<TopicDto> topicDtos { get; set; } = new List<TopicDto>();
+        public List<BlogPostDto> blogPostDtos { get; set; } = new List<BlogPostDto>(); // Form verisi
+        public List<TopicDto> topicDtos { get; set; } = new List<TopicDto>();   // Dropdown verisi
     }
 }

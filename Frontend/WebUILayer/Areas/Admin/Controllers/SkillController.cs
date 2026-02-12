@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
@@ -65,10 +66,20 @@ public class SkillController : Controller
       
     }
 
+
     [HttpPost]
-    public async Task<IActionResult> Delete(Guid Id)
+    public async Task<IActionResult> Delete(Guid id)
     {
-        await _skillApiService.DeleteAsync(Id);
+        try
+        {
+            await _skillApiService.DeleteAsync(id);
+            TempData["Success"] = "Silme işlemi başarılı.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Silme işlemi başarısız oldu.";
+        }
         return RedirectToAction(nameof(Index));
     }
+   
 }

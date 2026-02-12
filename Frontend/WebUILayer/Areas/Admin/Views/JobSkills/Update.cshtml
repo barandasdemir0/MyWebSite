@@ -1,0 +1,115 @@
+﻿@model WebUILayer.Areas.Admin.Models.JobSkillUpdateViewModel
+@{
+    ViewData["Title"] = "Update";
+    ViewData["BodyClass"] = "skill-editor-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/skill-editor.css">
+}
+
+<!-- Editor Content -->
+<div class="editor-layout">
+    <!-- Form Section -->
+    <div class="card editor-form-card">
+        <div class="card-header">
+            <h3>Yetenek Bilgileri</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Update" method="post" id="skillEditorForm">
+                <input type="hidden" asp-for="jobSkillDtos.Id" />
+                <div class="form-group">
+                    <label>Kategori *</label>
+
+
+
+                    <input type="text" asp-for="jobSkillCategoryDtos.CategoryName" id="skillName" class="form-control" placeholder="Örn: Node.js, React, Flutter" readonly>
+                    <input type="hidden" asp-for="jobSkillDtos.JobSkillCategoryId" />
+
+
+                    <!-- Razor ile doldurulacak - data attribute'lar preview için -->
+                    <!-- Hidden input for Razor to populate edit data -->
+                    <input type="hidden" id="skillData" data-name="" data-percent="" data-category="">
+                </div>
+
+                <div class="form-group">
+                    <label>Yetenek Adı *</label>
+                    <input type="text" asp-for="jobSkillDtos.JobSkillName" id="skillName" class="form-control" placeholder="Örn: Node.js, React, Flutter" required>
+                    <span asp-validation-for="jobSkillDtos.JobSkillName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Seviye (%) *</label>
+                    <div class="range-input-wrapper">
+                        <input type="range" id="skillPercent" class="form-range" min="0" max="100" asp-for="jobSkillDtos.JobSkillPercentage">
+                        <span class="range-value" id="skillPercentValue">% @Model.jobSkillDtos.JobSkillPercentage</span>
+                        <span asp-validation-for="jobSkillDtos.JobSkillPercentage" class="text-danger"></span>
+                    </div>
+                    <div class="range-labels">
+                        <span>Başlangıç</span>
+                        <span>Orta</span>
+                        <span>İleri</span>
+                        <span>Uzman</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a asp-controller="JobSkillCategories" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        İptal
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Preview Section -->
+    <div class="card editor-preview-card">
+        <div class="card-header">
+            <h3>Önizleme</h3>
+            <span class="preview-badge">Canlı</span>
+        </div>
+        <div class="card-body">
+
+            <div class="preview-container">
+                <div class="preview-category-card" id="previewCard">
+                    <div class="@Model.jobSkillCategoryDtos?.CategoryIcon">
+                        <span class="iconify"
+                              data-icon="@Model.jobSkillCategoryDtos?.CategoryIcon"
+                              data-width="48"
+                              data-height="48"></span>
+                    </div>
+                    <h4 class="category-title" id="previewCategoryTitle">@Model.jobSkillCategoryDtos?.CategoryName</h4>
+                    <p class="category-description" id="previewCategoryDesc">@Model.jobSkillCategoryDtos?.CategoryDescription</p>
+                    <div class="category-skills">
+                        <div class="skill-item" id="previewSkillItem">
+                            <div class="skill-header">
+                                <span class="skill-name" id="previewSkillName">@Model.jobSkillDtos.JobSkillName</span>
+                                <span class="skill-percent" id="previewSkillPercent">@Model.jobSkillDtos.JobSkillPercentage%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" id="previewSkillProgress" data-progress="@Model.jobSkillDtos.JobSkillPercentage"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <p class="preview-hint">
+                <i class="fas fa-info-circle"></i>
+                Yetenek, seçilen kategorinin kartında bu şekilde görünecektir.
+            </p>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/skill-editor.js"></script>
+}
+
+

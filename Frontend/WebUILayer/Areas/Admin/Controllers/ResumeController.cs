@@ -4,7 +4,9 @@ using DtoLayer.ExperienceDtos;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
@@ -56,6 +58,10 @@ public class ResumeController : Controller
     public async Task<IActionResult> UpdateExperience(Guid guid)
     {
         var query = await _experienceApiService.GetByIdAsync(guid);
+        if (query == null)
+        {
+            return NotFound();
+        }
         return View(query.Adapt<UpdateExperienceDto>());
     }
 
@@ -81,21 +87,38 @@ public class ResumeController : Controller
 
 
 
-
-
     [HttpPost]
-    public async Task<IActionResult> DeleteExperience(Guid guid)
+    public async Task<IActionResult> DeleteExperience(Guid id)
     {
-        await _experienceApiService.DeleteAsync(guid);
+        try
+        {
+            await _experienceApiService.DeleteAsync(id);
+            TempData["Success"] = "Silme işlemi başarılı.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Silme işlemi başarısız oldu.";
+        }
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpPost]
+    public async Task<IActionResult> RestoreExperience(Guid id)
+    {
+        try
+        {
+            await _experienceApiService.RestoreAsync(id);
+            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
+        }
+
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> RestoreExperience(Guid guid)
-    {
-        await _experienceApiService.RestoreAsync(guid);
-        return RedirectToAction(nameof(Index));
-    }
+
+   
 
     #endregion
 
@@ -128,6 +151,10 @@ public class ResumeController : Controller
     public async Task<IActionResult> UpdateEducation(Guid guid)
     {
         var query = await _educationApiService.GetByIdAsync(guid);
+        if (query == null)
+        {
+            return NotFound();
+        }
         return View(query.Adapt<UpdateEducationDto>());
     }
     [HttpPost]
@@ -149,21 +176,35 @@ public class ResumeController : Controller
         }
     }
 
-
     [HttpPost]
-    public async Task<IActionResult> DeleteEducation(Guid guid)
+    public async Task<IActionResult> DeleteEducation(Guid id)
     {
-        await _educationApiService.DeleteAsync(guid);
+        try
+        {
+            await _educationApiService.DeleteAsync(id);
+            TempData["Success"] = "Silme işlemi başarılı.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Silme işlemi başarısız oldu.";
+        }
         return RedirectToAction(nameof(Index));
     }
-
     [HttpPost]
-    public async Task<IActionResult> RestoreEducation(Guid guid)
+    public async Task<IActionResult> RestoreEducation(Guid id)
     {
-        await _educationApiService.RestoreAsync(guid);
+        try
+        {
+            await _educationApiService.RestoreAsync(id);
+            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
+        }
+
         return RedirectToAction(nameof(Index));
     }
-
 
 
 
@@ -198,6 +239,10 @@ public class ResumeController : Controller
     public async Task<IActionResult> UpdateCertificates(Guid guid)
     {
         var values = await _certificateApiService.GetByIdAsync(guid);
+        if (values == null)
+        {
+            return NotFound();
+        }
         return View(values.Adapt<UpdateCertificateDto>());
     }
     [HttpPost]
@@ -220,20 +265,39 @@ public class ResumeController : Controller
     }
 
 
-
     [HttpPost]
-    public async Task<IActionResult> DeleteCertificates(Guid guid)
+    public async Task<IActionResult> DeleteCertificates(Guid id)
     {
-        await _certificateApiService.DeleteAsync(guid);
+        try
+        {
+            await _certificateApiService.DeleteAsync(id);
+            TempData["Success"] = "Silme işlemi başarılı.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Silme işlemi başarısız oldu.";
+        }
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpPost]
+    public async Task<IActionResult> RestoreCertificates(Guid id)
+    {
+        try
+        {
+            await _certificateApiService.RestoreAsync(id);
+            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
+        }
+
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> RestoreCertificates(Guid guid)
-    {
-        await _certificateApiService.RestoreAsync(guid);
-        return RedirectToAction(nameof(Index));
-    }
+
+
+    
 
     #endregion
 

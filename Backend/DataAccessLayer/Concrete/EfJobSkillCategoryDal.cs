@@ -14,8 +14,9 @@ public class EfJobSkillCategoryDal : GenericRepository<JobSkillCategory>, IJobSk
     {
     }
 
-    public async Task<JobSkillCategory?> RestoreDeleteByIdAsync(Guid guid)
+    public async Task<JobSkillCategory?> RestoreDeleteByIdAsync(Guid guid) //silinen kaydı bul
     {
-        return await _context.jobSkillCategories.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
+        return await _context.JobSkillCategories.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid);
+        // contextin içerisinde categornin içinde ıgnoreet neyi silinenleri gölstermemeyi sonra eşleşen ilk kaydı bul ve geri getir
     }
 }

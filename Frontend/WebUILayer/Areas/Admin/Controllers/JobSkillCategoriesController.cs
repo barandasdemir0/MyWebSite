@@ -1,83 +1,88 @@
-﻿using DtoLayer.SocialMediaDtos;
+﻿using DtoLayer.JobSkillCategoryDtos;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
+
 [Area("Admin")]
 [Route("[area]/[controller]/[action]/{id?}")]
-public class SocialMediaController : Controller
+public class JobSkillCategoriesController : Controller
 {
+    private readonly IJobSkillCategoryService _jobSkillCategoryService;
+    private readonly IJobSkillApiService _jobSkillApiService;
 
-    private readonly ISocialMediaApiService _socialMediaApiService;
-
-    public SocialMediaController(ISocialMediaApiService socialMediaApiService)
+    public JobSkillCategoriesController(IJobSkillCategoryService jobSkillCategoryService, IJobSkillApiService jobSkillApiService)
     {
-        _socialMediaApiService = socialMediaApiService;
+        _jobSkillCategoryService = jobSkillCategoryService;
+        _jobSkillApiService = jobSkillApiService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var query = await _socialMediaApiService.GetAdminAllAsync();
+        //var model = new JobSkillIndexViewModel
+        //{
+        //    jobSkillDtos = await _jobSkillApiService.GetAllAdminAsync(),
+        //    jobSkillCategoryDtos = await _jobSkillCategoryService.GetAdminAllAsync()
+        //};
+        var query = await _jobSkillCategoryService.GetAdminAllAsync();
         return View(query);
     }
 
     [HttpGet]
     public IActionResult Create() => View();
-
-
     [HttpPost]
-    public async Task<IActionResult> Create(CreateSocialMediaDto createSocialMediaDto)
+    public async Task<IActionResult> Create(CreateJobSkillCategoryDto createJobSkillCategoryDto)
     {
         if (!ModelState.IsValid)
         {
-            return View(createSocialMediaDto);
+            return View(createJobSkillCategoryDto);
         }
         try
         {
-            await _socialMediaApiService.AddAsync(createSocialMediaDto);
+            var model = await _jobSkillCategoryService.AddAsync(createJobSkillCategoryDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
             ModelState.AddApiError(ex);
-            return View(createSocialMediaDto);
+            return View(createJobSkillCategoryDto);
         }
-       
+
     }
 
     [HttpGet]
     public async Task<IActionResult> Update(Guid guid)
     {
-        var query = await _socialMediaApiService.GetByIdAsync(guid);
+        var query = await _jobSkillCategoryService.GetByIdAsync(guid);
         if (query == null)
         {
             return NotFound();
         }
-        return View(query.Adapt<UpdateSocialMediaDto>());
+        return View(query.Adapt<UpdateJobSkillCategoryDto>());
     }
-
     [HttpPost]
-    public async Task<IActionResult> Update(UpdateSocialMediaDto updateSocialMediaDto)
+    public async Task<IActionResult> Update(UpdateJobSkillCategoryDto updateJobSkillCategoryDto)
     {
         if (!ModelState.IsValid)
         {
-            return View(updateSocialMediaDto);
+            return View(updateJobSkillCategoryDto);
         }
         try
         {
-            await _socialMediaApiService.UpdateAsync(updateSocialMediaDto.Id, updateSocialMediaDto);
+            var model = await _jobSkillCategoryService.UpdateAsync(updateJobSkillCategoryDto.Id, updateJobSkillCategoryDto);
             return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
             ModelState.AddApiError(ex);
-            return View(updateSocialMediaDto);
+            return View(updateJobSkillCategoryDto);
         }
 
     }
@@ -87,7 +92,7 @@ public class SocialMediaController : Controller
     {
         try
         {
-            await _socialMediaApiService.DeleteAsync(id);
+            await _jobSkillCategoryService.DeleteAsync(id);
             TempData["Success"] = "Silme işlemi başarılı.";
         }
         catch (Exception)
@@ -101,7 +106,7 @@ public class SocialMediaController : Controller
     {
         try
         {
-            await _socialMediaApiService.RestoreAsync(id);
+            await _jobSkillCategoryService.RestoreAsync(id);
             TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
         }
         catch (Exception)
@@ -111,6 +116,8 @@ public class SocialMediaController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+
 
 
 

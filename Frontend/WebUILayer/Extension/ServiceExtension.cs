@@ -61,6 +61,16 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
+        services.AddHttpClient<IJobSkillApiService, JobSkillApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IJobSkillCategoryService, JobSkillCategoryApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
 
 
 
