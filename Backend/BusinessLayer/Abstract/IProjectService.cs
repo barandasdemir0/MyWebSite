@@ -1,7 +1,7 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.GuestBookDtos;
 using DtoLayer.ProjectDtos;
-using DtoLayer.Shared;
+using SharedKernel.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;

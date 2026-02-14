@@ -4,9 +4,10 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.AboutDtos;
 using DtoLayer.BlogpostDtos;
-using DtoLayer.Shared;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Shared;
+using SharedKernel.Shareds;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,12 +29,12 @@ namespace BusinessLayer.Concrete
         {
             var entity = _mapper.Map<BlogPost>(dto);
             entity.Slug = await UniqueSlugAsync(dto.Title, cancellationToken);
-            if (entity.IsPublished && entity.PublishedAt == null )
+            if (entity.IsPublished && entity.PublishedAt == null)
             {
                 entity.PublishedAt = DateTime.UtcNow;
             }
-           
-            if (dto.TopicIds !=null)
+
+            if (dto.TopicIds != null)
             {
                 foreach (var topicId in dto.TopicIds)
                 {
@@ -47,7 +48,7 @@ namespace BusinessLayer.Concrete
 
         public async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.GetByIdAsync(guid,cancellationToken:cancellationToken);
+            var entity = await _repository.GetByIdAsync(guid, cancellationToken: cancellationToken);
             if (entity != null)
             {
                 await _repository.DeleteAsync(entity, cancellationToken);
@@ -55,11 +56,11 @@ namespace BusinessLayer.Concrete
             }
         }
 
-        public async Task<List<BlogPostDto>> GetAllAsync( CancellationToken cancellationToken = default)
+        public async Task<List<BlogPostDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var entity = await _repository.GetAllAsync(
                 tracking: false,
-                includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic),cancellationToken:cancellationToken);
+                includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
 
 
             return _mapper.Map<List<BlogPostDto>>(entity);
@@ -69,14 +70,14 @@ namespace BusinessLayer.Concrete
         {
             // DAL'daki özel metodunu çağırıyorsun.
             // Include ve Tracking işlemleri ZATEN O METODUN İÇİNDE YAPILDI.
-            var (items, totalCount) = await _repository.GetAdminListPagesAsync(query.PageNumber, query.PageSize ,query.TopicId, cancellationToken);
-           return _mapper.Map<List<BlogPostListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
-          
+            var (items, totalCount) = await _repository.GetAdminListPagesAsync(query.PageNumber, query.PageSize, query.TopicId, cancellationToken);
+            return _mapper.Map<List<BlogPostListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+
         }
 
         public async Task<BlogPostDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.GetByIdAsync(guid, tracking: false,includes:source=>source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic),cancellationToken: cancellationToken);
+            var entity = await _repository.GetByIdAsync(guid, tracking: false, includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -86,9 +87,9 @@ namespace BusinessLayer.Concrete
 
         public async Task<BlogPostDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.GetAsync(x => x.Slug == slug, 
+            var entity = await _repository.GetAsync(x => x.Slug == slug,
                 tracking: false,
-                includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic),cancellationToken:cancellationToken);
+                includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -100,8 +101,8 @@ namespace BusinessLayer.Concrete
         //bu yöntem ID ile çekmektir mantığı ne kadar doğru olsada işlem slugla çekmek daha profesyonelce yaklaşmaktır
         public async Task<BlogPostDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.GetByIdAsync(guid, 
-                tracking: false, includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic),cancellationToken:cancellationToken);
+            var entity = await _repository.GetByIdAsync(guid,
+                tracking: false, includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -111,7 +112,7 @@ namespace BusinessLayer.Concrete
 
         public async Task<BlogPostListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.RestoreDeletedByIdAsync(guid,cancellationToken);
+            var entity = await _repository.RestoreDeletedByIdAsync(guid, cancellationToken);
             if (entity == null)
             {
                 return null;
@@ -123,15 +124,15 @@ namespace BusinessLayer.Concrete
             return _mapper.Map<BlogPostListDto>(entity);
         }
 
-        public async Task<BlogPostDto?> UpdateAsync(Guid id,UpdateBlogPostDto dto, CancellationToken cancellationToken = default)
+        public async Task<BlogPostDto?> UpdateAsync(Guid id, UpdateBlogPostDto dto, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.GetAsync(x=>x.Id == id,tracking:true,includes: source => source.Include(x=>x.BlogTopics).ThenInclude(y=>y.Topic),cancellationToken:cancellationToken);
+            var entity = await _repository.GetAsync(x => x.Id == id, tracking: true, includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
 
             if (entity == null)
             {
                 return null;
             }
-           
+
             _mapper.Map(dto, entity);
 
             if (entity.IsPublished && entity.PublishedAt == null)
@@ -147,7 +148,7 @@ namespace BusinessLayer.Concrete
                 }
             }
             await _repository.UpdateAsync(entity, cancellationToken);
-            await _repository.SaveAsync( cancellationToken);
+            await _repository.SaveAsync(cancellationToken);
             return _mapper.Map<BlogPostDto>(entity);
         }
 
@@ -165,7 +166,7 @@ namespace BusinessLayer.Concrete
             string originalSlug = slug; //burada slug değerimizi originalslug adı altında bir değere atıyoruz bunun nedeni slug = C ise original slugda c-1 olması için
             int counter = 1; //sayaç atadık bu da sayacımızın ilk değeri 1
 
-            while (await _repository.GetAsync(x=>x.Slug == slug, cancellationToken: cancellationToken) != null) //bu slug değeri veritabanında varmı 
+            while (await _repository.GetAsync(x => x.Slug == slug, cancellationToken: cancellationToken) != null) //bu slug değeri veritabanında varmı 
             {
                 counter++; //eğer varsa ve aynıysa counterı 1 arttır
                 slug = $"{originalSlug}-{counter}"; //slug değerimize original slugu yaz ve tire koy ve counter adımızı yazdır
@@ -175,7 +176,21 @@ namespace BusinessLayer.Concrete
 
         }
 
-
-
+        public async Task<List<BlogPostDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
+        {
+            var entities = await _repository.GetAllAsync(
+                filter: x => x.IsPublished, //sadece published olanları getir yani yayınlanmışları
+                tracking: false, //izleme kapalı performans için
+                includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), //topicleri çekebilmek adına includeda yaptık
+                options: new QueryOptions<BlogPost> //zurnanın zırt dediği asıl metot yeri
+                {
+                    OrderBy = x => x.PublishedAt!, //bu alan boş olmayacak ve yayın tarihine göre sırala yani en yeni yayını almak için böyle yapıyoruz
+                    Descending = true, //yani en yeni en üstte olan yer burası
+                    Take = count, // take ilede count sayımızı alıyoruz burası skipde olurdu
+                },
+                cancellationToken: cancellationToken
+                );
+            return _mapper.Map<List<BlogPostDto>>(entities);
+        }
     }
 }

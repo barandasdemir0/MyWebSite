@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Query;
+using SharedKernel.Shareds;
+
 
 namespace DataAccessLayer.Abstract;
 
@@ -25,7 +27,7 @@ public interface IGenericRepository<T> where T : BaseEntity //bu repositori sade
     #region getirme komutları
 
     #region tümünü getirme
-    Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
+    Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null, QueryOptions<T>? options = null,
     CancellationToken cancellationToken = default); //projeleri getir kategorilerini dahil et ama ek olarak yazarlarınıda dahil et gibi bir anlam
 
     Task<List<T>> GetAllAdminAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,

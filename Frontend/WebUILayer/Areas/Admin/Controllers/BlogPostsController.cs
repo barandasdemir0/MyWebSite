@@ -1,7 +1,7 @@
 ﻿using DtoLayer.BlogpostDtos;
-using DtoLayer.Shared;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;

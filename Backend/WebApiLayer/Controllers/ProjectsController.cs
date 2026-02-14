@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.ProjectDtos;
-using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 

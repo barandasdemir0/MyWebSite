@@ -1,5 +1,5 @@
 ﻿using DtoLayer.ProjectDtos;
-using DtoLayer.Shared;
+using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete;

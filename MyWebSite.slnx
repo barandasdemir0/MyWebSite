@@ -4,6 +4,7 @@
     <Project Path="Backend/DataAccessLayer/DataAccessLayer.csproj" />
     <Project Path="Backend/DtoLayer/DtoLayer.csproj" />
     <Project Path="Backend/EntityLayer/EntityLayer.csproj" />
+    <Project Path="Backend/SharedKernel/SharedKernel.csproj" Id="b4ffdb87-7079-4b9a-87f3-1912f0d451a4" />
     <Project Path="Backend/WebApiLayer/WebApiLayer.csproj" />
   </Folder>
   <Folder Name="/Frontend/">

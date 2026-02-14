@@ -1,6 +1,6 @@
 ﻿using DtoLayer.NotificationDtos;
-using DtoLayer.Shared;
 using EntityLayer.Concrete;
+using SharedKernel.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;

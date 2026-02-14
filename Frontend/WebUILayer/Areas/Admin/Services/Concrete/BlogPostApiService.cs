@@ -1,5 +1,5 @@
 ﻿using DtoLayer.BlogpostDtos;
-using DtoLayer.Shared;
+using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -39,6 +39,21 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
             return await _httpClient.GetFromJsonAsync<BlogPostListDto>($"{_endpoint}/{slug}");
         }
 
+        public async Task<List<BlogPostDto>> GetLatestAsync(int count)
+        {
+            var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<BlogPostDto>();
+            }
+            var result = await response.Content.ReadFromJsonAsync<List<BlogPostDto>>();
+            if (result == null)
+            {
+                return new List<BlogPostDto>();
+            }
+            return result;
+        }
+
         public async Task RestoreAsync(Guid id)
         {
             var response = await _httpClient.PutAsync($"{_endpoint}/restore/{id}",null);
@@ -49,5 +64,7 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
             }
 
         }
+
+        
     }
 }

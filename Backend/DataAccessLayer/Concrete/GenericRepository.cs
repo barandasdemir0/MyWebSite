@@ -3,6 +3,7 @@ using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using SharedKernel.Shareds;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -58,7 +59,7 @@ namespace DataAccessLayer.Concrete
 
 
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null, QueryOptions<T>? options = null,
     CancellationToken cancellationToken = default)
         {
 
@@ -84,6 +85,43 @@ namespace DataAccessLayer.Concrete
 
             }
 
+            if (options!=null)// ayar varmı herhangi bir sıralama veya balka bir şey istenmişmi
+            {
+                if (options.OrderBy != null) //sana nasıl olacağı söylenmişmi
+                {
+                    IOrderedQueryable<T> orderedQuery; //bununla sorgumuzu açıyoruz var query = context.Products; bunun mantığında çalışır
+                    if (options.Descending)
+                    {
+                        orderedQuery = query.OrderByDescending(options.OrderBy); //büyükten küçüğe sırala
+                    }
+                    else
+                    {
+                        orderedQuery = query.OrderBy(options.OrderBy); //küçükten büyüğe sırala
+                    }
+                    if (options.ThenBy!= null) //thenbylar ise 2.ci sıralamayı yapar örnek a ile başlayan kişileri sıraladık ismi a ile başlayıp soyadı b ile başlayan kişileri sırala gibi
+                    {
+                        if (options.ThenByDescending)
+                        {
+                            orderedQuery = orderedQuery.ThenByDescending(options.ThenBy); 
+                        }
+                        else
+                        {
+                            orderedQuery = orderedQuery.ThenBy(options.ThenBy);
+                        }
+                    }
+
+                    query = orderedQuery;
+                }
+                if (options.Skip.HasValue) //skip atlama komutudr hasvalue varmı anlamı taşır yani null değilse zaten su satırdan başla su satırdan sonrasını ver yani o satırdan öncesini atla örnek : 1 2 3 4 5 biz skip(2) dersek 3 4 5
+                {
+                    query = query.Skip(options.Skip.Value);
+                }
+                if (options.Take.HasValue) //aynı mantık skip ile belirtilen kayda kadar al take(2) dersek 1 2 alır sadece
+                {
+                    query = query.Take(options.Take.Value);
+                }
+
+            }
             //  Tracking kapalıysa devre dışı bırak
             if (!tracking)
             {

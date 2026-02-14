@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Backend\DtoLayer\DtoLayer.csproj" />
+    <ProjectReference Include="..\..\Backend\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

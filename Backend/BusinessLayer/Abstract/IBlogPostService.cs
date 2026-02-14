@@ -1,7 +1,9 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.AboutDtos;
 using DtoLayer.BlogpostDtos;
-using DtoLayer.Shared;
+using SharedKernel.Shared;
+
+//using DtoLayer.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +21,9 @@ namespace BusinessLayer.Abstract
         Task<BlogPostListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
 
         Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default);
+
+        //count ile kaçtane blog yazısı istiyorsun bunu hallettik
+        Task<List<BlogPostDto>> GetLatestAsync(int count, CancellationToken cancellationToken=default);
 
 
 

@@ -1,8 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AboutDtos;
 using DtoLayer.BlogpostDtos;
-using DtoLayer.Shared;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 using System.Threading;
 
 namespace WebApiLayer.Controllers
@@ -114,6 +114,15 @@ namespace WebApiLayer.Controllers
         }
 
 
-
+        [HttpGet("latest/{count}")]
+        public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
+        {
+            var values = await _blogPostService.GetLatestAsync(count, cancellationToken);
+            if (values==null)
+            {
+                return NotFound();
+            }
+            return Ok(values);
+        }
     }
 }
