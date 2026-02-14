@@ -16,5 +16,8 @@ namespace BusinessLayer.Abstract
 
         Task<ProjectListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
         Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default);
+        Task<PagedResult<ProjectListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default);
+
+        Task<List<ProjectDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default);
     }
 }

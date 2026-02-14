@@ -24,7 +24,7 @@ public class DashboardController : Controller
         var model = new DashboardIndexViewModel
         {
             blogPostListDtos = await _blogPostApiService.GetLatestAsync(3), //3 tanesini getir diyoruz
-            projectListDtos = await _projectApiService.GetAllAsync(),
+            projectListDtos = await _projectApiService.GetLatestAsync(3),
           
            
         };

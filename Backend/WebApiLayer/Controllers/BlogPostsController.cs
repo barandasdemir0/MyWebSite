@@ -33,6 +33,13 @@ namespace WebApiLayer.Controllers
             return Ok(result);
         }
 
+        [HttpGet("user-all")] // hepsini getirme 
+        public async Task<IActionResult> GetAllUser([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _blogPostService.GetAllUserAsync(query, cancellationToken);
+            return Ok(result);
+        }
+
         //[HttpGet("{id}")] //idye göre getirme 
         //public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         //{

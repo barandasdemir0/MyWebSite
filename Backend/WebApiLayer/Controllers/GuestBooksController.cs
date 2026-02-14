@@ -2,6 +2,7 @@
 using DtoLayer.GithubRepoDtos;
 using DtoLayer.GuestBookDtos;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
@@ -26,9 +27,15 @@ public sealed class GuestBooksController : ControllerBase
     }
 
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery pagination, CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.GetAllAdminAsync(cancellationToken);
+        var query = await _guestBookService.GetAllAdminAsync(pagination, cancellationToken);
+        return Ok(query);
+    }
+    [HttpGet("user-all")]
+    public async Task<IActionResult> GetAllUser([FromQuery] PaginationQuery pagination, CancellationToken cancellationToken)
+    {
+        var query = await _guestBookService.GetAllUserAsync(pagination, cancellationToken);
         return Ok(query);
     }
 

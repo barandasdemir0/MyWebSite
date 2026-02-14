@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.GithubRepoDtos;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
@@ -22,6 +23,13 @@ public sealed class GithubReposController : ControllerBase
     {
         var query = await _githubRepoService.GetAllAsync(cancellationToken);
         return Ok(query);
+    }
+
+    [HttpGet("admin-all")] // hepsini getirme 
+    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _githubRepoService.GetAllAdminAsync(query, cancellationToken);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

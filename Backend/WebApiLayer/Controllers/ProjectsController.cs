@@ -30,6 +30,12 @@ public sealed class ProjectsController : ControllerBase
         var result = await _projectService.GetAllAdminAsync(query, cancellationToken);
         return Ok(result);
     }
+    [HttpGet("user-all")]
+    public async Task<IActionResult> GetAllUser([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _projectService.GetAllUserAsync(query, cancellationToken);
+        return Ok(result);
+    }
 
     [HttpGet("slug/{slug}")]
     public async Task<IActionResult> GetDetails(string slug, CancellationToken cancellationToken)
@@ -96,6 +102,17 @@ public sealed class ProjectsController : ControllerBase
             return NotFound();
         }
         return Ok(entity);
+    }
+
+    [HttpGet("latest/{count}")]
+    public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
+    {
+        var values = await _projectService.GetLatestAsync(count,cancellationToken);
+        if (values == null)
+        {
+            return NotFound();
+        }
+        return Ok(values);
     }
 
 

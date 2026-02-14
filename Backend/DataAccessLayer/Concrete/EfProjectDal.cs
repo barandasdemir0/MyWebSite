@@ -32,6 +32,26 @@ namespace DataAccessLayer.Concrete
                 .ToListAsync();
             return (items, totalCount);
         }
+
+        public async Task<(List<Project> Items, int TotalCount)> GetUserListPagesAsync(int page, int size,Guid? topicId ,CancellationToken cancellationToken = default)
+        {
+            IQueryable<Project> query = _context.Projects.AsNoTrackingWithIdentityResolution();
+            if (topicId.HasValue)
+            {
+                query = query.Where(x => x.ProjectTopics.Any(y => y.TopicId == topicId));
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
+        }
+
         public async Task<Project?> RestoreDeleteByIdAsync(Guid guid,
     CancellationToken cancellationToken = default)
         {

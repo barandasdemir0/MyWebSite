@@ -35,6 +35,21 @@ public class ProjectApiService : GenericApiService<ProjectDto, CreateProjectDto,
         return await _httpClient.GetFromJsonAsync<ProjectListDto>($"{_endpoint}/{guid}");
     }
 
+    public async Task<List<ProjectDto>> GetLatestAsync(int count)
+    {
+        var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
+        if (!response.IsSuccessStatusCode)
+        {
+            return new List<ProjectDto>();
+        }
+        var result = await response.Content.ReadFromJsonAsync<List<ProjectDto>>();
+        if (result==null)
+        {
+            return new List<ProjectDto>();
+        }
+        return result;
+    }
+
     public async Task RestoreAsync(Guid guid)
     {
         var response = await _httpClient.PutAsync($"{_endpoint}/restore/{guid}", null);

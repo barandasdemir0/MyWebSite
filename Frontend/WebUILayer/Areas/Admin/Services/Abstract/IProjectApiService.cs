@@ -1,4 +1,5 @@
-﻿using DtoLayer.ProjectDtos;
+﻿using DtoLayer.BlogpostDtos;
+using DtoLayer.ProjectDtos;
 using SharedKernel.Shared;
 
 namespace WebUILayer.Areas.Admin.Services.Abstract
@@ -10,5 +11,6 @@ namespace WebUILayer.Areas.Admin.Services.Abstract
 
         Task RestoreAsync(Guid guid);
         Task<PagedResult<ProjectDto>> GetAllAdminAsync(PaginationQuery paginationQuery);
+        Task<List<ProjectDto>> GetLatestAsync(int count);
     }
 }

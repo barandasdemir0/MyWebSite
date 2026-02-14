@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" href="/Mytheme/Admin/css/modules/index.css">
 }
 
@@ -58,7 +58,7 @@
     <div class="card card-projects">
         <div class="card-header">
             <h3>Son Projeler</h3>
-            <a href="projects.html" class="btn btn-sm btn-outline">Tümünü Gör</a>
+            <a asp-controller="Project" asp-action="Index" class="btn btn-sm btn-outline">Tümünü Gör</a>
         </div>
         <div class="table-responsive">
             <table class="admin-table">
@@ -70,16 +70,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.projectListDtos.TakeLast(3))
+                    @foreach (var item in Model.projectListDtos)
                     {
-                       
-                            <tr>
-                                <td>@item.Name</td>
+
+                        <tr>
+                            <td>@item.Name</td>
                             <td>@string.Join(", ", item.Topics)</td>
-                                <td><span class="status-badge active">Yayında</span></td>
-                            </tr>
-                      
-                      
+                            <td><span class="status-badge active">Yayında</span></td>
+                        </tr>
+
+
                     }
                 </tbody>
             </table>
@@ -90,7 +90,7 @@
     <div class="card card-blogs">
         <div class="card-header">
             <h3>Son Blog Yazıları</h3>
-            <a href="blog.html" class="btn btn-sm btn-outline">Tümünü Gör</a>
+            <a asp-controller="BlogPosts" asp-action="Index" class="btn btn-sm btn-outline">Tümünü Gör</a>
         </div>
         <div class="table-responsive">
             <table class="admin-table">
@@ -107,13 +107,13 @@
                         <tr>
                             <td>@item.Title</td>
                             <td>@string.Join(", ", item.Topics)</td>
-                           
-                                <td><span class="status-badge active">Yayında</span></td>
-                          
-                          
+
+                            <td><span class="status-badge active">Yayında</span></td>
+
+
                         </tr>
                     }
-                   
+
                 </tbody>
             </table>
         </div>

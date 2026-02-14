@@ -2,6 +2,7 @@
 using DtoLayer.HeroDtos;
 using DtoLayer.MessageDtos;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
@@ -23,10 +24,16 @@ public sealed class MessagesController : ControllerBase
         return Ok(query);
     }
 
-    [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
+    //[HttpGet("admin-all")]
+    //public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
+    //{
+    //    var query = await _messageService.GetAllAdminAsync(cancellationToken);
+    //    return Ok(query);
+    //}
+    [HttpGet("user-all")]
+    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery paginationQuery,CancellationToken cancellationToken)
     {
-        var query = await _messageService.GetAllAdminAsync(cancellationToken);
+        var query = await _messageService.GetAllAdmin(paginationQuery, cancellationToken);
         return Ok(query);
     }
 

@@ -1,13 +1,17 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
+using DtoLayer.BlogpostDtos;
 using DtoLayer.GuestBookDtos;
 using DtoLayer.TopicDtos;
 using MapsterMapper;
+using SharedKernel.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BusinessLayer.Concrete
 {
@@ -40,16 +44,22 @@ namespace BusinessLayer.Concrete
             }
         }
 
-        public async Task<List<GuestBookListDto>> GetAllAdminAsync( CancellationToken cancellationToken = default)
+        public async Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery , CancellationToken cancellationToken = default)
         {
-            var entity = await _guestBookDal.GetAllAdminAsync(tracking: false,cancellationToken:cancellationToken);
-            return _mapper.Map<List<GuestBookListDto>>(entity);
+            var (items, totalCount) = await _guestBookDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
+            return _mapper.Map<List<GuestBookListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
         }
 
         public async Task<List<GuestBookListDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var entity = await _guestBookDal.GetAllAsync(tracking: false,cancellationToken:cancellationToken);
             return _mapper.Map<List<GuestBookListDto>>(entity);
+        }
+
+        public async Task<PagedResult<GuestBookListDto>> GetAllUserAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
+        {
+            var (items, totalCount) = await _guestBookDal.GetUserListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
+            return _mapper.Map<List<GuestBookListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
         }
 
         public async Task<GuestBookListDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)

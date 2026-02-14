@@ -1,8 +1,11 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DtoLayer.BlogpostDtos;
 using DtoLayer.GithubRepoDtos;
 using MapsterMapper;
+using SharedKernel.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,10 +42,18 @@ public class GithubRepoManager : IGithubRepoService
         }
     }
 
+ 
+
     public async Task<List<GithubRepoDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var entity = await _githubRepoDal.GetAllAsync(tracking: false, cancellationToken:cancellationToken);
         return _mapper.Map<List<GithubRepoDto>>(entity.OrderBy(x => x.DisplayOrder));
+    }
+
+    public async Task<PagedResult<GithubRepoDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    {
+        var (items, totalCount) = await _githubRepoDal.GetUserListPagesAsync(query.PageNumber, query.PageSize, cancellationToken);
+        return _mapper.Map<List<GithubRepoDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
     }
 
     public async Task<GithubRepoDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
