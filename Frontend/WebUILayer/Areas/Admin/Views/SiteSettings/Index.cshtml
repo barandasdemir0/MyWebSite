@@ -1,0 +1,145 @@
+﻿@model UpdateSiteSettingDto
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "settings-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/settings.css">
+}
+
+<form asp-action="Index" method="post">
+    <!-- Settings Cards -->
+    <div class="content-grid">
+        <!-- Availability Status -->
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    <i class="fas fa-circle circle-icon"></i>Müsaitlik
+                    Durumu
+                </h3>
+            </div>
+
+
+            <div class="form-group">
+                <label>Durum Mesajı</label>
+                <textarea class="form-control" asp-for="WorkStatus" placeholder="Örn: Yeni projelere açığım"
+                          rows="3">Yeni projelere açığım</textarea>
+                <p class="input-hint">
+                    Profil ve iletişim sayfalarında görünecek
+                    kısa durum mesajı.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label>Durum Rengi (Anlamı)</label>
+                <div class="status-selector">
+                    <label>
+                        <input asp-for="IsAvailable" type="radio"  value="true" checked>
+                        <div class="status-color-dot success">
+                        </div>
+                        <span>Müsait (Yeşil)</span>
+                    </label>
+                    <label>
+                        <input asp-for="IsAvailable" type="radio"  value="false">
+                        <div class="status-color-dot warning">
+                        </div>
+                        <span>Meşgul (Sarı)</span>
+                    </label>
+                    <!-- Removed 'Kapalı (Kırmızı)' option as per user request -->
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <!-- CV Download Settings -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-file-pdf pdf-icon"></i>CV İndirme Ayarları</h3>
+            </div>
+
+
+            <div class="form-group">
+                <label>Türkçe CV (PDF)</label>
+                <input type="url" asp-for="CvFileUrlTr" class="form-control pdf-input" accept=".pdf">
+            </div>
+            <div class="form-group">
+                <label>İngilizce CV (PDF)</label>
+                <input type="url" asp-for="CvFileUrlEn" class="form-control pdf-input" accept=".pdf">
+            </div>
+
+            <div class="form-group">
+                <label>Mevcut Dosyalar</label>
+                <div class="file-list">
+                    <div class="file-row">
+                        <span class="file-label">TR:</span>
+                        <input type="text" class="form-control file-input" value="cv-baran-dasdemir-tr.pdf"
+                               readonly>
+                        <a href="@Model.CvFileUrlTr" class="btn btn-outline btn-sm download-btn">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                    <div class="file-row">
+                        <span class="file-label">EN:</span>
+                        <input type="text" class="form-control file-input" value="cv-baran-dasdemir-en.pdf"
+                               readonly>
+                        <a href="@Model.CvFileUrlEn" class="btn btn-outline btn-sm download-btn">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @*     <div class="form-actions">
+                <button type="button" class="btn btn-success" data-action="saveCV">
+                    <i class="fas fa-save"></i>
+                    CV'leri Güncelle
+                </button>
+            </div> *@
+
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-share-alt mr-10"></i>Seo Ayarları</h3>
+            </div>
+
+
+            <div class="form-group">
+                <label><i class="fas fa-heading mr-5"></i>Site İsmi</label>
+                <input type="text" class="form-control" asp-for="SiteTitle" placeholder="site ismi">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-tags mr-5"></i>Site Keywords</label>
+                <input type="text" class="form-control" asp-for="SiteKeywords" placeholder="Site Keywords">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-file-alt mr-5"></i>Meta Description </label>
+                <input type="text" class="form-control" asp-for="MetaDescription" placeholder="meta description">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-chart-line mr-5"></i>
+                    Google Analitic Id
+                </label>
+                <input type="text" class="form-control" asp-for="GoogleAnalyticsId" placeholder="Google Analitik Id">
+            </div>
+        </div>
+
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success" data-action="saveStatus">
+            <i class="fas fa-save"></i>
+            Ayarları Güncelle
+        </button>
+    </div>
+</form>
+
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/settings.js"></script>
+}

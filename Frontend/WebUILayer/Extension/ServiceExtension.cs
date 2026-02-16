@@ -70,6 +70,10 @@ public static class ServiceExtension
         {
             client.BaseAddress = new Uri(baseurl!);
         });
+        services.AddHttpClient<ISiteSettingsApiService, SiteSettingsApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
 
 
 

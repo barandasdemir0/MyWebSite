@@ -35,11 +35,29 @@ public class SiteSettingsController:ControllerBase
         return Ok(query);
     }
 
+    [HttpGet("single")] //upsert için işlemler
+    public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
+    {
+        var values = await _siteSettingsService.GetSingleAsync(cancellationToken);
+        if (values == null)
+        {
+            return NotFound();
+        }
+        return Ok(values);
+    }
+
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateSiteSettingDto createSiteSettingDto, CancellationToken cancellationToken)
     {
         var query = await _siteSettingsService.AddAsync(createSiteSettingDto, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
+    }
+
+    [HttpPost("save")]
+    public async Task<IActionResult> Save([FromBody] UpdateSiteSettingDto update, CancellationToken cancellationToken)
+    {
+        var query = await _siteSettingsService.SaveAsync(update, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
 

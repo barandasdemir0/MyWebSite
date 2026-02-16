@@ -30,7 +30,7 @@
                 <div class="profile-photo-preview" id="profilePhotoPreview">
                     <img id="profileImage"
                          @* src="https://ui-avatars.com/api/?name=Baran+D&background=6366f1&color=fff&size=140"> *@
-                         src="@(!string.IsNullOrEmpty(Model.ProfileImage) ? Model.ProfileImage : "https://ui-avatars.com/api/?name=Admin")"
+                         src="@(!string.IsNullOrEmpty(Model.ProfileImage) ? Model.ProfileImage : "https://ui-avatars.com/api/?name=Baran+Daşdemir&background=6366f1&color=fff&size=140")"
                          class="img-fluid rounded" style="max-height: 200px;" />
                 </div>
             </div>
@@ -92,63 +92,7 @@
 
 
 
-
-
-
-
-
-
-
-    @* <!-- Personal Info Card -->
-    <div class="card">
-        <div class="card-header">
-            <h3><i class="fas fa-id-card"></i>Kişisel Bilgiler</h3>
-        </div>
-
-
-
-        <div class="form-row">
-            <div class="form-group">
-                <label>İsim Soyisim</label>
-                <input type="text" class="form-control" value="Baran Dasdemir">
-            </div>
-            <div class="form-group">
-                <label>Email Adresi</label>
-                <input type="email" class="form-control" value="hello@barandasdemir.com">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label>Konum</label>
-                <input type="text" class="form-control" value="İstanbul, Türkiye">
-            </div>
-            <div class="form-group">
-                <label>Çalışma Durumu</label>
-                <input type="text" class="form-control" value="Açık İşlere Açık"
-                       placeholder="Örn: Freelance Projelere Açık">
-            </div>
-        </div>
-
-    </div>
- *@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Statistics Section -->
+  <!-- Statistics Section -->
     <div class="card">
         <div class="card-header">
             <h3><i class="fas fa-chart-bar"></i>İstatistikler</h3>

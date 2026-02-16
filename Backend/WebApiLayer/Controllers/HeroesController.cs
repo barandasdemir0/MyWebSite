@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using DtoLayer.ContactDtos;
 using DtoLayer.GithubRepoDtos;
 using DtoLayer.HeroDtos;
 using Microsoft.AspNetCore.Mvc;
@@ -35,11 +36,28 @@ public sealed class HeroesController : ControllerBase
         return Ok(query);
     }
 
+    [HttpGet("single")] //upsert için işlemler
+    public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
+    {
+        var values = await _heroService.GetSingleAsync(cancellationToken);
+        if (values == null)
+        {
+            return NotFound();
+        }
+        return Ok(values);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateHeroDto createHeroDto, CancellationToken cancellationToken)
     {
         var query = await _heroService.AddAsync(createHeroDto, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
+    }
+
+    [HttpPost("save")]
+    public async Task<IActionResult> Save([FromBody] UpdateHeroDto update, CancellationToken cancellationToken)
+    {
+        var query = await _heroService.SaveAsync(update, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
 

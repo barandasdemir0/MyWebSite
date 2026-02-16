@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using EntityLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,5 +12,10 @@ public class EfSiteSettingsDal : GenericRepository<SiteSettings>, ISiteSettingsD
 {
     public EfSiteSettingsDal(AppDbContext context) : base(context)
     {
+    }
+
+    public async Task<SiteSettings?> GetSingleAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.SiteSettings.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
     }
 }

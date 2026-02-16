@@ -13,5 +13,10 @@ namespace DataAccessLayer.Concrete
         public EfAboutDal(AppDbContext context) : base(context)
         {
         }
+
+        public async Task<About?> GetSingleAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.About.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

@@ -58,6 +58,36 @@ public class SiteSettingsManager : ISiteSettingsService
         return _mapper.Map<SiteSettingDto>(entity);
     }
 
+    public async Task<SiteSettingDto?> GetSingleAsync(CancellationToken cancellationToken = default)
+    {
+        var entity = await _siteSettingsDal.GetSingleAsync(cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
+        return _mapper.Map<SiteSettingDto>(entity);
+    }
+
+    public async Task<SiteSettingDto> SaveAsync(UpdateSiteSettingDto updateSiteSettingDto, CancellationToken cancellation = default)
+    {
+        var entity = await _siteSettingsDal.GetSingleAsync(cancellation);
+        if (entity == null)
+        {
+            entity = _mapper.Map<SiteSettings>(updateSiteSettingDto);
+            await _siteSettingsDal.AddAsync(entity);
+        }
+        else
+        {
+            _mapper.Map(updateSiteSettingDto, entity);
+            await _siteSettingsDal.UpdateAsync(entity, cancellation);
+        }
+
+        await _siteSettingsDal.SaveAsync(cancellation);
+        return _mapper.Map<SiteSettingDto>(entity);
+
+
+    }
+
     public async Task<SiteSettingDto?> UpdateAsync(Guid guid, UpdateSiteSettingDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await _siteSettingsDal.GetByIdAsync(guid, cancellationToken: cancellationToken);

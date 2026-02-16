@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const actionButtons = document.querySelectorAll('[data-action]');
     actionButtons.forEach(btn => {
         btn.addEventListener('click', function (e) {
-            e.preventDefault();
+          /*  e.preventDefault();*/
             handleActionButton(this);
         });
     });
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const downloadButtons = document.querySelectorAll('.download-btn');
     downloadButtons.forEach((btn, index) => {
         btn.addEventListener('click', function (e) {
-            e.preventDefault();
+           /* e.preventDefault();*/
             const fileName = this.closest('.file-row').querySelector('.file-input').value;
             downloadFile(fileName);
         });

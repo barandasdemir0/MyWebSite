@@ -12,9 +12,13 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         public async Task<UpdateHeroDto> GetHeroForEditAsync()
         {
-            var list = await GetAllAsync();
-            var query = list.FirstOrDefault();
-            if (query == null)
+            var response = await _httpClient.GetAsync($"{_endpoint}/single");
+            if (!response.IsSuccessStatusCode)
+            {
+                return new UpdateHeroDto();
+            }
+            var query = await response.Content.ReadFromJsonAsync<HeroDto>();
+            if (query==null)
             {
                 return new UpdateHeroDto();
             }
@@ -23,16 +27,11 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         public async Task SaveHeroAsync(UpdateHeroDto updateHeroDto)
         {
-            var list = await GetAllAsync();
-            var query = list.FirstOrDefault();
-            if (query == null)
+            var response = await _httpClient.PostAsJsonAsync($"{_endpoint}/save", updateHeroDto);
+            if (!response.IsSuccessStatusCode)
             {
-                var create = updateHeroDto.Adapt<CreateHeroDto>();
-                await AddAsync(create);
-            }
-            else
-            {
-                await UpdateAsync(query.Id, updateHeroDto);
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(error);
             }
         }
     }

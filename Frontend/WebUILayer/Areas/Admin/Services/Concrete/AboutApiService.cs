@@ -14,28 +14,26 @@ public class AboutApiService : GenericApiService<AboutDto, CreateAboutDto, Updat
 
     public async Task<UpdateAboutDto> GetAboutForEditAsync()
     {
-        var list = await GetAllAsync();
-        var existing = list.FirstOrDefault();
-        if (existing == null)
+        var response = await _httpClient.GetAsync($"{_endpoint}/single");
+        if (!response.IsSuccessStatusCode)
         {
             return new UpdateAboutDto();
         }
-        return existing.Adapt<UpdateAboutDto>();
+        var query = await response.Content.ReadFromJsonAsync<AboutDto>();
+        if (query == null)
+        {
+            return new UpdateAboutDto();
+        }
+        return query.Adapt<UpdateAboutDto>();
     }
 
     public async Task SaveAboutAsync(UpdateAboutDto updateAboutDto)
     {
-        var list = await GetAllAsync();
-        var existing = list.FirstOrDefault();
-        if (existing == null)
+        var response = await _httpClient.PostAsJsonAsync($"{_endpoint}/save", updateAboutDto);
+        if (!response.IsSuccessStatusCode)
         {
-            var create = updateAboutDto.Adapt<CreateAboutDto>();
-            //updateaboutdto.adap diğyerek girilen yerleri createye atıyorum yani mantık şu updatede de createde aynısı var updatedekini al createye yapıştır   Update formundaki veriyi alıp, kayıt yoksa Create için kullanıyorsun.
-            await AddAsync(create);
-        }
-        else
-        {
-            await UpdateAsync(existing.Id, updateAboutDto);
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception(error);
         }
     }
 }

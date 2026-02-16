@@ -3,6 +3,7 @@ using DtoLayer.AboutDtos;
 using Mapster;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebApiLayer.Controllers;
 
@@ -34,6 +35,16 @@ public sealed class AboutsController : ControllerBase
         }
         return Ok(values);
     }
+    [HttpGet("single")] //upsert için işlemler
+    public async Task<IActionResult> GetSingle( CancellationToken cancellationToken)
+    {
+        var values = await _aboutService.GetSingleAsync(cancellationToken);
+        if (values == null)
+        {
+            return NotFound();
+        }
+        return Ok(values);
+    }
 
     [HttpPost] //ekleme
     public async Task<IActionResult> Create([FromBody] CreateAboutDto createAboutDto, CancellationToken cancellationToken)
@@ -41,6 +52,16 @@ public sealed class AboutsController : ControllerBase
         var result = await _aboutService.AddAsync(createAboutDto, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result); //bunu çağırarak ne kaydedildiğimi görmek istiyorum dedik yani başarılar kaydedildi yerine bize direkt o kaydı gösteriyor
     }
+
+    [HttpPost("save")]
+    public async Task<IActionResult> Save([FromBody] UpdateAboutDto updateAboutDto,CancellationToken cancellation)
+    {
+        var result = await _aboutService.SaveAsync(updateAboutDto, cancellation);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+    }
+
+
+
 
     [HttpPut("{id}")] //güncelleme
     public async Task<IActionResult> Update(Guid id,[FromBody] UpdateAboutDto updateAboutDto, CancellationToken cancellationToken)

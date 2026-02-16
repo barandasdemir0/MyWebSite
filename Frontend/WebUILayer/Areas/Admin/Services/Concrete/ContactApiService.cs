@@ -12,8 +12,12 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         public async Task<UpdateContactDto> GetContactForEditAsync()
         {
-            var list = await GetAllAsync();
-            var query = list.FirstOrDefault();
+            var response = await _httpClient.GetAsync($"{_endpoint}/single");
+            if (!response.IsSuccessStatusCode)
+            {
+                return new UpdateContactDto();
+            }
+            var query = await response.Content.ReadFromJsonAsync<ContactDto>();
             if (query == null)
             {
                 return new UpdateContactDto();
@@ -23,17 +27,41 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         public async Task SaveContactAsync(UpdateContactDto updateContactDto)
         {
-            var list = await GetAllAsync();
-            var query = list.FirstOrDefault();
-            if (query == null)
+            var response = await _httpClient.PostAsJsonAsync($"{_endpoint}/save", updateContactDto);
+            if (!response.IsSuccessStatusCode)
             {
-                var create = updateContactDto.Adapt<CreateContactDto>();
-                await AddAsync(create);
-            }
-            else
-            {
-                await UpdateAsync(query.Id, updateContactDto);
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(error);
             }
         }
+
+
+        #region eski kodlar
+        //public async Task<UpdateContactDto> GetContactForEditAsync()
+        //{
+        //    var list = await GetAllAsync();
+        //    var query = list.FirstOrDefault();
+        //    if (query == null)
+        //    {
+        //        return new UpdateContactDto();
+        //    }
+        //    return query.Adapt<UpdateContactDto>();
+        //}
+
+        //public async Task SaveContactAsync(UpdateContactDto updateContactDto)
+        //{
+        //    var list = await GetAllAsync();
+        //    var query = list.FirstOrDefault();
+        //    if (query == null)
+        //    {
+        //        var create = updateContactDto.Adapt<CreateContactDto>();
+        //        await AddAsync(create);
+        //    }
+        //    else
+        //    {
+        //        await UpdateAsync(query.Id, updateContactDto);
+        //    }
+        //}
+        #endregion
     }
 }

@@ -33,11 +33,27 @@ public sealed class ContactsController : ControllerBase
         }
         return Ok(query);
     }
+    [HttpGet("single")] //upsert için işlemler
+    public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
+    {
+        var values = await _contactService.GetSingleAsync(cancellationToken);
+        if (values == null)
+        {
+            return NotFound();
+        }
+        return Ok(values);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateContactDto createContactDto, CancellationToken cancellationToken)
     {
         var query = await _contactService.AddAsync(createContactDto, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
+    }
+    [HttpPost("save")]
+    public async Task<IActionResult> Save([FromBody] UpdateContactDto update, CancellationToken cancellationToken)
+    {
+        var query = await _contactService.SaveAsync(update, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = query.Id }, query);
     }
 

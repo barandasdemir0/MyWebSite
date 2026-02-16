@@ -22,14 +22,14 @@ public class AboutManager : IAboutService
     public async Task<AboutDto> AddAsync(CreateAboutDto dto, CancellationToken cancellationToken = default)
     {
         var entity = _mapper.Map<About>(dto); // Create -> Entity yani elimdeki dto nesnesini al about entitysine çevir
-        await _repository.AddAsync(entity,cancellationToken);
+        await _repository.AddAsync(entity, cancellationToken);
         await _repository.SaveAsync(cancellationToken);
         return _mapper.Map<AboutDto>(entity); // Entity -> Read (ID var artık)  yani elimdeki aentity nesnesini al onu aboutdto tipine çevir 
     }
 
     public async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        var entity = await _repository.GetByIdAsync(guid,cancellationToken:cancellationToken);
+        var entity = await _repository.GetByIdAsync(guid, cancellationToken: cancellationToken);
         if (entity != null)
         {
             await _repository.DeleteAsync(entity, cancellationToken);
@@ -40,7 +40,7 @@ public class AboutManager : IAboutService
 
     public async Task<List<AboutDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var entity = await _repository.GetAllAsync(tracking: false,cancellationToken:cancellationToken);
+        var entity = await _repository.GetAllAsync(tracking: false, cancellationToken: cancellationToken);
         return _mapper.Map<List<AboutDto>>(entity);
     }
 
@@ -54,7 +54,34 @@ public class AboutManager : IAboutService
         return _mapper.Map<AboutDto>(entity);
     }
 
-    public async Task<AboutDto?> UpdateAsync(Guid guid,UpdateAboutDto dto, CancellationToken cancellationToken = default)
+    public async Task<AboutDto?> GetSingleAsync(CancellationToken cancellationToken = default)
+    {
+        var entity = await _repository.GetSingleAsync(cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
+        return _mapper.Map<AboutDto>(entity);
+    }
+
+    public async Task<AboutDto> SaveAsync(UpdateAboutDto update, CancellationToken cancellation = default)
+    {
+        var query = await _repository.GetSingleAsync(cancellation);
+        if (query == null)
+        {
+            query = _mapper.Map<About>(update);
+            await _repository.AddAsync(query, cancellation);
+        }
+        else
+        {
+            _mapper.Map(update, query);
+            await _repository.UpdateAsync(query, cancellation);
+        }
+        await _repository.SaveAsync(cancellation);
+        return _mapper.Map<AboutDto>(query);
+    }
+
+    public async Task<AboutDto?> UpdateAsync(Guid guid, UpdateAboutDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await _repository.GetByIdAsync(guid, cancellationToken: cancellationToken);
         if (entity == null)
@@ -62,7 +89,7 @@ public class AboutManager : IAboutService
             return null;
         }
         _mapper.Map(dto, entity);
-        await _repository.UpdateAsync(entity,cancellationToken);
+        await _repository.UpdateAsync(entity, cancellationToken);
         await _repository.SaveAsync(cancellationToken);
         return _mapper.Map<AboutDto>(entity);
     }
