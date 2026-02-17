@@ -56,32 +56,6 @@ public class AboutsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    #region eski güncelleme ve update komutları yukarııda tek komutta yapıldı
-    //[HttpGet]
-    //public IActionResult Create() => View();
-
-    //[HttpPost]
-    //public async Task<IActionResult> Create(CreateAboutDto createAboutDto)
-    //{
-    //    var query = await _aboutApiService.AddAsync(createAboutDto);
-    //    return RedirectToAction(nameof(Index));
-    //}
-
-    //[HttpGet]
-    //public async Task<IActionResult> Update(Guid id)
-    //{
-    //    var query = await _aboutApiService.GetByIdAsync(id);
-    //    return View(query);
-    //}
-
-    //[HttpPost]
-    //public async Task<IActionResult> Update(UpdateAboutDto updateAboutDto)
-    //{
-    //    await _aboutApiService.UpdateAsync(updateAboutDto);
-    //    return RedirectToAction(nameof(Index));
-    //}
-
-    #endregion
 
 
 }

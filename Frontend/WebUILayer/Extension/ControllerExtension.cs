@@ -42,4 +42,19 @@ public static class ControllerExtension
             catch { }
         modelState.AddModelError("", ex.Message);
     }
+
+    public static async Task<IActionResult> SafeAction(this Controller controller,Func<Task> action,string successMessage,string ErrorMessage, string redirectAction = "Index")
+    {
+        try
+        {
+            await action();
+            controller.TempData["Success"] = successMessage;
+        }
+        catch (Exception)
+        {
+
+            controller.TempData["Error"] = ErrorMessage;
+        }
+        return controller.RedirectToAction(redirectAction);
+    }
 }

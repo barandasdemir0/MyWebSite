@@ -2,10 +2,8 @@
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
-using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
@@ -81,7 +79,7 @@ public class BlogPostsController : Controller
     public async Task<IActionResult> Update(Guid guid)
     {
         var blog = await _blogPostApiService.GetByIdAsync(guid);
-        if (blog== null)
+        if (blog == null)
         {
             return NotFound();
         }
@@ -122,36 +120,29 @@ public class BlogPostsController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
     {
-        try
-        {
-            await _blogPostApiService.DeleteAsync(id);
-            TempData["Success"] = "Silme işlemi başarılı.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Silme işlemi başarısız oldu.";
-        }
-        return RedirectToAction(nameof(Index));
+
+        return await this.SafeAction
+            (
+            action: () => _blogPostApiService.DeleteAsync(id),
+            successMessage: "Silme işlemi Başarılı oldu",
+            ErrorMessage: "Silme İşlemi Başarısız oldu"
+            );
     }
     [HttpPost]
     public async Task<IActionResult> Restore(Guid id)
     {
-        try
-        {
-            await _blogPostApiService.RestoreAsync(id);
-            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
-        }
 
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+            (
+            action: () => _blogPostApiService.RestoreAsync(id),
+            successMessage: "Geri Alma işlemi Başarılı oldu",
+            ErrorMessage: "Geri Alma İşlemi Başarısız oldu"
+            );
     }
 
 
 
-   
+
 
 
 }

@@ -70,16 +70,12 @@ public class SkillController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
     {
-        try
-        {
-            await _skillApiService.DeleteAsync(id);
-            TempData["Success"] = "Silme işlemi başarılı.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Silme işlemi başarısız oldu.";
-        }
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+            (
+            action: () => _skillApiService.DeleteAsync(id),
+            successMessage: "Silme işlemi Başarılı oldu",
+            ErrorMessage: "Silme İşlemi Başarısız oldu"
+            );
     }
    
 }

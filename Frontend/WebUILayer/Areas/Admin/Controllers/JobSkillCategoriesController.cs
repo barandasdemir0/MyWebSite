@@ -90,31 +90,22 @@ public class JobSkillCategoriesController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
     {
-        try
-        {
-            await _jobSkillCategoryService.DeleteAsync(id);
-            TempData["Success"] = "Silme işlemi başarılı.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Silme işlemi başarısız oldu.";
-        }
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+           (
+           action: () => _jobSkillCategoryService.DeleteAsync(id),
+           successMessage: "Silme işlemi Başarılı oldu",
+           ErrorMessage: "Silme İşlemi Başarısız oldu"
+           );
     }
     [HttpPost]
     public async Task<IActionResult> Restore(Guid id)
     {
-        try
-        {
-            await _jobSkillCategoryService.RestoreAsync(id);
-            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
-        }
-
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+            (
+            action: () => _jobSkillCategoryService.RestoreAsync(id),
+            successMessage: "Geri Alma işlemi Başarılı oldu",
+            ErrorMessage: "Geri Alma İşlemi Başarısız oldu"
+            );
     }
 
 

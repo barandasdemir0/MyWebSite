@@ -90,31 +90,22 @@ public class ResumeController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteExperience(Guid id)
     {
-        try
-        {
-            await _experienceApiService.DeleteAsync(id);
-            TempData["Success"] = "Silme işlemi başarılı.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Silme işlemi başarısız oldu.";
-        }
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+             (
+             action: () => _experienceApiService.DeleteAsync(id),
+             successMessage: "Silme işlemi Başarılı oldu",
+             ErrorMessage: "Silme İşlemi Başarısız oldu"
+             );
     }
     [HttpPost]
     public async Task<IActionResult> RestoreExperience(Guid id)
     {
-        try
-        {
-            await _experienceApiService.RestoreAsync(id);
-            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
-        }
-
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+             (
+             action: () => _experienceApiService.RestoreAsync(id),
+             successMessage: "Geri Alma işlemi Başarılı oldu",
+             ErrorMessage: "Geri Alma İşlemi Başarısız oldu"
+             );
     }
 
 
@@ -179,31 +170,22 @@ public class ResumeController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteEducation(Guid id)
     {
-        try
-        {
-            await _educationApiService.DeleteAsync(id);
-            TempData["Success"] = "Silme işlemi başarılı.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Silme işlemi başarısız oldu.";
-        }
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+             (
+             action: () => _educationApiService.DeleteAsync(id),
+             successMessage: "Silme işlemi Başarılı oldu",
+             ErrorMessage: "Silme İşlemi Başarısız oldu"
+             );
     }
     [HttpPost]
     public async Task<IActionResult> RestoreEducation(Guid id)
     {
-        try
-        {
-            await _educationApiService.RestoreAsync(id);
-            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
-        }
-
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+           (
+           action: () => _educationApiService.RestoreAsync(id),
+           successMessage: "Geri Alma işlemi Başarılı oldu",
+           ErrorMessage: "Geri Alma İşlemi Başarısız oldu"
+           );
     }
 
 
@@ -268,31 +250,22 @@ public class ResumeController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteCertificates(Guid id)
     {
-        try
-        {
-            await _certificateApiService.DeleteAsync(id);
-            TempData["Success"] = "Silme işlemi başarılı.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Silme işlemi başarısız oldu.";
-        }
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+            (
+            action: () => _certificateApiService.DeleteAsync(id),
+            successMessage: "Silme işlemi Başarılı oldu",
+            ErrorMessage: "Silme İşlemi Başarısız oldu"
+            );
     }
     [HttpPost]
     public async Task<IActionResult> RestoreCertificates(Guid id)
     {
-        try
-        {
-            await _certificateApiService.RestoreAsync(id);
-            TempData["Success"] = "Geri yükleme işlemi başarılı oldu.";
-        }
-        catch (Exception)
-        {
-            TempData["Error"] = "Geri yükleme işlemi başarısız oldu.";
-        }
-
-        return RedirectToAction(nameof(Index));
+        return await this.SafeAction
+            (
+            action: () => _certificateApiService.RestoreAsync(id),
+            successMessage: "Geri Alma işlemi Başarılı oldu",
+            ErrorMessage: "Geri Alma İşlemi Başarısız oldu"
+            );
     }
 
 
