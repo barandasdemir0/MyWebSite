@@ -6,11 +6,11 @@
     <nav class="sidebar-menu">
         <div class="menu-section">
             <p class="menu-section-title">Sayfa Yönetimi</p>
-            <a asp-area="Admin" asp-controller="Profile" asp-action="Index" class="menu-item">
+            <a asp-area="Admin" asp-controller="Heroes" asp-action="Index" class="menu-item">
                 <i class="fas fa-home"></i>
                 <span>Hero & Profil</span>
             </a>
-            <a asp-area="Admin" asp-controller="Abouts" asp-action="Index" class="menu-item active">
+            <a asp-area="Admin" asp-controller="Abouts" asp-action="Index" class="menu-item">
                 <i class="fas fa-user"></i>
                 <span>Hakkımda</span>
             </a>
@@ -21,6 +21,10 @@
             <a asp-area="Admin" asp-controller="Contact" asp-action="Index" class="menu-item">
                 <i class="fas fa-envelope"></i>
                 <span>İletişim</span>
+            </a>
+            <a asp-area="Admin" asp-controller="SocialMedia" asp-action="Index" class="menu-item">
+                <i class="fas fa-envelope"></i>
+                <span>Sosyal medya</span>
             </a>
         </div>
         <div class="menu-section">
@@ -33,11 +37,11 @@
                 <i class="fas fa-inbox"></i>
                 <span>Mesajlar</span>
             </a>
-            <a asp-area="Admin" asp-controller="Projects" asp-action="Index" class="menu-item">
+            <a asp-area="Admin" asp-controller="Project" asp-action="Index" class="menu-item">
                 <i class="fas fa-folder-open"></i>
                 <span>Projeler</span>
             </a>
-            <a asp-area="Admin" asp-controller="Blog" asp-action="Index" class="menu-item">
+            <a asp-area="Admin" asp-controller="BlogPosts" asp-action="Index" class="menu-item">
                 <i class="fas fa-blog"></i>
                 <span>Blog Yazıları</span>
             </a>
@@ -48,19 +52,23 @@
         </div>
         <div class="menu-section">
             <p class="menu-section-title">Ayarlar</p>
-            <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="menu-item">
+            <a asp-area="Admin" asp-controller="Topic" asp-action="Index" class="menu-item">
                 <i class="fas fa-tags"></i>
                 <span>Kategoriler</span>
             </a>
-            <a asp-area="Admin" asp-controller="Skills" asp-action="Index" class="menu-item">
+            <a asp-area="Admin" asp-controller="Skill" asp-action="Index" class="menu-item">
                 <i class="fas fa-code"></i>
-                <span>Yetenekler</span>
+                <span>Yetenekler İcon</span>
+            </a>
+            <a asp-area="Admin" asp-controller="JobSkillCategories" asp-action="Index" class="menu-item">
+                <i class="fas fa-code"></i>
+                <span>Yetenekler Ana Sayfa</span>
             </a>
             <a asp-area="Admin" asp-controller="Github" asp-action="Index" class="menu-item">
                 <i class="fab fa-github"></i>
                 <span>GitHub Repoları</span>
             </a>
-            <a asp-area="Admin" asp-controller="Settings" asp-action="Index" class="menu-item">
+            <a asp-area="Admin" asp-controller="SiteSettings" asp-action="Index" class="menu-item">
                 <i class="fas fa-cog"></i>
                 <span>Site Ayarları</span>
             </a>

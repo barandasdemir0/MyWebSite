@@ -28,7 +28,12 @@ public sealed class ContactsController : CrudController<ContactDto,CreateContact
         return Ok(values);
     }
 
-
+    [HttpPost("save")]
+    public async Task<IActionResult> Save([FromBody] UpdateContactDto updateContactDto, CancellationToken cancellation)
+    {
+        var result = await _contactService.SaveAsync(updateContactDto, cancellation);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+    }
 
 
 }

@@ -16,8 +16,6 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         _blogPostService = blogPostService;
     }
 
-  
-
     [HttpGet("admin-all")] // hepsini getirme 
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
     {
@@ -31,17 +29,6 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         var result = await _blogPostService.GetAllUserAsync(query, cancellationToken);
         return Ok(result);
     }
-
-    //[HttpGet("{id}")] //idye göre getirme 
-    //public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
-    //{
-    //    var query = await _blogPostService.GetByIdAsync(id, cancellationToken);
-    //    if (query == null)
-    //    {
-    //        return NotFound();
-    //    }
-    //    return Ok(query);
-    //}
 
     [HttpGet("slug/{slug}")] //burası kullanıcıya gösterilecek yazan yazı
     public async Task<IActionResult> GetDetail(string slug, CancellationToken cancellationToken)

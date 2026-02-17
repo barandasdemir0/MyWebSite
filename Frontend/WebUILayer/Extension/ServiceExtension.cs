@@ -75,6 +75,11 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
+        services.AddHttpClient<IContactApiService, ContactApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
 
 
 

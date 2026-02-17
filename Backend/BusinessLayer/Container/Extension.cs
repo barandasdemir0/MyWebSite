@@ -1,8 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using BusinessLayer.Concrete;
 using BusinessLayer.ValidationRules;
 using DataAccessLayer.Abstract;
-using DataAccessLayer.Concrete;
 using DataAccessLayer.Context;
 using DtoLayer.Mapping;
 using FluentValidation;
@@ -25,11 +23,7 @@ public static class Extension
         {
             options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
         });
-
-
-
     }
-
 
     public static void AddThirdPartyServices(this IServiceCollection services)
     {
@@ -41,46 +35,9 @@ public static class Extension
         services.AddScoped<IMapper, ServiceMapper>();
 
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
-        //services.AddFluentValidationAutoValidation();
         services.AddFluentValidationAutoValidation();
 
-
-
-
-
     }
-
-
-
-    //public static void AddScalarConfiguration(this IServiceCollection services)
-    //{
-
-    //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public static void ContainerDependencies(this IServiceCollection services)
     {
@@ -88,13 +45,6 @@ public static class Extension
         services.Scan(scan => scan.FromAssemblyOf<IDalMarker>().AddClasses(c => c.Where(t => t.Name.StartsWith("Ef") && t.Name.EndsWith("Dal"))).AsImplementedInterfaces().WithScopedLifetime());
 
         services.Scan(scan => scan.FromAssemblyOf<IBusinessMarker>().AddClasses(c => c.Where(t => t.Name.EndsWith("Manager"))).AsImplementedInterfaces().WithScopedLifetime());
-
-
-     
-
     }
-
-
-
 
 }
