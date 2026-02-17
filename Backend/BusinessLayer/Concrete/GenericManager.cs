@@ -2,10 +2,11 @@
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using MapsterMapper;
+using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
 
-public class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> : IGenericService<TEntity, TListDto, TCreateDto, TUpdateDto> where TEntity : BaseEntity where TListDto : class
+public class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> : IGenericService<TEntity, TListDto, TCreateDto, TUpdateDto> where TEntity : BaseEntity where TListDto : class, IHasId
 {
 
     protected readonly IGenericRepository<TEntity> _repository;

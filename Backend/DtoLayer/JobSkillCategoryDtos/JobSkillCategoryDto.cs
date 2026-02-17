@@ -1,8 +1,9 @@
 ﻿using DtoLayer.JobSkillsDtos;
+using SharedKernel.Shared;
 
 namespace DtoLayer.JobSkillCategoryDtos;
 
-public class JobSkillCategoryDto
+public class JobSkillCategoryDto : IHasId
 {
     public Guid Id { get; set; }
     public string CategoryName { get; set; } = string.Empty;

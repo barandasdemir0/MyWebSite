@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.ExperienceDtos;
+﻿using SharedKernel.Shared;
 
-public class ExperienceDto
+namespace DtoLayer.ExperienceDtos;
+
+public class ExperienceDto : IHasId
 {
     public Guid Id { get; set; }
     public string ExperienceTitle { get; set; } = string.Empty;

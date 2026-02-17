@@ -1,6 +1,4 @@
 ﻿using BusinessLayer.Container;
-using DataAccessLayer.Context;
-using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

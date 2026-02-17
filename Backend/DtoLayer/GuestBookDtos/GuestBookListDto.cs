@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.GuestBookDtos;
+﻿using SharedKernel.Shared;
 
-public class GuestBookListDto
+namespace DtoLayer.GuestBookDtos;
+
+public class GuestBookListDto : IHasId
 {
     public Guid Id { get; set; }
     public string AuthorName { get; set; } = string.Empty;

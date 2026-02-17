@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.BlogPostDtos;
+﻿using SharedKernel.Shared;
 
-public class BlogPostListDto
+namespace DtoLayer.BlogPostDtos;
+
+public class BlogPostListDto : IHasId
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;

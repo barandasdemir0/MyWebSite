@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.ProjectDtos;
+﻿using SharedKernel.Shared;
 
-public class ProjectListDto
+namespace DtoLayer.ProjectDtos;
+
+public class ProjectListDto : IHasId
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.NotificationDtos;
+﻿using SharedKernel.Shared;
 
-public class NotificationDto
+namespace DtoLayer.NotificationDtos;
+
+public class NotificationDto : IHasId
 {
     public Guid Id { get; set; }
     public string Type { get; set; } = string.Empty;    // "comment", "project", "system", "user"

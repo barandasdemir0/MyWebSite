@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.HeroDtos;
+﻿using SharedKernel.Shared;
 
-public class HeroDto
+namespace DtoLayer.HeroDtos;
+
+public class HeroDto : IHasId
 {
     public Guid Id { get; set; }
     public string FullName { get; set; } = string.Empty;

@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.ProjectDtos;
+﻿using SharedKernel.Shared;
 
-public class ProjectDto
+namespace DtoLayer.ProjectDtos;
+
+public class ProjectDto : IHasId
 {
     public Guid Id { get; set; }
     // Temel

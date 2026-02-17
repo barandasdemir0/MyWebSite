@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.SocialMediaDtos;
+﻿using SharedKernel.Shared;
 
-public class SocialMediaDto
+namespace DtoLayer.SocialMediaDtos;
+
+public class SocialMediaDto : IHasId
 {
     public Guid Id { get; set; }
     public string SocialMediaName { get; set; } = string.Empty;

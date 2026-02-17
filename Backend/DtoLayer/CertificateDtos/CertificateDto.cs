@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.CertificateDtos;
+﻿using SharedKernel.Shared;
 
-public class CertificateDto
+namespace DtoLayer.CertificateDtos;
+
+public class CertificateDto : IHasId
 {
     public Guid Id { get; set; }  
     public string CertificateName { get; set; } = string.Empty;

@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.SkillDtos;
+﻿using SharedKernel.Shared;
 
-public class SkillDto
+namespace DtoLayer.SkillDtos;
+
+public class SkillDto : IHasId
 {
     public Guid Id { get; set; }
     public string SkillName { get; set; } = string.Empty;

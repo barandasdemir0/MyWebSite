@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.EducationDtos;
+﻿using SharedKernel.Shared;
 
-public class EducationDto
+namespace DtoLayer.EducationDtos;
+
+public class EducationDto : IHasId
 {
     public Guid Id { get; set; }
     public string EducationDegree { get; set; } = string.Empty;

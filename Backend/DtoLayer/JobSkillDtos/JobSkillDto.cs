@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.JobSkillsDtos;
+﻿using SharedKernel.Shared;
 
-public class JobSkillDto
+namespace DtoLayer.JobSkillsDtos;
+
+public class JobSkillDto : IHasId
 {
     public Guid Id { get; set; }
     public string JobSkillName { get; set; } = string.Empty;

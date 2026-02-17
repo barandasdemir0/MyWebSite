@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.SiteSettingDtos;
+﻿using SharedKernel.Shared;
 
-public class SiteSettingDto
+namespace DtoLayer.SiteSettingDtos;
+
+public class SiteSettingDto : IHasId
 {
     public Guid Id { get; set; }
     public string? CvFileUrlTr { get; set; }

@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.ChatbotSettingsDtos;
+﻿using SharedKernel.Shared;
 
-public class ChatbotSettingsDto
+namespace DtoLayer.ChatbotSettingsDtos;
+
+public class ChatbotSettingsDto : IHasId
 {
     public Guid Id { get; set; }
     public string AssistantName { get; set; } = string.Empty;

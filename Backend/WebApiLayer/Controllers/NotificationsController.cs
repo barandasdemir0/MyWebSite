@@ -1,16 +1,17 @@
 ﻿using BusinessLayer.Abstract;
+using DtoLayer.NotificationDtos;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
-public class NotificationsController: ControllerBase
+
+public class NotificationsController: CrudController<NotificationDto,CreateNotificationDto,UpdateNotificationDto>
 {
     private readonly INotificationService _notificationService;
 
-    public NotificationsController(INotificationService notificationService)
+    public NotificationsController(INotificationService notificationService) : base(notificationService)
     {
         _notificationService = notificationService;
     }
@@ -40,17 +41,6 @@ public class NotificationsController: ControllerBase
         {
             return NotFound();
         }
-        return Ok(values);
-    }
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id,CancellationToken cancellationToken)
-    {
-        var values = await _notificationService.GetByIdAsync(id, cancellationToken);
-        if (values == null)
-        {
-            return NotFound();
-        }
-        await _notificationService.DeleteAsync(id,cancellationToken);
         return Ok(values);
     }
 }

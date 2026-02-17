@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.GithubRepoDtos;
+﻿using SharedKernel.Shared;
 
-public class GithubRepoDto
+namespace DtoLayer.GithubRepoDtos;
+
+public class GithubRepoDto : IHasId
 {
     public Guid Id { get; set; }
     public string RepoName { get; set; } = string.Empty;

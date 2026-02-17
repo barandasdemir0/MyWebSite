@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.ContactDtos;
+﻿using SharedKernel.Shared;
 
-public class ContactDto
+namespace DtoLayer.ContactDtos;
+
+public class ContactDto : IHasId
 {
     public Guid Id { get; set; }
     public string? CvFileUrl { get; set; }

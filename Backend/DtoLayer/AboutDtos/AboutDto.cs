@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.AboutDtos;
+﻿using SharedKernel.Shared;
 
-public class AboutDto
+namespace DtoLayer.AboutDtos;
+
+public class AboutDto:IHasId
 {
     public Guid Id { get; set; }
     public string FullName { get; set; } = string.Empty;

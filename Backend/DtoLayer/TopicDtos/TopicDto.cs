@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.TopicDtos;
+﻿using SharedKernel.Shared;
 
-public class TopicDto
+namespace DtoLayer.TopicDtos;
+
+public class TopicDto : IHasId
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

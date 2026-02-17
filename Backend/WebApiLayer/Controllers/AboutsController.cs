@@ -1,42 +1,22 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AboutDtos;
-using Mapster;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
-public sealed class AboutsController : ControllerBase
+public sealed class AboutsController : CrudController<AboutDto, CreateAboutDto, UpdateAboutDto>
 {
     private readonly IAboutService _aboutService;
 
-    public AboutsController(IAboutService aboutService)
+    public AboutsController(IAboutService aboutService) : base(aboutService)
     {
         _aboutService = aboutService;
     }
 
-    [HttpGet] //listeleme
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
-    {
-        var values = await _aboutService.GetAllAsync(cancellationToken);
-        return Ok(values);
-    }
 
-    [HttpGet("{id}")] //idye göre getirme
-    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
-    {
-        var values = await _aboutService.GetByIdAsync(id, cancellationToken);
-        if (values == null)
-        {
-            return NotFound();
-        }
-        return Ok(values);
-    }
     [HttpGet("single")] //upsert için işlemler
-    public async Task<IActionResult> GetSingle( CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
     {
         var values = await _aboutService.GetSingleAsync(cancellationToken);
         if (values == null)
@@ -46,55 +26,11 @@ public sealed class AboutsController : ControllerBase
         return Ok(values);
     }
 
-    [HttpPost] //ekleme
-    public async Task<IActionResult> Create([FromBody] CreateAboutDto createAboutDto, CancellationToken cancellationToken)
-    {
-        var result = await _aboutService.AddAsync(createAboutDto, cancellationToken);
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result); //bunu çağırarak ne kaydedildiğimi görmek istiyorum dedik yani başarılar kaydedildi yerine bize direkt o kaydı gösteriyor
-    }
-
     [HttpPost("save")]
-    public async Task<IActionResult> Save([FromBody] UpdateAboutDto updateAboutDto,CancellationToken cancellation)
+    public async Task<IActionResult> Save([FromBody] UpdateAboutDto updateAboutDto, CancellationToken cancellation)
     {
         var result = await _aboutService.SaveAsync(updateAboutDto, cancellation);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
-
-
-
-
-    [HttpPut("{id}")] //güncelleme
-    public async Task<IActionResult> Update(Guid id,[FromBody] UpdateAboutDto updateAboutDto, CancellationToken cancellationToken)
-    {
-        //updateAboutDto.Id = id; --> hatamız 1 burası businessin işi idi
-        var result = await _aboutService.UpdateAsync(id,updateAboutDto, cancellationToken);
-        if (result == null)
-        {
-            return NotFound();
-        }
-        return Ok(result);
-
-    }
-
-    [HttpDelete("{id}")] //silme
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
-    {
-        var existing = await _aboutService.GetByIdAsync(id, cancellationToken);
-        if (existing==null)
-        {
-            return NotFound();
-        }
-        await _aboutService.DeleteAsync(id, cancellationToken);
-        return Ok(existing);
-
-    }
-
-
-
-
-
-
-
-
 
 }

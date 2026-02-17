@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.MessageDtos;
+﻿using SharedKernel.Shared;
 
-public class MessageListDto
+namespace DtoLayer.MessageDtos;
+
+public class MessageListDto : IHasId
 {
     public Guid Id { get; set; }
     public string SenderName { get; set; } = string.Empty;
