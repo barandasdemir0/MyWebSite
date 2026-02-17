@@ -1,13 +1,9 @@
 ﻿using CV.EntityLayer.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DataAccessLayer.Abstract
+namespace DataAccessLayer.Abstract;
+
+public interface ISocialMediaDal:IGenericRepository<SocialMedia>
 {
-    public interface ISocialMediaDal:IGenericRepository<SocialMedia>
-    {
-        Task<SocialMedia?> RestoreDeleteByIdAsync(Guid guid,
-        CancellationToken cancellationToken = default);
-    }
+    Task<SocialMedia?> RestoreDeleteByIdAsync(Guid guid,
+    CancellationToken cancellationToken = default);
 }

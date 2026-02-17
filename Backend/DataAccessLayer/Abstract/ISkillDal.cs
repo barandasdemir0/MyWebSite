@@ -1,13 +1,9 @@
 ﻿using CV.EntityLayer.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DataAccessLayer.Abstract
+namespace DataAccessLayer.Abstract;
+
+public interface ISkillDal:IGenericRepository<Skill>
 {
-    public interface ISkillDal:IGenericRepository<Skill>
-    {
-        Task<Skill?> RestoreDeleteByIdAsync(Guid guid,
-        CancellationToken cancellationToken = default);
-    }
+    Task<Skill?> RestoreDeleteByIdAsync(Guid guid,
+    CancellationToken cancellationToken = default);
 }

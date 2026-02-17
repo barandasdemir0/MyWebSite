@@ -2,21 +2,17 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DataAccessLayer.Concrete
+namespace DataAccessLayer.Concrete;
+
+public class EfContactDal : GenericRepository<Contact>, IContactDal
 {
-    public class EfContactDal : GenericRepository<Contact>, IContactDal
+    public EfContactDal(AppDbContext context) : base(context)
     {
-        public EfContactDal(AppDbContext context) : base(context)
-        {
-        }
+    }
 
-        public async Task<Contact?> GetSingleAsync(CancellationToken cancellationToken = default)
-        {
-            return await _context.Contacts.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
-        }
+    public async Task<Contact?> GetSingleAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Contacts.AsNoTracking().FirstOrDefaultAsync(cancellationToken);
     }
 }

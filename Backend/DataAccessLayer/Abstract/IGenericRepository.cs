@@ -1,10 +1,7 @@
 ﻿using CV.EntityLayer.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 using Microsoft.EntityFrameworkCore.Query;
 using SharedKernel.Shareds;
+using System.Linq.Expressions;
 
 
 namespace DataAccessLayer.Abstract;
@@ -65,35 +62,6 @@ public interface IGenericRepository<T> where T : BaseEntity //bu repositori sade
                                                      //1 kayıt güncellendi → 1
                                                      //2 kayıt silindi → 2
                                                      //Hiçbir şey değişmedi → 0
-
-    #endregion
-
-
-
-
-
-
-
-
-    #region eski gereksiz kodlar
-
-
-    //Task<List<T>> GetAllAsync(bool tracking = true); // hepsini getir
-
-    //Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter, bool tracking = true); //filtreli olarak getir
-
-    //Task<List<T>> GetAllAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null); //projeleri getir ama include olanları getir hani mesela project ve blog benzerse beraber getir
-
-
-
-
-
-
-    //Task<T?> GetByIdAsync(Guid guid, bool tracking = true); //idye göre getir 
-
-
-    //Task<T?> GetAsync(Expression<Func<T, bool>> filter, bool tracking = true); //idye göre yine ama tek kayıt olacak ve filtreli olacak
-
 
     #endregion
 }

@@ -2,22 +2,18 @@
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DataAccessLayer.Concrete
+namespace DataAccessLayer.Concrete;
+
+public class EfTopicDal : GenericRepository<Topic>, ITopicDal
 {
-    public class EfTopicDal : GenericRepository<Topic>, ITopicDal
+    public EfTopicDal(AppDbContext context) : base(context)
     {
-        public EfTopicDal(AppDbContext context) : base(context)
-        {
-        }
+    }
 
-        public async Task<Topic?> RestoreDeleteByIdAsync(Guid guid,
-    CancellationToken cancellationToken = default)
-        {
-            return await _context.Topics.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
-        }
+    public async Task<Topic?> RestoreDeleteByIdAsync(Guid guid,
+CancellationToken cancellationToken = default)
+    {
+        return await _context.Topics.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
     }
 }

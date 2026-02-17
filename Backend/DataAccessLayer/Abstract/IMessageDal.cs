@@ -1,13 +1,9 @@
 ﻿using CV.EntityLayer.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DataAccessLayer.Abstract
+namespace DataAccessLayer.Abstract;
+
+public interface IMessageDal:IGenericRepository<Message>
 {
-    public interface IMessageDal:IGenericRepository<Message>
-    {
-        Task<(List<Message> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, CancellationToken cancellationToken = default);
-      
-    }
+    Task<(List<Message> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, CancellationToken cancellationToken = default);
+  
 }
