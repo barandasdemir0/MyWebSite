@@ -1,6 +1,6 @@
-﻿using DataAccessLayer.Abstract;
+﻿using CV.EntityLayer.Entities;
+using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
-using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Text;

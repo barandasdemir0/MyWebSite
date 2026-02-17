@@ -1,6 +1,5 @@
-﻿using DtoLayer.AboutDtos;
+﻿using CV.EntityLayer.Entities;
 using DtoLayer.SiteSettingDtos;
-using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Text;

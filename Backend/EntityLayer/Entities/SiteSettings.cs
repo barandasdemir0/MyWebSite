@@ -1,9 +1,6 @@
-﻿using CV.EntityLayer.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//namespace EntityLayer.Concrete;
 
-namespace EntityLayer.Concrete;
+namespace CV.EntityLayer.Entities;
 
 public sealed class SiteSettings :BaseEntity
 {

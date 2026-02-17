@@ -2,9 +2,7 @@
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
-using DtoLayer.HeroDtos;
 using DtoLayer.SiteSettingDtos;
-using EntityLayer.Concrete;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;

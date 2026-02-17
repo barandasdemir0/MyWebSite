@@ -2,7 +2,6 @@
 using BusinessLayer.Extensions;
 using DataAccessLayer.Abstract;
 using DtoLayer.NotificationDtos;
-using EntityLayer.Concrete;
 using MapsterMapper;
 using SharedKernel.Shared;
 using System;

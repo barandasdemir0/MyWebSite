@@ -1,5 +1,5 @@
-﻿using DtoLayer.SocialMediaDtos;
-using EntityLayer.Concrete;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.SocialMediaDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

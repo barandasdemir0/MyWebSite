@@ -1,10 +1,11 @@
-﻿using EntityLayer.Concrete;
+﻿using CV.EntityLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static EntityLayer.Concrete.Message;
+using static CV.EntityLayer.Entities.Message;
+
 
 namespace DataAccessLayer.Configurations
 {

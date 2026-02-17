@@ -1,5 +1,5 @@
-﻿using DtoLayer.ChatbotSettingsDtos;
-using EntityLayer.Concrete;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.ChatbotSettingsDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

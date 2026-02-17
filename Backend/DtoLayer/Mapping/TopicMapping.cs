@@ -1,7 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.SocialMediaDtos;
 using DtoLayer.TopicDtos;
-using EntityLayer.Concrete;
 using Mapster;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,6 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DtoLayer.ChatbotSettingsDtos;
-using EntityLayer.Concrete;
 using MapsterMapper;
 using System;
 using System.Collections.Generic;

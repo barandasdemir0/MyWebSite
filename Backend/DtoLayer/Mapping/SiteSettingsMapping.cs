@@ -1,5 +1,5 @@
-﻿using DtoLayer.SiteSettingDtos;
-using EntityLayer.Concrete;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.SiteSettingDtos;
 using Mapster;
 using System;
 using System.Collections.Generic;

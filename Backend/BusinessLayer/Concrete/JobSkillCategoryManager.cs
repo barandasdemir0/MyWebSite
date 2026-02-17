@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.JobSkillCategoryDtos;
-using EntityLayer.Concrete;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;

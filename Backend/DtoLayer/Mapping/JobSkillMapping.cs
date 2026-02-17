@@ -1,5 +1,5 @@
-﻿using DtoLayer.JobSkillsDtos;
-using EntityLayer.Concrete;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.JobSkillsDtos;
 using Mapster;
 using System;
 using System.Collections.Generic;

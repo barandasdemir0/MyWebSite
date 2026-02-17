@@ -1,8 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Extensions;
+using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.MessageDtos;
-using EntityLayer.Concrete;
 using MapsterMapper;
 using SharedKernel.Shared;
 using System;

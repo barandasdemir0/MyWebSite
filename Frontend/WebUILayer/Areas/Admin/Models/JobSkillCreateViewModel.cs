@@ -1,6 +1,5 @@
 ﻿using DtoLayer.JobSkillCategoryDtos;
 using DtoLayer.JobSkillsDtos;
-using EntityLayer.Concrete;
 
 namespace WebUILayer.Areas.Admin.Models;
 

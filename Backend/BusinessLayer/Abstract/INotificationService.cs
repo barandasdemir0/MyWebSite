@@ -1,5 +1,5 @@
-﻿using DtoLayer.NotificationDtos;
-using EntityLayer.Concrete;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.NotificationDtos;
 using SharedKernel.Shared;
 using System;
 using System.Collections.Generic;

@@ -2,7 +2,6 @@
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.JobSkillsDtos;
-using EntityLayer.Concrete;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System;

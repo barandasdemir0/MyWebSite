@@ -1,5 +1,5 @@
-﻿using DtoLayer.JobSkillCategoryDtos;
-using EntityLayer.Concrete;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.JobSkillCategoryDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
