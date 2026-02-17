@@ -1,15 +1,10 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.CertificateDtos;
 using DtoLayer.ExperienceDtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BusinessLayer.Abstract
+namespace BusinessLayer.Abstract;
+
+public interface IExperienceService:IGenericService<Experience,ExperienceDto,CreateExperienceDto,UpdateExperienceDto>
 {
-    public interface IExperienceService:IGenericService<Experience,ExperienceDto,CreateExperienceDto,UpdateExperienceDto>
-    {
-        Task<ExperienceDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
-        Task<List<ExperienceDto>> GetAllAdminAsync( CancellationToken cancellationToken = default);
-    }
+    Task<ExperienceDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+    Task<List<ExperienceDto>> GetAllAdminAsync( CancellationToken cancellationToken = default);
 }

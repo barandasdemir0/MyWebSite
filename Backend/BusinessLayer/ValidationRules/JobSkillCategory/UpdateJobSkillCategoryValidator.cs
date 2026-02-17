@@ -1,8 +1,5 @@
 ﻿using DtoLayer.JobSkillCategoryDtos;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.ValidationRules.JobSkillCategory;
 

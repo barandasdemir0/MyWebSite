@@ -1,12 +1,8 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.AboutDtos;
 using DtoLayer.BlogPostDtos;
 using SharedKernel.Shared;
 
 //using DtoLayer.Shared;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Abstract;
 

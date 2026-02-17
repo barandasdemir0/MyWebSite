@@ -1,42 +1,38 @@
 ﻿using DataAccessLayer.Abstract;
 using DtoLayer.BlogPostDtos;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BusinessLayer.ValidationRules.BlogPostValidator
+namespace BusinessLayer.ValidationRules.BlogPostValidator;
+
+public class UpdateBlogPostValidator:AbstractValidator<UpdateBlogPostDto>
 {
-    public class UpdateBlogPostValidator:AbstractValidator<UpdateBlogPostDto>
+    public UpdateBlogPostValidator(ITopicDal topicDal)
     {
-        public UpdateBlogPostValidator(ITopicDal topicDal)
+        RuleFor(x => x.Title).NotEmpty()
+             .WithMessage("Bu Alanı Girmek Zorundasınız")
+             .MaximumLength(150)
+             .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır");
+
+
+        RuleFor(x => x.CoverImage)
+           .MaximumLength(200)
+           .WithMessage("Bu Alan Maksimum 200 Karakter Olmalıdır");
+
+        RuleFor(x => x.Technologies)
+           .MaximumLength(50)
+           .WithMessage("Bu Alan Maksimum 50 Karakter Olmalıdır");
+
+        RuleFor(x => x.Content).NotEmpty()
+           .WithMessage("Bu Alanı Girmek Zorundasınız");
+
+        RuleFor(x => x.TopicIds).NotEmpty()
+           .WithMessage("Kategori Girilmesi zorunludur");
+
+        RuleForEach(x => x.TopicIds).MustAsync(async (topicId, cancelation) =>
         {
-            RuleFor(x => x.Title).NotEmpty()
-                 .WithMessage("Bu Alanı Girmek Zorundasınız")
-                 .MaximumLength(150)
-                 .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır");
+            var exists = await topicDal.GetByIdAsync(topicId);
+            return exists != null;
+        }).WithMessage("Seçilen Kategori Mevcut değil veya silinmiş");
 
-
-            RuleFor(x => x.CoverImage)
-               .MaximumLength(200)
-               .WithMessage("Bu Alan Maksimum 200 Karakter Olmalıdır");
-
-            RuleFor(x => x.Technologies)
-               .MaximumLength(50)
-               .WithMessage("Bu Alan Maksimum 50 Karakter Olmalıdır");
-
-            RuleFor(x => x.Content).NotEmpty()
-               .WithMessage("Bu Alanı Girmek Zorundasınız");
-
-            RuleFor(x => x.TopicIds).NotEmpty()
-               .WithMessage("Kategori Girilmesi zorunludur");
-
-            RuleForEach(x => x.TopicIds).MustAsync(async (topicId, cancelation) =>
-            {
-                var exists = await topicDal.GetByIdAsync(topicId);
-                return exists != null;
-            }).WithMessage("Seçilen Kategori Mevcut değil veya silinmiş");
-
-        }
     }
 }

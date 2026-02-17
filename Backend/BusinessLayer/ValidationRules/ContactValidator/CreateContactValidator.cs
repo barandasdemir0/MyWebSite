@@ -1,9 +1,5 @@
-﻿using DtoLayer.CertificateDtos;
-using DtoLayer.ContactDtos;
+﻿using DtoLayer.ContactDtos;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.ValidationRules.ContactValidator;
 

@@ -1,8 +1,5 @@
 ﻿using DtoLayer.ChatbotSettingsDtos;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.ValidationRules.ChatbotSettingsValidator;
 

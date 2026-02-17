@@ -1,9 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.BlogPostDtos;
 using DtoLayer.CertificateDtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Abstract;
 

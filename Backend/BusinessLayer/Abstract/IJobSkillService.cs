@@ -1,8 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.JobSkillsDtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Abstract;
 

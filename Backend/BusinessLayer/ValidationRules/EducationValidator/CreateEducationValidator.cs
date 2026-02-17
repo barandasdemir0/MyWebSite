@@ -1,47 +1,42 @@
-﻿using DtoLayer.ContactDtos;
-using DtoLayer.EducationDtos;
+﻿using DtoLayer.EducationDtos;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BusinessLayer.ValidationRules.EducationValidator
+namespace BusinessLayer.ValidationRules.EducationValidator;
+
+public class CreateEducationValidator:AbstractValidator<CreateEducationDto>
 {
-    public class CreateEducationValidator:AbstractValidator<CreateEducationDto>
+    public CreateEducationValidator()
     {
-        public CreateEducationValidator()
-        {
-            RuleFor(x => x.EducationDegree)
-                .NotEmpty()
-                .WithMessage("Bu Alan Boş Geçilemez")
-                .MaximumLength(50)
-                .WithMessage("Bu Alan 50 Karakterden fazla olamaz");
+        RuleFor(x => x.EducationDegree)
+            .NotEmpty()
+            .WithMessage("Bu Alan Boş Geçilemez")
+            .MaximumLength(50)
+            .WithMessage("Bu Alan 50 Karakterden fazla olamaz");
 
-            RuleFor(x => x.EducationSchoolName)
-                .NotEmpty()
-                .WithMessage("Bu Alan Boş Geçilemez")
-                .MaximumLength(100)
-                .WithMessage("Bu Alan 100 Karakterden fazla olamaz");
+        RuleFor(x => x.EducationSchoolName)
+            .NotEmpty()
+            .WithMessage("Bu Alan Boş Geçilemez")
+            .MaximumLength(100)
+            .WithMessage("Bu Alan 100 Karakterden fazla olamaz");
 
-            RuleFor(x => x.EducationDescription)
-                .NotEmpty()
-                .WithMessage("Bu Alan Boş Geçilemez")
-                .MinimumLength(10)
-                .WithMessage("Açıklama En az 10 Karakter olmalıdır");
+        RuleFor(x => x.EducationDescription)
+            .NotEmpty()
+            .WithMessage("Bu Alan Boş Geçilemez")
+            .MinimumLength(10)
+            .WithMessage("Açıklama En az 10 Karakter olmalıdır");
 
-            RuleFor(x=>x.EducationStartDate)
-                 .NotNull()
-                .WithMessage("Tarih Boş Olamaz")
-           .LessThanOrEqualTo(DateTime.UtcNow)
-           .WithMessage("Sertifika tarihi bugünden ileri olamaz");
+        RuleFor(x=>x.EducationStartDate)
+             .NotNull()
+            .WithMessage("Tarih Boş Olamaz")
+       .LessThanOrEqualTo(DateTime.UtcNow)
+       .WithMessage("Sertifika tarihi bugünden ileri olamaz");
 
-            RuleFor(x => x.DisplayOrder).NotNull()
-            .WithMessage("Boş geçilemez")
-            .GreaterThan(0)
-              .WithMessage("Sıralama 0'dan büyük olmalıdır");
+        RuleFor(x => x.DisplayOrder).NotNull()
+        .WithMessage("Boş geçilemez")
+        .GreaterThan(0)
+          .WithMessage("Sıralama 0'dan büyük olmalıdır");
 
 
 
-        }
     }
 }

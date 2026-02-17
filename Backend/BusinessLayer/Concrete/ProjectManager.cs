@@ -2,191 +2,183 @@
 using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using DataAccessLayer.Concrete;
-using DtoLayer.GuestBookDtos;
 using DtoLayer.ProjectDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Shared;
 using SharedKernel.Shareds;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BusinessLayer.Concrete
+namespace BusinessLayer.Concrete;
+
+public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto,UpdateProjectDto> ,IProjectService
 {
-    public class ProjectManager : IProjectService
+    private readonly IProjectDal _projectDal;
+
+    public ProjectManager(IProjectDal projectDal, IMapper mapper) : base(projectDal, mapper)
     {
-        private readonly IProjectDal _projectDal;
-        private readonly IMapper _mapper;
+        _projectDal = projectDal;
+    }
 
-        public ProjectManager(IProjectDal projectDal, IMapper mapper)
+    public override async Task<ProjectDto> AddAsync(CreateProjectDto dto, CancellationToken cancellationToken = default)
+    {
+        var entity = _mapper.Map<Project>(dto);
+        entity.Slug = await UniqueSlugAsync(dto.Name, cancellationToken);
+        if (entity.IsPublished && entity.PublishedAt == null)
         {
-            _projectDal = projectDal;
-            _mapper = mapper;
+            entity.PublishedAt = DateTime.UtcNow;
         }
-
-        public async Task<ProjectDto> AddAsync(CreateProjectDto dto, CancellationToken cancellationToken = default)
+        if (dto.TopicIds != null)
         {
-            var entity = _mapper.Map<Project>(dto);
-            entity.Slug = await UniqueSlugAsync(dto.Name, cancellationToken);
-            if (entity.IsPublished && entity.PublishedAt == null)
+            foreach (var topic in dto.TopicIds)
             {
-                entity.PublishedAt = DateTime.UtcNow;
+                entity.ProjectTopics.Add(new ProjectTopic { TopicId = topic });
             }
-            if (dto.TopicIds != null)
-            {
-                foreach (var topic in dto.TopicIds)
-                {
-                    entity.ProjectTopics.Add(new ProjectTopic { TopicId = topic });
-                }
-            }
-            await _projectDal.AddAsync(entity, cancellationToken);
+        }
+        await _projectDal.AddAsync(entity, cancellationToken);
+        await _projectDal.SaveAsync(cancellationToken);
+        return _mapper.Map<ProjectDto>(entity);
+    }
+
+    public override async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
+    {
+        var entity = await _projectDal.GetByIdAsync(guid, cancellationToken: cancellationToken);
+        if (entity != null)
+        {
+            await _projectDal.DeleteAsync(entity, cancellationToken);
             await _projectDal.SaveAsync(cancellationToken);
-            return _mapper.Map<ProjectDto>(entity);
         }
+    }
 
-        public async Task DeleteAsync(Guid guid, CancellationToken cancellationToken = default)
+    public override async Task<List<ProjectDto>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var entity = await _projectDal.GetAllAsync(tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
+        return _mapper.Map<List<ProjectDto>>(entity);
+    }
+
+    public override async Task<ProjectDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
+    {
+        var entity = await _projectDal.GetByIdAsync(guid, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
+        if (entity == null)
         {
-            var entity = await _projectDal.GetByIdAsync(guid, cancellationToken: cancellationToken);
-            if (entity != null)
+            return null;
+        }
+        return _mapper.Map<ProjectDto>(entity);
+    }
+
+    public async Task<ProjectDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
+    {
+        var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
+        return _mapper.Map<ProjectDto>(entity);
+
+    }
+
+    public async Task<ProjectDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
+    {
+        var entity = await _projectDal.GetByIdAsync(guid, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
+        return _mapper.Map<ProjectDto>(entity);
+    }
+
+    public override async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto, CancellationToken cancellationToken = default)
+    {
+        var entity = await _projectDal.GetAsync(x => x.Id == guid,
+        tracking: true,
+        includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
+        if (entity == null)
+        {
+            return null;
+        }
+        _mapper.Map(dto, entity);
+        if (entity.IsPublished && entity.PublishedAt == null)
+        {
+            entity.PublishedAt = DateTime.UtcNow;
+        }
+        entity.ProjectTopics.Clear();
+        if (dto.TopicIds != null)
+        {
+            foreach (var topic in dto.TopicIds)
             {
-                await _projectDal.DeleteAsync(entity, cancellationToken);
-                await _projectDal.SaveAsync(cancellationToken);
+                entity.ProjectTopics.Add(new ProjectTopic { TopicId = topic });
+
             }
         }
+        await _projectDal.UpdateAsync(entity, cancellationToken: cancellationToken);
+        await _projectDal.SaveAsync(cancellationToken);
+        return _mapper.Map<ProjectDto>(entity);
+    }
 
-        public async Task<List<ProjectDto>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<string> UniqueSlugAsync(string name, CancellationToken cancellationToken = default)
+    {
+        string slug = name.AutoSlug();
+
+        string originalslug = slug;
+        int counter = 1;
+        while (await _projectDal.GetAsync(x => x.Slug == slug, cancellationToken: cancellationToken) != null)
         {
-            var entity = await _projectDal.GetAllAsync(tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
-            return _mapper.Map<List<ProjectDto>>(entity);
+            counter++;
+            slug = $"{originalslug}-{counter}";
         }
+        return slug;
 
-        public async Task<ProjectDto?> GetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
+    }
+
+    public async Task<ProjectListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
+    {
+        var entity = await _projectDal.RestoreDeleteByIdAsync(guid, cancellationToken: cancellationToken);
+        if (entity == null)
         {
-            var entity = await _projectDal.GetByIdAsync(guid, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
-            if (entity == null)
+            return null;
+        }
+        entity.IsDeleted = false;
+        entity.DeletedAt = null;
+
+        await _projectDal.UpdateAsync(entity, cancellationToken);
+        await _projectDal.SaveAsync(cancellationToken);
+
+        return _mapper.Map<ProjectListDto>(entity);
+    }
+
+    public async Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    {
+        //var entity = await _projectDal.GetAllAdminAsync(tracking: false);
+        //return _mapper.Map<PagedResult<ProjectListDto>>(entity);
+        var (items, totalCount) = await _projectDal.GetAdminListPagesAsync(
+            query.PageNumber,
+            query.PageSize,
+            query.TopicId
+            , cancellationToken);
+
+        return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+    }
+
+    public async Task<PagedResult<ProjectListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    {
+        var (items, totalCount) = await _projectDal.GetUserListPagesAsync(query.PageNumber, query.PageSize, query.TopicId, cancellationToken);
+        return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+    }
+
+    public async Task<List<ProjectDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
+    {
+        var entities = await _projectDal.GetAllAsync
+            (
+            filter: x => x.IsPublished,
+            tracking: false,
+            includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic),
+            options: new QueryOptions<Project>
             {
-                return null;
-            }
-            return _mapper.Map<ProjectDto>(entity);
-        }
-
-        public async Task<ProjectDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
-        {
-            var entity = await _projectDal.GetAsync(x => x.Slug == slug, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
-            if (entity == null)
-            {
-                return null;
-            }
-            return _mapper.Map<ProjectDto>(entity);
-
-        }
-
-        public async Task<ProjectDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
-        {
-            var entity = await _projectDal.GetByIdAsync(guid, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
-            if (entity == null)
-            {
-                return null;
-            }
-            return _mapper.Map<ProjectDto>(entity);
-        }
-
-        public async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto, CancellationToken cancellationToken = default)
-        {
-            var entity = await _projectDal.GetAsync(x => x.Id == guid,
-            tracking: true,
-            includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
-            if (entity == null)
-            {
-                return null;
-            }
-            _mapper.Map(dto, entity);
-            if (entity.IsPublished && entity.PublishedAt == null)
-            {
-                entity.PublishedAt = DateTime.UtcNow;
-            }
-            entity.ProjectTopics.Clear();
-            if (dto.TopicIds != null)
-            {
-                foreach (var topic in dto.TopicIds)
-                {
-                    entity.ProjectTopics.Add(new ProjectTopic { TopicId = topic });
-
-                }
-            }
-            await _projectDal.UpdateAsync(entity, cancellationToken: cancellationToken);
-            await _projectDal.SaveAsync(cancellationToken);
-            return _mapper.Map<ProjectDto>(entity);
-        }
-
-        public async Task<string> UniqueSlugAsync(string name, CancellationToken cancellationToken = default)
-        {
-            string slug = name.AutoSlug();
-
-            string originalslug = slug;
-            int counter = 1;
-            while (await _projectDal.GetAsync(x => x.Slug == slug, cancellationToken: cancellationToken) != null)
-            {
-                counter++;
-                slug = $"{originalslug}-{counter}";
-            }
-            return slug;
-
-        }
-
-        public async Task<ProjectListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
-        {
-            var entity = await _projectDal.RestoreDeleteByIdAsync(guid, cancellationToken: cancellationToken);
-            if (entity == null)
-            {
-                return null;
-            }
-            entity.IsDeleted = false;
-            entity.DeletedAt = null;
-
-            await _projectDal.UpdateAsync(entity, cancellationToken);
-            await _projectDal.SaveAsync(cancellationToken);
-
-            return _mapper.Map<ProjectListDto>(entity);
-        }
-
-        public async Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
-        {
-            //var entity = await _projectDal.GetAllAdminAsync(tracking: false);
-            //return _mapper.Map<PagedResult<ProjectListDto>>(entity);
-            var (items, totalCount) = await _projectDal.GetAdminListPagesAsync(
-                query.PageNumber,
-                query.PageSize,
-                query.TopicId
-                , cancellationToken);
-
-            return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
-        }
-
-        public async Task<PagedResult<ProjectListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
-        {
-            var (items, totalCount) = await _projectDal.GetUserListPagesAsync(query.PageNumber, query.PageSize, query.TopicId, cancellationToken);
-            return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
-        }
-
-        public async Task<List<ProjectDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
-        {
-            var entities = await _projectDal.GetAllAsync
-                (
-                filter: x => x.IsPublished,
-                tracking: false,
-                includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic),
-                options: new QueryOptions<Project>
-                {
-                    OrderBy = x => x.PublishedAt!,
-                    Descending = true,
-                    Take = count,
-                },
-                cancellationToken: cancellationToken
-                );
-            return _mapper.Map<List<ProjectDto>>(entities);
-        }
+                OrderBy = x => x.PublishedAt!,
+                Descending = true,
+                Take = count,
+            },
+            cancellationToken: cancellationToken
+            );
+        return _mapper.Map<List<ProjectDto>>(entities);
     }
 }

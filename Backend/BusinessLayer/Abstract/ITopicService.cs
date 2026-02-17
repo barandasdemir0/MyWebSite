@@ -1,15 +1,10 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.GuestBookDtos;
 using DtoLayer.TopicDtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BusinessLayer.Abstract
+namespace BusinessLayer.Abstract;
+
+public interface ITopicService:IGenericService<Topic,TopicDto,CreateTopicDto,UpdateTopicDto>
 {
-    public interface ITopicService:IGenericService<Topic,TopicDto,CreateTopicDto,UpdateTopicDto>
-    {
-        Task<TopicDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
-        Task<List<TopicDto>> GetAllAdminAsync( CancellationToken cancellationToken = default);
-    }
+    Task<TopicDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+    Task<List<TopicDto>> GetAllAdminAsync( CancellationToken cancellationToken = default);
 }

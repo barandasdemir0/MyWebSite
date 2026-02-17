@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace BusinessLayer.ValidationRules;
 
-namespace BusinessLayer.ValidationRules
+public interface IValidationMarker
 {
-    public interface IValidationMarker
-    {
-    }
 }

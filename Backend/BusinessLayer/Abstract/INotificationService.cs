@@ -1,9 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.NotificationDtos;
 using SharedKernel.Shared;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BusinessLayer.Abstract;
 
