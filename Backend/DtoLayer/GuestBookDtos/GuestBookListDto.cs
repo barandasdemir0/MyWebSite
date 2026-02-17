@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DtoLayer.GuestBookDtos;
+﻿namespace DtoLayer.GuestBookDtos;
 
 public class GuestBookListDto
 {

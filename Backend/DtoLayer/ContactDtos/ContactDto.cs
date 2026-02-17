@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DtoLayer.ContactDtos;
+﻿namespace DtoLayer.ContactDtos;
 
 public class ContactDto
 {

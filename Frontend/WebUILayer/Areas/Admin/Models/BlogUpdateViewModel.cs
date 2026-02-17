@@ -1,4 +1,4 @@
-﻿using DtoLayer.BlogpostDtos;
+﻿using DtoLayer.BlogPostDtos;
 using DtoLayer.TopicDtos;
 
 namespace WebUILayer.Areas.Admin.Models;

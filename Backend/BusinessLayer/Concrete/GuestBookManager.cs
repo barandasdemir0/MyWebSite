@@ -3,7 +3,7 @@ using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
-using DtoLayer.BlogpostDtos;
+using DtoLayer.BlogPostDtos;
 using DtoLayer.GuestBookDtos;
 using DtoLayer.TopicDtos;
 using MapsterMapper;

@@ -1,9 +1,4 @@
-﻿using DtoLayer.TopicDtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DtoLayer.BlogpostDtos;
+﻿namespace DtoLayer.BlogPostDtos;
 
 public class UpdateBlogPostDto
 {

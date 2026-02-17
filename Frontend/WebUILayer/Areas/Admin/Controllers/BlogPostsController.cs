@@ -1,4 +1,4 @@
-﻿using DtoLayer.BlogpostDtos;
+﻿using DtoLayer.BlogPostDtos;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;

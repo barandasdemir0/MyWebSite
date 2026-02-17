@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AboutDtos;
-using DtoLayer.BlogpostDtos;
+using DtoLayer.BlogPostDtos;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 using System.Threading;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DtoLayer.ChatbotSettingsDtos;
+﻿namespace DtoLayer.ChatbotSettingsDtos;
 
 public class ChatbotSettingsDto
 {

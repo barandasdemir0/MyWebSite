@@ -1,4 +1,4 @@
-﻿using DtoLayer.BlogpostDtos;
+﻿using DtoLayer.BlogPostDtos;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;

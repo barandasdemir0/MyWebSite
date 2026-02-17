@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DtoLayer.ProjectDtos;
+﻿namespace DtoLayer.ProjectDtos;
 
 public class ProjectListDto
 {

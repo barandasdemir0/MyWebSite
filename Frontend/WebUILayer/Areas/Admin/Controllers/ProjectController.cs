@@ -1,4 +1,4 @@
-﻿using DtoLayer.BlogpostDtos;
+﻿using DtoLayer.BlogPostDtos;
 using DtoLayer.ProjectDtos;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;

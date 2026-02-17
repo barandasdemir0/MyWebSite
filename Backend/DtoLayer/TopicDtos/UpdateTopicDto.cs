@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DtoLayer.TopicDtos;
+﻿namespace DtoLayer.TopicDtos;
 
 public class UpdateTopicDto
 {

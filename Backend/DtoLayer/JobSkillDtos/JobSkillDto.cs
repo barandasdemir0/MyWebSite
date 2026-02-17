@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DtoLayer.JobSkillsDtos;
+﻿namespace DtoLayer.JobSkillsDtos;
 
 public class JobSkillDto
 {
@@ -13,7 +9,5 @@ public class JobSkillDto
 
     public Guid JobSkillCategoryId { get; set; } // Category ID (hidden / backend için) Güncelleme formunda dropdown'da seçili kategori için
     public string CategoryName { get; set; } = string.Empty;  // UI'da gösterilecek isim Tabloda göstermek için: "Frontend", "Backend"
-
-
 
 }

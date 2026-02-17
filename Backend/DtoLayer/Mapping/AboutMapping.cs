@@ -1,9 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.AboutDtos;
 using Mapster;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DtoLayer.Mapping;
 

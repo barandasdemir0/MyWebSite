@@ -1,5 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
-using DtoLayer.BlogpostDtos;
+using DtoLayer.BlogPostDtos;
 using DtoLayer.CertificateDtos;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.AboutDtos;
-using DtoLayer.BlogpostDtos;
+using DtoLayer.BlogPostDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Shared;

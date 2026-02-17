@@ -2,7 +2,7 @@
 using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using DtoLayer.BlogpostDtos;
+using DtoLayer.BlogPostDtos;
 using DtoLayer.GithubRepoDtos;
 using MapsterMapper;
 using SharedKernel.Shared;

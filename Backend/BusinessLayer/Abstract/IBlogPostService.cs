@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.AboutDtos;
-using DtoLayer.BlogpostDtos;
+using DtoLayer.BlogPostDtos;
 using SharedKernel.Shared;
 
 //using DtoLayer.Shared;
