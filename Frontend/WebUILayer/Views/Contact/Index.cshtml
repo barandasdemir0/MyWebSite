@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/pages/contact.css">
+}
+
+<!-- PAGE HEADER -->
+<section class="section section-header-page">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-subtitle">Bana Ulaşın</p>
+            <h1 class="section-title">İletişim</h1>
+            <div class="section-line"></div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="section contact-section" style="padding-top: 40px;">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Contact Info -->
+            <div class="col-lg-5" data-aos="fade-right">
+                <h3 class="mb-4">Hadi Konuşalım</h3>
+                <p class="mb-4 contact-info-text">
+                    Yeni projeler, işbirlikleri veya sadece merhaba demek için benimle iletişime geçebilirsiniz.
+                    Size en kısa sürede dönüş yapacağım.
+                </p>
+
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p><a href="mailto:hello@barandasdemir.com">hello@barandasdemir.com</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <div class="contact-details">
+                            <h4>Telefon</h4>
+                            <p><a href="tel:+905551234567">+90 555 123 4567</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="contact-details">
+                            <h4>Konum</h4>
+                            <p>İstanbul, Türkiye</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-share-alt"></i></div>
+                    <div class="contact-details">
+                        <h4>Sosyal Medya</h4>
+                        <div class="contact-social-links">
+                            <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
+                            <a href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="contact-form">
+                    <h3 class="mb-4">Mesaj Gönderin</h3>
+                    <form class="needs-validation" novalidate id="contactForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Adınız *</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           placeholder="Adınızı girin" required>
+                                    <div class="invalid-feedback">Lütfen adınızı girin.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="email">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           placeholder="email@ornek.com" required>
+                                    <div class="invalid-feedback">Lütfen geçerli bir email girin.</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="subject">Konu *</label>
+                                    <input type="text" class="form-control" id="subject" name="subject"
+                                           placeholder="Mesajınızın konusu" required>
+                                    <div class="invalid-feedback">Lütfen konu girin.</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="message">Mesajınız *</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5"
+                                              placeholder="Mesajınızı buraya yazın..." required></textarea>
+                                    <div class="invalid-feedback">Lütfen mesajınızı yazın.</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn-primary-custom w-100">
+                                    <i class="fas fa-paper-plane me-2"></i>Mesaj Gönder
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="successModal" class="modal-overlay">
+            <div class="modal-content">
+                <button class="close-modal">&times;</button>
+                <div class="modal-success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h3>Mesaj Gönderildi!</h3>
+                <p>Mesajınız başarıyla iletildi. En kısa sürede size dönüş yapacağım.</p>
+                <button class="btn-primary-custom w-100" id="modalCloseBtn">Harika!</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Location Map -->
+    <div class="row mt-5">
+        <div class="col-12" data-aos="fade-up">
+            <div class="map-container">
+                <a href="https://www.google.com/maps/place/Istanbul" target="_blank" rel="noopener">
+                    <img src="https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/28.9784,41.0082,10,0/1200x400?access_token=pk.placeholder"
+                         alt="Istanbul Harita"
+                         onerror="this.src='https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=1200&h=400&fit=crop'">
+                    <div class="map-location-label">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <span>İstanbul, Türkiye</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</section>
+@section scripts{
+    <script src="~/Mytheme/portfolio/js/contact.js"></script>
+}
+

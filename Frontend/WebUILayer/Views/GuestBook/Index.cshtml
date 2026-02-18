@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/guestbook.css">
+}
+
+<!-- PAGE HEADER -->
+<section class="section guestbook-header-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-subtitle">Topluluk</p>
+            <h1 class="section-title">Ziyaretçi <span class="gradient-text">Defteri</span></h1>
+            <div class="section-line"></div>
+            <p class="text-center mt-3 section-header-subtitle">
+                Ziyaretçiler için bir hatıra duvarı. Düşüncelerinizi paylaşmak için GitHub ile giriş yapın veya bir
+                not bırakın.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- GUESTBOOK SECTION -->
+<section class="section guestbook-section">
+    <div class="container guestbook-container">
+
+        <!-- Auth / Sign In Call to Action -->
+        <div class="guestbook-auth" data-aos="fade-up">
+            <p class="auth-text">Yorum bırakmak için sosyal medya hesaplarınızla giriş yapmanız gerekmektedir.</p>
+            <div class="auth-buttons">
+                <a href="#" class="btn-github">
+                    <i class="fab fa-github"></i> GitHub ile Giriş
+                </a>
+                <a href="#" class="btn-linkedin">
+                    <i class="fab fa-linkedin"></i> LinkedIn ile Giriş
+                </a>
+            </div>
+        </div>
+
+        <!-- Comment Form (Simulated) -->
+        <div class="guestbook-form" data-aos="fade-up" data-aos-delay="100">
+            <div class="form-header">
+                <h3>Bir Not Bırakın</h3>
+                <p>Mesajlarınız moderasyon sonrası yayınlanacaktır.</p>
+            </div>
+            <form>
+                <div class="form-group">
+                    <textarea class="form-control" id="guestbookMessage" name="message" rows="4"
+                              placeholder="Mesajınız..."></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="button" class="btn-primary-custom form-submit-btn" disabled
+                            title="Giriş yapmalısınız">
+                        <i class="fas fa-paper-plane me-2"></i>Gönder
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Comments List -->
+        <div class="comments-list">
+            <h3 class="mb-4">Son Mesajlar (3)</h3>
+
+            <!-- Comment 1 -->
+            <div class="comment-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="comment-avatar">
+                    <img src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" alt="GitHub User">
+                </div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            Linus Torvalds
+                            <span>Contributor</span>
+                        </div>
+                        <div class="comment-date">2 saat önce</div>
+                    </div>
+                    <p class="comment-text">
+                        Harika bir portföy çalışması olmuş! Özellikle temiz kod yapısını ve modern tasarımı çok
+                        beğendim. Başarılar dilerim.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Comment 2 -->
+            <div class="comment-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="comment-avatar">
+                    <img src="https://avatars.githubusercontent.com/u/1024025?v=4" alt="GitHub User">
+                </div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            Dan Abramov
+                            <span>Guest</span>
+                        </div>
+                        <div class="comment-date">Dün</div>
+                    </div>
+                    <p class="comment-text">
+                        React kullanmasan bile Vanilla JS ile bu kadar interaktif bir yapı kurman takdire şayan.
+                        Glassmorphism efektleri çok yerinde kullanılmış. ✨
+                    </p>
+                </div>
+            </div>
+
+            <!-- Comment 3 -->
+            <div class="comment-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="comment-avatar">
+                    <img src="https://avatars.githubusercontent.com/u/1500684?v=4" alt="GitHub User">
+                </div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <div class="comment-author">
+                            Kent C. Dodds
+                            <span>Guest</span>
+                        </div>
+                        <div class="comment-date">2 gün önce</div>
+                    </div>
+                    <p class="comment-text">
+                        Tasarım harika, UX akışı çok yumuşak. Mobil uyumluluk da gayet başarılı görünüyor. Eline
+                        sağlık! 🚀
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-wrapper">
+            <button class="pagination-btn" id="prevPage">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn" id="nextPage">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+    </div>
+</section>
+
+@section scripts{
+    <script src="~/Mytheme/portfolio/js/guestbook.js"></script>
+}

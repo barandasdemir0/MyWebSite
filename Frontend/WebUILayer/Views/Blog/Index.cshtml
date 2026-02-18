@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/blog.css">
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/components/search.css">
+}
+
+<!-- PAGE HEADER -->
+<section class="section" style="padding-top: 150px; padding-bottom: 20px; background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-subtitle">Yazılar & Makaleler</p>
+            <h1 class="section-title">Teknoloji <span class="gradient-text">Blogu</span></h1>
+            <div class="section-line"></div>
+        </div>
+    </div>
+</section>
+
+<!-- BLOG SECTION -->
+<section class="section blog-section" style="padding-top: 40px;">
+    <div class="container">
+        <!-- Search Box -->
+        <div class="search-box" data-aos="fade-up" id="blogSearch">
+            <input type="text" class="search-input" id="searchInput" placeholder="Yazılarda ara...">
+            <button class="search-clear" id="searchClear"><i class="fas fa-times"></i></button>
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="portfolio-filters" data-aos="fade-up" style="margin-bottom: 50px;">
+            <button class="filter-btn active" data-filter="*">Tümü</button>
+            <button class="filter-btn" data-filter="yazilim">Yazılım</button>
+            <button class="filter-btn" data-filter="kariyer">Kariyer</button>
+            <button class="filter-btn" data-filter="saas">SaaS</button>
+        </div>
+
+        <div class="blog-grid">
+
+            <!-- Blog Post 1 -->
+            <article class="blog-card" data-aos="fade-up" data-category="yazilim">
+                <div class="blog-image">
+                    <span class="blog-category">Yazılım</span>
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop"
+                         alt="Kodlama">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> 2 Ocak 2024</span>
+                        <span><i class="far fa-user"></i> Baran D.</span>
+                        <span><i class="far fa-clock"></i> 5 dk okuma</span>
+                    </div>
+                    <h3 class="blog-title">
+                        <a href="blog-details.html">
+                            Modern Web Geliştirmede React vs Vue
+                            Karşılaştırması
+                        </a>
+                    </h3>
+                    <p class="blog-excerpt">
+                        Front-end dünyasının iki devi arasındaki farklar, avantajlar ve hangi
+                        projede hangisini seçmeli?
+                    </p>
+                    <div class="blog-footer">
+                        <a href="blog-details.html" class="read-more">
+                            Devamını Oku <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Blog Post 2 -->
+            <article class="blog-card" data-aos="fade-up" data-aos-delay="100" data-category="kariyer">
+                <div class="blog-image">
+                    <span class="blog-category">Kariyer</span>
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop"
+                         alt="Ofis">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> 28 Aralık 2023</span>
+                        <span><i class="far fa-user"></i> Baran D.</span>
+                        <span><i class="far fa-clock"></i> 7 dk okuma</span>
+                    </div>
+                    <h3 class="blog-title">
+                        <a href="blog-details.html">Junior Developer'dan Senior'a Giden Yol</a>
+                    </h3>
+                    <p class="blog-excerpt">
+                        Yazılım kariyerinde basamakları tırmanırken dikkat edilmesi gerekenler
+                        &nbsp;ve soft skill'lerin önemi.
+                    </p>
+                    <div class="blog-footer">
+                        <a href="blog-details.html" class="read-more">
+                            Devamını Oku <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Blog Post 3 -->
+            <article class="blog-card" data-aos="fade-up" data-aos-delay="200" data-category="saas">
+                <div class="blog-image">
+                    <span class="blog-category">SaaS</span>
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop"
+                         alt="SaaS">
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> 15 Aralık 2023</span>
+                        <span><i class="far fa-user"></i> Baran D.</span>
+                        <span><i class="far fa-clock"></i> 6 dk okuma</span>
+                    </div>
+                    <h3 class="blog-title"><a href="#">Micro SaaS Fikri Nasıl Bulunur ve Doğrulanır?</a></h3>
+                    <p class="blog-excerpt">
+                        Kârlı bir Micro SaaS projesi geliştirmek için izlenmesi gereken adımlar
+                        ve pazar araştırması teknikleri.
+                    </p>
+                    <div class="blog-footer">
+                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-wrapper">
+            <button class="pagination-btn" id="prevPage">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn" id="nextPage">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script src="~/Mytheme/portfolio/js/blog.js"></script>
+}
+

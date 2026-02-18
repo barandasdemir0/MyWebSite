@@ -122,13 +122,9 @@ function initBackToTop() {
 function initPreloader() {
     const preloader = document.querySelector('.preloader');
     if (!preloader) return;
-    
-    // Ensure preloader is visible on initial page load
-    preloader.classList.remove('hidden');
-    
-    // Hide after page loads
-    window.addEventListener('load', () => {
-        setTimeout(() => preloader.classList.add('hidden'), 500);
+
+    requestAnimationFrame(() => {
+        preloader.classList.add('hidden');
     });
 }
 

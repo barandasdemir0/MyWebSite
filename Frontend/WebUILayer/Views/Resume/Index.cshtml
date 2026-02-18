@@ -1,0 +1,155 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/pages/resume.css">
+}
+
+<!-- PAGE HEADER -->
+<section class="section resume-header-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-subtitle">Kariyerim</p>
+            <h1 class="section-title">CV / Özgeçmiş</h1>
+            <div class="section-line"></div>
+        </div>
+    </div>
+</section>
+
+<!-- RESUME CONTENT -->
+<section class="section resume-section">
+    <div class="container">
+        <!-- Tabs -->
+        <div class="resume-tabs" data-aos="fade-up">
+            <button class="resume-tab active" data-tab="experience">
+                <i class="fas fa-briefcase me-2"></i>Deneyim
+            </button>
+            <button class="resume-tab" data-tab="education">
+                <i class="fas fa-graduation-cap me-2"></i>Eğitim
+            </button>
+            <button class="resume-tab" data-tab="certificates">
+                <i class="fas fa-certificate me-2"></i>Sertifikalar
+            </button>
+        </div>
+
+        <!-- Experience Tab -->
+        <div class="tab-content active" id="experience">
+            <div class="timeline" data-aos="fade-up">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2022 - Günümüz</span>
+                        <h4>Senior Full-Stack Developer</h4>
+                        <h5>Tech Startup XYZ</h5>
+                        <p>
+                            E-ticaret platformu ve Micro SaaS projelerinin geliştirilmesi. React, Node.js ve AWS
+                            kullanarak ölçeklenebilir çözümler üretilmesi.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2020 - 2022</span>
+                        <h4>Mobile App Developer</h4>
+                        <h5>ABC Software</h5>
+                        <p>
+                            Flutter ve React Native ile cross-platform mobil uygulamalar geliştirilmesi. 10+ başarılı
+                            uygulama yayınlanması.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2019 - 2020</span>
+                        <h4>Frontend Developer</h4>
+                        <h5>Digital Agency</h5>
+                        <p>
+                            Kurumsal web siteleri ve landing page tasarımları. Vue.js ve modern CSS teknikleri ile
+                            responsive arayüzler.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Tab -->
+        <div class="tab-content" id="education">
+            <div class="timeline" data-aos="fade-up">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2015 - 2019</span>
+                        <h4>Bilgisayar Mühendisliği</h4>
+                        <h5>İstanbul Teknik Üniversitesi</h5>
+                        <p>
+                            Yazılım geliştirme, veri yapıları ve algoritma konularında kapsamlı eğitim. 3.5/4.0 GPA
+                            ile mezuniyet.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2011 - 2015</span>
+                        <h4>Fen Lisesi</h4>
+                        <h5>Ankara Fen Lisesi</h5>
+                        <p>Matematik ve fen bilimleri ağırlıklı eğitim. Bölge birinciliği ile mezuniyet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificates Tab -->
+        <div class="tab-content" id="certificates">
+            <div class="row g-4" data-aos="fade-up">
+                <div class="col-md-6">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2023</span>
+                        <h4>AWS Solutions Architect</h4>
+                        <h5>Amazon Web Services</h5>
+                        <p>Cloud mimarisi ve AWS servislerinin profesyonel seviyede kullanımı.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2022</span>
+                        <h4>Google Flutter Certification</h4>
+                        <h5>Google Developers</h5>
+                        <p>Flutter ile mobil uygulama geliştirme uzmanlığı.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2021</span>
+                        <h4>Meta Front-End Developer</h4>
+                        <h5>Meta (Coursera)</h5>
+                        <p>React ve modern frontend teknolojileri professional sertifikası.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2020</span>
+                        <h4>MongoDB Database Admin</h4>
+                        <h5>MongoDB University</h5>
+                        <p>NoSQL veritabanı yönetimi ve optimizasyonu.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download CV -->
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="assets/cv-baran-dasdemir.pdf" class="btn-primary-custom" download>
+                <i class="fas fa-download me-2"></i>CV İndir (PDF)
+            </a>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script src="~/Mytheme/portfolio/js/resume.js"></script>
+}

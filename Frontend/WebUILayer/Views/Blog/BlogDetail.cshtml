@@ -1,0 +1,212 @@
+﻿
+@{
+    ViewData["Title"] = "BlogDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/blog-details.css">
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/components/related-content.css">
+}
+<!-- HEADER -->
+<section class="blog-header-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10" data-aos="fade-up">
+                <span class="badge bg-primary mb-3">Yazılım</span>
+                <h1 class="display-4 fw-bold mb-4">Modern Web Geliştirmede React vs Vue Karşılaştırması</h1>
+                <div class="blog-meta-large">
+                    <span><i class="far fa-calendar"></i> 2 Ocak 2024</span>
+                    <span><i class="far fa-user"></i> Baran Dasdemir</span>
+                    <span><i class="far fa-clock"></i> 5 dk okuma</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ARTICLE CONTENT -->
+<section class="section pt-0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+                <!-- Featured Image -->
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=600&fit=crop"
+                     alt="React vs Vue" class="blog-featured-image">
+
+                <article class="article-content">
+                    <p class="lead">
+                        Front-end geliştirme dünyası her geçen gün değişiyor. React ve Vue.js, modern web
+                        uygulamaları
+                        geliştirmek için en popüler iki JavaScript kütüphanesi. Peki hangisini seçmelisiniz?
+                    </p>
+
+                    <h2>1. Popülerlik ve Ekosistem</h2>
+                    <p>
+                        React, Facebook (Meta) tarafından geliştirildiği için arkasında devasa bir topluluk ve
+                        şirket
+                        desteği var. NPM indirme sayılarına baktığımızda React'in açık ara önde olduğunu görüyoruz.
+                        Ancak Vue, özellikle Çin pazarında ve Laravel ekosisteminde çok güçlü.
+                    </p>
+
+                    <blockquote>
+                        "Teknoloji seçimi yaparken sadece popülerliğe değil, projenin gereksinimlerine ve ekibin
+                        yetkinliğine odaklanmak gerekir."
+                    </blockquote>
+
+                    <h2>2. Öğrenme Eğrisi</h2>
+                    <p>
+                        Vue.js, HTML, CSS ve JavaScript temellerine sadık kaldığı için genellikle öğrenmesi daha
+                        kolay
+                        olarak kabul edilir. Template yapısı, klasik web geliştirmeye çok benzer.
+                    </p>
+                    <p>
+                        React ise JSX (JavaScript XML) sözdizimini kullanır. Bu, HTML'i JavaScript içine yazmanızı
+                        gerektirir ve başlarda karmaşık gelebilir. Ancak "Her şey JavaScript'tir" felsefesi,
+                        dili daha iyi öğrenmenizi sağlar.
+                    </p>
+
+                    <h3>Hangisini Seçmeli?</h3>
+                    <ul>
+                        <li>
+                            <strong>React Seçin:</strong> Büyük ölçekli ve karmaşık uygulamalar yapıyorsanız, mobil
+                            uygulama (React Native) planınız varsa.
+                        </li>
+                        <li>
+                            <strong>Vue Seçin:</strong> Hızlı prototipleme yapmak istiyorsanız, daha kolay bir
+                            başlangıç arıyorsanız, legancy kodları dönüştürüyorsanız.
+                        </li>
+                    </ul>
+
+                    <h2>Sonuç</h2>
+                    <p>
+                        Her iki teknoloji de harika işler çıkarabilir. Önemli olan hangisinin sizin iş akışınıza
+                        daha uygun olduğu. Ben kişisel projelerimde React tercih ediyorum çünkü ekosistemindeki
+                        hazır kütüphaneler (Next.js gibi) işimi çok hızlandırıyor.
+                    </p>
+                </article>
+
+                <!-- Share & Author -->
+                <div class="share-buttons">
+                    <span class="d-flex align-items-center me-3 fw-bold">Paylaş:</span>
+                    <a href="#" class="share-btn"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="share-btn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="share-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="share-btn"><i class="fas fa-link"></i></a>
+                </div>
+
+                <div class="author-box">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop"
+                         alt="Baran Dasdemir" class="author-img">
+                    <div class="author-info">
+                        <h4>Baran Dasdemir</h4>
+                        <p>
+                            Full Stack Developer & Tech Enthusiast. Web teknolojileri, yapay zeka ve
+                            yazılım mimarisi üzerine modern çözümler üretiyorum.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Related Projects Section -->
+        <div class="related-content-section" data-aos="fade-up">
+            <div class="section-header text-center">
+                <h3 class="h4">
+                    <i class="fas fa-folder-open me-2" style="color: var(--primary);"></i>Bu
+                    Kategorideki Projeler
+                </h3>
+                <p style="color: var(--text-secondary); margin-top: 15px;">
+                    Yazılım kategorisindeki projelerimi
+                    inceleyin
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Related Project 1 -->
+                <div class="col-md-4">
+                    <div class="related-card">
+                        <div class="related-card-image">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop"
+                                 alt="E-Ticaret Platformu">
+                            <span class="project-date">15 Ocak 2024</span>
+                            <div class="related-card-overlay">
+                                <a href="project-detail.html" class="btn-icon">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="related-card-body">
+                            <span class="related-category">Web Development</span>
+                            <h5><a href="project-detail.html">E-Ticaret Platformu</a></h5>
+                            <div class="related-tags">
+                                <span>React</span>
+                                <span>Node.js</span>
+                                <span>MongoDB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Project 2 -->
+                <div class="col-md-4">
+                    <div class="related-card">
+                        <div class="related-card-image">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop"
+                                 alt="Analytics Dashboard">
+                            <span class="project-date">10 Aralık 2023</span>
+                            <div class="related-card-overlay">
+                                <a href="project-detail.html" class="btn-icon">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="related-card-body">
+                            <span class="related-category">SaaS</span>
+                            <h5><a href="project-detail.html">Analytics Dashboard</a></h5>
+                            <div class="related-tags">
+                                <span>Vue.js</span>
+                                <span>Python</span>
+                                <span>PostgreSQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Project 3 -->
+                <div class="col-md-4">
+                    <div class="related-card">
+                        <div class="related-card-image">
+                            <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop"
+                                 alt="API Gateway">
+                            <span class="project-date">5 Kasım 2023</span>
+                            <div class="related-card-overlay">
+                                <a href="project-detail.html" class="btn-icon">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="related-card-body">
+                            <span class="related-category">Backend</span>
+                            <h5><a href="project-detail.html">API Gateway Service</a></h5>
+                            <div class="related-tags">
+                                <span>.NET</span>
+                                <span>Docker</span>
+                                <span>Redis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center" style="margin-top: 25px;">
+                <a href="portfolio.html" class="btn-outline-custom">
+                    <i class="fas fa-th me-2"></i>Tüm Projeleri Gör
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+

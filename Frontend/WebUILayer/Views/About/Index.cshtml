@@ -1,0 +1,244 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/hero.css">
+    <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/sections.css">
+}
+
+<!-- PAGE HEADER -->
+<section class="section" style="padding-top: 150px; padding-bottom: 20px; background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-subtitle">Beni Tanıyın</p>
+            <h1 class="section-title">Hakkımda</h1>
+            <div class="section-line"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT CONTENT -->
+<section class="section about-section" style="padding-top: 40px;">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5" data-aos="fade-right">
+                <div class="about-image-wrapper">
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=600&fit=crop"
+                             alt="Baran Dasdemir">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="about-content">
+                    <h2>Merhaba, Ben <span class="gradient-text">Baran Dasdemir</span></h2>
+                    <p class="about-text">
+                        5+ yıllık deneyimimle web ve mobil uygulama geliştirme alanında uzmanlaştım.
+                        Modern teknolojileri kullanarak kullanıcı odaklı, performanslı ve ölçeklenebilir
+                        çözümler üretmek benim en büyük tutkum.
+                    </p>
+                    <p class="about-text">
+                        Full-stack geliştirme, mobil uygulama geliştirme ve Micro SaaS projeleri konularında
+                        geniş bir deneyime sahibim. Her projede en iyi pratikleri uygulayarak kaliteli
+                        ve sürdürülebilir kod yazmayı hedefliyorum.
+                    </p>
+
+                    <!-- Info Grid -->
+                    <div class="about-info">
+                        <div class="info-item">
+                            <i class="fas fa-user"></i><span>
+                                <strong>İsim:</strong> Baran
+                                Dasdemir
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i><span>
+                                <strong>Email:</strong>
+                                hello@barandasdemir.com
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i><span>
+                                <strong>Konum:</strong>
+                                İstanbul, Türkiye
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-briefcase"></i><span>
+                                <strong>Durum:</strong> Açık
+                                İşlere Açık
+                            </span>
+                        </div>
+                    </div>
+
+                    <a href="assets/cv-baran-dasdemir.pdf" class="btn-primary-custom" download>
+                        <i class="fas fa-download me-2"></i>CV İndir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SKILLS SECTION -->
+<section class="section skills-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-subtitle">Yeteneklerim</p>
+            <h2 class="section-title">Teknik <span class="gradient-text">Beceriler</span></h2>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Frontend -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-code"></i></div>
+                    <h4>Frontend</h4>
+                    <p>Modern ve responsive kullanıcı arayüzleri</p>
+                    <div class="skill-progress">
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">React / Vue</span><span class="progress-percent">90%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">TypeScript</span><span class="progress-percent">85%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="85"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backend -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-server"></i></div>
+                    <h4>Backend</h4>
+                    <p>Güçlü ve ölçeklenebilir API'lar</p>
+                    <div class="skill-progress">
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">Node.js</span><span class="progress-percent">88%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="88"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">ASP.NET</span><span class="progress-percent">80%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="80"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h4>Mobile</h4>
+                    <p>Cross-platform mobil uygulamalar</p>
+                    <div class="skill-progress">
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">Flutter</span><span class="progress-percent">85%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">React Native</span><span class="progress-percent">75%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="75"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-tools"></i></div>
+                    <h4>Araçlar</h4>
+                    <p>DevOps ve geliştirme araçları</p>
+                    <div class="skill-progress">
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">Git / Docker</span><span class="progress-percent">90%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-title">AWS / Azure</span><span class="progress-percent">70%</span>
+                            </div>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" data-width="70"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COUNTERS -->
+<section class="counters-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-4" data-aos="fade-up">
+                <div class="counter-item">
+                    <div class="counter-icon"><i class="fas fa-code"></i></div>
+                    <div class="counter-number" data-target="50">0</div>
+                    <div class="counter-label">Proje</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="counter-item">
+                    <div class="counter-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="counter-number" data-target="5">0</div>
+                    <div class="counter-label">Yıl Deneyim</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="counter-item">
+                    <div class="counter-icon"><i class="fas fa-mug-hot"></i></div>
+                    <div class="counter-number" data-target="1000">0</div>
+                    <div class="counter-label">Çay</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+@* @section Scripts {
+
+
+    <script src="Mytheme/portfolio/js/animations.js"></script>
+    <script src="Mytheme/portfolio/js/main.js"></script>
+} *@
