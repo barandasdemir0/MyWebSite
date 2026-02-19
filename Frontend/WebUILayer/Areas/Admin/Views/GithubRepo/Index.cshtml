@@ -1,0 +1,90 @@
+﻿@model GithubIndexViewModel
+@using DtoLayer.GithubRepoDtos
+@using WebUILayer.Areas.Admin.Models
+@{
+    ViewData["Title"] = "GitHub Repoları";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    var savedNames = Model.SavedRepoNames ?? new List<string>();
+}
+@section styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/github.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css">
+}
+
+<!-- Fetch Section -->
+<div class="card mb-25">
+    <div class="card-header">
+        <h3><i class="fab fa-github mr-10"></i>GitHub Hesabı</h3>
+    </div>
+    <div class="p-20">
+        <form method="get" asp-action="Index" class="fetch-section">
+            <input type="text" name="username" class="form-control"
+                   placeholder="GitHub kullanıcı adı" value="@Model.Username">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i>
+                Repoları Çek
+            </button>
+            <div id="selectedCount" class="selected-count hidden">
+                <i class="fas fa-check-circle"></i>
+                <span>0</span>/4 repo seçili
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Repos Grid -->
+<div class="card">
+    <div class="card-header">
+        <h3>Repolar</h3>
+        <button class="btn btn-success hidden" id="publishBtn"
+                data-sync-url="@Url.Action("Sync", "GithubRepo", new { area = "Admin" })">
+            <i class="fas fa-rocket"></i>
+            Seçilenleri Kaydet
+        </button>
+    </div>
+    <div class="p-20">
+        <div class="max-selection-warning mb-25">
+            <i class="fas fa-info-circle"></i>
+            <span>Maksimum <strong>4</strong> repo seçebilirsiniz.</span>
+        </div>
+        <div class="repos-grid" id="reposGrid">
+        @foreach (var repo in Model.GithubRepos)
+{
+    var isSaved = savedNames.Contains(repo.RepoName);
+    <div class="repo-card @(isSaved ? "selected" : "")" data-repo-name="@repo.RepoName">
+        <div class="repo-header">
+            <i class="fas fa-book text-muted"></i>
+            <span class="repo-name">@repo.RepoName</span>
+            @if (isSaved)
+            {
+                <span class="badge badge-success">Kayıtlı</span>
+            }
+        </div>
+        <p class="repo-description">@repo.Description</p>
+        <div class="repo-stats">
+            <span class="language-badge">@repo.Language</span>
+            <span class="repo-stat">
+                <i class="fas fa-star"></i> @repo.StarCount
+            </span>
+            <span class="repo-stat">
+                <i class="fas fa-code-branch"></i> @repo.ForkCount
+            </span>
+        </div>
+    </div>
+}
+        </div>
+    </div>
+
+ @await Component.InvokeAsync("_LayoutPaginationPartialComponent",
+    new { 
+        currentPage = Model.CurrentPage, 
+        totalPages = Model.TotalPages,
+        extraRouteValues = new Dictionary<string, string> { { "username", Model.Username } }
+    })
+</div>
+
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/github.js"></script>
+}

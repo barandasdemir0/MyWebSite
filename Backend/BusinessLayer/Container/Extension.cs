@@ -37,6 +37,15 @@ public static class Extension
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
         services.AddFluentValidationAutoValidation();
 
+
+
+        services.AddHttpClient("GithubApi", client =>
+        {
+            client.BaseAddress = new Uri("https://api.github.com/");
+            client.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+            client.DefaultRequestHeaders.Add("User-Agent", "MyWebSite-App");
+        });
+
     }
 
     public static void ContainerDependencies(this IServiceCollection services)

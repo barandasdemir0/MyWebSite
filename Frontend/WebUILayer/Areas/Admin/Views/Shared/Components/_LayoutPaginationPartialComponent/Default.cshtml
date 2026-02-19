@@ -1,10 +1,19 @@
 ﻿@model WebUILayer.Areas.Admin.Models.PaginationViewModel
 
+@{
+    RouteValueDictionary GetRoute(int page)
+    {
+        var rv = new RouteValueDictionary(Model.ExtraRouteValues);
+        rv["PageNumber"] = page;
+        return rv;
+    }
+}
+
 <div class="pagination-wrapper">
     <div class="pagination">
         @if (Model.CurrentPage > 1)
         {
-            <a href="@Url.Action(Model.Action, new { PageNumber = Model.CurrentPage - 1 })" class="pagination-btn"><i class="fas fa-chevron-left"></i></a>
+            <a href="@Url.Action(Model.Action, GetRoute(Model.CurrentPage - 1))" class="pagination-btn"><i class="fas fa-chevron-left"></i></a>
         }
         else
         {
@@ -18,16 +27,15 @@
         }
         @if (start > 1)
         {
-            <a href="@Url.Action(Model.Action, new { PageNumber = 1 })" class="pagination-btn">1</a>
+            <a href="@Url.Action(Model.Action, GetRoute(1))" class="pagination-btn">1</a>
             if (start > 2)
             {
-
                 <span style="padding:0 10px; color:#888;">...</span>
             }
         }
         @for (int i = start; i <= end; i++)
         {
-            <a href="@Url.Action(Model.Action, new { PageNumber = i })" class="pagination-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
+            <a href="@Url.Action(Model.Action, GetRoute(i))" class="pagination-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
         }
         @if (end < Model.TotalPages)
         {
@@ -35,11 +43,11 @@
             {
                 <span style="padding:0 10px; color:#888;">...</span>
             }
-            <a href="@Url.Action(Model.Action, new { PageNumber = Model.TotalPages })" class="pagination-btn">@Model.TotalPages</a>
+            <a href="@Url.Action(Model.Action, GetRoute(Model.TotalPages))" class="pagination-btn">@Model.TotalPages</a>
         }
         @if (Model.CurrentPage < Model.TotalPages)
         {
-            <a href="@Url.Action(Model.Action, new { PageNumber = Model.CurrentPage + 1 })" class="pagination-btn"><i class="fas fa-chevron-right"></i></a>
+            <a href="@Url.Action(Model.Action, GetRoute(Model.CurrentPage + 1))" class="pagination-btn"><i class="fas fa-chevron-right"></i></a>
         }
         else
         {

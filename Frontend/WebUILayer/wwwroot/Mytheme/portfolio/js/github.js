@@ -1,136 +1,96 @@
-/**
- * GitHub API Integration using Pure JavaScript
- * Fetches latest public repositories and displays them.
- * Falls back to static cards if API fails or no repos found.
- */
+const MAX_REPOS = 4;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const githubContainer = document.getElementById('github-projects-grid');
-    if (!githubContainer) return;
+document.addEventListener('DOMContentLoaded', function () {
+    const fetchBtn = document.getElementById('fetchReposBtn');
+    const publishBtn = document.getElementById('publishBtn');
+    const reposGrid = document.getElementById('reposGrid');
+    const selectedCountEl = document.getElementById('selectedCount');
+    const template = document.getElementById('repoCardTemplate');
 
-    // Check if static cards already exist (fallback mode)
-    const existingCards = githubContainer.querySelectorAll('.github-card');
-    if (existingCards.length > 0) {
-        // Static cards are present, don't overwrite them
-        console.log('GitHub: Using static fallback cards');
-        return;
+    // Kartı template'den oluştur (inline HTML yok)
+    function createRepoCard(repo) {
+        const clone = template.content.cloneNode(true);
+        const card = clone.querySelector('.repo-card');
+
+        card.dataset.repoName = repo.repoName;
+        card.querySelector('.repo-name').textContent = repo.repoName;
+        card.querySelector('.repo-description').textContent = repo.description || '';
+        card.querySelector('.language-badge').textContent = repo.language || '';
+        card.querySelector('.star-count').textContent = repo.starCount;
+        card.querySelector('.fork-count').textContent = repo.forkCount;
+
+        return clone;
     }
 
-    // Configuration
-    const USERNAME = 'barandasdemir0'; // Default username, change if needed
-    const REPO_COUNT = 4;
-    const SORT = 'updated'; // updated, created, pushed, full_name
+    // Fetch
+    fetchBtn.addEventListener('click', async function () {
+        const username = document.getElementById('githubUsername').value.trim();
+        if (!username) return;
 
-    // Language Colors Map
-    const languageColors = {
-        'JavaScript': '#f1e05a',
-        'TypeScript': '#2b7489',
-        'HTML': '#e34c26',
-        'CSS': '#563d7c',
-        'Python': '#3572A5',
-        'Java': '#b07219',
-        'C#': '#178600',
-        'C++': '#f34b7d',
-        'Dart': '#00B4AB',
-        'Go': '#00ADD8',
-        'PHP': '#4F5D95',
-        'Ruby': '#701516',
-        'Swift': '#ffac45'
-    };
+        fetchBtn.disabled = true;
+        fetchBtn.querySelector('i').classList.add('fa-spin');
 
-    // Default Color
-    const defaultColor = '#6366f1'; // Primary color
-
-    /**
-     * Fetch Repositories
-     */
-    async function fetchRepos() {
         try {
-            const response = await fetch(`https://api.github.com/users/${USERNAME}/repos?sort=${SORT}&per_page=${REPO_COUNT}&type=public`);
-
-            if (!response.ok) {
-                throw new Error('API Error');
-            }
-
+            const response = await fetch(`${GITHUB_FETCH_URL}?username=${username}`);
             const repos = await response.json();
-            if (repos.length > 0) {
-                renderRepos(repos);
-            }
-            // If no repos, static cards remain
 
+            reposGrid.innerHTML = '';
+            repos.forEach(repo => reposGrid.appendChild(createRepoCard(repo)));
+            updateSelectedCount();
         } catch (error) {
-            console.error('GitHub Fetch Error:', error);
-            // Static cards remain as fallback
+            console.error('Fetch hatası:', error);
+        } finally {
+            fetchBtn.disabled = false;
+            fetchBtn.querySelector('i').classList.remove('fa-spin');
         }
-    }
+    });
 
-    /**
-     * Render Repositories to DOM
-     * @param {Array} repos 
-     */
-    function renderRepos(repos) {
+    // Kart seçimi
+    reposGrid.addEventListener('click', function (e) {
+        const card = e.target.closest('.repo-card');
+        if (!card) return;
 
-        const html = repos.map(repo => {
-            const langColor = languageColors[repo.language] || defaultColor;
-            const description = repo.description ?
-                (repo.description.length > 100 ? repo.description.substring(0, 100) + '...' : repo.description) :
-                'Bu proje için açıklama bulunmuyor.';
+        const isSelected = card.classList.contains('selected');
+        const currentCount = reposGrid.querySelectorAll('.repo-card.selected').length;
 
-            // Format date
-            const date = new Date(repo.updated_at).toLocaleDateString('tr-TR', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
+        if (!isSelected && currentCount >= MAX_REPOS) {
+            alert(`Maksimum ${MAX_REPOS} repo seçebilirsiniz.`);
+            return;
+        }
+
+        card.classList.toggle('selected');
+        updateSelectedCount();
+    });
+
+    // Publish
+    publishBtn.addEventListener('click', async function () {
+        const selectedCards = reposGrid.querySelectorAll('.repo-card.selected');
+        if (selectedCards.length === 0) return;
+
+        const username = document.getElementById('githubUsername').value.trim();
+        const repoNames = Array.from(selectedCards).map(c => c.dataset.repoName);
+
+        publishBtn.disabled = true;
+
+        try {
+            const response = await fetch(GITHUB_SYNC_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, repoNames })
             });
+            const result = await response.json();
+            if (result.success) location.reload();
+        } catch (error) {
+            console.error('Sync hatası:', error);
+        } finally {
+            publishBtn.disabled = false;
+        }
+    });
 
-            return `
-                <div class="repo-card" data-aos="fade-up">
-                    <div class="repo-header">
-                        <div class="repo-icon">
-                            <i class="far fa-folder-open"></i>
-                        </div>
-                        <a href="${repo.html_url}" target="_blank" class="repo-link" aria-label="Github Link">
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                    <h3>${repo.name}</h3>
-                    <p>${description}</p>
-                    <div class="repo-footer">
-                        <div class="repo-lang">
-                            <span class="lang-dot" style="background-color: ${langColor}"></span>
-                            <span>${repo.language || 'Diğer'}</span>
-                        </div>
-                        <div class="repo-stats">
-                            <div class="repo-stat" title="Stars">
-                                <i class="far fa-star"></i>
-                                <span>${repo.stargazers_count}</span>
-                            </div>
-                            <div class="repo-stat" title="Forks">
-                                <i class="fas fa-code-branch"></i>
-                                <span>${repo.forks_count}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        githubContainer.innerHTML = html;
+    function updateSelectedCount() {
+        const count = reposGrid.querySelectorAll('.repo-card.selected').length;
+        selectedCountEl.classList.toggle('hidden', count === 0);
+        publishBtn.classList.toggle('hidden', count === 0);
+        if (count > 0) selectedCountEl.querySelector('span').textContent = count;
     }
-
-    /**
-     * Show Error Message
-     */
-    function showError() {
-        githubContainer.innerHTML = `
-            <div class="github-error col-12">
-                <i class="fas fa-exclamation-circle"></i>
-                <p>GitHub verileri şu an yüklenemiyor.</p>
-                <a href="https://github.com/${USERNAME}" target="_blank" class="btn-text">Profile Git <i class="fas fa-arrow-right"></i></a>
-            </div>
-        `;
-    }
-
-    // Initialize
-    fetchRepos();
 });

@@ -26,4 +26,25 @@ public sealed class GithubReposController : CrudController<GithubRepoDto,CreateG
     }
 
 
+    [HttpGet("fetch/{username}")]
+    public async Task<IActionResult> FetchFromGithub([FromQuery] PaginationQuery query, string username, CancellationToken cancellationToken)
+    {
+        var repos = await _githubRepoService.FetchFromGithubAsync(query, username, cancellationToken);
+        return Ok(repos);
+    }
+    [HttpPost("sync")]
+    public async Task<IActionResult> SyncSelected([FromBody] SyncGithubRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _githubRepoService.SyncSelectedAsync(request.Username, request.RepoNames, cancellationToken);
+        return Ok(result);
+    }
+    [HttpPut("toggle/{id}")]
+    public async Task<IActionResult> ToggleVisibility(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _githubRepoService.ToggleVisibilityAsync(id, cancellationToken);
+        return result == null ? NotFound() : Ok(result);
+    }
+
+
+
 }

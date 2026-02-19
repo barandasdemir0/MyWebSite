@@ -82,6 +82,13 @@ public static class ServiceExtension
 
 
 
+        services.AddHttpClient<IGithubApiService, GithubRepoApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+
+
 
 
 
