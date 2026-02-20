@@ -1,4 +1,5 @@
 const MAX_REPOS = 4;
+const STORAGE_KEY = 'github_selected_repos';
 
 document.addEventListener('DOMContentLoaded', function () {
     const publishBtn = document.getElementById('publishBtn');
@@ -7,59 +8,78 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!reposGrid) return;
 
-    // Kart seçimi
+    // localStorage'dan oku
+    let selectedRepos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    // Razor'ın "Kayıtlı" olarak işaretlediği kartları da ekle
+    reposGrid.querySelectorAll('.repo-card.selected').forEach(card => {
+        const name = card.dataset.repoName;
+        if (!selectedRepos.includes(name)) {
+            selectedRepos.push(name);
+        }
+    });
+
+    // Tüm sayfadaki kartları array'e göre işaretle
+    reposGrid.querySelectorAll('.repo-card').forEach(card => {
+        card.classList.toggle('selected', selectedRepos.includes(card.dataset.repoName));
+    });
+
+    // localStorage'ı güncelle
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedRepos));
+    updateUI();
+
+    // Kart tıklama
     reposGrid.addEventListener('click', function (e) {
         const card = e.target.closest('.repo-card');
         if (!card) return;
 
+        const repoName = card.dataset.repoName;
         const isSelected = card.classList.contains('selected');
-        const currentCount = reposGrid.querySelectorAll('.repo-card.selected').length;
 
-        if (!isSelected && currentCount >= MAX_REPOS) {
-            alert('Maksimum ' + MAX_REPOS + ' repo seçebilirsiniz.');
-            return;
+        if (!isSelected && selectedRepos.length >= MAX_REPOS) return;
+
+        if (isSelected) {
+            selectedRepos = selectedRepos.filter(r => r !== repoName);
+            card.classList.remove('selected');
+        } else {
+            selectedRepos.push(repoName);
+            card.classList.add('selected');
         }
 
-        card.classList.toggle('selected');
-        updateSelectedCount();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedRepos));
+        updateUI();
     });
 
-    // Seçilenleri kaydet
+    // Kaydet
     publishBtn.addEventListener('click', async function () {
-        const selectedCards = reposGrid.querySelectorAll('.repo-card.selected');
-        if (selectedCards.length === 0) return;
+        if (selectedRepos.length === 0) return;
 
         const syncUrl = publishBtn.dataset.syncUrl;
         const username = document.querySelector('input[name="username"]').value.trim();
-        const repoNames = Array.from(selectedCards).map(c => c.dataset.repoName);
 
         publishBtn.disabled = true;
-
         try {
             const response = await fetch(syncUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, repoNames })
+                body: JSON.stringify({ username, repoNames: selectedRepos })
             });
             const result = await response.json();
-            if (result.success) location.reload();
-        } catch (error) {
-            console.error('Sync hatası:', error);
+            if (result.success) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        } catch (err) {
+            console.error('Sync hatası:', err);
         } finally {
             publishBtn.disabled = false;
         }
     });
 
-    function updateSelectedCount() {
-        const count = reposGrid.querySelectorAll('.repo-card.selected').length;
-        // Eğer en az 1 tane seçiliyse butonu göster
-        if (count > 0) {
-            selectedCountEl.classList.remove('hidden');
-            publishBtn.classList.remove('hidden');
-            selectedCountEl.querySelector('span').textContent = count;
-        } else {
-            selectedCountEl.classList.add('hidden');
-            publishBtn.classList.add('hidden');
-        }
+    function updateUI() {
+        const count = selectedRepos.length;
+        selectedCountEl.classList.toggle('hidden', count === 0);
+        publishBtn.classList.toggle('hidden', count === 0);
+        if (count > 0) selectedCountEl.querySelector('span').textContent = count;
     }
 });

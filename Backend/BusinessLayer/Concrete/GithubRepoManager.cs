@@ -64,7 +64,15 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
     // Seçilenleri kaydet
     public async Task<List<GithubRepoDto>> SyncSelectedAsync(string username, List<string> repoNames, CancellationToken cancellationToken = default)
     {
+        var allExisting = await _repository.GetAllAsync(tracking: true, cancellationToken: cancellationToken);
+        foreach (var r in allExisting)
+        {
+            r.IsVisible = false;
+            r.DisplayOrder = 0;
+            await _repository.UpdateAsync(r, cancellationToken);
+        }
         var githubRepos = await FetchAllFromGithubAsync(username, cancellationToken);
+
         var selected = githubRepos
             .Where(r => repoNames.Contains(r.RepoName, StringComparer.OrdinalIgnoreCase))
             .ToList();
@@ -77,6 +85,7 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
                 _mapper.Map(repo, existing);
                 existing.Description ??= string.Empty;
                 existing.Language ??= string.Empty;
+                existing.IsVisible = true;
                 existing.DisplayOrder = order++;
                 await _repository.UpdateAsync(existing, cancellationToken);
             }
@@ -85,7 +94,7 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
                 var entity = _mapper.Map<GithubRepo>(repo);
                 entity.Description ??= string.Empty;
                 entity.Language ??= string.Empty;
-                entity.IsVisible = false;
+                entity.IsVisible = true;
                 await _repository.AddAsync(entity, cancellationToken);
             }
         }
