@@ -37,11 +37,11 @@ public class GithubRepoController : Controller
         }
         // Veritabanındaki kayıtlı repo isimlerini al
         var savedRepos = await _githubApiService.GetAllAsync();
-        model.SavedRepoNames = savedRepos.Select(r => r.RepoName).ToList();
+        model.SavedRepoNames = savedRepos.Select(r => r.RepoName).ToHashSet(StringComparer.OrdinalIgnoreCase);
         return View(model);
     }
     [HttpPost]
-    [IgnoreAntiforgeryToken]  // ← ekle
+    [IgnoreAntiforgeryToken] 
     public async Task<IActionResult> Sync([FromBody] SyncGithubRequest request)
     {
         try
@@ -63,15 +63,7 @@ public class GithubRepoController : Controller
             ErrorMessage: "İşlem başarısız"
         );
     }
-    [HttpPost]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        return await this.SafeAction(
-            action: () => _githubApiService.DeleteAsync(id),
-            successMessage: "Repo silindi",
-            ErrorMessage: "Silme işlemi başarısız"
-        );
-    }
+   
 
 
 }

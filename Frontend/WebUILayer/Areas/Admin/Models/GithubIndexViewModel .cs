@@ -6,5 +6,7 @@ public class GithubIndexViewModel:BasePaginationViewModel
 {
     public List<GithubApiRepoDto> GithubRepos { get; set; } = [];
     public string Username { get; set; } = string.Empty;
-    public List<string> SavedRepoNames { get; set; } = [];  // ← YENİ
+    public HashSet<string> SavedRepoNames { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public bool IsSaved(string repoName) => SavedRepoNames.Contains(repoName);
 }

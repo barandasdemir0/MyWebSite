@@ -30,13 +30,13 @@ public sealed class GithubReposController : CrudController<GithubRepoDto,CreateG
     public async Task<IActionResult> FetchFromGithub([FromQuery] PaginationQuery query, string username, CancellationToken cancellationToken)
     {
         var repos = await _githubRepoService.FetchFromGithubAsync(query, username, cancellationToken);
-        return Ok(repos);
+        return Ok(repos); // githubdan repo isteğini çekiyoruz   hepsini çekeriz yani 
     }
     [HttpPost("sync")]
     public async Task<IActionResult> SyncSelected([FromBody] SyncGithubRequest request, CancellationToken cancellationToken)
     {
         var result = await _githubRepoService.SyncSelectedAsync(request.Username, request.RepoNames, cancellationToken);
-        return Ok(result);
+        return Ok(result); //veritabanını kaydediyor 
     }
     [HttpPut("toggle/{id}")]
     public async Task<IActionResult> ToggleVisibility(Guid id, CancellationToken cancellationToken)
