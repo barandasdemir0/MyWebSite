@@ -3,7 +3,7 @@
 @{
     RouteValueDictionary GetRoute(int page)
     {
-        var rv = new RouteValueDictionary(Model.ExtraRouteValues);
+        var rv = new RouteValueDictionary(Model.ExtraRouteValues!);
         rv["PageNumber"] = page;
         return rv;
     }
