@@ -1,15 +1,10 @@
-﻿namespace CV.EntityLayer.Entities;
+﻿using EntityLayer.Entities;
+
+namespace CV.EntityLayer.Entities;
 
 public sealed class Message : BaseEntity
 {
-    public enum MessageFolder
-    {
-        Inbox,      // Gelen Kutusu
-        Sent,       // Gönderilenler
-        Draft,      // Taslaklar
-        Trash       // Çöp Kutusu
-
-    }
+   
     //gönderen
     public string SenderName { get; set; } = string.Empty;
     public string SenderEmail { get; set; } = string.Empty;

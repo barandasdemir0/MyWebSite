@@ -1,10 +1,13 @@
 ﻿using CV.EntityLayer.Entities;
+using EntityLayer.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace DataAccessLayer.Context;
 
-public sealed class AppDbContext:DbContext
+public sealed class AppDbContext:IdentityDbContext<AppUser,IdentityRole<Guid>,Guid>
 {
    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
     {
@@ -36,6 +39,8 @@ public sealed class AppDbContext:DbContext
     //global query filter otomatik soft delete filtresi
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         //bu configurasyon dosyalarımızı bulup otomatik uygular hani biz fluentapi yaptık ya
