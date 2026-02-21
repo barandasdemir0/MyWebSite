@@ -9,6 +9,8 @@ public class SiteSettingDto : IHasId
     public string? CvFileUrlEn { get; set; }
     public string WorkStatus { get; set; } = string.Empty;  // "İşe Açık Yazısı"
     public bool IsAvailable { get; set; } // "İşe Açık checkbox"
+    public bool IsMaintenanceMode { get; set; } = false;
+
 
     // (SEO):
     public string? SiteTitle { get; set; }

@@ -1,4 +1,5 @@
 using WebUILayer.Extension;
+using WebUILayer.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,14 +34,21 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+
+app.UseMiddleware<MaintenanceMiddleware>();
 app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.UseStaticFiles();
+
+
+
 
 #region area için özel kod
 app.MapControllerRoute(
