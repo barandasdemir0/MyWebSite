@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [Route("[area]/[controller]/[action]/{id?}")]
 public class DashboardController : Controller
 {

@@ -2,6 +2,7 @@
 using DtoLayer.EducationDtos;
 using DtoLayer.ExperienceDtos;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
@@ -11,6 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace WebUILayer.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [Route("[area]/[controller]/[action]/{id?}")]
 public class ResumeController : Controller
 {

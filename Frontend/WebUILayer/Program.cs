@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using WebUILayer.Extension;
 using WebUILayer.Middleware;
 
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region benim eklediklerim
 
+builder.Services.AddCookieAuth();
 builder.Services.AddApiService(builder.Configuration);
 builder.Services.AddAutoValidate();
 
@@ -42,6 +44,7 @@ app.UseStaticFiles();
 app.UseMiddleware<MaintenanceMiddleware>();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

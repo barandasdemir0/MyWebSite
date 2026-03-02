@@ -1,0 +1,134 @@
+﻿using DtoLayer.AuthDtos;
+using EntityLayer.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using WebUILayer.Areas.Admin.Services.Abstract;
+
+namespace WebUILayer.Controllers;
+
+public class AuthController : Controller
+{
+    private readonly IAuthApiService _authApiService;
+
+    public AuthController(IAuthApiService authApiService)
+    {
+        _authApiService = authApiService;
+    }
+
+    [HttpGet("/auth/login")]
+    public IActionResult Login() => View();
+
+    [HttpPost("/auth/login")]
+    public async Task<IActionResult> Login(LoginDto loginDto)
+    {
+        var result = await _authApiService.LoginAsync(loginDto);
+        if (result == null || !result.Success)
+        {
+            ModelState.AddModelError("", result?.Error ?? "Bağlantı Hatası");
+            return View(loginDto);
+        }
+        if (result.RequiresTwoFactor)
+        {
+            TempData["2FA_UserId"] = result.UserId;
+            return RedirectToAction("ChooseTwoFactor");
+        }
+        await SetCookieFromJwtAsync(result.Token!);
+        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+    }
+
+
+
+
+    [HttpGet("/auth/register")]
+    public IActionResult Register() => View();
+
+    [HttpPost("/auth/register")]
+    public async Task<IActionResult> Register(RegisterDto registerDto)
+    {
+        var result = await _authApiService.RegisterAsync(registerDto);
+        if (result == null || !result.Success)
+        {
+            foreach (var error in result?.Errors ?? [])
+            {
+                ModelState.AddModelError("", error);
+            }
+            return View(registerDto);
+        }
+        TempData["Success"] = "Kayıt başarılı, giriş yapabilirsiniz.";
+        return RedirectToAction("Login");
+    }
+
+    [HttpGet("/auth/choose-2fa")]
+    public IActionResult ChooseTwoFactor() => View();
+
+    [HttpPost("/auth/send-email-code")]
+    public async Task<IActionResult> SendEmailCode()
+    {
+        var userId = TempData["2FA_UserId"]?.ToString();
+        TempData["2FA_UserId"] = userId;
+
+        await _authApiService.SendEmailCodeAsync(userId!);
+        TempData["2FA_Provider"] = "Email";
+        return RedirectToAction("VerifyTwoFactor");
+
+    }
+
+    [HttpGet("/auth/verify-2fa")]
+    public IActionResult VerifyTwoFactor() => View();
+
+    [HttpPost("/auth/verify-2fa")]
+    public async Task<IActionResult> VerifyTwoFactor(string code)
+    {
+        var userId = TempData["2FA_UserId"]?.ToString();
+        var provider = TempData["2FA_Provider"]?.ToString() ?? "Email";
+
+        var result = await _authApiService.VerifyTwoFactorAsync
+            (
+            new TwoFactorVerifyDto
+            {
+                UserId = userId!,
+                Code = code,
+                Provider = Enum.Parse<TwoFactorProvider>(provider)
+            }
+            );
+        if (result == null || ! result.Success)
+        {
+            ModelState.AddModelError("", result?.Error ?? "Geçersiz Kod");
+            return View();
+        }
+        await SetCookieFromJwtAsync(result.Token!);
+        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+    }
+
+
+    [HttpPost("/auth/logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync();
+        return RedirectToAction("Login");
+    }
+
+
+    private async Task SetCookieFromJwtAsync(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwt = handler.ReadJwtToken(token);
+        var identity = new ClaimsIdentity(
+            jwt.Claims,
+            CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync
+            (
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(identity),
+            new AuthenticationProperties
+            {
+                IsPersistent = true
+            }
+            );
+    }
+
+
+}

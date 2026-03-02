@@ -11,17 +11,19 @@ using System.Text;
 
 namespace BusinessLayer.Concrete;
 
-internal class AuthManager : IAuthService
+public class AuthManager : IAuthService
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
 
-    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, IEmailService emailService)
+    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, IEmailService emailService, RoleManager<IdentityRole<Guid>> roleManager)
     {
         _userManager = userManager;
         _configuration = configuration;
         _emailService = emailService;
+        _roleManager = roleManager;
     }
 
     public async Task<bool> ConfirmAuthenticatorSetupAsync(string userId, string Code, CancellationToken cancellationToken)
@@ -56,7 +58,7 @@ internal class AuthManager : IAuthService
             return new LoginResultDto
             {
                 Success = true,
-                Token = CreateJwt(user)
+                Token = await CreateJwtAsync(user)
             };
         }
 
@@ -143,15 +145,16 @@ internal class AuthManager : IAuthService
         return new LoginResultDto
         {
             Success = true,
-            Token = CreateJwt(user)
+            Token = await CreateJwtAsync(user)
         };
     }
 
 
 
-    private string CreateJwt(AppUser user)
+    private async Task<string> CreateJwtAsync(AppUser user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
+        var roles = await _userManager.GetRolesAsync(user);
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
@@ -180,5 +183,50 @@ internal class AuthManager : IAuthService
             Error = error
 
         };
+    }
+
+    public async Task<RegisterResultDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
+    {
+        var user = new AppUser
+        {
+            UserName = registerDto.UserName,
+            Email = registerDto.Email,
+            DisplayName = registerDto.DisplayName,
+            EmailConfirmed = true
+        };
+
+        var result = await _userManager.CreateAsync(user, registerDto.Password);
+        if (!result.Succeeded)
+        {
+            return new RegisterResultDto
+            {
+                Success = false,
+                Errors = result.Errors.Select(x => x.Description).ToList()
+            };
+         
+        }
+        return new RegisterResultDto
+        {
+            Success = true
+        };
+    }
+
+    public async Task<bool> AssignRoleAsync(string UserId, string role, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(UserId);
+        if (user==null)
+        {
+            return false;
+        }
+        if (!await _roleManager.RoleExistsAsync(role))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<Guid>
+            {
+                Name = role
+            });
+
+        }
+        await _userManager.AddToRoleAsync(user, role);
+        return true;
     }
 }

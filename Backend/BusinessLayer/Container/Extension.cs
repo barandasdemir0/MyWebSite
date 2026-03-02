@@ -3,13 +3,19 @@ using BusinessLayer.ValidationRules;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using DtoLayer.Mapping;
+using EntityLayer.Entities;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Text;
+
 
 namespace BusinessLayer.Container;
 
@@ -54,6 +60,42 @@ public static class Extension
         services.Scan(scan => scan.FromAssemblyOf<IDalMarker>().AddClasses(c => c.Where(t => t.Name.StartsWith("Ef") && t.Name.EndsWith("Dal"))).AsImplementedInterfaces().WithScopedLifetime());
 
         services.Scan(scan => scan.FromAssemblyOf<IBusinessMarker>().AddClasses(c => c.Where(t => t.Name.EndsWith("Manager"))).AsImplementedInterfaces().WithScopedLifetime());
+    }
+
+    public static void AddIdentityAndJwt(this IServiceCollection services, IConfiguration configuration)
+    {
+        //ıdentity
+        services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
+        {
+            options.Password.RequiredLength = 16;
+            options.Password.RequireNonAlphanumeric = true;
+            options.SignIn.RequireConfirmedEmail = true;
+        })
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+
+        //jwt
+        var jwtKey = configuration["Jwt:SecretKey"]!;
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
     }
 
 }

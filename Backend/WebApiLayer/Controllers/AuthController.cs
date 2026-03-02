@@ -97,7 +97,34 @@ public class AuthController : ControllerBase
 
     }
 
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto,CancellationToken cancellationToken)
+    {
+        var result = await _authService.RegisterAsync(registerDto, cancellationToken);
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+        else
+        {
+            return BadRequest(result.Errors);
+        }
+    }
 
+    [HttpPost("assign-role")]
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto assignRoleDto,CancellationToken cancellationToken)
+    {
+        var ok = await _authService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
+        if (ok)
+        {
+            return Ok();
+        }
+        else
+        {
+            return BadRequest();
+        }
+    }
 
 
 

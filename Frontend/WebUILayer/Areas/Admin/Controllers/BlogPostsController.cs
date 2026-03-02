@@ -1,5 +1,6 @@
 ﻿using DtoLayer.BlogPostDtos;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Models;
@@ -9,6 +10,7 @@ using WebUILayer.Extension;
 namespace WebUILayer.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [Route("[area]/[controller]/[action]/{id?}")]
 public class BlogPostsController : Controller
 {

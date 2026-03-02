@@ -20,6 +20,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDatabaseLayers(builder.Configuration);
 builder.Services.ContainerDependencies();
 builder.Services.AddThirdPartyServices();
+builder.Services.AddIdentityAndJwt(builder.Configuration);
 
 
 #endregion
@@ -36,6 +37,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

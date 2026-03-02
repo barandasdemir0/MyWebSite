@@ -1,5 +1,6 @@
 ﻿using DtoLayer.JobSkillCategoryDtos;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Models;
@@ -11,6 +12,7 @@ namespace WebUILayer.Areas.Admin.Controllers;
 
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [Route("[area]/[controller]/[action]/{id?}")]
 public class JobSkillCategoriesController : Controller
 {

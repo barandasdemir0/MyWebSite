@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
 
@@ -87,6 +88,11 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
+        services.AddHttpClient<IAuthApiService, AuthApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
 
 
 
@@ -109,7 +115,19 @@ public static class ServiceExtension
       
     }
 
-
+    public static void AddCookieAuth(this IServiceCollection services)
+    {
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+        {
+            options.LoginPath = "/auth/login";
+            options.LogoutPath = "/auth/logout";
+            options.AccessDeniedPath = "/auth/login";
+            options.Cookie.Name = "AdminAuth";
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        });
+    }
  
 
 }

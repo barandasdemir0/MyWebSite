@@ -10,4 +10,7 @@ public interface IAuthService
     Task<Setup2FAResultDto> SetupAuthenticatorAsync(string userId, CancellationToken cancellationToken);
     Task<bool> ConfirmAuthenticatorSetupAsync(string userId, string Code, CancellationToken cancellationToken);
     Task RevokeTokensAsync(string userId, CancellationToken cancellationToken);
+
+    Task<RegisterResultDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken);
+    Task<bool> AssignRoleAsync(string UserId, string role, CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 ﻿using DtoLayer.AboutDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Extension;
@@ -6,7 +7,10 @@ using WebUILayer.Extension;
 namespace WebUILayer.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [Route("[area]/[controller]/[action]/{id?}")]
+
+
 public class AboutsController : Controller
 {
     private readonly IAboutApiService _aboutApiService;

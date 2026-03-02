@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <script src="js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İki Aşamalı Doğrulama Yöntemi Seç | Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/modules/variables.css?v=1.0">
+    <link rel="stylesheet" href="css/modules/global.css?v=1.0">
+    <link rel="stylesheet" href="css/modules/layout.css?v=1.0">
+    <link rel="stylesheet" href="css/modules/components.css?v=1.0">
+    <link rel="stylesheet" href="css/modules/notifications.css?v=1.0">
+    <link rel="stylesheet" href="css/modules/login.css?v=1.0">
+    <link rel="stylesheet" href="css/modules/choose-two-factor.css?v=1.0">
+    <link rel="stylesheet" href="css/modules/preloader.css">
+</head>
+
+<body class="login-page choose-two-factor-page">
+    <div class="preloader">
+        <div class="loader-container">
+            <div class="loader-logo"><span>B</span>aran<span>.</span></div>
+            <div class="loader"></div>
+            <div class="loader-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="loader-progress"></div>
+            <div class="loader-text">Yükleniyor</div>
+        </div>
+    </div>
+    <div class="choose-two-factor-container">
+        <div class="choose-two-factor-box">
+            <div class="choose-two-factor-header">
+                <h1><span>2FA</span> Yöntemi</h1>
+                <p>Doğrulama için kullanmak istediğiniz yöntemi seçin</p>
+            </div>
+
+            <form action="two-factor.html" method="get" id="chooseTwoFactorForm">
+                <div class="two-factor-options">
+                    <label class="two-factor-option has-icon">
+                        <input type="radio" name="method" value="authenticator" required>
+                        <span class="two-factor-option-icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></span>
+                        <span class="two-factor-option-content">
+                            <span class="two-factor-option-title">Authenticator uygulaması</span>
+                            <span class="two-factor-option-desc">Google Authenticator, Authy vb. ile tek seferlik kod</span>
+                        </span>
+                    </label>
+                    <label class="two-factor-option has-icon">
+                        <input type="radio" name="method" value="email">
+                        <span class="two-factor-option-icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
+                        <span class="two-factor-option-content">
+                            <span class="two-factor-option-title">E-posta ile kod</span>
+                            <span class="two-factor-option-desc">Giriş sırasında e-posta adresinize gönderilen 6 haneli kod</span>
+                        </span>
+                    </label>
+                </div>
+
+                <div class="choose-two-factor-actions">
+                    <button type="submit" class="btn btn-primary btn-two-factor-submit">
+                        <i class="fas fa-arrow-right"></i>
+                        Devam Et
+                    </button>
+                </div>
+            </form>
+
+            <div class="choose-two-factor-back">
+                <a href="login.html"><i class="fas fa-arrow-left"></i> Girişe dön</a>
+            </div>
+
+            <div class="security-note">
+                <i class="fas fa-shield-alt"></i>
+                <span>İki aşamalı doğrulama hesabınızı yetkisiz girişlere karşı korur.</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/modules/notifications.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script src="js/modules/ui.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>
