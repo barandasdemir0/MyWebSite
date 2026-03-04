@@ -36,6 +36,18 @@ public class AuthApiService : IAuthApiService
     public async Task<RegisterResultDto?> RegisterAsync(RegisterDto registerDto)
     {
         var response = await _httpClient.PostAsJsonAsync("auth/register", registerDto);
+        if (!response.IsSuccessStatusCode)
+        {
+            var errors = await response.Content.ReadFromJsonAsync<List<string>>();
+            return new RegisterResultDto
+            {
+                Success = false,
+                Errors = errors?? new List<string>
+                {
+                    "Kayıt Başarısız. Girdiğiniz bilgileri kontrol edip tekrar deneyin."
+                }
+            };
+        }
         return await response.Content.ReadFromJsonAsync<RegisterResultDto>();
     }
 

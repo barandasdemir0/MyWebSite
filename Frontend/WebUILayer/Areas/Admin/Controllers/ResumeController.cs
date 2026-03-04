@@ -12,7 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace WebUILayer.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize]
 [Route("[area]/[controller]/[action]/{id?}")]
 public class ResumeController : Controller
 {

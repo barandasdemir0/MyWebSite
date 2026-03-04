@@ -1,6 +1,6 @@
 /**
  * Register Page Script
- * Handles password visibility toggle, password strength checker, and form submission
+ * Handles password visibility toggle, password strength checker
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const togglePasswordBtn = document.getElementById('togglePassword');
     if (togglePasswordBtn) {
         togglePasswordBtn.addEventListener('click', function () {
-            const passwordInput = document.getElementById('password');
+            const passwordInput = document.getElementById('password'); // Dikkat: id css ile aynı olsun, C#'taki asp-for id'si
+            if (!passwordInput) return;
             const icon = this.querySelector('i');
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
@@ -24,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPassword');
     if (toggleConfirmPasswordBtn) {
         toggleConfirmPasswordBtn.addEventListener('click', function () {
-            const passwordInput = document.getElementById('confirmPassword');
+            const passwordInput = document.getElementById('confirmPassword'); // Dikkat: id css ile aynı olsun, C#'taki asp-for id'si
+            if (!passwordInput) return;
             const icon = this.querySelector('i');
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
@@ -37,56 +39,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Password strength checker
-    const passwordInput = document.getElementById('password');
+    const passwordInput = document.getElementById('password'); // id="password" olduğundan emin ol!
     const strengthFill = document.getElementById('strengthFill');
     const strengthText = document.getElementById('strengthText');
 
-    if (passwordInput) {
+    if (passwordInput && strengthFill && strengthText) {
         passwordInput.addEventListener('input', function () {
             const password = this.value;
             let strength = 0;
 
-            if (password.length >= 8) strength++;
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-            if (/\d/.test(password)) strength++;
-            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+            if (password.length >= 8) strength += 1; // 8 Karakter (1 Puan)
+            if (/[a-z]/.test(password)) strength += 1; // Küçük harf (1 Puan)
+            if (/[A-Z]/.test(password)) strength += 1; // Büyük harf (1 Puan)
+            if (/\d/.test(password)) strength += 1; // Rakam (1 Puan)
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 1; // Orijinal (1 Puan)
 
             strengthFill.className = 'password-strength-fill';
 
             if (password.length === 0) {
                 strengthText.textContent = 'En az 8 karakter';
-            } else if (strength <= 1) {
+            } else if (strength <= 2) {
                 strengthFill.classList.add('weak');
                 strengthText.textContent = 'Zayıf şifre';
-            } else if (strength === 2 || strength === 3) {
+            } else if (strength === 3 || strength === 4) {
                 strengthFill.classList.add('medium');
                 strengthText.textContent = 'Orta güçlükte';
-            } else {
+            } else if (strength === 5) {
                 strengthFill.classList.add('strong');
                 strengthText.textContent = 'Güçlü şifre';
             }
-        });
-    }
-
-    // Form submission
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (password !== confirmPassword) {
-                showNotification('Şifreler eşleşmiyor!', 'error');
-                return;
-            }
-
-            // Simulate registration
-            showNotification('Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...', 'success');
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
         });
     }
 });

@@ -24,6 +24,7 @@ public class AuthController : Controller
     [HttpPost("/auth/login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
+
         var result = await _authApiService.LoginAsync(loginDto);
         if (result == null || !result.Success)
         {
@@ -37,6 +38,8 @@ public class AuthController : Controller
         }
         await SetCookieFromJwtAsync(result.Token!);
         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+        //return LocalRedirect("/Admin/Dashboard/Index");
+
     }
 
 
@@ -58,11 +61,37 @@ public class AuthController : Controller
             return View(registerDto);
         }
         TempData["Success"] = "Kayıt başarılı, giriş yapabilirsiniz.";
-        return RedirectToAction("Login");
+        return RedirectToAction(nameof(Login));
     }
+
+    
+
+
+
 
     [HttpGet("/auth/choose-2fa")]
     public IActionResult ChooseTwoFactor() => View();
+
+
+    [HttpPost("/auth/process-2fa-choice")]
+    public async Task<IActionResult> ProcessTwoFactorChoice(string SelecttedProvider)
+    {
+        var userId = TempData["2FA_UserId"]?.ToString();
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction(nameof(Login));
+        }
+        TempData["2FA_UserId"] = userId;
+        if (SelecttedProvider == "Email")
+        {
+            return await SendEmailCode();
+        }
+        TempData["2FA_Provider"] = "Authenticator";
+        return RedirectToAction("VerifyTwoFactor");
+    }
+
+
+
 
     [HttpPost("/auth/send-email-code")]
     public async Task<IActionResult> SendEmailCode()
@@ -104,11 +133,14 @@ public class AuthController : Controller
     }
 
 
+
+
+
     [HttpPost("/auth/logout")]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync();
-        return RedirectToAction("Login");
+        return RedirectToAction(nameof(Login));
     }
 
 

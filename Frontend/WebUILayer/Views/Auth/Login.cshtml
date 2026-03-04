@@ -1,16 +1,96 @@
-﻿
+﻿@model LoginDto
 @{
     Layout = null;
-    ViewData["BodyClass"] = "login-page";
 }
-
 <!DOCTYPE html>
+<html lang="tr">
 
-<html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Login</title>
+    <script src="~/Mytheme/js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Giriş | Portfolio Yönetim Paneli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/variables.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/global.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/layout.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/components.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/notifications.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/login.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/login-page.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/preloader.css">
 </head>
-<body>
+
+<body class="login-page">
+    <!-- Preloader -->
+  
+    <div class="login-container">
+        <div class="login-box">
+            <div class="header-actions">
+                <!-- Theme Toggle will be injected here by ui.js -->
+            </div>
+            <div class="login-logo">
+                <h1><span>Admin</span> Panel</h1>
+                <p>Portfolio Yönetim Sistemi</p>
+            </div>
+
+            <form  asp-action="Login" method="post">
+ 
+               
+                <div class="form-group">
+                    <label for="email">Email Adresi</label>
+                   
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="email" class="form-control" asp-for="Email" id="email" placeholder="admin@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <input type="password" class="form-control" asp-for="Password" id="password" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox">
+                        <span>Beni Hatırla</span>
+                    </label>
+                    <a href="#">Şifremi Unuttum</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Giriş Yap
+                </button>
+            </form>
+
+            <div class="signup-section">
+                <p>
+                    Hesabınız yok mu?
+                    <a asp-action="Register">Kayıt Ol</a>
+                </p>
+            </div>
+
+            <div class="security-section">
+                <p>
+                    <i class="fas fa-shield-alt"></i>
+                    Güvenli bağlantı ile korunmaktadır
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Mytheme/admin/js/modules/notifications.js"></script>
+    <script src="~/Mytheme/admin/js/modules/ui.js"></script>
+    <script src="~/Mytheme/admin/js/admin.js"></script>
 </body>
+
 </html>

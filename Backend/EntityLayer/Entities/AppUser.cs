@@ -4,7 +4,8 @@ namespace EntityLayer.Entities;
 
 public sealed class AppUser:IdentityUser<Guid>
 {
-    public string? DisplayName { get; set; }
+    public string? Name { get; set; }
+    public string? Surname { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     //hangi 2fa yöntemini tercih ettiğin  email or google authenticator

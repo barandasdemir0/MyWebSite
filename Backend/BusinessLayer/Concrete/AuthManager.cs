@@ -155,13 +155,15 @@ public class AuthManager : IAuthService
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
         var roles = await _userManager.GetRolesAsync(user);
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
             new Claim(ClaimTypes.Email,user.Email??""),
-            new Claim(ClaimTypes.Name,user.DisplayName ?? user.UserName ??""),
-            new Claim(ClaimTypes.Role,"Admin")
+            new Claim(ClaimTypes.Name,$"{user.Name}{user.Surname}")
+
         };
+        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
 
         var token = new JwtSecurityToken
             (
@@ -189,9 +191,10 @@ public class AuthManager : IAuthService
     {
         var user = new AppUser
         {
-            UserName = registerDto.UserName,
+            UserName = registerDto.Email,
             Email = registerDto.Email,
-            DisplayName = registerDto.DisplayName,
+            Name = registerDto.Name,
+            Surname = registerDto.Surname,
             EmailConfirmed = true
         };
 
