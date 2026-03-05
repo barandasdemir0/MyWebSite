@@ -11,6 +11,8 @@ public static class ServiceExtension
     {
         var baseurl = configuration["ApiSettings:Baseurl"];
 
+        #region admin için bağlamalar  --> bu yapı daha sonra scrutor ile otomatikleştirilecek
+
         services.AddHttpClient<IAboutApiService, AboutApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
@@ -93,7 +95,12 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
+        #endregion
 
+        #region public için bağlamalar --> bu yapı scrutor ile otomatikleştirilecek
+
+
+        #endregion
 
 
 
