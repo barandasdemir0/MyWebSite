@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCookieAuth();
 builder.Services.AddApiService(builder.Configuration);
 builder.Services.AddAutoValidate();
+builder.Services.AddHttpContextAccessor();
 
 #endregion
 

@@ -1,0 +1,80 @@
+﻿@model Setup2FAResultDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <script src="js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İki Aşamalı Doğrulama Yöntemi Seç | Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/variables.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/global.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/layout.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/components.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/notifications.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/login.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/choose-two-factor.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/preloader.css">
+</head>
+
+<body class="login-page choose-two-factor-page">
+    <div class="preloader">
+        <div class="loader-container">
+            <div class="loader-logo"><span>B</span>aran<span>.</span></div>
+            <div class="loader"></div>
+            <div class="loader-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="loader-progress"></div>
+            <div class="loader-text">Yükleniyor</div>
+        </div>
+    </div>
+
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-mobile-alt"></i>Authenticator Kurulumu</h3>
+    </div>
+    <div class="card-body">
+        <p>Google Authenticator veya Authy uygulamanızla QR kodu tarayın:</p>
+
+        <div style="text-align:center; margin: 24px 0;">
+            <img src="@Model.QrCodeImageBase64" alt="QR Kod" style="max-width: 200px;">
+        </div>
+
+        <p>QR tarayamıyorsanız bu kodu elle girin:</p>
+        <code style="font-size: 1.1rem; letter-spacing: 4px;">@Model.ManuelEntryKey</code>
+
+        <hr>
+
+        <form action="/Admin/Security/ConfirmAuthenticator" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Uygulamadaki 6 haneli kodu girin</label>
+                <input type="text" class="form-control" name="code"
+                       maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
+                       placeholder="000000" required>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check"></i> Onayla ve 2FA'yı Aç
+            </button>
+        </form>
+
+        <a href="/Admin/Security/Index"><i class="fas fa-arrow-left"></i> Geri dön</a>
+    </div>
+</div>
+    <script src="/Mytheme/admin/js/modules/notifications.js"></script>
+    <script src="/Mytheme/admin/js/modules/auth.js"></script>
+    <script src="/Mytheme/admin/js/modules/ui.js"></script>
+    <script src="/Mytheme/admin/js/admin.js"></script>
+</body>
+
+</html>

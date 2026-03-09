@@ -1,0 +1,144 @@
+﻿@using EntityLayer.Entities
+@model UserProfileDto
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "security-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" href="/Mytheme/portfolio/css/modules/security.css">
+}
+
+<div class="content-grid">
+    <!-- İki Aşamalı Doğrulama -->
+    <div class="card card-two-factor">
+        <div class="card-header">
+            <h3><i class="fas fa-lock"></i>İki Aşamalı Doğrulama (2FA)</h3>
+            @if (Model.TwoFactorEnabled)
+            {
+                <span class="card-badge card-badge-success">Açık</span>
+            }
+            else
+            {
+                <span class="card-badge card-badge-danger">Kapalı</span>
+            }  
+            
+        </div>
+        <div class="card-body-two-factor">
+            @if (Model.TwoFactorEnabled)
+            {
+                <p class="two-factor-desc">Hesabınız giriş sırasında ek doğrulama ile korunuyor.</p>
+                <div class="two-factor-method">
+                    <span class="two-factor-method-label">Yöntem:</span>
+                    <span class="two-factor-method-value">
+                        @if (Model.Preferred2FAProvider == EntityLayer.Entities.TwoFactorProvider.Authenticator)
+                        {
+                            <i class="fas fa-mobile-alt"> </i>
+                            @:Authenticator uygulaması
+                        }
+                        else
+                        {
+                            <i class="fas fa-envelope"></i> @:E-posta ile kod
+                        }
+                    </span>
+                </div>
+                   <div class="two-factor-actions">
+                <form action="Toggle2FA" method="post" class="btn btn-secondary">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="Enable" value="false">
+                    <input type="hidden" name="Provider" value="@((int)Model.Preferred2FAProvider)">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times"></i> 2FA'yı Kapat
+                    </button>
+                </form>
+  
+            </div>
+            }
+            else
+            {
+                 <!-- 2FA KAPALI: Açma formu + yöntem seçimi -->
+            <p class="two-factor-desc">Hesabınızı korumak için iki aşamalı doğrulamayı açın.</p>
+            <form action="/Admin/Security/Toggle2FA" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Enable" value="true">
+                
+                <div class="two-factor-options" style="margin-bottom: 16px;">
+                    <label class="two-factor-option has-icon">
+                        <input type="radio" name="Provider" value="@((int)TwoFactorProvider.Email)" checked>
+                        <span class="two-factor-option-icon"><i class="fas fa-envelope"></i></span>
+                        <span class="two-factor-option-content">
+                            <span class="two-factor-option-title">E-posta ile kod</span>
+                            <span class="two-factor-option-desc">Giriş sırasında e-posta adresinize 6 haneli kod</span>
+                        </span>
+                    </label>
+                    <label class="two-factor-option has-icon">
+                        <input type="radio" name="Provider" value="@((int)TwoFactorProvider.Authenticator)">
+                        <span class="two-factor-option-icon"><i class="fas fa-mobile-alt"></i></span>
+                        <span class="two-factor-option-content">
+                            <span class="two-factor-option-title">Authenticator uygulaması</span>
+                            <span class="two-factor-option-desc">Google Authenticator, Authy vb.</span>
+                        </span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-shield-alt"></i> 2FA'yı Aç
+                </button>
+            </form>
+            }
+          
+          
+         
+        </div>
+    </div>
+
+    <!-- Security Settings -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-shield-alt"></i>Admin Güvenlik</h3>
+        </div>
+
+        <form asp-action="ChangePassword" method="post">
+            <div class="form-group">
+                <label>Admin Email</label>
+                <input type="email" class="form-control" name="Email">
+            </div>
+
+            <div class="form-group">
+                <label>Mevcut Şifre</label>
+                <div class="password-wrapper">
+                    <input type="password" class="form-control" name="CurrentPassword" placeholder="••••••••">
+                    <button type="button" class="password-toggle">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Yeni Şifre</label>
+                <div class="password-wrapper">
+                    <input type="password" class="form-control" name="NewPassword" placeholder="En az 8 karakter">
+                    <button type="button" class="password-toggle">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Yeni Şifre (Tekrar)</label>
+                <div class="password-wrapper">
+                    <input type="password" class="form-control"  name="ConfirmPassword" placeholder="Şifreyi tekrar girin" required>
+                    <button type="button" class="password-toggle">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-key"></i>
+                Şifreyi Güncelle
+            </button>
+        </form>
+    </div>
+</div>
+

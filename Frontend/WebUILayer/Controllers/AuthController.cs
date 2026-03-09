@@ -136,7 +136,7 @@ public class AuthController : Controller
 
 
 
-    [HttpPost("/auth/logout")]
+    [HttpGet("/auth/logout")]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync();
@@ -148,8 +148,10 @@ public class AuthController : Controller
     {
         var handler = new JwtSecurityTokenHandler();
         var jwt = handler.ReadJwtToken(token);
+        var claims = jwt.Claims.ToList();
+        claims.Add(new Claim("RawJwtToken", token));
         var identity = new ClaimsIdentity(
-            jwt.Claims,
+           claims,
             CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync
             (

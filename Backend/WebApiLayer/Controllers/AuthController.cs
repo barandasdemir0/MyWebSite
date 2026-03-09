@@ -12,10 +12,14 @@ public class AuthController : ControllerBase
 {
 
     private readonly IAuthService _authService;
+    private readonly IUserProfileService _userProfileService;
+    private readonly ITwoFactorService _twoFactorService;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IUserProfileService userProfileService, ITwoFactorService twoFactorService)
     {
         _authService = authService;
+        _userProfileService = userProfileService;
+        _twoFactorService = twoFactorService;
     }
 
     [HttpPost("login")]
@@ -36,7 +40,7 @@ public class AuthController : ControllerBase
     [HttpPost("send-email-code")]
     public async Task<IActionResult> SendEmailCode([FromBody] string userId,CancellationToken cancellationToken)
     {
-        var sent = await _authService.SendMailOtpAsync(userId, cancellationToken);
+        var sent = await _twoFactorService.SendMailOtpAsync(userId, cancellationToken);
         if (sent)
         {
             return Ok();
@@ -51,7 +55,7 @@ public class AuthController : ControllerBase
     [HttpPost("verify-2fa")]
     public async Task<IActionResult> VerifyTwoFactor([FromBody] TwoFactorVerifyDto dto,CancellationToken cancellationToken)
     {
-        var result = await _authService.VerifyTwoFactorAsync(dto, cancellationToken);
+        var result = await _twoFactorService.VerifyTwoFactorAsync(dto, cancellationToken);
         if (result.Success)
         {
             return Ok(result);
@@ -66,7 +70,7 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> SetupAuthenticator(string userId,CancellationToken cancellationToken)
     {
-        var result = await _authService.SetupAuthenticatorAsync(userId, cancellationToken);
+        var result = await _twoFactorService.SetupAuthenticatorAsync(userId, cancellationToken);
         return Ok(result);
     }
 
@@ -75,7 +79,7 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> ConfirmAuthenticator([FromBody] TwoFactorVerifyDto twoFactorVerifyDto,CancellationToken cancellation)
     {
-        var ok = await _authService.ConfirmAuthenticatorSetupAsync(twoFactorVerifyDto.UserId, twoFactorVerifyDto.Code, cancellation);
+        var ok = await _twoFactorService.ConfirmAuthenticatorSetupAsync(twoFactorVerifyDto.UserId, twoFactorVerifyDto.Code, cancellation);
         if (ok)
         {
             return Ok();
@@ -112,10 +116,10 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("assign-role")]
-    [Authorize(Roles ="Admin")]
+    [Authorize]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto assignRoleDto,CancellationToken cancellationToken)
     {
-        var ok = await _authService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
+        var ok = await _userProfileService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
         if (ok)
         {
             return Ok();
@@ -125,6 +129,39 @@ public class AuthController : ControllerBase
             return BadRequest();
         }
     }
+
+    [HttpGet("profile/{userId}")]
+    [Authorize]
+    public async Task<IActionResult> GetProfile(string userId , CancellationToken cancellationToken)
+    {
+        var profile = await _userProfileService.GetUserProfileAsync(userId, cancellationToken);
+        return Ok(profile);
+    }
+
+    [HttpPost("change-password/{userId}")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(string userId, [FromBody] ChangePasswordDto changePasswordDto,CancellationToken cancellationToken)
+    {
+        var ok = await _userProfileService.ChangePasswordAsync(userId, changePasswordDto, cancellationToken);
+        if (ok)
+        {
+            return Ok();
+        }
+        return BadRequest("Şifre değiştirilemedi mevcut şifren yanlış olabilir");
+    }
+
+    [HttpPost("toggle-2fa/{userId}")]
+    [Authorize]
+    public async Task<IActionResult> Toggle2FA(string userId, [FromBody] Toggle2FADto toggle2FADto ,CancellationToken cancellationToken)
+    {
+        var ok = await _userProfileService.Toggle2FAAsync(userId, toggle2FADto, cancellationToken);
+        if (ok)
+        {
+            return Ok();
+        }
+        return BadRequest("2FA ayarı değiştirilemedi");
+    }
+
 
 
 
