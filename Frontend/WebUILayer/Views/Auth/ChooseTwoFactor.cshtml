@@ -48,7 +48,7 @@
         <form asp-action="ProcessTwoFactorChoice" method="post" id="chooseTwoFactorForm">
             <div class="two-factor-options">
                 <label class="two-factor-option has-icon">
-                    <input type="radio" name="SelectedProvider" value="Authenticator" required>
+                    <input type="radio" name="SelectedProvider" value="Authenticator">
                     <span class="two-factor-option-icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></span>
                     <span class="two-factor-option-content">
                         <span class="two-factor-option-title">Authenticator uygulaması</span>
@@ -56,7 +56,7 @@
                     </span>
                 </label>
                 <label class="two-factor-option has-icon">
-                    <input type="radio" name="method" value="Email">
+                        <input type="radio" name="SelecttedProvider" value="Email">
                     <span class="two-factor-option-icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
                     <span class="two-factor-option-content">
                         <span class="two-factor-option-title">E-posta ile kod</span>

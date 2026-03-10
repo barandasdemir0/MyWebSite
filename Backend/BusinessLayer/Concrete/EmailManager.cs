@@ -16,16 +16,29 @@ public class EmailManager : IEmailService
 
     public async Task SendAsync(string to, string subject, string body, CancellationToken cancellationToken = default)
     {
-        using var smtp = new SmtpClient(_configuration["Email:Host"])
+        try
         {
-            Port = int.Parse(_configuration["Email:Host"]!),
-            Credentials = new NetworkCredential
-            (
-                _configuration["Email:Username"],
-                _configuration["Email::Password"]),
-            EnableSsl = true
-        };
-        var mail = new MailMessage(_configuration["Email:From"]!, to, subject, body);
-        await smtp.SendMailAsync(mail, cancellationToken);
+            using var smtp = new SmtpClient(_configuration["Email:Host"])
+            {
+                Port = int.Parse(_configuration["Email:Port"]!),
+                Credentials = new NetworkCredential
+          (
+              _configuration["Email:Username"],
+              _configuration["Email:Password"]),
+                EnableSsl = true
+            };
+            var mail = new MailMessage(_configuration["Email:From"]!, to, subject, body);
+            mail.IsBodyHtml = true;
+            await smtp.SendMailAsync(mail, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+
+            System.Diagnostics.Debug.WriteLine($"MAIL HATASI: {ex.Message}");
+            throw; // Hatayı yukarı fırlatsın ki API 400 dönsün
+        }
+      
+
+       
     }
 }

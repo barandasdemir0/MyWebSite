@@ -74,7 +74,7 @@ public class AuthController : Controller
 
 
     [HttpPost("/auth/process-2fa-choice")]
-    public async Task<IActionResult> ProcessTwoFactorChoice(string SelecttedProvider)
+    public async Task<IActionResult> ProcessTwoFactorChoice(string SelectedProvider)
     {
         var userId = TempData["2FA_UserId"]?.ToString();
         if (string.IsNullOrEmpty(userId))
@@ -82,26 +82,27 @@ public class AuthController : Controller
             return RedirectToAction(nameof(Login));
         }
         TempData["2FA_UserId"] = userId;
-        if (SelecttedProvider == "Email")
+        if (SelectedProvider == "Email")
         {
-            return await SendEmailCode();
+            return RedirectToAction(nameof(SendEmailCode));
         }
         TempData["2FA_Provider"] = "Authenticator";
-        return RedirectToAction("VerifyTwoFactor");
+        return RedirectToAction(nameof(VerifyTwoFactor));
     }
 
 
 
 
-    [HttpPost("/auth/send-email-code")]
+    [HttpGet("/auth/send-email-code")]
     public async Task<IActionResult> SendEmailCode()
     {
         var userId = TempData["2FA_UserId"]?.ToString();
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction(nameof(Login));
         TempData["2FA_UserId"] = userId;
 
         await _authApiService.SendEmailCodeAsync(userId!);
         TempData["2FA_Provider"] = "Email";
-        return RedirectToAction("VerifyTwoFactor");
+        return RedirectToAction(nameof(VerifyTwoFactor));
 
     }
 

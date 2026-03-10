@@ -24,6 +24,7 @@ public class AuthApiService : IAuthApiService
 
     public async Task<bool> ConfirmAuthenticatorAsync(TwoFactorVerifyDto dto)
     {
+        AddTokenHeader(); // BUNU EKLE
         var response = await _httpClient.PostAsJsonAsync("auth/Confirm-authenticator", dto);
         return response.IsSuccessStatusCode;
     }
@@ -85,6 +86,7 @@ public class AuthApiService : IAuthApiService
 
     public async Task<bool> SendEmailCodeAsync(string userId)
     {
+        AddTokenHeader(); // BUNU EKLE
         var response = await _httpClient.PostAsJsonAsync("auth/send-email-code", userId);
         return response.IsSuccessStatusCode;
     }
@@ -109,6 +111,7 @@ public class AuthApiService : IAuthApiService
 
     public async Task<LoginResultDto?> VerifyTwoFactorAsync(TwoFactorVerifyDto twoFactorVerifyDto)
     {
+        AddTokenHeader(); // BUNU EKLE
         var response = await _httpClient.PostAsJsonAsync("auth/verify-2fa", twoFactorVerifyDto);
         if (!response.IsSuccessStatusCode)
         {

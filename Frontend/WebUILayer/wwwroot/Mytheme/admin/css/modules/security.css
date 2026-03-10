@@ -125,3 +125,8 @@
 .security-page .btn-ghost:hover {
     color: var(--admin-primary);
 }
+.security-page .qr-code-image {
+    max-width: 200px;
+    border-radius: 8px;
+    border: 2px solid var(--admin-border);
+}
