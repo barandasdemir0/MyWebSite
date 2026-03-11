@@ -141,6 +141,7 @@ public class AuthController : Controller
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync();
+        HttpContext.Response.Cookies.Delete("AccessToken");
         return RedirectToAction(nameof(Login));
     }
 
@@ -149,20 +150,31 @@ public class AuthController : Controller
     {
         var handler = new JwtSecurityTokenHandler();
         var jwt = handler.ReadJwtToken(token);
-        var claims = jwt.Claims.ToList();
-        claims.Add(new Claim("RawJwtToken", token));
-        var identity = new ClaimsIdentity(
-           claims,
-            CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var identity = new ClaimsIdentity
+            (
+                jwt.Claims,
+                CookieAuthenticationDefaults.AuthenticationScheme
+            );
+
         await HttpContext.SignInAsync
             (
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(identity),
-            new AuthenticationProperties
-            {
-                IsPersistent = true
-            }
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity),
+                new AuthenticationProperties
+                {
+                    IsPersistent = true
+                }
             );
+
+        HttpContext.Response.Cookies.Append("AccessToken", token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.UtcNow.AddHours(1)
+        });
+     
     }
 
 

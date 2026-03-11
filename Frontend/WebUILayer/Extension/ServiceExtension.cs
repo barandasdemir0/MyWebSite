@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
+using WebUILayer.Helper;
 
 namespace WebUILayer.Extension;
 
@@ -14,87 +15,90 @@ public static class ServiceExtension
 
         #region admin için bağlamalar  --> bu yapı daha sonra scrutor ile otomatikleştirilecek
 
+        services.AddTransient<JwtTokenHandler>();
+
+
         services.AddHttpClient<IAboutApiService, AboutApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
 
         services.AddHttpClient<IBlogPostApiService, BlogPostApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<ITopicApiService, TopicApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IHeroApiService, HeroApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<ICertificateApiService, CertificateApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IEducationApiService, EducationApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IExperienceApiService, ExperienceApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IProjectApiService, ProjectApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<ISkillApiService, SkillApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<ISocialMediaApiService, SocialMediaApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IJobSkillApiService, JobSkillApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IJobSkillCategoryService, JobSkillCategoryApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
         services.AddHttpClient<ISiteSettingsApiService, SiteSettingsApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IContactApiService, ContactApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
 
 
         services.AddHttpClient<IGithubApiService, GithubRepoApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IAuthApiService, AuthApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
-        });
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         #endregion
 
@@ -123,6 +127,9 @@ public static class ServiceExtension
       
     }
 
+
+
+
     public static void AddCookieAuth(this IServiceCollection services)
     {
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
@@ -135,6 +142,17 @@ public static class ServiceExtension
             options.Cookie.SameSite = SameSiteMode.Lax;
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        });
+    }
+
+
+    public static void AddSessionTempData(this IServiceCollection services)
+    {
+        services.AddSession(options =>
+        {
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+            options.IdleTimeout = TimeSpan.FromMinutes(5);
         });
     }
  

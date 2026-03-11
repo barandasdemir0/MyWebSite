@@ -1,7 +1,8 @@
 ﻿using BusinessLayer.Abstract;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Configuration;
-using System.Net;
-using System.Net.Mail;
+using MimeKit;
 
 namespace BusinessLayer.Concrete;
 
@@ -16,28 +17,34 @@ public class EmailManager : IEmailService
 
     public async Task SendAsync(string to, string subject, string body, CancellationToken cancellationToken = default)
     {
-        try
-        {
-            using var smtp = new SmtpClient(_configuration["Email:Host"])
-            {
-                Port = int.Parse(_configuration["Email:Port"]!),
-                Credentials = new NetworkCredential
-          (
-              _configuration["Email:Username"],
-              _configuration["Email:Password"]),
-                EnableSsl = true
-            };
-            var mail = new MailMessage(_configuration["Email:From"]!, to, subject, body);
-            mail.IsBodyHtml = true;
-            await smtp.SendMailAsync(mail, cancellationToken);
-        }
-        catch (Exception ex)
-        {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress("Baran Dasdemir", _configuration["Email:From"]!));
+        message.To.Add(MailboxAddress.Parse(to));
 
-            System.Diagnostics.Debug.WriteLine($"MAIL HATASI: {ex.Message}");
-            throw; // Hatayı yukarı fırlatsın ki API 400 dönsün
-        }
-      
+        message.Subject = subject;
+        message.Body = new TextPart("html")
+        {
+            Text = body
+        };
+
+       
+
+        using var smtp = new SmtpClient();
+        await smtp.ConnectAsync(
+            _configuration["Email:Host"],
+            int.Parse(_configuration["Email:Port"]!),
+            SecureSocketOptions.StartTls,
+            cancellationToken
+            );
+
+        await smtp.AuthenticateAsync(
+            _configuration["Email:Username"],
+            _configuration["Email:Password"],
+            cancellationToken
+            );
+
+        await smtp.SendAsync(message, cancellationToken);
+        await smtp.DisconnectAsync(true, cancellationToken);
 
        
     }

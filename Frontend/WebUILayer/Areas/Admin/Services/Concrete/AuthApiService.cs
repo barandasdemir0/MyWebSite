@@ -17,14 +17,12 @@ public class AuthApiService : IAuthApiService
 
     public async Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto)
     {
-        AddTokenHeader();
         var response = await _httpClient.PostAsJsonAsync($"auth/change-password/{userId}", changePasswordDto);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> ConfirmAuthenticatorAsync(TwoFactorVerifyDto dto)
     {
-        AddTokenHeader(); // BUNU EKLE
         var response = await _httpClient.PostAsJsonAsync("auth/Confirm-authenticator", dto);
         return response.IsSuccessStatusCode;
     }
@@ -35,7 +33,6 @@ public class AuthApiService : IAuthApiService
     public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
     {
 
-        AddTokenHeader();
         var response = await _httpClient.GetAsync($"auth/profile/{userId}");
         if (!response.IsSuccessStatusCode)
         {
@@ -86,14 +83,12 @@ public class AuthApiService : IAuthApiService
 
     public async Task<bool> SendEmailCodeAsync(string userId)
     {
-        AddTokenHeader(); // BUNU EKLE
         var response = await _httpClient.PostAsJsonAsync("auth/send-email-code", userId);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<Setup2FAResultDto?> SetupAuthenticatorAsync(string userId)
     {
-        AddTokenHeader();
         var response = await _httpClient.GetAsync($"auth/setup-authenticator/{userId}");
         if (!response.IsSuccessStatusCode)
         {
@@ -104,14 +99,13 @@ public class AuthApiService : IAuthApiService
 
     public async Task<bool> Toggle2FAAsync(string userId, Toggle2FADto dto)
     {
-        AddTokenHeader();
         var response = await _httpClient.PostAsJsonAsync($"auth/toggle-2fa/{userId}", dto);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<LoginResultDto?> VerifyTwoFactorAsync(TwoFactorVerifyDto twoFactorVerifyDto)
     {
-        AddTokenHeader(); // BUNU EKLE
+     
         var response = await _httpClient.PostAsJsonAsync("auth/verify-2fa", twoFactorVerifyDto);
         if (!response.IsSuccessStatusCode)
         {
@@ -126,15 +120,4 @@ public class AuthApiService : IAuthApiService
         return await response.Content.ReadFromJsonAsync<LoginResultDto>();
     }
 
-
-
-    private void AddTokenHeader()
-    {
-        var token = _httpContextAccessor.HttpContext?.User.FindFirst("RawJwtToken")?.Value;
-        if (!string.IsNullOrEmpty(token))
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
-
-    }
 }

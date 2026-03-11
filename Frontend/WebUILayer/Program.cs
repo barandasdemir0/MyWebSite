@@ -16,6 +16,7 @@ builder.Services.AddCookieAuth();
 builder.Services.AddApiService(builder.Configuration);
 builder.Services.AddAutoValidate();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSessionTempData();
 
 #endregion
 
@@ -43,8 +44,10 @@ app.UseStaticFiles();
 
 
 app.UseMiddleware<MaintenanceMiddleware>();
-app.UseRouting();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
+app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

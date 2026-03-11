@@ -3,8 +3,8 @@ using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using QRCoder;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,40 +16,36 @@ public class AuthManager : IAuthService
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly IConfiguration _configuration;
-    private readonly IEmailService _emailService;
+    private readonly ILogger<AuthManager> _logger;
 
-    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, IEmailService emailService, RoleManager<IdentityRole<Guid>> roleManager)
+
+    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger)
     {
         _userManager = userManager;
         _configuration = configuration;
-        _emailService = emailService;
         _roleManager = roleManager;
+        _logger = logger;
     }
 
-  
+
 
     public async Task<LoginResultDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
-        if (user== null|| !await _userManager.CheckPasswordAsync(user,loginDto.Password))
+        if (user==null)
         {
             return Fail("Geçersiz Eposta veya şifre");
         }
-        if (!await _userManager.GetTwoFactorEnabledAsync(user))
-        {
-            return new LoginResultDto
-            {
-                Success = true,
-                Token = await CreateJwtAsync(user)
-            };
-        }
+
+
 
         if (await _userManager.IsLockedOutAsync(user))
         {
             return Fail("Hesabınız Geçiçi Olarak Kilitlendi");
         }
 
-        if (!await _userManager.CheckPasswordAsync(user,loginDto.Password))
+
+        if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
         {
             await _userManager.AccessFailedAsync(user);
             return Fail("Geçersiz e-posta veya şifre");
@@ -57,12 +53,27 @@ public class AuthManager : IAuthService
 
         await _userManager.ResetAccessFailedCountAsync(user);
 
+
+        if (!await _userManager.GetTwoFactorEnabledAsync(user))
+        {
+
+            return new LoginResultDto
+            {
+                Success = true,
+                RequiresTwoFactor = true,
+                UserId = user.Id.ToString()
+
+            };
+        }
+
         return new LoginResultDto
         {
             Success = true,
-            RequiresTwoFactor = true,
-            UserId = user.Id.ToString()
+            Token = await CreateJwtAsync(user)
+
         };
+
+
     }
 
     public async Task RevokeTokensAsync(string userId, CancellationToken cancellationToken)
@@ -85,15 +96,6 @@ public class AuthManager : IAuthService
             EmailConfirmed = false
         };
 
-        if (!await _roleManager.RoleExistsAsync("User"))
-        {
-            await _roleManager.CreateAsync(new IdentityRole<Guid>
-            {
-                Name = "User"
-            });
-        }
-        await _userManager.AddToRoleAsync(user, "User");
-
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (!result.Succeeded)
         {
@@ -104,6 +106,17 @@ public class AuthManager : IAuthService
             };
 
         }
+
+        if (!await _roleManager.RoleExistsAsync("User"))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<Guid>
+            {
+                Name = "User"
+            });
+        }
+        await _userManager.AddToRoleAsync(user, "User");
+
+       
         return new RegisterResultDto
         {
             Success = true
