@@ -133,6 +133,7 @@ public static class ServiceExtension
             options.Cookie.Name = "AdminAuth";
             options.Cookie.HttpOnly = true;
             options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.ExpireTimeSpan = TimeSpan.FromHours(8);
         });
     }

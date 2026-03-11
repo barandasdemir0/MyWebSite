@@ -44,6 +44,19 @@ public class AuthManager : IAuthService
             };
         }
 
+        if (await _userManager.IsLockedOutAsync(user))
+        {
+            return Fail("Hesabınız Geçiçi Olarak Kilitlendi");
+        }
+
+        if (!await _userManager.CheckPasswordAsync(user,loginDto.Password))
+        {
+            await _userManager.AccessFailedAsync(user);
+            return Fail("Geçersiz e-posta veya şifre");
+        }
+
+        await _userManager.ResetAccessFailedCountAsync(user);
+
         return new LoginResultDto
         {
             Success = true,
@@ -69,8 +82,17 @@ public class AuthManager : IAuthService
             Email = registerDto.Email,
             Name = registerDto.Name,
             Surname = registerDto.Surname,
-            EmailConfirmed = true
+            EmailConfirmed = false
         };
+
+        if (!await _roleManager.RoleExistsAsync("User"))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<Guid>
+            {
+                Name = "User"
+            });
+        }
+        await _userManager.AddToRoleAsync(user, "User");
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (!result.Succeeded)
@@ -108,7 +130,7 @@ public class AuthManager : IAuthService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(8),
+            expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 

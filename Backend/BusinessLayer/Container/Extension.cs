@@ -8,7 +8,9 @@ using FluentValidation;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,6 +72,11 @@ public static class Extension
             options.Password.RequiredLength = 16;
             options.Password.RequireNonAlphanumeric = true;
             options.SignIn.RequireConfirmedEmail = true;
+
+
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
         })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
@@ -96,6 +103,29 @@ public static class Extension
                     ClockSkew = TimeSpan.Zero
                 };
             });
+    }
+
+    public static void AddEmailRateLimiter(this IServiceCollection services)
+    {
+        services.AddRateLimiter(options =>
+        {
+            options.AddFixedWindowLimiter("email", opt =>
+            {
+                opt.Window = TimeSpan.FromMinutes(1);
+                opt.PermitLimit = 3;
+            });
+        });
+    }
+
+    public static void CorsPolicy(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend", policy =>
+            policy.WithOrigins("https://localhost:7130")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+        });
     }
 
 }

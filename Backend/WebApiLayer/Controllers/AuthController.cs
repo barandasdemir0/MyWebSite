@@ -2,6 +2,7 @@
 using DtoLayer.AuthDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace WebApiLayer.Controllers;
@@ -36,7 +37,7 @@ public class AuthController : ControllerBase
         }
     }
 
-
+    [EnableRateLimiting("email")]
     [HttpPost("send-email-code")]
     public async Task<IActionResult> SendEmailCode([FromBody] string userId,CancellationToken cancellationToken)
     {
@@ -66,10 +67,11 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpGet("setup-authenticator/{userId}")]
+    [HttpGet("setup-authenticator")]
     [Authorize]
-    public async Task<IActionResult> SetupAuthenticator(string userId,CancellationToken cancellationToken)
+    public async Task<IActionResult> SetupAuthenticator(CancellationToken cancellationToken)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         var result = await _twoFactorService.SetupAuthenticatorAsync(userId, cancellationToken);
         return Ok(result);
     }
@@ -130,18 +132,20 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpGet("profile/{userId}")]
+    [HttpGet("profile")]
     [Authorize]
-    public async Task<IActionResult> GetProfile(string userId , CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProfile( CancellationToken cancellationToken)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         var profile = await _userProfileService.GetUserProfileAsync(userId, cancellationToken);
         return Ok(profile);
     }
 
-    [HttpPost("change-password/{userId}")]
+    [HttpPost("change-password")]
     [Authorize]
-    public async Task<IActionResult> ChangePassword(string userId, [FromBody] ChangePasswordDto changePasswordDto,CancellationToken cancellationToken)
+    public async Task<IActionResult> ChangePassword( [FromBody] ChangePasswordDto changePasswordDto,CancellationToken cancellationToken)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         var ok = await _userProfileService.ChangePasswordAsync(userId, changePasswordDto, cancellationToken);
         if (ok)
         {
@@ -150,10 +154,11 @@ public class AuthController : ControllerBase
         return BadRequest("Şifre değiştirilemedi mevcut şifren yanlış olabilir");
     }
 
-    [HttpPost("toggle-2fa/{userId}")]
+    [HttpPost("toggle-2fa")]
     [Authorize]
-    public async Task<IActionResult> Toggle2FA(string userId, [FromBody] Toggle2FADto toggle2FADto ,CancellationToken cancellationToken)
+    public async Task<IActionResult> Toggle2FA( [FromBody] Toggle2FADto toggle2FADto ,CancellationToken cancellationToken)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         var ok = await _userProfileService.Toggle2FAAsync(userId, toggle2FADto, cancellationToken);
         if (ok)
         {
