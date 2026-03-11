@@ -13,14 +13,12 @@ public class AuthController : ControllerBase
 {
 
     private readonly IAuthService _authService;
-    private readonly IUserProfileService _userProfileService;
-    private readonly ITwoFactorService _twoFactorService;
+  
 
-    public AuthController(IAuthService authService, IUserProfileService userProfileService, ITwoFactorService twoFactorService)
+    public AuthController(IAuthService authService)
     {
         _authService = authService;
-        _userProfileService = userProfileService;
-        _twoFactorService = twoFactorService;
+       
     }
 
     [HttpPost("login")]
@@ -37,60 +35,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [EnableRateLimiting("email")]
-    [HttpPost("send-email-code")]
-    public async Task<IActionResult> SendEmailCode([FromBody] string userId,CancellationToken cancellationToken)
-    {
-        var sent = await _twoFactorService.SendMailOtpAsync(userId, cancellationToken);
-        if (sent)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest("Kod Gönderilemedi");
-        }
-    }
-
-
-    [HttpPost("verify-2fa")]
-    public async Task<IActionResult> VerifyTwoFactor([FromBody] TwoFactorVerifyDto dto,CancellationToken cancellationToken)
-    {
-        var result = await _twoFactorService.VerifyTwoFactorAsync(dto, cancellationToken);
-        if (result.Success)
-        {
-            return Ok(result);
-        }
-        else
-        {
-            return BadRequest(result.Error);
-        }
-    }
-
-    [HttpGet("setup-authenticator")]
-    [Authorize]
-    public async Task<IActionResult> SetupAuthenticator(CancellationToken cancellationToken)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var result = await _twoFactorService.SetupAuthenticatorAsync(userId, cancellationToken);
-        return Ok(result);
-    }
-
-
-    [HttpPost("Confirm-authenticator")]
-    [Authorize]
-    public async Task<IActionResult> ConfirmAuthenticator([FromBody] TwoFactorVerifyDto twoFactorVerifyDto,CancellationToken cancellation)
-    {
-        var ok = await _twoFactorService.ConfirmAuthenticatorSetupAsync(twoFactorVerifyDto.UserId, twoFactorVerifyDto.Code, cancellation);
-        if (ok)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest("Geçersiz kod, authenticator kurulumu başarısız");
-        }
-    }
+  
 
 
     [HttpPost("logout")]
@@ -117,56 +62,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpPost("assign-role")]
-    [Authorize]
-    public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto assignRoleDto,CancellationToken cancellationToken)
-    {
-        var ok = await _userProfileService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
-        if (ok)
-        {
-            return Ok();
-        }
-        else
-        {
-            return BadRequest();
-        }
-    }
-
-    [HttpGet("profile")]
-    [Authorize]
-    public async Task<IActionResult> GetProfile( CancellationToken cancellationToken)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var profile = await _userProfileService.GetUserProfileAsync(userId, cancellationToken);
-        return Ok(profile);
-    }
-
-    [HttpPost("change-password")]
-    [Authorize]
-    public async Task<IActionResult> ChangePassword( [FromBody] ChangePasswordDto changePasswordDto,CancellationToken cancellationToken)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var ok = await _userProfileService.ChangePasswordAsync(userId, changePasswordDto, cancellationToken);
-        if (ok)
-        {
-            return Ok();
-        }
-        return BadRequest("Şifre değiştirilemedi mevcut şifren yanlış olabilir");
-    }
-
-    [HttpPost("toggle-2fa")]
-    [Authorize]
-    public async Task<IActionResult> Toggle2FA( [FromBody] Toggle2FADto toggle2FADto ,CancellationToken cancellationToken)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var ok = await _userProfileService.Toggle2FAAsync(userId, toggle2FADto, cancellationToken);
-        if (ok)
-        {
-            return Ok();
-        }
-        return BadRequest("2FA ayarı değiştirilemedi");
-    }
-
+ 
 
 
 
