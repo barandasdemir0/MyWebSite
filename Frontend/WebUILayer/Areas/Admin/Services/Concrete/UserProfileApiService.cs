@@ -14,13 +14,13 @@ public class UserProfileApiService : IUserProfileApiService
 
     public async Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto)
     {
-        var response = await _httpClient.PostAsJsonAsync($"auth/change-password/{userId}", changePasswordDto);
+        var response = await _httpClient.PostAsJsonAsync($"userprofile/change-password", changePasswordDto);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
     {
-        var response = await _httpClient.GetAsync($"auth/profile/{userId}");
+        var response = await _httpClient.GetAsync($"userprofile/profile");
         if (!response.IsSuccessStatusCode)
         {
             var errorBody = await response.Content.ReadAsStringAsync();
@@ -31,7 +31,7 @@ public class UserProfileApiService : IUserProfileApiService
 
     public async Task<bool> Toggle2FAAsync(string userId, Toggle2FADto dto)
     {
-        var response = await _httpClient.PostAsJsonAsync($"auth/toggle-2fa/{userId}", dto);
+        var response = await _httpClient.PostAsJsonAsync($"userprofile/toggle-2fa", dto);
         return response.IsSuccessStatusCode;
     }
 }

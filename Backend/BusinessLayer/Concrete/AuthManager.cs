@@ -34,6 +34,7 @@ public class AuthManager : IAuthService
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
         if (user==null)
         {
+            _logger.LogWarning("Başarısız giriş denemesi - kullanıcı yok: {Email}", loginDto.Email);
             return Fail("Geçersiz Eposta veya şifre");
         }
 
@@ -41,6 +42,7 @@ public class AuthManager : IAuthService
 
         if (await _userManager.IsLockedOutAsync(user))
         {
+            _logger.LogWarning("Kilitli hesaba giriş denemesi: {Email}", loginDto.Email);
             return Fail("Hesabınız Geçiçi Olarak Kilitlendi");
         }
 
@@ -48,15 +50,17 @@ public class AuthManager : IAuthService
         if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
         {
             await _userManager.AccessFailedAsync(user);
+            _logger.LogWarning("Başarısız giriş denemesi - yanlış şifre: {Email}", loginDto.Email);
             return Fail("Geçersiz e-posta veya şifre");
         }
 
         await _userManager.ResetAccessFailedCountAsync(user);
 
-
-        if (!await _userManager.GetTwoFactorEnabledAsync(user))
+       
+        if (await _userManager.GetTwoFactorEnabledAsync(user))
         {
-
+            _logger.LogInformation("2FA doğrulama bekleniyor: {UserId}", user.Id);
+            //2fa açıksa doğrulama ekranına gönder
             return new LoginResultDto
             {
                 Success = true,
@@ -65,6 +69,8 @@ public class AuthManager : IAuthService
 
             };
         }
+
+        //direkt token ver
 
         return new LoginResultDto
         {
@@ -116,7 +122,7 @@ public class AuthManager : IAuthService
         }
         await _userManager.AddToRoleAsync(user, "User");
 
-       
+        _logger.LogInformation("Yeni kullanıcı kaydı: {Email}", registerDto.Email);
         return new RegisterResultDto
         {
             Success = true

@@ -1,10 +1,12 @@
 ﻿using BusinessLayer.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
 [ApiController]
+[Authorize]
 public abstract class CrudController<TListDto,TCreateDto,TUpdateDto> : ControllerBase where TListDto:class,IHasId
 {
     protected readonly ICrudService<TListDto, TCreateDto, TUpdateDto> _crudService;

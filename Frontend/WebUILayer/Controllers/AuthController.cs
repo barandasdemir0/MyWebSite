@@ -35,7 +35,7 @@ public class AuthController : Controller
         }
         if (result.RequiresTwoFactor)
         {
-            TempData["2FA_UserId"] = result.UserId;
+            HttpContext.Session.SetString("2FA_UserId", result.UserId!);
             return RedirectToAction("ChooseTwoFactor");
         }
         await SetCookieFromJwtAsync(result.Token!);
@@ -78,17 +78,16 @@ public class AuthController : Controller
     [HttpPost("/auth/process-2fa-choice")]
     public async Task<IActionResult> ProcessTwoFactorChoice(string SelectedProvider)
     {
-        var userId = TempData["2FA_UserId"]?.ToString();
+        var userId = HttpContext.Session.GetString("2FA_UserId");
         if (string.IsNullOrEmpty(userId))
         {
             return RedirectToAction(nameof(Login));
         }
-        TempData["2FA_UserId"] = userId;
         if (SelectedProvider == "Email")
         {
             return RedirectToAction(nameof(SendEmailCode));
         }
-        TempData["2FA_Provider"] = "Authenticator";
+        HttpContext.Session.SetString("2FA_Provider", "Authenticator");
         return RedirectToAction(nameof(VerifyTwoFactor));
     }
 
@@ -98,12 +97,10 @@ public class AuthController : Controller
     [HttpGet("/auth/send-email-code")]
     public async Task<IActionResult> SendEmailCode()
     {
-        var userId = TempData["2FA_UserId"]?.ToString();
+        var userId = HttpContext.Session.GetString("2FA_UserId");
         if (string.IsNullOrEmpty(userId)) return RedirectToAction(nameof(Login));
-        TempData["2FA_UserId"] = userId;
-
         await _twoFactorApiService.SendEmailCodeAsync(userId!);
-        TempData["2FA_Provider"] = "Email";
+        HttpContext.Session.SetString("2FA_Provider", "Email");
         return RedirectToAction(nameof(VerifyTwoFactor));
 
     }
@@ -114,8 +111,8 @@ public class AuthController : Controller
     [HttpPost("/auth/verify-2fa")]
     public async Task<IActionResult> VerifyTwoFactor(string code)
     {
-        var userId = TempData["2FA_UserId"]?.ToString();
-        var provider = TempData["2FA_Provider"]?.ToString() ?? "Email";
+        var userId = HttpContext.Session.GetString("2FA_UserId");
+        var provider = HttpContext.Session.GetString("2FA_Provider") ?? "Email";
 
         var result = await _twoFactorApiService.VerifyTwoFactorAsync
             (
@@ -132,6 +129,7 @@ public class AuthController : Controller
             return View();
         }
         await SetCookieFromJwtAsync(result.Token!);
+        HttpContext.Session.Clear();
         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
     }
 
