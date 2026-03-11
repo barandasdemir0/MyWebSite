@@ -100,6 +100,20 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
+        services.AddHttpClient<IUserProfileApiService, UserProfileApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
+
+        services.AddHttpClient<ITwoFactorApiService, TwoFactorApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
+
+
+
+
+
         #endregion
 
         #region public için bağlamalar --> bu yapı scrutor ile otomatikleştirilecek

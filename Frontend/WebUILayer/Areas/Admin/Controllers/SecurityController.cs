@@ -14,10 +14,14 @@ namespace WebUILayer.Areas.Admin.Controllers;
 public class SecurityController : Controller
 {
     private readonly IAuthApiService _authApiService;
+    private readonly IUserProfileApiService _userProfileApiService;
+    private readonly ITwoFactorApiService _twoFactorApiService;
 
-    public SecurityController(IAuthApiService authApiService)
+    public SecurityController(IAuthApiService authApiService, IUserProfileApiService userProfileApiService, ITwoFactorApiService twoFactorApiService)
     {
         _authApiService = authApiService;
+        _userProfileApiService = userProfileApiService;
+        _twoFactorApiService = twoFactorApiService;
     }
 
     private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -26,14 +30,14 @@ public class SecurityController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var profile = await _authApiService.GetUserProfileAsync(GetUserId());
+        var profile = await _userProfileApiService.GetUserProfileAsync(GetUserId());
         return View(profile);
     }
 
     [HttpPost]
     public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
     {
-        var ok = await _authApiService.ChangePasswordAsync(GetUserId(), changePasswordDto);
+        var ok = await _userProfileApiService.ChangePasswordAsync(GetUserId(), changePasswordDto);
         TempData[ok ? "Success" : "Error"] = ok
            ? "Şifre başarıyla değiştirildi."
            : "Şifre değiştirilemedi. Mevcut şifrenizi kontrol edin.";
@@ -48,7 +52,7 @@ public class SecurityController : Controller
             return RedirectToAction(nameof(SetupAuthenticator));
         }
 
-        var ok = await _authApiService.Toggle2FAAsync(GetUserId(), toggle2FADto);
+        var ok = await _userProfileApiService.Toggle2FAAsync(GetUserId(), toggle2FADto);
         TempData[ok ? "Success" : "Error"] = ok
           ? (toggle2FADto.Enable ? "2FA başarıyla açıldı." : "2FA kapatıldı.")
           : "2FA ayarı değiştirilemedi.";
@@ -59,7 +63,7 @@ public class SecurityController : Controller
     [HttpGet]
     public async Task<IActionResult> SetupAuthenticator(string code)
     {
-        var result = await _authApiService.SetupAuthenticatorAsync(GetUserId());
+        var result = await _twoFactorApiService.SetupAuthenticatorAsync(GetUserId());
         return View(result);
     }
 
@@ -67,7 +71,7 @@ public class SecurityController : Controller
     [HttpPost]
     public async Task<IActionResult> ConfirmAuthenticator(string code)
     {
-        var ok = await _authApiService.ConfirmAuthenticatorAsync(new TwoFactorVerifyDto
+        var ok = await _twoFactorApiService.ConfirmAuthenticatorAsync(new TwoFactorVerifyDto
         {
             UserId = GetUserId(),
             Code = code

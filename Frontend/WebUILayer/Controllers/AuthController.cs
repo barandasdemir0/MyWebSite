@@ -12,10 +12,12 @@ namespace WebUILayer.Controllers;
 public class AuthController : Controller
 {
     private readonly IAuthApiService _authApiService;
+    private readonly ITwoFactorApiService _twoFactorApiService;
 
-    public AuthController(IAuthApiService authApiService)
+    public AuthController(IAuthApiService authApiService, ITwoFactorApiService twoFactorApiService)
     {
         _authApiService = authApiService;
+        _twoFactorApiService = twoFactorApiService;
     }
 
     [HttpGet("/auth/login")]
@@ -100,7 +102,7 @@ public class AuthController : Controller
         if (string.IsNullOrEmpty(userId)) return RedirectToAction(nameof(Login));
         TempData["2FA_UserId"] = userId;
 
-        await _authApiService.SendEmailCodeAsync(userId!);
+        await _twoFactorApiService.SendEmailCodeAsync(userId!);
         TempData["2FA_Provider"] = "Email";
         return RedirectToAction(nameof(VerifyTwoFactor));
 
@@ -115,7 +117,7 @@ public class AuthController : Controller
         var userId = TempData["2FA_UserId"]?.ToString();
         var provider = TempData["2FA_Provider"]?.ToString() ?? "Email";
 
-        var result = await _authApiService.VerifyTwoFactorAsync
+        var result = await _twoFactorApiService.VerifyTwoFactorAsync
             (
             new TwoFactorVerifyDto
             {
