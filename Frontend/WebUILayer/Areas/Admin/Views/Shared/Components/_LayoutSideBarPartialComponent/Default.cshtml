@@ -72,6 +72,10 @@
                 <i class="fas fa-cog"></i>
                 <span>Site Ayarları</span>
             </a>
+            <a asp-area="Admin" asp-controller="UserManagement" asp-action="PendingUser" class="menu-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Kullanıcı Onaylama</span>
+            </a>
             <a asp-area="Admin" asp-controller="Security" asp-action="Index" class="menu-item">
                 <i class="fas fa-shield-alt"></i>
                 <span>Güvenlik</span>
@@ -84,11 +88,12 @@
                 <i class="fas fa-bell"></i>
                 <span>Bildirimler</span>
             </a>
-            <form asp-controller="Auth" asp-action="Logout" method="post"> 
-                <button type="submit" class="menu-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Çıkış Yap</span>
-                </button>
+            <a href="javascript:void(0)" onclick="document.getElementById('logout-form').submit();" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Çıkış Yap</span>
+            </a>
+
+            <form id="logout-form" asp-controller="Auth" asp-action="Logout" method="post" style="display:none;">
             </form>
 
             

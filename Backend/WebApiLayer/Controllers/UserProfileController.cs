@@ -28,7 +28,7 @@ public class UserProfileController : ControllerBase
         }
         else
         {
-            return BadRequest();
+            return BadRequest("Rol atanamadı");
         }
     }
 
@@ -66,5 +66,28 @@ public class UserProfileController : ControllerBase
         }
         return BadRequest("2FA ayarı değiştirilemedi");
     }
+
+    [HttpGet("pending-users")]
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> GetPendingUsers(CancellationToken cancellationToken)
+    {
+        var users = await _userProfileService.GetPendingUsersAsync(cancellationToken);
+        return Ok(users);
+    }
+
+    [HttpPost("approve-user")]
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> ApproveUser(CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var ok = await _userProfileService.ApproveUserAsync(userId, cancellationToken);
+        if (ok)
+        {
+            return Ok();
+        }
+        return BadRequest("Rol onaylanamadı");
+    }
+
+
 
 }

@@ -2,6 +2,7 @@
 using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Concrete;
 
@@ -14,6 +15,19 @@ public class UserProfileManager : IUserProfileService
     {
         _userManager = userManager;
         _roleManager = roleManager;
+    }
+
+    public async Task<bool> ApproveUserAsync(string userId, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user==null)
+        {
+            return false;
+        }
+        user.IsApproved = true;
+        user.EmailConfirmed = true;
+        await _userManager.UpdateAsync(user);
+        return true;
     }
 
     public async Task<bool> AssignRoleAsync(string UserId, string role, CancellationToken cancellationToken)
@@ -45,6 +59,20 @@ public class UserProfileManager : IUserProfileService
         }
         var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
         return result.Succeeded;
+    }
+
+    public async Task<List<PendingUserDto>> GetPendingUsersAsync(CancellationToken cancellationToken)
+    {
+        var users = await _userManager.Users.Where(u => !u.IsApproved).Select(u => new PendingUserDto
+        {
+            UserId = u.Id.ToString(),
+            Email = u.Email ?? "",
+            Name = u.Name ?? "",
+            Surname = u.Surname ??"",
+            CreatedAt = u.CreatedAt
+        }).ToListAsync(cancellationToken);
+        return users;
+        //burası dataaccesse alınmalı
     }
 
     public async Task<UserProfileDto> GetUserProfileAsync(string UserId, CancellationToken cancellationToken)

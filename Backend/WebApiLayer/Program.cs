@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Container;
 using Scalar.AspNetCore;
+using WebApiLayer.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,5 +49,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+using(var scope = app.Services.CreateScope())
+{
+    await DataSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 app.Run();

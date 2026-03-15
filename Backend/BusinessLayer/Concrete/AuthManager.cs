@@ -76,6 +76,13 @@ public class AuthManager : IAuthService
             };
         }
 
+        if (!user.IsApproved)
+        {
+            _logger.LogWarning("Onaylanmamış Hesap Giriş Denemesi:{Email}", loginDto.Email);
+            return Fail("Hesabınız Henüz Admin Tarafından Onaylanmadı");
+        }
+
+
         //direkt token ver
 
 

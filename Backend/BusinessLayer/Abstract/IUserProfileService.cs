@@ -9,5 +9,7 @@ public interface IUserProfileService
     Task<bool> Toggle2FAAsync(string userId, Toggle2FADto toggle2FADto, CancellationToken cancellationToken);
     Task<bool> AssignRoleAsync(string UserId, string role, CancellationToken cancellationToken);
 
+    Task<List<PendingUserDto>> GetPendingUsersAsync(CancellationToken cancellationToken);
+    Task<bool> ApproveUserAsync(string userId, CancellationToken cancellationToken);
 
 }

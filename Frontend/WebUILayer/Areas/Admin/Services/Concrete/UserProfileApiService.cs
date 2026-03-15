@@ -12,10 +12,26 @@ public class UserProfileApiService : IUserProfileApiService
         _httpClient = httpClient;
     }
 
+    public async Task<bool> ApproveUserAsync(string userId)
+    {
+        var response = await _httpClient.GetAsync($"userprofile/approve-user/{userId}");
+        return response.IsSuccessStatusCode;
+    }
+
     public async Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
         var response = await _httpClient.PostAsJsonAsync("userprofile/change-password", changePasswordDto);
         return response.IsSuccessStatusCode;
+    }
+
+    public async Task<List<PendingUserDto>> GetPendingUsersAsync()
+    {
+        var response = await _httpClient.GetAsync("userprofile/pending-users");
+        if (!response.IsSuccessStatusCode)
+        {
+            return new List<PendingUserDto>();
+        }
+        return await response.Content.ReadFromJsonAsync<List<PendingUserDto>>() ?? new();
     }
 
     public async Task<UserProfileDto?> GetUserProfileAsync()
