@@ -34,6 +34,7 @@ public sealed class AppDbContext:IdentityDbContext<AppUser,IdentityRole<Guid>,Gu
     public DbSet<SiteSettings> SiteSettings { get; set; }
     public DbSet<ChatbotSettings> ChatbotSettings { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
     //global query filter otomatik soft delete filtresi

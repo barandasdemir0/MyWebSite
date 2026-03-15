@@ -4,7 +4,7 @@ namespace WebUILayer.Areas.Admin.Services.Abstract;
 
 public interface IUserProfileApiService
 {
-    Task<UserProfileDto?> GetUserProfileAsync(string userId);
-    Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto);
-    Task<bool> Toggle2FAAsync(string userId, Toggle2FADto dto);
+    Task<UserProfileDto?> GetUserProfileAsync();
+    Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto);
+    Task<bool> Toggle2FAAsync(Toggle2FADto dto);
 }

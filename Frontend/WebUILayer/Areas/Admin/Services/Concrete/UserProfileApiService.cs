@@ -12,15 +12,15 @@ public class UserProfileApiService : IUserProfileApiService
         _httpClient = httpClient;
     }
 
-    public async Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto)
+    public async Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
-        var response = await _httpClient.PostAsJsonAsync($"userprofile/change-password", changePasswordDto);
+        var response = await _httpClient.PostAsJsonAsync("userprofile/change-password", changePasswordDto);
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
+    public async Task<UserProfileDto?> GetUserProfileAsync()
     {
-        var response = await _httpClient.GetAsync($"userprofile/profile");
+        var response = await _httpClient.GetAsync("userprofile/profile");
         if (!response.IsSuccessStatusCode)
         {
             var errorBody = await response.Content.ReadAsStringAsync();
@@ -29,9 +29,9 @@ public class UserProfileApiService : IUserProfileApiService
         return await response.Content.ReadFromJsonAsync<UserProfileDto>();
     }
 
-    public async Task<bool> Toggle2FAAsync(string userId, Toggle2FADto dto)
+    public async Task<bool> Toggle2FAAsync(Toggle2FADto dto)
     {
-        var response = await _httpClient.PostAsJsonAsync($"userprofile/toggle-2fa", dto);
+        var response = await _httpClient.PostAsJsonAsync("userprofile/toggle-2fa", dto);
         return response.IsSuccessStatusCode;
     }
 }

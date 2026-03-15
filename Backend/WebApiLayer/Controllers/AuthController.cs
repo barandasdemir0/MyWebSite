@@ -62,7 +62,19 @@ public class AuthController : ControllerBase
         }
     }
 
- 
+
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto dto,CancellationToken cancellationToken)
+    {
+        var deviceInfo = Request.Headers["User-Agent"].ToString();
+        var result = await _authService.RefreshTokenAsync(dto, deviceInfo, cancellationToken);
+        if (result.Success)
+        {
+            return Ok();
+        }
+        return Unauthorized(result.Error);
+    }
 
 
 

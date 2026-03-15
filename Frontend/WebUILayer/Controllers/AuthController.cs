@@ -26,7 +26,7 @@ public class AuthController : Controller
     [HttpPost("/auth/login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
-
+        loginDto.DeviceInfo = Request.Headers["User-Agent"].ToString();
         var result = await _authApiService.LoginAsync(loginDto);
         if (result == null || !result.Success)
         {
@@ -38,7 +38,7 @@ public class AuthController : Controller
             HttpContext.Session.SetString("2FA_UserId", result.UserId!);
             return RedirectToAction("ChooseTwoFactor");
         }
-        await SetCookieFromJwtAsync(result.Token!);
+        await SetCookieFromJwtAsync(result.Token!,result.RefreshToken);
         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
         //return LocalRedirect("/Admin/Dashboard/Index");
 
@@ -128,7 +128,7 @@ public class AuthController : Controller
             ModelState.AddModelError("", result?.Error ?? "Geçersiz Kod");
             return View();
         }
-        await SetCookieFromJwtAsync(result.Token!);
+        await SetCookieFromJwtAsync(result.Token!,result.RefreshToken);
         HttpContext.Session.Clear();
         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
     }
@@ -141,15 +141,15 @@ public class AuthController : Controller
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync();
-        HttpContext.Response.Cookies.Delete("AccessToken");
+        HttpContext.Response.Cookies.Delete("RefreshToken");
         return RedirectToAction(nameof(Login));
     }
 
 
-    private async Task SetCookieFromJwtAsync(string token)
+    private async Task SetCookieFromJwtAsync(string accesstoken,string? refreshToken = null)
     {
         var handler = new JwtSecurityTokenHandler();
-        var jwt = handler.ReadJwtToken(token);
+        var jwt = handler.ReadJwtToken(accesstoken);
 
         var identity = new ClaimsIdentity
             (
@@ -167,13 +167,24 @@ public class AuthController : Controller
                 }
             );
 
-        HttpContext.Response.Cookies.Append("AccessToken", token, new CookieOptions
+        HttpContext.Response.Cookies.Append("AccessToken", accesstoken, new CookieOptions
         {
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Strict,
             Expires = DateTimeOffset.UtcNow.AddHours(1)
         });
+
+        if (!string.IsNullOrEmpty(refreshToken))
+        {
+            HttpContext.Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.Now.AddDays(7)
+            });
+        }
      
     }
 

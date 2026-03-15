@@ -7,4 +7,6 @@ public class LoginResultDto
     public string? UserId { get; set; }
     public string? Token { get; set; }
     public string? Error { get; set; }
+    public string? RefreshToken { get; set; }  // EKLE
+
 }

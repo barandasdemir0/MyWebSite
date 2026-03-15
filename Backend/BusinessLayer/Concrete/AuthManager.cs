@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BusinessLayer.Concrete;
@@ -17,14 +19,16 @@ public class AuthManager : IAuthService
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthManager> _logger;
+    private readonly IRefreshTokenDal _refreshTokenDal;
 
 
-    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger)
+    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal)
     {
         _userManager = userManager;
         _configuration = configuration;
         _roleManager = roleManager;
         _logger = logger;
+        _refreshTokenDal = refreshTokenDal;
     }
 
 
@@ -56,9 +60,11 @@ public class AuthManager : IAuthService
 
         await _userManager.ResetAccessFailedCountAsync(user);
 
-       
+      
+
         if (await _userManager.GetTwoFactorEnabledAsync(user))
         {
+          
             _logger.LogInformation("2FA doğrulama bekleniyor: {UserId}", user.Id);
             //2fa açıksa doğrulama ekranına gönder
             return new LoginResultDto
@@ -72,13 +78,17 @@ public class AuthManager : IAuthService
 
         //direkt token ver
 
+
+
+        var accessToken = await CreateJwtAsync(user);
+        var refreshToken = await CreateRefreshTokenAsync(user, loginDto.DeviceInfo,cancellationToken);
+        _logger.LogInformation("Kullanıcı giriş yaptı: {UserId}", user.Id);
         return new LoginResultDto
         {
             Success = true,
-            Token = await CreateJwtAsync(user)
-
+            Token = accessToken,
+            RefreshToken = refreshToken
         };
-
 
     }
 
@@ -88,6 +98,8 @@ public class AuthManager : IAuthService
         if (user!=null)
         {
             await _userManager.UpdateSecurityStampAsync(user);
+
+            await _refreshTokenDal.RevokeAllByUserAsync(user.Id, cancellationToken);
         }
     } 
 
@@ -130,6 +142,97 @@ public class AuthManager : IAuthService
     }
 
 
+   
+
+ 
+
+    public async Task<LoginResultDto> RefreshTokenAsync(RefreshTokenRequestDto dto, string deviceInfo, CancellationToken cancellationToken)
+    {
+        ClaimsPrincipal? principal;
+        try
+        {
+            principal = GetPrincipalFromExpiredToken(dto.AccessToken);
+        }
+        catch
+        {
+            return Fail("Geçersiz Token");
+        }
+
+        var userId = principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+        {
+            return Fail("Geçersiz Token");
+        }
+        var storedToken = await _refreshTokenDal.GetValidTokenAsync(dto.RefreshToken, Guid.Parse(userId), cancellationToken);
+        if (storedToken==null)
+        {
+            return Fail("Refresh Token Geçersiz veya süresi dolmuş");
+        }
+
+        storedToken.IsRevoked = true;
+        await _refreshTokenDal.SaveChangesAsync(cancellationToken);
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return Fail("Kullanıcı Bulunamadı");
+        }
+
+        var newAccessToken = await CreateJwtAsync(user);
+
+        var newRefreshToken = await CreateRefreshTokenAsync(user, deviceInfo, cancellationToken);
+
+        return new LoginResultDto
+        {
+            Success = true,
+            Token = newAccessToken,
+            RefreshToken = newRefreshToken
+        };
+
+
+    }
+
+    private async Task<string> CreateRefreshTokenAsync(AppUser user, string? deviceInfo, CancellationToken cancellationToken)
+    {
+        var tokenBytes = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(tokenBytes);
+
+        var tokenString = Convert.ToBase64String(tokenBytes);
+
+        var refreshToken = new RefreshToken
+        {
+            Token = tokenString,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            DeviceInfo = deviceInfo,
+            userId = user.Id
+        };
+
+        await _refreshTokenDal.AddAsync(refreshToken, cancellationToken);
+        return tokenString;
+
+
+    }
+
+    private ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
+    {
+        var key = new SymmetricSecurityKey
+            (
+                Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!)
+            );
+
+        var validation = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = _configuration["Jwt:Issuer"],
+            ValidAudience = _configuration["Jwt:Audience"],
+            IssuerSigningKey = key,
+            ValidateLifetime = false // süresi dolmuş tokenıda oıku
+        };
+
+        return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+    }
     private async Task<string> CreateJwtAsync(AppUser user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
@@ -155,7 +258,6 @@ public class AuthManager : IAuthService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-
     private static LoginResultDto Fail(string error)
     {
         return new LoginResultDto

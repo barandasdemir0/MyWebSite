@@ -14,7 +14,7 @@ public class TwoFactorApiService : ITwoFactorApiService
 
     public async Task<bool> ConfirmAuthenticatorAsync(TwoFactorVerifyDto dto)
     {
-        var response = await _httpClient.PostAsJsonAsync("twofactor/Confirm-authenticator", dto);
+        var response = await _httpClient.PostAsJsonAsync("twofactor/confirm-authenticator", dto);
         return response.IsSuccessStatusCode;
     }
 
@@ -24,7 +24,7 @@ public class TwoFactorApiService : ITwoFactorApiService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<Setup2FAResultDto?> SetupAuthenticatorAsync(string userId)
+    public async Task<Setup2FAResultDto?> SetupAuthenticatorAsync()
     {
         var response = await _httpClient.GetAsync($"twofactor/setup-authenticator");
         if (!response.IsSuccessStatusCode)

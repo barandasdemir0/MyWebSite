@@ -58,11 +58,12 @@ public class TwoFactorController : ControllerBase
     }
 
 
-    [HttpPost("Confirm-authenticator")]
+    [HttpPost("confirm-authenticator")]
     [Authorize]
     public async Task<IActionResult> ConfirmAuthenticator([FromBody] TwoFactorVerifyDto twoFactorVerifyDto, CancellationToken cancellation)
     {
-        var ok = await _twoFactorService.ConfirmAuthenticatorSetupAsync(twoFactorVerifyDto.UserId, twoFactorVerifyDto.Code, cancellation);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var ok = await _twoFactorService.ConfirmAuthenticatorSetupAsync(userId, twoFactorVerifyDto.Code, cancellation);
         if (ok)
         {
             return Ok();

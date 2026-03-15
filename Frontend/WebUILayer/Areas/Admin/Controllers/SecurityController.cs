@@ -30,14 +30,14 @@ public class SecurityController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var profile = await _userProfileApiService.GetUserProfileAsync(GetUserId());
+        var profile = await _userProfileApiService.GetUserProfileAsync();
         return View(profile);
     }
 
     [HttpPost]
     public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
     {
-        var ok = await _userProfileApiService.ChangePasswordAsync(GetUserId(), changePasswordDto);
+        var ok = await _userProfileApiService.ChangePasswordAsync( changePasswordDto);
         TempData[ok ? "Success" : "Error"] = ok
            ? "Şifre başarıyla değiştirildi."
            : "Şifre değiştirilemedi. Mevcut şifrenizi kontrol edin.";
@@ -52,7 +52,7 @@ public class SecurityController : Controller
             return RedirectToAction(nameof(SetupAuthenticator));
         }
 
-        var ok = await _userProfileApiService.Toggle2FAAsync(GetUserId(), toggle2FADto);
+        var ok = await _userProfileApiService.Toggle2FAAsync( toggle2FADto);
         TempData[ok ? "Success" : "Error"] = ok
           ? (toggle2FADto.Enable ? "2FA başarıyla açıldı." : "2FA kapatıldı.")
           : "2FA ayarı değiştirilemedi.";
@@ -63,7 +63,7 @@ public class SecurityController : Controller
     [HttpGet]
     public async Task<IActionResult> SetupAuthenticator(string code)
     {
-        var result = await _twoFactorApiService.SetupAuthenticatorAsync(GetUserId());
+        var result = await _twoFactorApiService.SetupAuthenticatorAsync();
         return View(result);
     }
 

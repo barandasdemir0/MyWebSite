@@ -11,4 +11,8 @@ public sealed class AppUser:IdentityUser<Guid>
     //hangi 2fa yöntemini tercih ettiğin  email or google authenticator
 
     public TwoFactorProvider Preferred2FAProvider { get; set; } = TwoFactorProvider.None;
+
+
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
 }
