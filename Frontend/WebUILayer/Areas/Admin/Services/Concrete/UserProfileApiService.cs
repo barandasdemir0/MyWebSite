@@ -12,11 +12,13 @@ public class UserProfileApiService : IUserProfileApiService
         _httpClient = httpClient;
     }
 
-    public async Task<bool> ApproveUserAsync(string userId)
+    public async Task<bool> ApproveUserAsync(string userId,string role)
     {
-        var response = await _httpClient.GetAsync($"userprofile/approve-user/{userId}");
+        var response = await _httpClient.PostAsJsonAsync($"userprofile/approve-user/{userId}",role);
         return response.IsSuccessStatusCode;
     }
+
+  
 
     public async Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
@@ -43,6 +45,12 @@ public class UserProfileApiService : IUserProfileApiService
             throw new Exception($"API Hatası: {response.StatusCode} - {errorBody}");
         }
         return await response.Content.ReadFromJsonAsync<UserProfileDto>();
+    }
+
+    public async Task<bool> RejecetUserAsync(string userId)
+    {
+        var response = await _httpClient.PostAsync($"userprofile/reject-user/{userId}", null);
+        return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> Toggle2FAAsync(Toggle2FADto dto)

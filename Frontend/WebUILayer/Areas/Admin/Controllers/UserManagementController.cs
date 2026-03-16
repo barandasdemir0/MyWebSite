@@ -25,11 +25,20 @@ public class UserManagementController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Approve(string id)
+    public async Task<IActionResult> Approve(string id,string role="User")
     {
-        var ok = await _userProfileApiService.ApproveUserAsync(id);
+        var ok = await _userProfileApiService.ApproveUserAsync(id,role);
         TempData[ok ? "Success" : "Error"] = ok
             ? "Kullanıcı onaylandı." : "Kullanıcı onaylanamadı.";
         return RedirectToAction(nameof(PendingUser));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Reject(string id)
+    {
+        var ok = await _userProfileApiService.RejecetUserAsync(id);
+        TempData[ok ? "Success" : "Error"] = ok ? "Kullanıcı reddedildi." : "Reddetme başarısız.";
+        return RedirectToAction(nameof(PendingUser));
+
     }
 }

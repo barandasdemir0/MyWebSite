@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using QRCoder;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BusinessLayer.Concrete;
@@ -16,12 +18,14 @@ public class TwoFactorManager : ITwoFactorService
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
+    private readonly IRefreshTokenDal _refreshTokenDal;
 
-    public TwoFactorManager(UserManager<AppUser> userManager, IEmailService emailService, IConfiguration configuration)
+    public TwoFactorManager(UserManager<AppUser> userManager, IEmailService emailService, IConfiguration configuration, IRefreshTokenDal refreshTokenDal)
     {
         _userManager = userManager;
         _emailService = emailService;
         _configuration = configuration;
+        _refreshTokenDal = refreshTokenDal;
     }
 
     public async Task<bool> ConfirmAuthenticatorSetupAsync(string userId, string Code, CancellationToken cancellationToken)
@@ -52,6 +56,7 @@ public class TwoFactorManager : ITwoFactorService
             return false;
         }
 
+        await _userManager.UpdateSecurityStampAsync(user);
         var code = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
 
         await _emailService.SendAsync(user.Email, "Giriş Doğrulama Kodunuz", $"Giriş kodunuz: <b>{code}</b><br/>Bu kod 5 dakika geçerlidir.", cancellationToken);
@@ -95,7 +100,7 @@ public class TwoFactorManager : ITwoFactorService
             return Fail("Kullanıcı Bulunamadı");
         }
 
-        var provider = user.Preferred2FAProvider switch
+        var provider = dto.Provider switch
         {
             TwoFactorProvider.Authenticator => _userManager.Options.Tokens.AuthenticatorTokenProvider,
             TwoFactorProvider.Email => TokenOptions.DefaultEmailProvider,
@@ -111,9 +116,30 @@ public class TwoFactorManager : ITwoFactorService
         return new LoginResultDto
         {
             Success = true,
-            Token = await CreateJwtAsync(user)
+            Token = await CreateJwtAsync(user),
+            RefreshToken = await CreateRefresthTokenAsync(user, null)
+
         };
     }
+
+    private async Task<string> CreateRefresthTokenAsync(AppUser user,string? deviceInfo)
+    {
+        var tokenBytes = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(tokenBytes);
+        var tokenString = Convert.ToBase64String(tokenBytes);
+
+        var refreshToken = new RefreshToken
+        {
+            Token = tokenString,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            DeviceInfo = deviceInfo,
+            userId = user.Id
+        };
+        await _refreshTokenDal.AddAsync(refreshToken);
+        return tokenString;
+    }
+
 
 
     private async Task<string> CreateJwtAsync(AppUser user)

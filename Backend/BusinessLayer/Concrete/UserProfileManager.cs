@@ -17,7 +17,7 @@ public class UserProfileManager : IUserProfileService
         _roleManager = roleManager;
     }
 
-    public async Task<bool> ApproveUserAsync(string userId, CancellationToken cancellationToken)
+    public async Task<bool> ApproveUserAsync(string userId,string role, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user==null)
@@ -27,6 +27,11 @@ public class UserProfileManager : IUserProfileService
         user.IsApproved = true;
         user.EmailConfirmed = true;
         await _userManager.UpdateAsync(user);
+
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        await _userManager.AddToRoleAsync(user, role);
+
         return true;
     }
 
@@ -93,6 +98,17 @@ public class UserProfileManager : IUserProfileService
             TwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user),
             Preferred2FAProvider = user.Preferred2FAProvider
         };
+    }
+
+    public async Task<bool> RejectUserAsync(string userId, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user==null)
+        {
+            return false;
+        }
+        var result = await _userManager.DeleteAsync(user);
+        return result.Succeeded;
     }
 
     public async Task<bool> Toggle2FAAsync(string userId, Toggle2FADto toggle2FADto, CancellationToken cancellationToken)

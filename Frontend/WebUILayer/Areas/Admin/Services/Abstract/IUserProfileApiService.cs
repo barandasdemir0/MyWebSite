@@ -9,6 +9,7 @@ public interface IUserProfileApiService
     Task<bool> Toggle2FAAsync(Toggle2FADto dto);
 
     Task<List<PendingUserDto>> GetPendingUsersAsync();
-    Task<bool> ApproveUserAsync(string userId);
+    Task<bool> ApproveUserAsync(string userId,string role);
+    Task<bool> RejecetUserAsync(string userId);
 
 }

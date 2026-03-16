@@ -106,7 +106,12 @@ public class AuthController : Controller
     }
 
     [HttpGet("/auth/verify-2fa")]
-    public IActionResult VerifyTwoFactor() => View();
+    public IActionResult VerifyTwoFactor() 
+    {
+        var provider = HttpContext.Session.GetString("2FA_Provider") ?? "Email";
+        ViewBag.provider = provider;
+        return View();
+    }
 
     [HttpPost("/auth/verify-2fa")]
     public async Task<IActionResult> VerifyTwoFactor(string code)

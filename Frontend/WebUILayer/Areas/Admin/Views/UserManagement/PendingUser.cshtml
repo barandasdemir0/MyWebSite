@@ -37,9 +37,7 @@
                             <td>@item.Name</td>
                             <td>@item.Surname</td>
                             <td>@item.Email</td>
-                            <td data-label="Rol"><span class="status-badge role-admin">İzin isteyen kullanıcı</span></td>
                             <td data-label="Son Giriş">@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                            <td data-label="Durum"><span class="status-badge active">Aktif</span></td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
                                     <form asp-action="Approve" asp-route-id="@item.UserId" method="post">
@@ -47,8 +45,11 @@
                                             <i class="fas fa-check"></i> Onayla
                                         </button>
                                     </form>
+                                    <form asp-action="Reject" asp-route-id="@item.UserId" method="post">
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>Sil</button>
+                                    </form>
                                     
-                                   @*  <button class="action-btn delete" title="Sil"><i class="fas fa-trash"></i></button> *@
+                                 
                                 </div>
                             </td>
                         </tr>

@@ -75,17 +75,28 @@ public class UserProfileController : ControllerBase
         return Ok(users);
     }
 
-    [HttpPost("approve-user")]
+    [HttpPost("approve-user/{userId}")]
     [Authorize(Roles ="Admin")]
-    public async Task<IActionResult> ApproveUser(CancellationToken cancellationToken)
+    public async Task<IActionResult> ApproveUser(string userId,[FromBody] string role , CancellationToken cancellationToken)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var ok = await _userProfileService.ApproveUserAsync(userId, cancellationToken);
+        var ok = await _userProfileService.ApproveUserAsync(userId, role, cancellationToken);
         if (ok)
         {
             return Ok();
         }
         return BadRequest("Rol onaylanamadı");
+    }
+
+    [HttpPost("reject-user/{userId}")]
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> RejectUser(string userId, CancellationToken cancellationToken)
+    {
+        var ok = await _userProfileService.RejectUserAsync(userId, cancellationToken);
+        if (ok)
+        {
+            return Ok();
+        }
+        return BadRequest("Kullanıcı Silinemedi");
     }
 
 
