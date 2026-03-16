@@ -36,20 +36,28 @@ public class AuthManager : IAuthService
     public async Task<LoginResultDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
+        
+
         if (user==null)
         {
             _logger.LogWarning("Başarısız giriş denemesi - kullanıcı yok: {Email}", loginDto.Email);
             return Fail("Geçersiz Eposta veya şifre");
         }
 
-
+        if (!user.IsApproved)
+        {
+            _logger.LogWarning("Onaylanmamış Hesap Giriş Denemesi:{Email}", loginDto.Email);
+            return Fail("Hesabınız Henüz Admin Tarafından Onaylanmadı");
+        }
 
         if (await _userManager.IsLockedOutAsync(user))
         {
             _logger.LogWarning("Kilitli hesaba giriş denemesi: {Email}", loginDto.Email);
             return Fail("Hesabınız Geçiçi Olarak Kilitlendi");
         }
-
+        // Not: CheckPasswordAsync kullanıldığı için RequireConfirmedEmail bypass edilmiş.
+        // EmailConfirmed kontrolü onay sistemi tarafından yönetiliyor (ApproveUserAsync → EmailConfirmed = true).
+        // IsApproved kontrolü yukarıda yapıldığı için onaylanmamış kullanıcı buraya ulaşamaz.
 
         if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
         {
@@ -76,11 +84,8 @@ public class AuthManager : IAuthService
             };
         }
 
-        if (!user.IsApproved)
-        {
-            _logger.LogWarning("Onaylanmamış Hesap Giriş Denemesi:{Email}", loginDto.Email);
-            return Fail("Hesabınız Henüz Admin Tarafından Onaylanmadı");
-        }
+     
+       
 
 
         //direkt token ver

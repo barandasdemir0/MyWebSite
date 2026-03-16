@@ -35,6 +35,11 @@ public class EfRefreshTokenDal : IRefreshTokenDal
     {
         var tokens = await _appDbContext.RefreshTokens
             .Where(t => t.userId == userId && !t.IsRevoked).ToListAsync(cancellation);
+        foreach (var token in tokens)
+        {
+            token.IsRevoked = true;
+        }
+        await _appDbContext.SaveChangesAsync(cancellation);
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

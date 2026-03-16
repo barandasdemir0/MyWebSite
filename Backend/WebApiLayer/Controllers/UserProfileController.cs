@@ -18,7 +18,7 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpPost("assign-role")]
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto assignRoleDto, CancellationToken cancellationToken)
     {
         var ok = await _userProfileService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
