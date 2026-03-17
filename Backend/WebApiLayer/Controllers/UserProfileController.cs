@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AuthDtos;
+using EntityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -99,6 +100,32 @@ public class UserProfileController : ControllerBase
         return BadRequest("Kullanıcı Silinemedi");
     }
 
+    [HttpGet("all-users")]
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
+    {
+        var users = await _userProfileService.GetAllUserAsync(cancellationToken);
+        return Ok(users);
+    }
 
+    [HttpGet("role-permissions/{roleName}")]  // "s" ekle
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> GetRolePermissions(string roleName,CancellationToken cancellationToken)
+    {
+        var perms = await _userProfileService.GetRolePermissionsAsync(roleName, cancellationToken);
+        return Ok(perms);
+    }
+
+    [HttpPost("role-permissions/{roleName}")] // "s" ekle
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> SaveRolePermissions(string roleName,[FromBody]List<string> permissions,CancellationToken cancellation)
+    {
+        var ok = await _userProfileService.SaveRolePermissionsAsync(roleName, permissions, cancellation);
+        if (ok)
+        {
+            return Ok();
+        }
+        return BadRequest();
+    }
 
 }

@@ -17,6 +17,7 @@ public abstract class CrudController<TListDto,TCreateDto,TUpdateDto> : Controlle
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public virtual async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var query = await _crudService.GetAllAsync(cancellationToken);
@@ -24,6 +25,7 @@ public abstract class CrudController<TListDto,TCreateDto,TUpdateDto> : Controlle
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public virtual async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         var query = await _crudService.GetByIdAsync(id, cancellationToken);

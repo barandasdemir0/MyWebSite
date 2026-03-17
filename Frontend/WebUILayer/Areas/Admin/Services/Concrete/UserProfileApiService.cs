@@ -26,6 +26,16 @@ public class UserProfileApiService : IUserProfileApiService
         return response.IsSuccessStatusCode;
     }
 
+    public async Task<List<ApprovedUserDto>> GetAllUsersAsync()
+    {
+        var response = await _httpClient.GetAsync("userprofile/all-users");
+        if (!response.IsSuccessStatusCode)
+        {
+            return new List<ApprovedUserDto>();
+        }
+        return await response.Content.ReadFromJsonAsync<List<ApprovedUserDto>>() ?? new();
+    }
+
     public async Task<List<PendingUserDto>> GetPendingUsersAsync()
     {
         var response = await _httpClient.GetAsync("userprofile/pending-users");
@@ -34,6 +44,16 @@ public class UserProfileApiService : IUserProfileApiService
             return new List<PendingUserDto>();
         }
         return await response.Content.ReadFromJsonAsync<List<PendingUserDto>>() ?? new();
+    }
+
+    public async Task<List<string>> GetRolePermissionsAsync(string roleName)
+    {
+        var response = await _httpClient.GetAsync($"userprofile/role-permissions/{roleName}");
+        if (!response.IsSuccessStatusCode)
+        {
+            return new List<string>();
+        }
+        return await response.Content.ReadFromJsonAsync<List<string>>() ?? new();
     }
 
     public async Task<UserProfileDto?> GetUserProfileAsync()
@@ -50,6 +70,12 @@ public class UserProfileApiService : IUserProfileApiService
     public async Task<bool> RejectUserAsync(string userId)
     {
         var response = await _httpClient.PostAsync($"userprofile/reject-user/{userId}", null);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> SaveRolePermissions(string roleName, List<string> permissions)
+    {
+        var response = await _httpClient.PostAsJsonAsync($"userprofile/role-permissions/{roleName}", permissions);
         return response.IsSuccessStatusCode;
     }
 

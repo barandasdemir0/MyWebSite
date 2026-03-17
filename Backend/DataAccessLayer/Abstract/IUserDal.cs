@@ -6,4 +6,7 @@ public interface IUserDal
 {
     Task<List<AppUser>> GetPendingUserAsync(CancellationToken cancellationToken);
     Task<List<AppUser>> GetApprovedUserAsync(CancellationToken cancellationToken);
+
+    Task<List<string>> GetRolePermissionsAsync(string roleName, CancellationToken cancellationToken);
+    Task SaveRolePermissionsAsync(string roleName, List<string> permissions, CancellationToken cancellationToken);
 }

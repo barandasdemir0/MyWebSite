@@ -1,18 +1,21 @@
-﻿@model List<PendingUserDto>
+﻿@using DtoLayer.AuthDtos
+@model UserManagementViewModel
 @{
-    ViewData["Title"] = "PendingUser";
+    ViewData["Title"] = "Kullanıcı Yönetimi";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 @section styles {
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/table-variations.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/user-management.css">
 }
 
+<!-- Onay Bekleyen Kullanıcılar -->
 <div class="card mt-25">
     <div class="card-header">
-        <h3> Onay Bekleyen Kullanıcılar</h3>
-        <input type="text" class="form-control filter-search" placeholder="Kullanıcı ara...">
+        <h3><i class="fas fa-user-clock"></i> Onay Bekleyen Kullanıcılar</h3>
+        <input type="text" class="form-control filter-search" id="tableSearch" placeholder="Kullanıcı ara...">
     </div>
-    @if (Model.Count == 0)
+    @if (Model.PendingUsers.Count == 0)
     {
         <p>Onay Bekleyen Kullanıcı Yok</p>
     }
@@ -23,22 +26,21 @@
                 <thead>
                     <tr>
                         <th>Ad</th>
-                        <th>SoyAd</th>
+                        <th>Soyad</th>
                         <th>E-posta</th>
                         <th>Kayıt Tarihi</th>
                         <th>İşlemler</th>
                     </tr>
                 </thead>
                 <tbody>
-
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.PendingUsers)
                     {
                         <tr>
                             <td>@item.Name</td>
                             <td>@item.Surname</td>
                             <td>@item.Email</td>
-                            <td data-label="Son Giriş">@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                            <td data-label="İşlemler">
+                            <td>@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>
                                 <div class="action-btns">
                                     <form asp-action="Approve" asp-route-id="@item.UserId" method="post">
                                         <button type="submit" class="btn btn-success btn-sm">
@@ -46,24 +48,137 @@
                                         </button>
                                     </form>
                                     <form asp-action="Reject" asp-route-id="@item.UserId" method="post">
-                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i>Sil</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Sil
+                                        </button>
                                     </form>
-                                    
-                                 
                                 </div>
                             </td>
                         </tr>
                     }
-            
-                  
-          
                 </tbody>
             </table>
         </div>
     }
 </div>
+<br/>
+<!-- İki Panel Yan Yana -->
+<div class="user-management-grid mt-25">
+
+    <!-- PANEL 1: Onaylı Kullanıcılar -->
+    <div class="card panel-users">
+        <div class="card-header">
+            <h3><i class="fas fa-users"></i> Onaylı Kullanıcılar</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Ad Soyad</th>
+                        <th>E-posta</th>
+                        <th>Rol</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var allRoles = new[] { "User", "Editor", "Admin" };
+                    }
+                    @foreach (var user in Model.ApprovedUsers)
+                    {
+                        <tr>
+                            <td>@user.Name @user.Surname</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <form asp-action="Approve" asp-route-id="@user.UserId" method="post" class="role-form">
+                                    <!-- Kullanıcı rol select: -->
+                                    <select name="role" class="form-control form-select-sm role-select">
+                                        @foreach (var r in allRoles)
+                                        {
+                                            if (user.Role == r)
+                                            {
+                                                <option value="@r" selected="selected">@r</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@r">@r</option>
+                                            }
+                                        }
+                                    </select>
+
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-action="Reject" asp-route-id="@user.UserId" method="post">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+    <!-- PANEL 2: Rol İzinleri -->
+    <div class="card panel-permissions">
+        <div class="card-header">
+            <h3><i class="fas fa-shield-alt"></i> Rol İzinleri</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="PendingUser" method="get" class="form-group">
+                <label>Rol Seç</label>
+                @{
+                    var selectableRoles = new[] { "Editor", "User" };
+                }
+                <!-- Rol seçici: -->
+                <select name="selectedRole" id="roleSelector" class="form-control">
+                    @foreach (var role in selectableRoles)
+                    {
+                        if (Model.SelectedRole == role)
+                        {
+                            <option value="@role" selected="selected">@role</option>
+                        }
+                        else
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    }
+                </select>
+            </form>
+
+            <form asp-action="SavePermissions" method="post">
+                <input type="hidden" name="selectedRole" value="@Model.SelectedRole" />
+                <div class="permissions-grid">
+                    @foreach (var perm in Model.AllPermissions)
+                    {
+                        <label class="permission-item">
+                            @if (Model.ActivePermissions.Contains(perm.Key))
+                            {
+                                <input type="checkbox" name="permissions" value="@perm.Key" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="permissions" value="@perm.Key" />
+                            }
+                            @perm.Label
+                        </label>
+                    }
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Kaydet
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <script src="/Mytheme/admin/js/modules/table-previews.js"></script>
 }
-
-

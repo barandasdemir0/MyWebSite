@@ -272,3 +272,7 @@ function showToast(message, type) {
         setTimeout(function () { toast.remove(); }, 300);
     }, 3000);
 }
+// user-management.js — tek görev: rol seçince sayfayı yenile
+document.getElementById('roleSelector')?.addEventListener('change', function () {
+    this.closest('form').submit();
+});

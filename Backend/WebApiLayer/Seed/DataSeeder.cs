@@ -26,6 +26,14 @@ public static class DataSeeder
             });
         }
 
+        if (!await roleManager.RoleExistsAsync("Editor"))
+        {
+            await roleManager.CreateAsync(new IdentityRole<Guid>
+            {
+                Name = "Editor"
+            });
+        }
+
         var adminEmail = "barandasdemir.bd@gmail.com";
         var admin = await userManager.FindByEmailAsync(adminEmail);
         if (admin == null)

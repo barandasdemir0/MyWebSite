@@ -63,12 +63,7 @@ public class AuthApiService : IAuthApiService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> SetNewPasswordAsync(SetNewPasswordDto setNewPasswordDto)
-    {
-        var result = await _httpClient.PostAsJsonAsync("auth/set-new-password", setNewPasswordDto);
-        return result.IsSuccessStatusCode;
-    }
-
+   
     public async Task<bool> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto)
     {
 
@@ -76,4 +71,11 @@ public class AuthApiService : IAuthApiService
         return result.IsSuccessStatusCode;
       
     }
+
+    public async Task<bool> SetNewPasswordAsync(SetNewPasswordDto setNewPasswordDto)
+    {
+        var result = await _httpClient.PostAsJsonAsync("auth/set-new-password", setNewPasswordDto);
+        return result.IsSuccessStatusCode;
+    }
+
 }

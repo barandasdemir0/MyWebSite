@@ -2,9 +2,8 @@
 using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
-using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Concrete;
 
@@ -13,12 +12,14 @@ public class UserProfileManager : IUserProfileService
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly IUserDal _userDal;
+    private readonly IMapper _mapper;
 
-    public UserProfileManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, IUserDal userDal)
+    public UserProfileManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, IUserDal userDal, IMapper mapper)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _userDal = userDal;
+        _mapper = mapper;
     }
 
     public async Task<bool> ApproveUserAsync(string userId,string role, CancellationToken cancellationToken)
@@ -73,12 +74,37 @@ public class UserProfileManager : IUserProfileService
         return result.Succeeded;
     }
 
+    public async Task<List<ApprovedUserDto>> GetAllUserAsync(CancellationToken cancellationToken)
+    {
+        var users = await _userDal.GetApprovedUserAsync(cancellationToken);
+        var result = new List<ApprovedUserDto>();
+        foreach (var item in users)
+        {
+            var roles = await _userManager.GetRolesAsync(item);
+            result.Add(new ApprovedUserDto
+            {
+                UserId = item.Id.ToString(),
+                Name = item.Name ?? "",
+                Surname = item.Surname ?? "",
+                Email = item.Email ?? "",
+                Role = roles.FirstOrDefault() ?? "User",
+                CreatedAt = item.CreatedAt
+            });
+        }
+        return result;
+    }
+
     public async Task<List<PendingUserDto>> GetPendingUsersAsync(CancellationToken cancellationToken)
     {
 
         var user = await _userDal.GetPendingUserAsync(cancellationToken);
-        return user.Adapt<List<PendingUserDto>>();
+        return _mapper.Map<List<PendingUserDto>>(user);
 
+    }
+
+    public async Task<List<string>> GetRolePermissionsAsync(string roleName, CancellationToken cancellationToken)
+    {
+        return await _userDal.GetRolePermissionsAsync(roleName, cancellationToken);
     }
 
     public async Task<UserProfileDto> GetUserProfileAsync(string UserId, CancellationToken cancellationToken)
@@ -110,6 +136,12 @@ public class UserProfileManager : IUserProfileService
         }
         var result = await _userManager.DeleteAsync(user);
         return result.Succeeded;
+    }
+
+    public async Task<bool> SaveRolePermissionsAsync(string roleName, List<string> permissions, CancellationToken cancellationToken)
+    {
+         await _userDal.SaveRolePermissionsAsync(roleName, permissions, cancellationToken);
+        return true;
     }
 
     public async Task<bool> Toggle2FAAsync(string userId, Toggle2FADto toggle2FADto, CancellationToken cancellationToken)
