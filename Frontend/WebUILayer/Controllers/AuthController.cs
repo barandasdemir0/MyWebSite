@@ -38,7 +38,7 @@ public class AuthController : Controller
             HttpContext.Session.SetString("2FA_UserId", result.UserId!);
             return RedirectToAction(nameof(ChooseTwoFactor));
         }
-        await SetCookieFromJwtAsync(result.Token!,result.RefreshToken);
+        await SetCookieFromJwtAsync(result.Token!,result.RefreshToken,loginDto.RememberMe);
         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
         //return LocalRedirect("/Admin/Dashboard/Index");
 
@@ -285,7 +285,7 @@ public class AuthController : Controller
 
 
 
-    private async Task SetCookieFromJwtAsync(string accesstoken,string? refreshToken = null)
+    private async Task SetCookieFromJwtAsync(string accesstoken,string? refreshToken = null,bool rememberMe=false)
     {
         var handler = new JwtSecurityTokenHandler();
         var jwt = handler.ReadJwtToken(accesstoken);
@@ -302,7 +302,7 @@ public class AuthController : Controller
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties
                 {
-                    IsPersistent = true
+                    IsPersistent = rememberMe
                 }
             );
 
@@ -321,7 +321,7 @@ public class AuthController : Controller
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.Now.AddDays(7)
+                Expires = rememberMe ? DateTimeOffset.UtcNow.AddDays(7) : DateTimeOffset.UtcNow.AddHours(1)
             });
         }
      
