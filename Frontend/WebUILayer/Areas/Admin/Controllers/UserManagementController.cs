@@ -6,7 +6,7 @@ using WebUILayer.Areas.Admin.Services.Abstract;
 namespace WebUILayer.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("[area]/[controller]/[action]/{id?}")]
 public class UserManagementController : Controller
 {
@@ -36,7 +36,7 @@ public class UserManagementController : Controller
     [HttpPost]
     public async Task<IActionResult> Reject(string id)
     {
-        var ok = await _userProfileApiService.RejecetUserAsync(id);
+        var ok = await _userProfileApiService.RejectUserAsync(id);
         TempData[ok ? "Success" : "Error"] = ok ? "Kullanıcı reddedildi." : "Reddetme başarısız.";
         return RedirectToAction(nameof(PendingUser));
 

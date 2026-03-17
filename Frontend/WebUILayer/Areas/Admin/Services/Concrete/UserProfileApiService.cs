@@ -47,7 +47,7 @@ public class UserProfileApiService : IUserProfileApiService
         return await response.Content.ReadFromJsonAsync<UserProfileDto>();
     }
 
-    public async Task<bool> RejecetUserAsync(string userId)
+    public async Task<bool> RejectUserAsync(string userId)
     {
         var response = await _httpClient.PostAsync($"userprofile/reject-user/{userId}", null);
         return response.IsSuccessStatusCode;

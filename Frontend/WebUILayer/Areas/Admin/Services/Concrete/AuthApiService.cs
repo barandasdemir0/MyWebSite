@@ -13,6 +13,11 @@ public class AuthApiService : IAuthApiService
         _httpClient = httpClient; 
     }
 
+    public async Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
+    {
+        await _httpClient.PostAsJsonAsync("auth/forgot-password", forgotPasswordDto);
+    }
+
     public async Task<LoginResultDto?> LoginAsync(LoginDto loginDto)
     {
         var response = await _httpClient.PostAsJsonAsync("auth/login", loginDto);
@@ -52,5 +57,23 @@ public class AuthApiService : IAuthApiService
         return await response.Content.ReadFromJsonAsync<RegisterResultDto>();
     }
 
+    public async Task<bool> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
+    {
+        var response = await _httpClient.PostAsJsonAsync("auth/reset-password", resetPasswordDto);
+        return response.IsSuccessStatusCode;
+    }
 
+    public async Task<bool> SetNewPasswordAsync(SetNewPasswordDto setNewPasswordDto)
+    {
+        var result = await _httpClient.PostAsJsonAsync("auth/set-new-password", setNewPasswordDto);
+        return result.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto)
+    {
+
+        var result = await _httpClient.PostAsJsonAsync("auth/verify-reset-otp", verifyResetOtpDto);
+        return result.IsSuccessStatusCode;
+      
+    }
 }

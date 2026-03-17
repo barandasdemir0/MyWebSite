@@ -36,7 +36,7 @@ public class AuthController : Controller
         if (result.RequiresTwoFactor)
         {
             HttpContext.Session.SetString("2FA_UserId", result.UserId!);
-            return RedirectToAction("ChooseTwoFactor");
+            return RedirectToAction(nameof(ChooseTwoFactor));
         }
         await SetCookieFromJwtAsync(result.Token!,result.RefreshToken);
         return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
@@ -146,12 +146,143 @@ public class AuthController : Controller
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync();
+        HttpContext.Response.Cookies.Delete("AccessToken");
         HttpContext.Response.Cookies.Delete("RefreshToken");
         return RedirectToAction(nameof(Login));
     }
 
 
-  
+    [HttpGet("/auth/forgot-password")]
+    public IActionResult ForgotPassword() => View();
+
+    [HttpPost("/auth/forgot-password")]
+    public async Task< IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+    {
+      
+        HttpContext.Session.SetString("reset_email", forgotPasswordDto.Email);
+        return RedirectToAction(nameof(ChooseResetMethod));
+    }
+
+    [HttpGet("/auth/ChooseResetMethod")]
+    public IActionResult ChooseResetMethod()
+    {
+        if (string.IsNullOrEmpty(HttpContext.Session.GetString("reset_email")))
+        {
+            return RedirectToAction(nameof(Login));
+        }
+        return View();
+    }
+
+    [HttpPost("/auth/process-reset-choice")]
+    public async Task<IActionResult> ProcessResetChoice(string SelectedProvider)
+    {
+        var email = HttpContext.Session.GetString("reset_email");
+        if (string.IsNullOrEmpty(email))
+        {
+            return RedirectToAction(nameof(Login));
+        }
+        if (SelectedProvider=="Email")
+        {
+            await _authApiService.ForgotPasswordAsync(new ForgotPasswordDto
+            {
+                Email = email
+            });
+        }
+
+        HttpContext.Session.SetString("reset_provider", SelectedProvider);
+        return RedirectToAction(nameof(VerifyResetCode));
+    }
+
+
+    [HttpGet("/auth/resend-reset-code")]
+    public async Task<IActionResult> ResendResetCode()
+    {
+        var email = HttpContext.Session.GetString("reset_email");
+        if (string.IsNullOrEmpty(email)) return RedirectToAction(nameof(Login));
+
+        await _authApiService.ForgotPasswordAsync(new ForgotPasswordDto { Email = email });
+        TempData["Info"] = "Kod tekrar gönderildi.";
+        return RedirectToAction(nameof(VerifyResetCode));
+    }
+
+
+
+
+    [HttpGet("/auth/verify-reset-code")]
+    public IActionResult VerifyResetCode()
+    {
+        if (string.IsNullOrEmpty(HttpContext.Session.GetString("reset_email")))
+        {
+            return RedirectToAction(nameof(Login));
+        }
+        return View();
+    }
+
+    [HttpPost("/auth/verify-reset-code")]
+    public async Task<IActionResult> VerifyResetCode(string code)
+    {
+        var email = HttpContext.Session.GetString("reset_email");
+        var providerStr = HttpContext.Session.GetString("reset_provider") ?? "Email";
+        if (string.IsNullOrEmpty(email))
+        {
+            return RedirectToAction(nameof(Login));
+        }
+        var provider = Enum.Parse<TwoFactorProvider>(providerStr);
+        var ok = await _authApiService.VerifyResetOtpAsync(new VerifyResetOtpDto
+        {
+            Email = email,
+            provider = provider,
+            Code = code
+        });
+
+        if (!ok)
+        {
+            ModelState.AddModelError("", "Geçersiz veya süresi dolmuş kod.");
+            return View();
+        }
+        HttpContext.Session.SetString("reset_verified", "true");
+        return RedirectToAction(nameof(SetNewPassword));
+    }
+
+
+    [HttpGet("/auth/set-new-password")]
+    public IActionResult SetNewPassword()
+    {
+        if (HttpContext.Session.GetString("reset_verified")!="true")
+        {
+            return RedirectToAction(nameof(Login));
+        }
+        return View();
+    }
+
+    [HttpPost("/auth/set-new-password")]
+    public async Task<IActionResult> SetNewPassword(string confirmPassword,SetNewPasswordDto setNewPasswordDto)
+    {
+        if (HttpContext.Session.GetString("reset_verified") != "true")
+        {
+            return RedirectToAction(nameof(Login));
+        }
+        if (setNewPasswordDto.NewPassword != confirmPassword)
+        {
+            ModelState.AddModelError("", "Şifreler eşleşmiyor.");
+            return View();
+        }
+
+        setNewPasswordDto.Email = HttpContext.Session.GetString("reset_email")!;
+        var ok = await _authApiService.SetNewPasswordAsync(setNewPasswordDto);
+        if (!ok)
+        {
+            ModelState.AddModelError("", "Şifreler değiştirilemedi.");
+            return View();
+        }
+        HttpContext.Session.Clear();
+        TempData["Success"] = "Şifreniz başarıyla değiştirildi.";
+        return RedirectToAction(nameof(Login));
+    }
+
+
+
+
 
 
     private async Task SetCookieFromJwtAsync(string accesstoken,string? refreshToken = null)

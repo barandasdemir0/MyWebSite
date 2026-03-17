@@ -77,6 +77,37 @@ public class AuthController : ControllerBase
     }
 
 
+    [HttpPost("forgot-password")]
+    [EnableRateLimiting("email")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto,CancellationToken cancellationToken)
+    {
+        await _authService.ForgotPasswordAsync(forgotPasswordDto.Email, cancellationToken);
+        return Ok("Eğer bu eposta kayıtlıysa,sıfırlama bağlantısı gönderildi");
+    }
+
+
+    [HttpPost("verify-reset-otp")]
+    [EnableRateLimiting("email")]
+    public async Task<IActionResult> VerifyResetOtp([FromBody]VerifyResetOtpDto verifyResetOtpDto,CancellationToken cancellationToken)
+    {
+        var ok = await _authService.VerifyResetOtpAsync(verifyResetOtpDto.Email,verifyResetOtpDto.Code,verifyResetOtpDto.provider,cancellationToken);
+        if (ok)
+        {
+            return Ok();
+        }
+        return BadRequest("Geçersiz veya süresi dolmuş kod");
+    }
+
+    [HttpPost("set-new-password")]
+    public async Task<IActionResult> SetNewPassword([FromBody] SetNewPasswordDto setNewPasswordDto,CancellationToken cancellationToken)
+    {
+        var ok = await _authService.SetNewPasswordAsync(setNewPasswordDto.Email, setNewPasswordDto.NewPassword, cancellationToken);
+        if (ok)
+        {
+            return Ok();
+        }
+        return BadRequest("şifre değiştirilemedi");
+    }
 
 
 }

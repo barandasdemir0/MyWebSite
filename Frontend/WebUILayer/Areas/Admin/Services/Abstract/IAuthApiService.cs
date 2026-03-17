@@ -8,4 +8,8 @@ public interface IAuthApiService
     Task<RegisterResultDto?> RegisterAsync(RegisterDto registerDto);
     Task LogoutAsync();
 
+    Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
+    Task<bool> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto);
+    Task<bool> SetNewPasswordAsync(SetNewPasswordDto setNewPasswordDto);
+
 }

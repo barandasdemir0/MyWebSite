@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +12,13 @@ public class UserProfileManager : IUserProfileService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly IUserDal _userDal;
 
-    public UserProfileManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+    public UserProfileManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, IUserDal userDal)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _userDal = userDal;
     }
 
     public async Task<bool> ApproveUserAsync(string userId,string role, CancellationToken cancellationToken)
@@ -50,6 +54,9 @@ public class UserProfileManager : IUserProfileService
             });
 
         }
+
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
         await _userManager.AddToRoleAsync(user, role);
         return true;
     }
@@ -68,16 +75,10 @@ public class UserProfileManager : IUserProfileService
 
     public async Task<List<PendingUserDto>> GetPendingUsersAsync(CancellationToken cancellationToken)
     {
-        var users = await _userManager.Users.Where(u => !u.IsApproved).Select(u => new PendingUserDto
-        {
-            UserId = u.Id.ToString(),
-            Email = u.Email ?? "",
-            Name = u.Name ?? "",
-            Surname = u.Surname ??"",
-            CreatedAt = u.CreatedAt
-        }).ToListAsync(cancellationToken);
-        return users;
-        //burası dataaccesse alınmalı
+
+        var user = await _userDal.GetPendingUserAsync(cancellationToken);
+        return user.Adapt<List<PendingUserDto>>();
+
     }
 
     public async Task<UserProfileDto> GetUserProfileAsync(string UserId, CancellationToken cancellationToken)

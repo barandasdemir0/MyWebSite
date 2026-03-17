@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <script src="~/Mytheme/js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kodu Doğrula | Portfolio Yönetim Paneli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/variables.css">
+        <link rel="stylesheet" href="~/Mytheme/admin/css/modules/global.css">
+            <link rel="stylesheet" href="~/Mytheme/admin/css/modules/layout.css">
+                <link rel="stylesheet" href="~/Mytheme/admin/css/modules/components.css">
+                    <link rel="stylesheet" href="~/Mytheme/admin/css/modules/notifications.css">
+                        <link rel="stylesheet" href="~/Mytheme/admin/css/modules/login.css">
+                            <link rel="stylesheet" href="~/Mytheme/admin/css/modules/login-page.css">
+                                <link rel="stylesheet" href="~/Mytheme/admin/css/modules/preloader.css">
+                                </head>
+                                <body class="login-page">
+                                    <div class="login-container">
+                                        <div class="login-box">
+                                            <div class="header-actions"></div>
+                                            <div class="login-logo">
+                                                <h1><span>Kodu</span> Doğrula</h1>
+                                                <p>E-postanıza gelen 6 haneli kodu girin</p>
+                                            </div>
+                                            <form asp-action="VerifyResetCode" method="post">
+                                                <div asp-validation-summary="All" class="text-danger"></div>
+                                                <div class="form-group">
+                                                    <label for="code">Doğrulama Kodu</label>
+                                                    <input type="text" class="form-control" name="code" id="code"
+                                                           placeholder="000000" maxlength="6"
+                                                           inputmode="numeric" pattern="[0-9]{6}" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-shield-alt"></i>
+                                                    Doğrula
+                                                </button>
+                                            </form>
+                                            <div class="signup-section">
+                                                <p>
+                                                    Kodu almadınız mı?
+                                                    <a asp-action="ResendResetCode">Tekrar Gönder</a>
+
+                                                </p>
+                                            </div>
+                                            <div class="security-section">
+                                                <p>
+                                                    <i class="fas fa-shield-alt"></i>
+                                                    Güvenli bağlantı ile korunmaktadır
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script src="~/Mytheme/admin/js/modules/notifications.js"></script>
+                                    <script src="~/Mytheme/admin/js/modules/ui.js"></script>
+                                    <script src="~/Mytheme/admin/js/admin.js"></script>
+                                </body>
+                            </html>

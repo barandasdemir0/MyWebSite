@@ -17,18 +17,20 @@ public class AuthManager : IAuthService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthManager> _logger;
     private readonly IRefreshTokenDal _refreshTokenDal;
 
 
-    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal)
+    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService)
     {
         _userManager = userManager;
         _configuration = configuration;
         _roleManager = roleManager;
         _logger = logger;
         _refreshTokenDal = refreshTokenDal;
+        _emailService = emailService;
     }
 
 
@@ -280,4 +282,56 @@ public class AuthManager : IAuthService
         };
     }
 
+    public async Task ForgotPasswordAsync(string email, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user==null)
+        {
+            return;
+        }
+
+        await _userManager.UpdateSecurityStampAsync(user);
+        var code = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+
+
+        await _emailService.SendAsync(email, "Şifre Sıfırlama",
+       $"Şifre sıfırlama kodunuz: <b>{code}</b><br/>Bu kod 10 dakika geçerlidir.", cancellationToken);
+
+
+    }
+
+   
+
+    public async Task<bool> VerifyResetOtpAsync(string email, string code, TwoFactorProvider provider, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user ==null)
+        {
+            return false;
+        }
+
+        var tokenProvider = provider switch
+        {
+            TwoFactorProvider.Authenticator => _userManager.Options.Tokens.AuthenticatorTokenProvider,
+            TwoFactorProvider.Email => TokenOptions.DefaultEmailProvider,
+            _ => TokenOptions.DefaultEmailProvider
+        };
+
+        return await _userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, code );
+    }
+
+    public async Task<bool> SetNewPasswordAsync(string email, string newPassword, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user==null)
+        {
+            return false;
+        }
+
+
+
+        await _userManager.RemovePasswordAsync(user);
+        var result = await _userManager.AddPasswordAsync(user, newPassword);
+        return result.Succeeded;
+    }
 }
