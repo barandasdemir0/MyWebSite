@@ -71,7 +71,7 @@ public class AuthController : ControllerBase
         var result = await _authService.RefreshTokenAsync(dto, deviceInfo, cancellationToken);
         if (result.Success)
         {
-            return Ok();
+            return Ok(result);
         }
         return Unauthorized(result.Error);
     }

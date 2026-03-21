@@ -9,32 +9,29 @@ public static class DataSeeder
     {
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var configuration = services.GetRequiredService<IConfiguration>();
 
-        if (!await roleManager.RoleExistsAsync("Admin"))
+        string[] roles ={
+            RoleConsts.Admin,RoleConsts.User,RoleConsts.Editor
+        };
+
+        foreach (var role in roles)
         {
-            await roleManager.CreateAsync(new IdentityRole<Guid>
+            if (!await roleManager.RoleExistsAsync(role))
             {
-                Name = "Admin"
-            });
+                await roleManager.CreateAsync(new IdentityRole<Guid>
+                {
+                    Name = role
+                });
+            }
         }
 
-        if (!await roleManager.RoleExistsAsync("User"))
+        var adminEmail = configuration["Seed:AdminEmail"];
+        var adminPassword = configuration["Seed:AdminPassword"];
+        if (string.IsNullOrEmpty(adminEmail) || string.IsNullOrEmpty(adminPassword))
         {
-            await roleManager.CreateAsync(new IdentityRole<Guid>
-            {
-                Name = "User"
-            });
+            return;
         }
-
-        if (!await roleManager.RoleExistsAsync("Editor"))
-        {
-            await roleManager.CreateAsync(new IdentityRole<Guid>
-            {
-                Name = "Editor"
-            });
-        }
-
-        var adminEmail = "barandasdemir.bd@gmail.com";
         var admin = await userManager.FindByEmailAsync(adminEmail);
         if (admin == null)
         {
@@ -48,8 +45,8 @@ public static class DataSeeder
                 IsApproved = true
             };
 
-            await userManager.CreateAsync(admin, "CoC4CDpTht,6t&Rw.");
-            await userManager.AddToRoleAsync(admin, "Admin");
+            await userManager.CreateAsync(admin, adminPassword);
+            await userManager.AddToRoleAsync(admin, RoleConsts.Admin);
         }
     }
 

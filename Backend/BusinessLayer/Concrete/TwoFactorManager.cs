@@ -17,15 +17,13 @@ public class TwoFactorManager : ITwoFactorService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailService _emailService;
-    private readonly IConfiguration _configuration;
-    private readonly IRefreshTokenDal _refreshTokenDal;
+    private readonly ITokenService _tokenService;
 
-    public TwoFactorManager(UserManager<AppUser> userManager, IEmailService emailService, IConfiguration configuration, IRefreshTokenDal refreshTokenDal)
+    public TwoFactorManager(UserManager<AppUser> userManager, IEmailService emailService, ITokenService tokenService)
     {
         _userManager = userManager;
         _emailService = emailService;
-        _configuration = configuration;
-        _refreshTokenDal = refreshTokenDal;
+        _tokenService = tokenService;
     }
 
     public async Task<bool> ConfirmAuthenticatorSetupAsync(string userId, string Code, CancellationToken cancellationToken)
@@ -92,12 +90,30 @@ public class TwoFactorManager : ITwoFactorService
         };
     }
 
+    public async Task<bool> Toggle2FAAsync(string userId, Toggle2FADto toggle2FADto, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return false;
+
+        }
+        await _userManager.SetTwoFactorEnabledAsync(user, toggle2FADto.Enable);
+        user.Preferred2FAProvider = toggle2FADto.Enable ? toggle2FADto.Provider : TwoFactorProvider.None;
+        await _userManager.UpdateAsync(user);
+        return true;
+    }
+
     public async Task<LoginResultDto> VerifyTwoFactorAsync(TwoFactorVerifyDto dto, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(dto.UserId);
         if (user == null)
         {
-            return Fail("Kullanıcı Bulunamadı");
+            return new LoginResultDto
+            {
+                Success = false,
+                Error = "Kullanıcı Bulunamadı"
+            };
         }
 
         var provider = dto.Provider switch
@@ -110,71 +126,25 @@ public class TwoFactorManager : ITwoFactorService
         var valid = await _userManager.VerifyTwoFactorTokenAsync(user, provider, dto.Code);
         if (!valid)
         {
-            return Fail("Geçersiz veya süresi dolmuş kod");
+            return new LoginResultDto
+            {
+                Success = false,
+                Error= "Geçersiz veya süresi dolmuş kod"
+            };
         }
 
         return new LoginResultDto
         {
             Success = true,
-            Token = await CreateJwtAsync(user),
-            RefreshToken = await CreateRefresthTokenAsync(user, null)
+            Token = await _tokenService.CreateAccessTokenAsync(user),
+            RefreshToken = await _tokenService.CreateRefreshTokenAsync(user, null)
 
         };
     }
 
-    private async Task<string> CreateRefresthTokenAsync(AppUser user,string? deviceInfo)
-    {
-        var tokenBytes = new byte[64];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(tokenBytes);
-        var tokenString = Convert.ToBase64String(tokenBytes);
-
-        var refreshToken = new RefreshToken
-        {
-            Token = tokenString,
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            DeviceInfo = deviceInfo,
-            userId = user.Id
-        };
-        await _refreshTokenDal.AddAsync(refreshToken);
-        return tokenString;
-    }
+   
 
 
 
-    private async Task<string> CreateJwtAsync(AppUser user)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
-        var roles = await _userManager.GetRolesAsync(user);
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-            new Claim(ClaimTypes.Email,user.Email??""),
-            new Claim(ClaimTypes.Name,$"{user.Name}{user.Surname}")
-
-        };
-        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
-
-
-        var token = new JwtSecurityToken
-            (
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(8),
-            signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
-            );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    private static LoginResultDto Fail(string error)
-    {
-        return new LoginResultDto
-        {
-            Success = false,
-            Error = error
-
-        };
-    }
+  
 }

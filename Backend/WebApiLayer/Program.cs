@@ -51,9 +51,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-using(var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
     await DataSeeder.SeedAsync(scope.ServiceProvider);
+
 }
+
 
 app.Run();

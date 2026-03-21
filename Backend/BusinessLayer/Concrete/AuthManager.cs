@@ -18,19 +18,19 @@ public class AuthManager : IAuthService
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly IEmailService _emailService;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<AuthManager> _logger;
     private readonly IRefreshTokenDal _refreshTokenDal;
+    private readonly ITokenService _tokenService;
 
 
-    public AuthManager(UserManager<AppUser> userManager, IConfiguration configuration, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService)
+    public AuthManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService, ITokenService tokenService)
     {
         _userManager = userManager;
-        _configuration = configuration;
         _roleManager = roleManager;
         _logger = logger;
         _refreshTokenDal = refreshTokenDal;
         _emailService = emailService;
+        _tokenService = tokenService;
     }
 
 
@@ -86,16 +86,16 @@ public class AuthManager : IAuthService
             };
         }
 
-     
-       
+
+
 
 
         //direkt token ver
 
 
 
-        var accessToken = await CreateJwtAsync(user);
-        var refreshToken = await CreateRefreshTokenAsync(user, loginDto.DeviceInfo,cancellationToken);
+        var accessToken = await _tokenService.CreateAccessTokenAsync(user);
+        var refreshToken = await _tokenService.CreateRefreshTokenAsync(user, loginDto.DeviceInfo,cancellationToken);
         _logger.LogInformation("Kullanıcı giriş yaptı: {UserId}", user.Id);
         return new LoginResultDto
         {
@@ -139,14 +139,14 @@ public class AuthManager : IAuthService
 
         }
 
-        if (!await _roleManager.RoleExistsAsync("User"))
+        if (!await _roleManager.RoleExistsAsync(RoleConsts.User))
         {
             await _roleManager.CreateAsync(new IdentityRole<Guid>
             {
-                Name = "User"
+                Name = RoleConsts.User
             });
         }
-        await _userManager.AddToRoleAsync(user, "User");
+        await _userManager.AddToRoleAsync(user, RoleConsts.User);
 
         _logger.LogInformation("Yeni kullanıcı kaydı: {Email}", registerDto.Email);
         return new RegisterResultDto
@@ -165,7 +165,7 @@ public class AuthManager : IAuthService
         ClaimsPrincipal? principal;
         try
         {
-            principal = GetPrincipalFromExpiredToken(dto.AccessToken);
+            principal = _tokenService.GetPrincipalFromExpiredToken(dto.AccessToken);
         }
         catch
         {
@@ -192,9 +192,9 @@ public class AuthManager : IAuthService
             return Fail("Kullanıcı Bulunamadı");
         }
 
-        var newAccessToken = await CreateJwtAsync(user);
+        var newAccessToken = await _tokenService.CreateAccessTokenAsync(user);
 
-        var newRefreshToken = await CreateRefreshTokenAsync(user, deviceInfo, cancellationToken);
+        var newRefreshToken = await _tokenService.CreateRefreshTokenAsync(user, deviceInfo, cancellationToken);
 
         return new LoginResultDto
         {
@@ -206,72 +206,11 @@ public class AuthManager : IAuthService
 
     }
 
-    private async Task<string> CreateRefreshTokenAsync(AppUser user, string? deviceInfo, CancellationToken cancellationToken)
-    {
-        var tokenBytes = new byte[64];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(tokenBytes);
+   
 
-        var tokenString = Convert.ToBase64String(tokenBytes);
+   
 
-        var refreshToken = new RefreshToken
-        {
-            Token = tokenString,
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            DeviceInfo = deviceInfo,
-            userId = user.Id
-        };
-
-        await _refreshTokenDal.AddAsync(refreshToken, cancellationToken);
-        return tokenString;
-
-
-    }
-
-    private ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
-    {
-        var key = new SymmetricSecurityKey
-            (
-                Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!)
-            );
-
-        var validation = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidIssuer = _configuration["Jwt:Issuer"],
-            ValidAudience = _configuration["Jwt:Audience"],
-            IssuerSigningKey = key,
-            ValidateLifetime = false // süresi dolmuş tokenıda oıku
-        };
-
-        return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
-    }
-    private async Task<string> CreateJwtAsync(AppUser user)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
-        var roles = await _userManager.GetRolesAsync(user);
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-            new Claim(ClaimTypes.Email,user.Email??""),
-            new Claim(ClaimTypes.Name,$"{user.Name}{user.Surname}")
-
-        };
-        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
-
-
-        var token = new JwtSecurityToken
-            (
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
-            );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
+    
     private static LoginResultDto Fail(string error)
     {
         return new LoginResultDto

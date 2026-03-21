@@ -12,17 +12,23 @@ namespace WebApiLayer.Controllers;
 public class UserProfileController : ControllerBase
 {
     private readonly IUserProfileService _userProfileService;
+    private readonly IUserAdminService _userAdminService;
+    private readonly IRolePermissionService _rolePermissionService;
+    private readonly ITwoFactorService _twoFactorService;
 
-    public UserProfileController(IUserProfileService userProfileService)
+    public UserProfileController(IUserProfileService userProfileService, IUserAdminService userAdminService, IRolePermissionService rolePermissionService, ITwoFactorService twoFactorService)
     {
         _userProfileService = userProfileService;
+        _userAdminService = userAdminService;
+        _rolePermissionService = rolePermissionService;
+        _twoFactorService = twoFactorService;
     }
 
     [HttpPost("assign-role")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto assignRoleDto, CancellationToken cancellationToken)
     {
-        var ok = await _userProfileService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
+        var ok = await _userAdminService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
         if (ok)
         {
             return Ok();
@@ -60,7 +66,7 @@ public class UserProfileController : ControllerBase
     public async Task<IActionResult> Toggle2FA([FromBody] Toggle2FADto toggle2FADto, CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var ok = await _userProfileService.Toggle2FAAsync(userId, toggle2FADto, cancellationToken);
+        var ok = await _twoFactorService.Toggle2FAAsync(userId, toggle2FADto, cancellationToken);
         if (ok)
         {
             return Ok();
@@ -69,18 +75,18 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpGet("pending-users")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> GetPendingUsers(CancellationToken cancellationToken)
     {
-        var users = await _userProfileService.GetPendingUsersAsync(cancellationToken);
+        var users = await _userAdminService.GetPendingUsersAsync(cancellationToken);
         return Ok(users);
     }
 
     [HttpPost("approve-user/{userId}")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> ApproveUser(string userId,[FromBody] string role , CancellationToken cancellationToken)
     {
-        var ok = await _userProfileService.ApproveUserAsync(userId, role, cancellationToken);
+        var ok = await _userAdminService.ApproveUserAsync(userId, role, cancellationToken);
         if (ok)
         {
             return Ok();
@@ -89,10 +95,10 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpPost("reject-user/{userId}")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> RejectUser(string userId, CancellationToken cancellationToken)
     {
-        var ok = await _userProfileService.RejectUserAsync(userId, cancellationToken);
+        var ok = await _userAdminService.RejectUserAsync(userId, cancellationToken);
         if (ok)
         {
             return Ok();
@@ -101,26 +107,26 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpGet("all-users")]
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
     {
-        var users = await _userProfileService.GetAllUserAsync(cancellationToken);
+        var users = await _userAdminService.GetAllUserAsync(cancellationToken);
         return Ok(users);
     }
 
-    [HttpGet("role-permissions/{roleName}")]  // "s" ekle
-    [Authorize(Roles ="Admin")]
+    [HttpGet("role-permissions/{roleName}")] 
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> GetRolePermissions(string roleName,CancellationToken cancellationToken)
     {
-        var perms = await _userProfileService.GetRolePermissionsAsync(roleName, cancellationToken);
+        var perms = await _rolePermissionService.GetRolePermissionsAsync(roleName, cancellationToken);
         return Ok(perms);
     }
 
-    [HttpPost("role-permissions/{roleName}")] // "s" ekle
-    [Authorize(Roles = "Admin")]
+    [HttpPost("role-permissions/{roleName}")] 
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> SaveRolePermissions(string roleName,[FromBody]List<string> permissions,CancellationToken cancellation)
     {
-        var ok = await _userProfileService.SaveRolePermissionsAsync(roleName, permissions, cancellation);
+        var ok = await _rolePermissionService.SaveRolePermissionsAsync(roleName, permissions, cancellation);
         if (ok)
         {
             return Ok();
