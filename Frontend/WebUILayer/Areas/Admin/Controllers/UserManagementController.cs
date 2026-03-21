@@ -1,4 +1,5 @@
 ﻿using DtoLayer.AuthDtos;
+using EntityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -30,18 +31,7 @@ public class UserManagementController : Controller
             ApprovedUsers = approved,
             SelectedRole = selectedRole,
             ActivePermissions = perms,
-            AllPermissions = new List<PermissionItem>
-        {
-            new() { Key = "blog.create",     Label = "Blog oluştur" },
-            new() { Key = "blog.edit",       Label = "Blog düzenle" },
-            new() { Key = "blog.delete",     Label = "Blog sil" },
-            new() { Key = "project.create",  Label = "Proje oluştur" },
-            new() { Key = "project.edit",    Label = "Proje düzenle" },
-            new() { Key = "project.delete",  Label = "Proje sil" },
-            new() { Key = "skill.manage",    Label = "Yetenekler" },
-            new() { Key = "user.manage",     Label = "Kullanıcı yönetimi" },
-            new() { Key = "site.settings",   Label = "Site ayarları" },
-        }
+            AllPermissions = PermissionConsts.GetAll().Select(p => new PermissionItem { Key = p.Key, Label = p.Label }).ToList()
         };
         return View(vm);
     }

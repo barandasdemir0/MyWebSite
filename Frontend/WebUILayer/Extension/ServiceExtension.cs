@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Helper;
+using WebUILayer.Services.Abstract;
+using WebUILayer.Services.Concrete;
 
 namespace WebUILayer.Extension;
 
@@ -117,7 +119,10 @@ public static class ServiceExtension
         #endregion
 
         #region public için bağlamalar --> bu yapı scrutor ile otomatikleştirilecek
-
+        services.AddHttpClient<ICookieAuthService, CookieAuthService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
         #endregion
 

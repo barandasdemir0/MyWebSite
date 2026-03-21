@@ -2,6 +2,7 @@
 using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
+using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -21,9 +22,10 @@ public class AuthManager : IAuthService
     private readonly ILogger<AuthManager> _logger;
     private readonly IRefreshTokenDal _refreshTokenDal;
     private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
 
 
-    public AuthManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService, ITokenService tokenService)
+    public AuthManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService, ITokenService tokenService, IMapper mapper)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -31,6 +33,7 @@ public class AuthManager : IAuthService
         _refreshTokenDal = refreshTokenDal;
         _emailService = emailService;
         _tokenService = tokenService;
+        _mapper = mapper;
     }
 
 
@@ -119,14 +122,8 @@ public class AuthManager : IAuthService
 
     public async Task<RegisterResultDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
-        var user = new AppUser
-        {
-            UserName = registerDto.Email,
-            Email = registerDto.Email,
-            Name = registerDto.Name,
-            Surname = registerDto.Surname,
-            EmailConfirmed = false
-        };
+        var user = _mapper.Map<AppUser>(registerDto);
+        user.EmailConfirmed = false;
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (!result.Succeeded)
