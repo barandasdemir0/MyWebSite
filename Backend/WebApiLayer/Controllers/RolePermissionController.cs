@@ -18,7 +18,7 @@ namespace WebApiLayer.Controllers
             _rolePermissionService = rolePermissionService;
         }
 
-        [HttpGet("role-permissions/{roleName}")]
+        [HttpGet("{roleName}")]
         [Authorize(Roles = RoleConsts.Admin)]
         public async Task<IActionResult> GetRolePermissions(string roleName, CancellationToken cancellationToken)
         {
@@ -26,7 +26,7 @@ namespace WebApiLayer.Controllers
             return Ok(perms);
         }
 
-        [HttpPost("role-permissions/{roleName}")]
+        [HttpPost("{roleName}")]
         [Authorize(Roles = RoleConsts.Admin)]
         public async Task<IActionResult> SaveRolePermissions(string roleName, [FromBody] List<string> permissions, CancellationToken cancellation)
         {

@@ -21,7 +21,6 @@ namespace WebApiLayer.Controllers
 
 
         [HttpPost("assign-role")]
-        [Authorize(Roles = RoleConsts.Admin)]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto assignRoleDto, CancellationToken cancellationToken)
         {
             var ok = await _userAdminService.AssignRoleAsync(assignRoleDto.UserId, assignRoleDto.Role, cancellationToken);
@@ -36,7 +35,6 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpGet("pending-users")]
-        [Authorize(Roles = RoleConsts.Admin)]
         public async Task<IActionResult> GetPendingUsers(CancellationToken cancellationToken)
         {
             var users = await _userAdminService.GetPendingUsersAsync(cancellationToken);
@@ -44,7 +42,6 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpPost("approve-user/{userId}")]
-        [Authorize(Roles = RoleConsts.Admin)]
         public async Task<IActionResult> ApproveUser(string userId, [FromBody] string role, CancellationToken cancellationToken)
         {
             var ok = await _userAdminService.ApproveUserAsync(userId, role, cancellationToken);
@@ -56,7 +53,6 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpPost("reject-user/{userId}")]
-        [Authorize(Roles = RoleConsts.Admin)]
         public async Task<IActionResult> RejectUser(string userId, CancellationToken cancellationToken)
         {
             var ok = await _userAdminService.RejectUserAsync(userId, cancellationToken);
@@ -68,7 +64,6 @@ namespace WebApiLayer.Controllers
         }
 
         [HttpGet("all-users")]
-        [Authorize(Roles = RoleConsts.Admin)]
         public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
         {
             var users = await _userAdminService.GetAllUserAsync(cancellationToken);

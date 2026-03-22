@@ -154,7 +154,9 @@ public class AuthController : Controller
     [HttpPost("/auth/forgot-password")]
     public async Task< IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
     {
-      
+        // Not: Burada API çağrısı yapılmıyor çünkü kullanıcı önce doğrulama yöntemini
+        // seçecek (Email/Authenticator). OTP gönderimi ProcessResetChoice'da yapılıyor.
+
         HttpContext.Session.SetString("reset_email", forgotPasswordDto.Email);
         return RedirectToAction(nameof(ChooseResetMethod));
     }

@@ -13,7 +13,7 @@ public class RolePermissionApiService : IRolePermissionApiService
 
     public async Task<List<string>> GetRolePermissionsAsync(string roleName)
     {
-        var response = await _httpClient.GetAsync($"rolepermission/role-permissions/{roleName}");
+        var response = await _httpClient.GetAsync($"rolepermission/{roleName}");
         if (!response.IsSuccessStatusCode)
         {
             return new List<string>();
@@ -23,7 +23,7 @@ public class RolePermissionApiService : IRolePermissionApiService
 
     public async Task<bool> SaveRolePermissions(string roleName, List<string> permissions)
     {
-        var response = await _httpClient.PostAsJsonAsync($"rolepermission/role-permissions/{roleName}", permissions);
+        var response = await _httpClient.PostAsJsonAsync($"rolepermission/{roleName}", permissions);
         return response.IsSuccessStatusCode;
     }
 }

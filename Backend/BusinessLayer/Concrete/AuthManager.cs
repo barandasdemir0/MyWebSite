@@ -289,8 +289,8 @@ public class AuthManager : IAuthService
 
 
 
-        await _userManager.RemovePasswordAsync(user);
-        var result = await _userManager.AddPasswordAsync(user, newPassword);
+        var identityResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, identityResetToken, newPassword);
         return result.Succeeded;
     }
 }

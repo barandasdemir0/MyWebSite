@@ -17,6 +17,9 @@ builder.Services.AddApiService(builder.Configuration);
 builder.Services.AddAutoValidate();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSessionTempData();
+builder.Services.AddMemoryCache();
+
+
 
 #endregion
 

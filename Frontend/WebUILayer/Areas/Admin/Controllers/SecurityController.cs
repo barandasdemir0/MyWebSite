@@ -60,7 +60,7 @@ public class SecurityController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> SetupAuthenticator(string code)
+    public async Task<IActionResult> SetupAuthenticator()
     {
         var result = await _twoFactorApiService.SetupAuthenticatorAsync();
         return View(result);

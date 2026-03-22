@@ -25,7 +25,7 @@ public class ApiExceptionMiddleware
         {
             _logger.LogWarning(ex, "Kayıt bulunamadı : {Message}", ex.Message);
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-            context.Response.ContentType = "applicaton/json";
+            context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
                 error = ex.Message
@@ -35,7 +35,7 @@ public class ApiExceptionMiddleware
         {
             _logger.LogWarning(ex, "İş kuralı hatası : {Message}", ex.Message);
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            context.Response.ContentType = "applicaton/json";
+            context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
                 error = ex.Message
@@ -45,7 +45,7 @@ public class ApiExceptionMiddleware
         {
             _logger.LogWarning(ex, "Beklenmeyen hata : {Message}", ex.Message);
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            context.Response.ContentType = "applicaton/json";
+            context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
                 error = "Sunucu hatası oluştu"

@@ -95,7 +95,7 @@ public class AuthController : ControllerBase
         {
             return Ok(new
             {
-                ok
+                resetToken = ok
             });
         }
         return BadRequest("Geçersiz veya süresi dolmuş kod");

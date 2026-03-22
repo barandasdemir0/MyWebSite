@@ -21,6 +21,8 @@ public class EfRolePermissionDal : IRolePermissionDal
 
     public async Task SaveRolePermissionsAsync(string roleName, List<string> permissions, CancellationToken cancellationToken)
     {
+        await using var transaction = await _appDbContext.Database.BeginTransactionAsync(cancellationToken);
+
         var existing = _appDbContext.RolePermissions.Where(x => x.RoleName == roleName);
         _appDbContext.RolePermissions.RemoveRange(existing);
         foreach (var item in permissions)
@@ -34,5 +36,6 @@ public class EfRolePermissionDal : IRolePermissionDal
 
         }
         await _appDbContext.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
     }
 }

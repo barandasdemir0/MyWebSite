@@ -9,7 +9,7 @@ public class PasswordResetToken
         
     }
     public Guid Id { get; protected set; }
-    public string Token { get; set; } = string.Empty;
+    public string Token { get; protected set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DateTime ExpiresAt { get; set; }
     public bool IsUsed { get; set; }

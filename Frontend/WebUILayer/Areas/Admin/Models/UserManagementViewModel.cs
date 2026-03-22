@@ -12,10 +12,6 @@ public class UserManagementViewModel
     public List<PermissionItem> AllPermissions { get; set; } = new();
     public List<string> AllRoles { get; set; } = new();
     public List<string> SelectableRoles { get; set; } = new();
-}
-
-public class PermissionItem
-{
     public string Key { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
 }
