@@ -41,17 +41,6 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         return Ok(query);
     }
 
-    [HttpGet("{id}")]//burasıda admine gösterilecek yazan yazı id ile çekiliyorki tüm veri gelsin
-    public async Task<IActionResult> GetDetailById(Guid id, CancellationToken cancellationToken)
-    {
-        var query = await _blogPostService.GetDetailsByIdAsync(id, cancellationToken);
-        if (query == null)
-        {
-            return NotFound();
-        }
-        return Ok(query);
-    }
-
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken )
     {

@@ -75,15 +75,6 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 
     }
 
-    public async Task<ProjectDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
-    {
-        var entity = await _projectDal.GetByIdAsync(guid, tracking: false, includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
-        if (entity == null)
-        {
-            return null;
-        }
-        return _mapper.Map<ProjectDto>(entity);
-    }
 
     public override async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto, CancellationToken cancellationToken = default)
     {

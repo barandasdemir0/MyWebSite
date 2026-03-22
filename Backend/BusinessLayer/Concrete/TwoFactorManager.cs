@@ -80,7 +80,7 @@ public class TwoFactorManager : ITwoFactorService
         return new Setup2FAResultDto
         {
             QrCodeImageBase64 = $"data:image/png;base64,{base64}",
-            ManuelEntryKey = key
+            ManualEntryKey = key
         };
     }
 

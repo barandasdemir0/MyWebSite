@@ -82,19 +82,6 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
         return _mapper.Map<BlogPostDto>(entity);
     }
 
-
-    //bu yöntem ID ile çekmektir mantığı ne kadar doğru olsada işlem slugla çekmek daha profesyonelce yaklaşmaktır
-    public async Task<BlogPostDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
-    {
-        var entity = await _blogPostDal.GetByIdAsync(guid,
-            tracking: false, includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
-        if (entity == null)
-        {
-            return null;
-        }
-        return _mapper.Map<BlogPostDto>(entity);
-    }
-
     public async Task<BlogPostListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _blogPostDal.RestoreDeletedByIdAsync(guid, cancellationToken);

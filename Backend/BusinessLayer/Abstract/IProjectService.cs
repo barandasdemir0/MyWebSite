@@ -6,7 +6,6 @@ namespace BusinessLayer.Abstract;
 
 public interface IProjectService:IGenericService<Project, ProjectDto, CreateProjectDto,UpdateProjectDto>
 {
-    Task<ProjectDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default);
 
     Task<ProjectDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default);
 

@@ -32,7 +32,7 @@ namespace DataAccessLayer.Concrete
 
         public async Task<(List<Project> Items, int TotalCount)> GetUserListPagesAsync(int page, int size,Guid? topicId ,CancellationToken cancellationToken = default)
         {
-            IQueryable<Project> query = _context.Projects.AsNoTrackingWithIdentityResolution();
+            IQueryable<Project> query = _context.Projects.AsNoTrackingWithIdentityResolution().Include(x=>x.ProjectTopics).ThenInclude(y=>y.Topic);
             if (topicId.HasValue)
             {
                 query = query.Where(x => x.ProjectTopics.Any(y => y.TopicId == topicId));

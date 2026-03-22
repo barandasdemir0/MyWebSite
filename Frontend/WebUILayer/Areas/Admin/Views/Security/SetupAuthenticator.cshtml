@@ -25,7 +25,7 @@
             <p class="two-factor-desc">QR tarayamıyorsanız bu kodu elle girin:</p>
             <div class="two-factor-method">
                 <span class="two-factor-method-label">Manuel Kod:</span>
-                <span class="two-factor-method-value">@Model.ManuelEntryKey</span>
+                <span class="two-factor-method-value">@Model.ManualEntryKey </span>
             </div>
 
             <form asp-area="Admin" asp-controller="Security" asp-action="ConfirmAuthenticator" method="post">

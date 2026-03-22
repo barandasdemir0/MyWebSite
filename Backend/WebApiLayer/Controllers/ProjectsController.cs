@@ -42,17 +42,6 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetDetailById(Guid id, CancellationToken cancellationToken)
-    {
-        var query = await _projectService.GetDetailsByIdAsync(id, cancellationToken);
-        if (query == null)
-        {
-            return NotFound();
-        }
-        return Ok(query);
-    }
-
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
