@@ -1,8 +1,7 @@
-﻿using DtoLayer.AuthDtos;
-using EntityLayer.Entities;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.AuthDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WebUILayer.Areas.Admin.Services.Abstract;
 
 namespace WebUILayer.Areas.Admin.Controllers;

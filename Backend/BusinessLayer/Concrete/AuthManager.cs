@@ -1,10 +1,11 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos;
-using EntityLayer.Entities;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using SharedKernel.Enums;
 using System.Security.Claims;
 
 namespace BusinessLayer.Concrete;

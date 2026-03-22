@@ -26,7 +26,7 @@ namespace DataAccessLayer.Concrete
             var items = await query.OrderByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * size)
                 .Take(size)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
             return (items, totalCount);
         }
 

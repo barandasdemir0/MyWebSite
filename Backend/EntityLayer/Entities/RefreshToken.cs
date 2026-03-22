@@ -1,4 +1,4 @@
-﻿namespace EntityLayer.Entities;
+﻿namespace CV.EntityLayer.Entities;
 
 public class RefreshToken
 {

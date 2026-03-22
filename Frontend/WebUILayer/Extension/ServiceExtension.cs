@@ -104,7 +104,14 @@ public static class ServiceExtension
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
 
-
+        services.AddHttpClient<IUserAdminApiService, UserAdminApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
+        services.AddHttpClient<IRolePermissionApiService, RolePermissionApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
 
 

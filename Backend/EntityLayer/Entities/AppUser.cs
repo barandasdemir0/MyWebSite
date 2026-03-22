@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SharedKernel.Enums;
 
-namespace EntityLayer.Entities;
+namespace CV.EntityLayer.Entities;
 
 public sealed class AppUser:IdentityUser<Guid>
 {

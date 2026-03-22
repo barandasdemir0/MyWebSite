@@ -1,10 +1,10 @@
-﻿using EntityLayer.Entities;
+﻿using SharedKernel.Enums;
 
 namespace CV.EntityLayer.Entities;
 
 public sealed class Message : BaseEntity
 {
-   
+
     //gönderen
     public string SenderName { get; set; } = string.Empty;
     public string SenderEmail { get; set; } = string.Empty;

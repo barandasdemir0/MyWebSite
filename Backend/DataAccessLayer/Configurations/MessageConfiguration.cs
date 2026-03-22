@@ -1,8 +1,7 @@
 ﻿using CV.EntityLayer.Entities;
-using EntityLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static CV.EntityLayer.Entities.Message;
+using SharedKernel.Enums;
 
 
 namespace DataAccessLayer.Configurations;

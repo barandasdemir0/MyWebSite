@@ -1,5 +1,5 @@
-﻿using DtoLayer.AuthDtos;
-using EntityLayer.Entities;
+﻿using CV.EntityLayer.Entities;
+using DtoLayer.AuthDtos;
 using Mapster;
 
 namespace DtoLayer.Mapping;

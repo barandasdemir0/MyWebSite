@@ -1,6 +1,4 @@
-﻿//namespace EntityLayer.Concrete;
-
-namespace CV.EntityLayer.Entities;
+﻿namespace CV.EntityLayer.Entities;
 
 public sealed class SiteSettings :BaseEntity
 {

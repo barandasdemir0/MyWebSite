@@ -1,4 +1,4 @@
-﻿using EntityLayer.Entities;
+﻿using CV.EntityLayer.Entities;
 
 namespace DataAccessLayer.Abstract;
 

@@ -1,5 +1,4 @@
 ﻿using CV.EntityLayer.Entities;
-using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-﻿namespace EntityLayer.Entities;
+﻿namespace SharedKernel.Enums;
 
 public enum MessageFolder
 {

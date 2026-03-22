@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

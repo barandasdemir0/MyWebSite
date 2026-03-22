@@ -1,8 +1,7 @@
 ﻿using DtoLayer.AuthDtos;
-using EntityLayer.Entities;
-using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Enums;
 using System.Security.Claims;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Services.Abstract;

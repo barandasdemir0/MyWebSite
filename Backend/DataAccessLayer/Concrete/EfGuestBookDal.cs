@@ -27,7 +27,7 @@ public class EfGuestBookDal : GenericRepository<GuestBook>, IGuestBookDal
 
     public async Task<(List<GuestBook> Items, int TotalCount)> GetUserListPagesAsync(int page, int size, CancellationToken cancellationToken = default)
     {
-        IQueryable<GuestBook> query = _context.GuestBooks.AsNoTrackingWithIdentityResolution();
+        IQueryable<GuestBook> query = _context.GuestBooks.AsNoTrackingWithIdentityResolution().Where(x=>x.IsApproved);
 
         var totalCount = await query.CountAsync(cancellationToken);
 

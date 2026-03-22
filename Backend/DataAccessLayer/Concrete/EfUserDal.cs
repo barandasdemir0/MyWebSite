@@ -1,6 +1,6 @@
-﻿using DataAccessLayer.Abstract;
+﻿using CV.EntityLayer.Entities;
+using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
-using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

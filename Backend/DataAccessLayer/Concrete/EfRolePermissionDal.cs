@@ -1,6 +1,6 @@
-﻿using DataAccessLayer.Abstract;
+﻿using CV.EntityLayer.Entities;
+using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
-using EntityLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Concrete;
@@ -23,7 +23,7 @@ public class EfRolePermissionDal : IRolePermissionDal
     {
         await using var transaction = await _appDbContext.Database.BeginTransactionAsync(cancellationToken);
 
-        var existing = _appDbContext.RolePermissions.Where(x => x.RoleName == roleName);
+        var existing = await _appDbContext.RolePermissions.Where(x => x.RoleName == roleName).ToListAsync(cancellationToken);
         _appDbContext.RolePermissions.RemoveRange(existing);
         foreach (var item in permissions)
         {

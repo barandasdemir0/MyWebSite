@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using EntityLayer.Entities;
+using CV.EntityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers

@@ -1,15 +1,9 @@
 ﻿using BusinessLayer.Abstract;
-using DataAccessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.AuthDtos;
-using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using QRCoder;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+using SharedKernel.Enums;
 
 namespace BusinessLayer.Concrete;
 

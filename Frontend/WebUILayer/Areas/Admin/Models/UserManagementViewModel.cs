@@ -1,5 +1,4 @@
-﻿// DtoLayer/AuthDtos/UserManagementViewModel.cs (YENİ)
-using EntityLayer.Entities;
+﻿using CV.EntityLayer.Entities;
 
 namespace DtoLayer.AuthDtos;
 
@@ -12,6 +11,4 @@ public class UserManagementViewModel
     public List<PermissionItem> AllPermissions { get; set; } = new();
     public List<string> AllRoles { get; set; } = new();
     public List<string> SelectableRoles { get; set; } = new();
-    public string Key { get; set; } = string.Empty;
-    public string Label { get; set; } = string.Empty;
 }

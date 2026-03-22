@@ -29,7 +29,7 @@ public class MaintenanceMiddleware
         }
 
 
-        if (path.StartsWith("/Mytheme") || path.StartsWith("/lib") || path.Contains("."))
+        if (path.StartsWith("/mytheme") || path.StartsWith("/lib") || path.Contains("."))
         {
             await _next(context);
             return;

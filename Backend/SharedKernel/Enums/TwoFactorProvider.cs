@@ -1,4 +1,5 @@
-﻿
+﻿namespace SharedKernel.Enums;
+
 public enum TwoFactorProvider
 {
     None = 0,

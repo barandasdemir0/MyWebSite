@@ -24,14 +24,22 @@ public class EfNotificationDal : GenericRepository<Notification>, INotificationD
         return (items, totalCount);
     }
 
+
+    /// <summary>
+    /// Bildirim okundu işaretlemek için IgnoreQueryFilters ile getirir (silinmiş olsa bile).
+    /// </summary>
     public async Task<Notification?> ReadGetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         return await _context.Notifications.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
     }
 
+    /// <summary>
+    /// Soft-delete geri almak için IgnoreQueryFilters ile getirir.
+    /// </summary>
+
     public async Task<Notification?> RestoreGetByIdAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        return await _context.Notifications.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid,cancellationToken);
+        return await _context.Notifications.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == guid, cancellationToken);
 
     }
 }

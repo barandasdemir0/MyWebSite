@@ -1,6 +1,7 @@
 ﻿using DtoLayer.AuthDtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Enums;
 using WebUILayer.Services.Abstract;
 
 namespace WebUILayer.Controllers;

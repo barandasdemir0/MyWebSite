@@ -1,4 +1,4 @@
-﻿using EntityLayer.Entities;
+﻿using SharedKernel.Enums;
 
 namespace DtoLayer.AuthDtos;
 

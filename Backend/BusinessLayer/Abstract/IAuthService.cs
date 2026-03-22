@@ -1,6 +1,5 @@
 ﻿using DtoLayer.AuthDtos;
-using EntityLayer.Entities;
-using Microsoft.AspNetCore.Identity;
+using SharedKernel.Enums;
 
 namespace BusinessLayer.Abstract;
 

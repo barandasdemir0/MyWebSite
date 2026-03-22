@@ -1,9 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.ValidationRules;
+using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using DtoLayer.Mapping;
-using EntityLayer.Entities;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
