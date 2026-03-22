@@ -13,8 +13,12 @@ public interface IAuthService
 
     Task ForgotPasswordAsync(string email, CancellationToken cancellationToken);
 
-    Task<bool> VerifyResetOtpAsync(string email,  string code, TwoFactorProvider provider, CancellationToken cancellationToken);
-    Task<bool> SetNewPasswordAsync(string email, string newPassword, CancellationToken cancellationToken);
+    Task<string?> VerifyResetOtpAsync(string email,  string code, TwoFactorProvider provider, CancellationToken cancellationToken);
+    Task<bool> SetNewPasswordAsync(string email, string newPassword,string resetToken, CancellationToken cancellationToken);
+
+
+
+
 
 
    

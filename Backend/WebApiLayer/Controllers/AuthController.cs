@@ -90,23 +90,27 @@ public class AuthController : ControllerBase
     [EnableRateLimiting("email")]
     public async Task<IActionResult> VerifyResetOtp([FromBody]VerifyResetOtpDto verifyResetOtpDto,CancellationToken cancellationToken)
     {
-        var ok = await _authService.VerifyResetOtpAsync(verifyResetOtpDto.Email,verifyResetOtpDto.Code,verifyResetOtpDto.provider,cancellationToken);
-        if (ok)
+        var ok = await _authService.VerifyResetOtpAsync(verifyResetOtpDto.Email,verifyResetOtpDto.Code,verifyResetOtpDto.Provider,cancellationToken);
+        if (ok!=null)
         {
-            return Ok();
+            return Ok(new
+            {
+                ok
+            });
         }
         return BadRequest("Geçersiz veya süresi dolmuş kod");
     }
 
     [HttpPost("set-new-password")]
+    [EnableRateLimiting("email")]
     public async Task<IActionResult> SetNewPassword([FromBody] SetNewPasswordDto setNewPasswordDto,CancellationToken cancellationToken)
     {
-        var ok = await _authService.SetNewPasswordAsync(setNewPasswordDto.Email, setNewPasswordDto.NewPassword, cancellationToken);
+        var ok = await _authService.SetNewPasswordAsync(setNewPasswordDto.Email, setNewPasswordDto.NewPassword, setNewPasswordDto.ResetToken ,cancellationToken);
         if (ok)
         {
             return Ok();
         }
-        return BadRequest("şifre değiştirilemedi");
+        return BadRequest("şifre değiştirilemedi veya token geçersiz");
     }
 
 

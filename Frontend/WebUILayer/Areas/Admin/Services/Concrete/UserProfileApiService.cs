@@ -12,48 +12,10 @@ public class UserProfileApiService : IUserProfileApiService
         _httpClient = httpClient;
     }
 
-    public async Task<bool> ApproveUserAsync(string userId,string role)
-    {
-        var response = await _httpClient.PostAsJsonAsync($"userprofile/approve-user/{userId}",role);
-        return response.IsSuccessStatusCode;
-    }
-
-  
-
     public async Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
         var response = await _httpClient.PostAsJsonAsync("userprofile/change-password", changePasswordDto);
         return response.IsSuccessStatusCode;
-    }
-
-    public async Task<List<ApprovedUserDto>> GetAllUsersAsync()
-    {
-        var response = await _httpClient.GetAsync("userprofile/all-users");
-        if (!response.IsSuccessStatusCode)
-        {
-            return new List<ApprovedUserDto>();
-        }
-        return await response.Content.ReadFromJsonAsync<List<ApprovedUserDto>>() ?? new();
-    }
-
-    public async Task<List<PendingUserDto>> GetPendingUsersAsync()
-    {
-        var response = await _httpClient.GetAsync("userprofile/pending-users");
-        if (!response.IsSuccessStatusCode)
-        {
-            return new List<PendingUserDto>();
-        }
-        return await response.Content.ReadFromJsonAsync<List<PendingUserDto>>() ?? new();
-    }
-
-    public async Task<List<string>> GetRolePermissionsAsync(string roleName)
-    {
-        var response = await _httpClient.GetAsync($"userprofile/role-permissions/{roleName}");
-        if (!response.IsSuccessStatusCode)
-        {
-            return new List<string>();
-        }
-        return await response.Content.ReadFromJsonAsync<List<string>>() ?? new();
     }
 
     public async Task<UserProfileDto?> GetUserProfileAsync()
@@ -65,18 +27,6 @@ public class UserProfileApiService : IUserProfileApiService
             throw new Exception($"API Hatası: {response.StatusCode} - {errorBody}");
         }
         return await response.Content.ReadFromJsonAsync<UserProfileDto>();
-    }
-
-    public async Task<bool> RejectUserAsync(string userId)
-    {
-        var response = await _httpClient.PostAsync($"userprofile/reject-user/{userId}", null);
-        return response.IsSuccessStatusCode;
-    }
-
-    public async Task<bool> SaveRolePermissions(string roleName, List<string> permissions)
-    {
-        var response = await _httpClient.PostAsJsonAsync($"userprofile/role-permissions/{roleName}", permissions);
-        return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> Toggle2FAAsync(Toggle2FADto dto)

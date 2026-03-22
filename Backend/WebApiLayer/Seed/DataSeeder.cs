@@ -50,5 +50,20 @@ public static class DataSeeder
         }
     }
 
+   
 
+
+
+}
+
+public static class DataSeederExtension
+{
+    public static async Task SeedDatabaseAsync(this WebApplication app)
+    {
+
+        if (!app.Environment.IsDevelopment()) return;
+        using var scope = app.Services.CreateScope();
+        await DataSeeder.SeedAsync(scope.ServiceProvider);
+
+    }
 }

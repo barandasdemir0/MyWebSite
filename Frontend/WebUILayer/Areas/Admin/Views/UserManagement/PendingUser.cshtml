@@ -81,9 +81,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        var allRoles = new[] { "User", "Editor", "Admin" };
-                    }
+                   
                     @foreach (var user in Model.ApprovedUsers)
                     {
                         <tr>
@@ -93,7 +91,7 @@
                                 <form asp-action="Approve" asp-route-id="@user.UserId" method="post" class="role-form">
                                     <!-- Kullanıcı rol select: -->
                                     <select name="role" class="form-control form-select-sm role-select">
-                                        @foreach (var r in allRoles)
+                                        @foreach (var r in Model.AllRoles)
                                         {
                                             if (user.Role == r)
                                             {
@@ -133,12 +131,10 @@
         <div class="card-body">
             <form asp-action="PendingUser" method="get" class="form-group">
                 <label>Rol Seç</label>
-                @{
-                    var selectableRoles = new[] { "Editor", "User" };
-                }
+               
                 <!-- Rol seçici: -->
                 <select name="selectedRole" id="roleSelector" class="form-control">
-                    @foreach (var role in selectableRoles)
+                    @foreach (var role in Model.SelectableRoles)
                     {
                         if (Model.SelectedRole == role)
                         {

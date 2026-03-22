@@ -1,6 +1,6 @@
 ﻿using DtoLayer.AuthDtos;
 
-namespace WebUILayer.Areas.Admin.Services.Abstract;
+namespace WebUILayer.Services.Abstract;
 
 public interface ITwoFactorApiService
 {

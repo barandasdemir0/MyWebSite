@@ -117,12 +117,15 @@ public static class Extension
         });
     }
 
-    public static void CorsPolicy(this IServiceCollection services)
+    public static void CorsPolicy(this IServiceCollection services, IConfiguration configuration)
     {
+
+        var origins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+
         services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend", policy =>
-            policy.WithOrigins("https://localhost:7130")
+            policy.WithOrigins(origins)
             .AllowAnyHeader()
             .AllowAnyMethod());
         });

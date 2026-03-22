@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Container;
 using Scalar.AspNetCore;
+using WebApiLayer.Middleware;
 using WebApiLayer.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +24,7 @@ builder.Services.ContainerDependencies();
 builder.Services.AddThirdPartyServices();
 builder.Services.AddIdentityAndJwt(builder.Configuration);
 builder.Services.AddEmailRateLimiter();
-builder.Services.CorsPolicy();
+builder.Services.CorsPolicy(builder.Configuration);
 
 
 #endregion
@@ -45,18 +46,13 @@ else
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseRateLimiter();
+app.UseMiddleware<ApiExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-
-if (app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    await DataSeeder.SeedAsync(scope.ServiceProvider);
-
-}
+await app.SeedDatabaseAsync();
 
 
 app.Run();

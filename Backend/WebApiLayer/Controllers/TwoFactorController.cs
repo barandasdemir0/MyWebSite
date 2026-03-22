@@ -20,9 +20,9 @@ public class TwoFactorController : ControllerBase
 
     [EnableRateLimiting("email")]
     [HttpPost("send-email-code")]
-    public async Task<IActionResult> SendEmailCode([FromBody] string userId, CancellationToken cancellationToken)
+    public async Task<IActionResult> SendEmailCode([FromBody] SendEmailCodeDto sendEmailCodeDto, CancellationToken cancellationToken)
     {
-        var sent = await _twoFactorService.SendMailOtpAsync(userId, cancellationToken);
+        var sent = await _twoFactorService.SendMailOtpAsync(sendEmailCodeDto.UserId, cancellationToken);
         if (sent)
         {
             return Ok();

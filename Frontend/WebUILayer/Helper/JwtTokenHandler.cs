@@ -1,5 +1,4 @@
 ﻿using DtoLayer.AuthDtos;
-using System.Configuration;
 using System.Net.Http.Headers;
 
 namespace WebUILayer.Helper;
@@ -32,7 +31,7 @@ public class JwtTokenHandler : DelegatingHandler
             if (!string.IsNullOrEmpty(refreshToken) && !string.IsNullOrEmpty(token))
             {
                 var newToken = await TryRefreshAsync(token, refreshToken, cancellationToken);
-                if (newToken!=null)
+                if (newToken != null)
                 {
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newToken);
                     response = await base.SendAsync(request, cancellationToken);
@@ -43,7 +42,7 @@ public class JwtTokenHandler : DelegatingHandler
     }
 
 
-    private async Task<string?> TryRefreshAsync(string accessToken,string refreshToken,CancellationToken cancellationToken)
+    private async Task<string?> TryRefreshAsync(string accessToken, string refreshToken, CancellationToken cancellationToken)
     {
         var baseUrl = _configuration["ApiSettings:Baseurl"];
         using var http = new HttpClient
@@ -70,19 +69,25 @@ public class JwtTokenHandler : DelegatingHandler
         }
 
         var ctx = _httpContextAccessor.HttpContext;
-        var cookieOpt = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict
-        };
         ctx?.Response.Cookies.Append("AccessToken", result.Token, new CookieOptions
         {
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Strict,
-            Expires = DateTimeOffset.Now.AddDays(7)
+            Expires = DateTimeOffset.UtcNow.AddHours(1)
         });
+
+        if (!string.IsNullOrEmpty(result.RefreshToken))
+        {
+            ctx?.Response.Cookies.Append("RefreshToken", result.RefreshToken, new CookieOptions
+            {
+
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
+            });
+        }
 
         return result.Token;
     }

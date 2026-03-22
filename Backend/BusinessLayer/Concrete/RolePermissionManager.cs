@@ -6,21 +6,21 @@ namespace BusinessLayer.Concrete;
 public class RolePermissionManager : IRolePermissionService
 {
 
-    private readonly IUserDal _userDal;
+    private readonly IRolePermissionDal _rolePermissionDal;
 
-    public RolePermissionManager(IUserDal userDal)
+    public RolePermissionManager(IRolePermissionDal rolePermissionDal)
     {
-        _userDal = userDal;
+        _rolePermissionDal = rolePermissionDal;
     }
 
     public async Task<List<string>> GetRolePermissionsAsync(string roleName, CancellationToken cancellationToken)
     {
-        return await _userDal.GetRolePermissionsAsync(roleName, cancellationToken);
+        return await _rolePermissionDal.GetRolePermissionsAsync(roleName, cancellationToken);
     }
 
     public async Task<bool> SaveRolePermissionsAsync(string roleName, List<string> permissions, CancellationToken cancellationToken)
     {
-        await _userDal.SaveRolePermissionsAsync(roleName, permissions, cancellationToken);
+        await _rolePermissionDal.SaveRolePermissionsAsync(roleName, permissions, cancellationToken);
         return true;
     }
 }

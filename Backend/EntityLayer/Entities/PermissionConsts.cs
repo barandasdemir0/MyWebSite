@@ -27,8 +27,9 @@ public static class PermissionConsts
     /// <summary>
     /// Tüm permission'ları (Key, Label) çifti olarak döndürür.
     /// </summary>
+     private static readonly IReadOnlyList<(string Key, string Label)> _all =     _labels.Select(x => (x.Key, x.Value)).ToList().AsReadOnly();
     public static IReadOnlyList<(string Key, string Label)> GetAll()
     {
-        return _labels.Select(x => (x.Key, x.Value)).ToList().AsReadOnly();
+        return _all;
     }
 }

@@ -4,13 +4,8 @@ using DtoLayer.AuthDtos;
 using EntityLayer.Entities;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace BusinessLayer.Concrete;
 
@@ -22,10 +17,11 @@ public class AuthManager : IAuthService
     private readonly ILogger<AuthManager> _logger;
     private readonly IRefreshTokenDal _refreshTokenDal;
     private readonly ITokenService _tokenService;
+    private readonly IPasswordResetTokenDal _passwordResetTokenDal;
     private readonly IMapper _mapper;
 
 
-    public AuthManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService, ITokenService tokenService, IMapper mapper)
+    public AuthManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService, ITokenService tokenService, IMapper mapper, IPasswordResetTokenDal passwordResetTokenDal)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -34,6 +30,7 @@ public class AuthManager : IAuthService
         _emailService = emailService;
         _tokenService = tokenService;
         _mapper = mapper;
+        _passwordResetTokenDal = passwordResetTokenDal;
     }
 
 
@@ -238,12 +235,12 @@ public class AuthManager : IAuthService
 
    
 
-    public async Task<bool> VerifyResetOtpAsync(string email, string code, TwoFactorProvider provider, CancellationToken cancellationToken)
+    public async Task<string?> VerifyResetOtpAsync(string email, string code, TwoFactorProvider provider, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user ==null)
         {
-            return false;
+            return null;
         }
 
         var tokenProvider = provider switch
@@ -253,11 +250,37 @@ public class AuthManager : IAuthService
             _ => TokenOptions.DefaultEmailProvider
         };
 
-        return await _userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, code );
+        var valid = await _userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, code);
+
+        if (!valid)
+        {
+            return null;
+        }
+
+        var resetToken = new PasswordResetToken
+        {
+            Email = email,
+            ExpiresAt = DateTime.UtcNow.AddMinutes(3)
+        };
+
+        await _passwordResetTokenDal.AddAsync(resetToken, cancellationToken);
+        return resetToken.Token;
+        
     }
 
-    public async Task<bool> SetNewPasswordAsync(string email, string newPassword, CancellationToken cancellationToken)
+    public async Task<bool> SetNewPasswordAsync(string email, string newPassword, string resetToken, CancellationToken cancellationToken)
     {
+
+        var tokenEntity = await _passwordResetTokenDal.GetValidTokenAsync(resetToken, email, cancellationToken);
+        if (tokenEntity==null)
+        {
+            return false;
+        }
+
+        await _passwordResetTokenDal.MarkAsUsedAsync(tokenEntity, cancellationToken);
+
+
+
         var user = await _userManager.FindByEmailAsync(email);
         if (user==null)
         {

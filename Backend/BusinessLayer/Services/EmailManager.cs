@@ -4,7 +4,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace BusinessLayer.Concrete;
+namespace BusinessLayer.Services;
 
 public class EmailManager : IEmailService
 {

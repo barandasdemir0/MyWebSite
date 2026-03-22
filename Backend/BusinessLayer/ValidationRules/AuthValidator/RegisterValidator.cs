@@ -30,5 +30,9 @@ public class RegisterValidator : AbstractValidator<RegisterDto>
             .WithMessage("Şifre Alanı Girmek Zorunludur")
             .MinimumLength(16)
             .WithMessage("16 Karakterli Bir şifre Giriniz");
+
+        RuleFor(x => x.ConfirmPassword)
+            .NotEmpty().WithMessage("Şifre tekrarı zorunludur")
+            .Equal(x => x.Password).WithMessage("Şifreler eşleşmiyor");
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Helper;
@@ -97,12 +96,25 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
-        services.AddHttpClient<IAuthApiService, AuthApiService>(client =>
+     
+
+        services.AddHttpClient<IUserProfileApiService, UserProfileApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
-        services.AddHttpClient<IUserProfileApiService, UserProfileApiService>(client =>
+
+
+
+
+
+
+        #endregion
+
+        #region public için bağlamalar --> bu yapı scrutor ile otomatikleştirilecek
+        services.AddScoped<ICookieAuthService, CookieAuthService>();
+
+        services.AddHttpClient<IAuthApiService, AuthApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
@@ -112,18 +124,7 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
-
-
-
-
-        #endregion
-
-        #region public için bağlamalar --> bu yapı scrutor ile otomatikleştirilecek
-        services.AddHttpClient<ICookieAuthService, CookieAuthService>(client =>
-        {
-            client.BaseAddress = new Uri(baseurl!);
-        }).AddHttpMessageHandler<JwtTokenHandler>();
-
+      
         #endregion
 
 

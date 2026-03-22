@@ -1,7 +1,7 @@
 ﻿using DtoLayer.AuthDtos;
-using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Services.Abstract;
 
-namespace WebUILayer.Areas.Admin.Services.Concrete;
+namespace WebUILayer.Services.Concrete;
 
 public class TwoFactorApiService : ITwoFactorApiService
 {
@@ -20,7 +20,10 @@ public class TwoFactorApiService : ITwoFactorApiService
 
     public async Task<bool> SendEmailCodeAsync(string userId)
     {
-        var response = await _httpClient.PostAsJsonAsync("twofactor/send-email-code", userId);
+        var response = await _httpClient.PostAsJsonAsync("twofactor/send-email-code", new
+        {
+            UserId = userId
+        });
         return response.IsSuccessStatusCode;
     }
 

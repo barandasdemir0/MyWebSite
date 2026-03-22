@@ -13,5 +13,6 @@ public class UserMapping : IRegister
             .Map(dest => dest.UserName, src => src.Email)
             .Ignore(dest => dest.Id)
             .Ignore(dest => dest.EmailConfirmed);
+        config.NewConfig<AppUser, ApprovedUserDto>().Map(dest => dest.UserId, src => src.Id.ToString()).Ignore(dest => dest.Role);
     }
 }

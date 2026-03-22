@@ -1,11 +1,6 @@
 ﻿using DtoLayer.AuthDtos;
-using EntityLayer.Entities;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Services.Abstract;
 
 namespace WebUILayer.Controllers;
@@ -127,7 +122,8 @@ public class AuthController : Controller
             {
                 UserId = userId!,
                 Code = code,
-                Provider = Enum.Parse<TwoFactorProvider>(provider)
+                Provider = Enum.Parse<TwoFactorProvider>(provider),
+                DeviceInfo = Request.Headers["User-Agent"].ToString()
             }
             );
         if (result == null || ! result.Success)
@@ -228,18 +224,19 @@ public class AuthController : Controller
             return RedirectToAction(nameof(Login));
         }
         var provider = Enum.Parse<TwoFactorProvider>(providerStr);
-        var ok = await _authApiService.VerifyResetOtpAsync(new VerifyResetOtpDto
+        var resetToken = await _authApiService.VerifyResetOtpAsync(new VerifyResetOtpDto
         {
             Email = email,
-            provider = provider,
+            Provider = provider,
             Code = code
         });
 
-        if (!ok)
+        if (resetToken==null)
         {
             ModelState.AddModelError("", "Geçersiz veya süresi dolmuş kod.");
             return View();
         }
+        HttpContext.Session.SetString("reset_token", resetToken);
         HttpContext.Session.SetString("reset_verified", "true");
         return RedirectToAction(nameof(SetNewPassword));
     }
@@ -269,6 +266,7 @@ public class AuthController : Controller
         }
 
         setNewPasswordDto.Email = HttpContext.Session.GetString("reset_email")!;
+        setNewPasswordDto.ResetToken = HttpContext.Session.GetString("reset_token")!;
         var ok = await _authApiService.SetNewPasswordAsync(setNewPasswordDto);
         if (!ok)
         {

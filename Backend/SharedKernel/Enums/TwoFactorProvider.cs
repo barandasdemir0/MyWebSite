@@ -1,5 +1,4 @@
-﻿namespace EntityLayer.Entities;
-
+﻿
 public enum TwoFactorProvider
 {
     None = 0,

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BusinessLayer.ValidationRules.AuthValidator;
 
-public class SetNewPasswordValidator:AbstractValidator<SetNewPasswordDto>
+public class SetNewPasswordValidator : AbstractValidator<SetNewPasswordDto>
 {
     public SetNewPasswordValidator()
     {
@@ -13,5 +13,7 @@ public class SetNewPasswordValidator:AbstractValidator<SetNewPasswordDto>
         RuleFor(x => x.NewPassword)
             .NotEmpty().WithMessage("Yeni şifre zorunludur")
             .MinimumLength(16).WithMessage("Şifre en az 16 karakter olmalıdır");
+        RuleFor(x => x.ResetToken)
+           .NotEmpty().WithMessage("Reset token zorunludur");
     }
 }

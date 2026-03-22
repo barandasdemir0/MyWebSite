@@ -13,7 +13,7 @@ public class RefreshToken
     public string? DeviceInfo { get; set; }
     public bool IsRevoked { get; set; } //iptal edildi
 
-    public Guid userId { get; set; }
-    public AppUser User = null!;
+    public Guid UserId { get; set; }
+    public AppUser User { get; set; } = null!;
 
 }

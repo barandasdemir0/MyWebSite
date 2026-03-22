@@ -65,21 +65,20 @@ public class UserAdminManager : IUserAdminService
     public async Task<List<ApprovedUserDto>> GetAllUserAsync(CancellationToken cancellationToken)
     {
         var users = await _userDal.GetApprovedUserAsync(cancellationToken);
-        var result = new List<ApprovedUserDto>();
-        foreach (var item in users)
+        var userIds = users.Select(u => u.Id).ToList();
+        var rolesMap = await _userDal.GetUserRolesBatchAsync(userIds, cancellationToken);
+
+        return users.Select(item => 
         {
-            var roles = await _userManager.GetRolesAsync(item);
-            result.Add(new ApprovedUserDto
-            {
-                UserId = item.Id.ToString(),
-                Name = item.Name ?? "",
-                Surname = item.Surname ?? "",
-                Email = item.Email ?? "",
-                Role = roles.FirstOrDefault() ?? RoleConsts.User,
-                CreatedAt = item.CreatedAt
-            });
-        }
-        return result;
+
+            var dto = _mapper.Map<ApprovedUserDto>(item);
+            dto.Role = rolesMap.TryGetValue(item.Id, out var roles) ? roles.FirstOrDefault() ?? RoleConsts.User : RoleConsts.User;
+            return dto;
+               
+        }).ToList();
+
+
+
     }
 
     public async Task<List<PendingUserDto>> GetPendingUsersAsync(CancellationToken cancellationToken)

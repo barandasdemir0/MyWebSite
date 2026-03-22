@@ -27,25 +27,14 @@ public class EfUserDal : IUserDal
         return await _userManager.Users.Where(u => !u.IsApproved).ToListAsync(cancellationToken);
     }
 
-    public async Task<List<string>> GetRolePermissionsAsync(string roleName, CancellationToken cancellationToken)
+    public async Task<Dictionary<Guid, List<string>>> GetUserRolesBatchAsync(List<Guid> userIds, CancellationToken cancellationToken)
     {
-        return await _appDbContext.RolePermissions.Where(x => x.RoleName == roleName).Select(y => y.Permission).ToListAsync(cancellationToken);
-    }
-
-    public async Task SaveRolePermissionsAsync(string roleName, List<string> permissions, CancellationToken cancellationToken)
-    {
-        var existing = _appDbContext.RolePermissions.Where(x => x.RoleName == roleName);
-        _appDbContext.RolePermissions.RemoveRange(existing);
-        foreach (var item in permissions)
-        {
-            _appDbContext.RolePermissions.Add(new RolePermission
+        return await _appDbContext.UserRoles.
+            Where(u => userIds.Contains(u.UserId)).
+            Join(_appDbContext.Roles, u => u.RoleId, r => r.Id, (u, r) => new
             {
-                RoleName = roleName,
-                Permission = item
-            });
-
-           
-        }
-        await _appDbContext.SaveChangesAsync(cancellationToken);
+                u.UserId,
+                RoleName = r.Name!
+            }).GroupBy(x => x.UserId).ToDictionaryAsync(g => g.Key, g => g.Select(x => x.RoleName).ToList(), cancellationToken);
     }
 }

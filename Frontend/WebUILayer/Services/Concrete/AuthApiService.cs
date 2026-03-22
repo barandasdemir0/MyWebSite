@@ -1,8 +1,9 @@
 ﻿using DtoLayer.AuthDtos;
 using System.Net.Http.Headers;
-using WebUILayer.Areas.Admin.Services.Abstract;
+using System.Text.Json;
+using WebUILayer.Services.Abstract;
 
-namespace WebUILayer.Areas.Admin.Services.Concrete;
+namespace WebUILayer.Services.Concrete;
 
 public class AuthApiService : IAuthApiService
 {
@@ -56,19 +57,18 @@ public class AuthApiService : IAuthApiService
         }
         return await response.Content.ReadFromJsonAsync<RegisterResultDto>();
     }
-
-    public async Task<bool> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
-    {
-        var response = await _httpClient.PostAsJsonAsync("auth/reset-password", resetPasswordDto);
-        return response.IsSuccessStatusCode;
-    }
-
    
-    public async Task<bool> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto)
+    public async Task<string?> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto)
     {
 
         var result = await _httpClient.PostAsJsonAsync("auth/verify-reset-otp", verifyResetOtpDto);
-        return result.IsSuccessStatusCode;
+        if (!result.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        var body = await result.Content.ReadFromJsonAsync<JsonElement>();
+        return body.GetProperty("resetToken").GetString();
       
     }
 

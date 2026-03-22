@@ -25,7 +25,7 @@ public class EfRefreshTokenDal : IRefreshTokenDal
         return await _appDbContext.RefreshTokens.FirstOrDefaultAsync
             (
                 t => t.Token == token
-                && t.userId == userId
+                && t.UserId == userId
                 && !t.IsRevoked
                 && t.ExpiresAt > DateTime.UtcNow, cancellationToken
             );
@@ -34,7 +34,7 @@ public class EfRefreshTokenDal : IRefreshTokenDal
     public async Task RevokeAllByUserAsync(Guid userId, CancellationToken cancellation = default)
     {
         var tokens = await _appDbContext.RefreshTokens
-            .Where(t => t.userId == userId && !t.IsRevoked).ToListAsync(cancellation);
+            .Where(t => t.UserId == userId && !t.IsRevoked).ToListAsync(cancellation);
         foreach (var token in tokens)
         {
             token.IsRevoked = true;

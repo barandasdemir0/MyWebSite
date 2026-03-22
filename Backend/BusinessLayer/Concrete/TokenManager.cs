@@ -63,7 +63,7 @@ public class TokenManager : ITokenService
             Token = tokenString,
             ExpiresAt = DateTime.UtcNow.AddDays(7),
             DeviceInfo = deviceInfo,
-            userId = user.Id
+            UserId = user.Id
         };
 
         await _refreshTokenDal.AddAsync(refreshToken, cancellation);

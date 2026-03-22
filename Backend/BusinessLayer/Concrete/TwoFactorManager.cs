@@ -137,7 +137,7 @@ public class TwoFactorManager : ITwoFactorService
         {
             Success = true,
             Token = await _tokenService.CreateAccessTokenAsync(user),
-            RefreshToken = await _tokenService.CreateRefreshTokenAsync(user, null)
+            RefreshToken = await _tokenService.CreateRefreshTokenAsync(user, dto.DeviceInfo)
 
         };
     }

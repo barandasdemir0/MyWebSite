@@ -1,6 +1,6 @@
 ﻿using DtoLayer.AuthDtos;
 
-namespace WebUILayer.Areas.Admin.Services.Abstract;
+namespace WebUILayer.Services.Abstract;
 
 public interface IAuthApiService
 {
@@ -9,7 +9,7 @@ public interface IAuthApiService
     Task LogoutAsync();
 
     Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
-    Task<bool> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto);
+    Task<string?> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto);
     Task<bool> SetNewPasswordAsync(SetNewPasswordDto setNewPasswordDto);
 
 }

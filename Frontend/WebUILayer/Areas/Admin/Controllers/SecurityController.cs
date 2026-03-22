@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Services.Abstract;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
@@ -13,13 +14,11 @@ namespace WebUILayer.Areas.Admin.Controllers;
 [Route("[area]/[controller]/[action]/{id?}")]
 public class SecurityController : Controller
 {
-    private readonly IAuthApiService _authApiService;
     private readonly IUserProfileApiService _userProfileApiService;
     private readonly ITwoFactorApiService _twoFactorApiService;
 
-    public SecurityController(IAuthApiService authApiService, IUserProfileApiService userProfileApiService, ITwoFactorApiService twoFactorApiService)
+    public SecurityController( IUserProfileApiService userProfileApiService, ITwoFactorApiService twoFactorApiService)
     {
-        _authApiService = authApiService;
         _userProfileApiService = userProfileApiService;
         _twoFactorApiService = twoFactorApiService;
     }
