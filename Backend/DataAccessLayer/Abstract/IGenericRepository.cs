@@ -1,6 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
 using Microsoft.EntityFrameworkCore.Query;
-using SharedKernel.Shareds;
+using SharedKernel.Shared;
 using System.Linq.Expressions;
 
 

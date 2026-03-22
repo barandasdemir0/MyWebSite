@@ -6,7 +6,6 @@ using DtoLayer.ProjectDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Shared;
-using SharedKernel.Shareds;
 
 namespace BusinessLayer.Concrete;
 

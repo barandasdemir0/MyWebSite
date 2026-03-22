@@ -3,7 +3,7 @@ using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using SharedKernel.Shareds;
+using SharedKernel.Shared;
 using System.Linq.Expressions;
 
 namespace DataAccessLayer.Concrete;

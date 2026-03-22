@@ -6,7 +6,6 @@ using DtoLayer.BlogPostDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Shared;
-using SharedKernel.Shareds;
 
 namespace BusinessLayer.Concrete;
 

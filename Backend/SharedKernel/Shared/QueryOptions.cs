@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
+﻿using System.Linq.Expressions;
 
-namespace SharedKernel.Shareds;
+namespace SharedKernel.Shared;
 
 public class QueryOptions<T> where T :class
 {
