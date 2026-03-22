@@ -12,7 +12,7 @@ public static class ServiceExtension
 {
     public static void AddApiService(this IServiceCollection services,IConfiguration configuration)
     {
-        var baseurl = configuration["ApiSettings:Baseurl"];
+        var baseurl = configuration["ApiSettings:BaseUrl"];
 
         #region admin için bağlamalar  --> bu yapı daha sonra scrutor ile otomatikleştirilecek
 
