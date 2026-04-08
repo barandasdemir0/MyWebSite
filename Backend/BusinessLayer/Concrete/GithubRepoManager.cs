@@ -4,8 +4,10 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.GithubRepoDtos;
 using MapsterMapper;
+using SharedKernel.Exceptions;
 using SharedKernel.Shared;
 using System.Net.Http.Json;
+
 
 namespace BusinessLayer.Concrete;
 
@@ -44,7 +46,7 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
                 )).Count;
             if (visibleCount>=4)
             {
-                throw new InvalidOperationException("En fazla 4 repo görünür yapılabilir!");
+                throw new ValidationException("En fazla 4 repo görünür yapılabilir!");
             }
         }
         return await base.UpdateAsync(guid, dto, cancellationToken);
@@ -120,7 +122,7 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
                 tracking: false,
                 cancellationToken: cancellationToken)).Count; //dbye git visible olanların sayısı al
             if (visibleCount >= 4) // 4den fazla ise
-                throw new InvalidOperationException("En fazla 4 repo görünür yapılabilir!"); // 4den fazladır yaz
+                throw new ValidationException("En fazla 4 repo görünür yapılabilir!"); // 4den fazladır yaz
             entity.DisplayOrder = visibleCount + 1; //görünür yapılacaksa sıra veriliyor
         }
         else

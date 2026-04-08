@@ -4,6 +4,7 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.MessageDtos;
 using MapsterMapper;
+using SharedKernel.Exceptions;
 using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
@@ -45,6 +46,6 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
 
     public override async Task<MessageDto?> UpdateAsync(Guid guid, UpdateMessageDto dto, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Mesajlar güncellenemez!");
+        throw new BusinessException("Mesajlar güncellenemez!");
     }
 }

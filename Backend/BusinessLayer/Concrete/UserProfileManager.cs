@@ -2,6 +2,7 @@
 using CV.EntityLayer.Entities;
 using DtoLayer.AuthDtos;
 using Microsoft.AspNetCore.Identity;
+using SharedKernel.Exceptions;
 
 namespace BusinessLayer.Concrete;
 
@@ -33,7 +34,7 @@ public class UserProfileManager : IUserProfileService
         var user = await _userManager.FindByIdAsync(UserId);
         if (user == null)
         {
-            throw new Exception("Kullanıcı bulunamadı");
+            throw new NotFoundException("Kullanıcı bulunamadı",UserId);
         }
 
         return new UserProfileDto

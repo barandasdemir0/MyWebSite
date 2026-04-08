@@ -4,6 +4,7 @@ using DtoLayer.AuthDtos;
 using Microsoft.AspNetCore.Identity;
 using QRCoder;
 using SharedKernel.Enums;
+using SharedKernel.Exceptions;
 
 namespace BusinessLayer.Concrete;
 
@@ -60,7 +61,7 @@ public class TwoFactorManager : ITwoFactorService
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            throw new Exception("Kullanıcı bulunamadı");
+            throw new NotFoundException("Kullanıcı bulunamadı",userId);
             //return Fail("Kullanıcı Bulunamadı");
         }
         await _userManager.ResetAuthenticatorKeyAsync(user);

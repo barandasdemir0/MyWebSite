@@ -4,6 +4,7 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.NotificationDtos;
 using MapsterMapper;
+using SharedKernel.Exceptions;
 using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
@@ -19,7 +20,7 @@ public class NotificationManager : GenericManager<Notification,NotificationDto,C
 
     public override Task<NotificationDto> AddAsync(CreateNotificationDto dto, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Bildirimler Eklenemez!");
+        throw new BusinessException("Bildirimler Eklenemez!");
     }
 
     public async Task<PagedResult<NotificationDto>> GetAllAdminAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
@@ -59,6 +60,6 @@ public class NotificationManager : GenericManager<Notification,NotificationDto,C
 
     public override Task<NotificationDto?> UpdateAsync(Guid guid, UpdateNotificationDto dto, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Bildirimler güncellenemez!");
+        throw new BusinessException("Bildirimler güncellenemez!");
     }
 }

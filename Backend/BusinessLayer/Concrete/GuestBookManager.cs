@@ -4,6 +4,7 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.GuestBookDtos;
 using MapsterMapper;
+using SharedKernel.Exceptions;
 using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
@@ -62,6 +63,6 @@ public class GuestBookManager : GenericManager<GuestBook,GuestBookListDto,Create
 
     public override Task<GuestBookListDto?> UpdateAsync(Guid guid, UpdateGuestBookDto dto, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Ziyaretçi Mesajları güncellenemez!");
+        throw new BusinessException("Ziyaretçi Mesajları güncellenemez!");
     }
 }

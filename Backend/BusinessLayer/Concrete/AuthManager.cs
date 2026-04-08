@@ -4,6 +4,7 @@ using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
 using System.Security.Claims;
@@ -255,6 +256,10 @@ public class AuthManager : IAuthService
 
         if (!valid)
         {
+            //return ValidationProblemDetails
+            //    {
+
+            //}  --> bunları incele chatten örnek veri al
             return null;
         }
 
