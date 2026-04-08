@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
-using DtoLayer.AuthDtos;
+using DtoLayer.AuthDtos.Requests;
+using DtoLayer.AuthDtos.Responses;
 using Microsoft.AspNetCore.Identity;
 using QRCoder;
 using SharedKernel.Enums;

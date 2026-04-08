@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
-using DtoLayer.AuthDtos;
+using DtoLayer.AuthDtos.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

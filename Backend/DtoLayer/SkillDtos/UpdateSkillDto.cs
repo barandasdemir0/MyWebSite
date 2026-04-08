@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.SkillDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateSkillDto
+namespace DtoLayer.SkillDtos;
+
+public class UpdateSkillDto : IHasId
 {
     public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string SkillName { get; set; } = string.Empty;

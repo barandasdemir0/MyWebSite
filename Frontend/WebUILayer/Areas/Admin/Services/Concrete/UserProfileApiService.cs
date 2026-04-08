@@ -1,4 +1,5 @@
-﻿using DtoLayer.AuthDtos;
+﻿using DtoLayer.AuthDtos.Requests;
+using DtoLayer.AuthDtos.Responses;
 using WebUILayer.Areas.Admin.Services.Abstract;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete;

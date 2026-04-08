@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.ProjectDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateProjectDto
+namespace DtoLayer.ProjectDtos;
+
+public class UpdateProjectDto : IHasId
 {
     public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string Name { get; set; } = string.Empty;

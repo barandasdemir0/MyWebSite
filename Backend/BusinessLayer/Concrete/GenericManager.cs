@@ -6,7 +6,7 @@ using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
 
-public abstract class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> : IGenericService<TEntity, TListDto, TCreateDto, TUpdateDto> where TEntity : BaseEntity where TListDto : class, IHasId
+public abstract class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> : IGenericService<TEntity, TListDto, TCreateDto, TUpdateDto> where TEntity : BaseEntity where TListDto : class, IHasId 
 {
 
     protected readonly IGenericRepository<TEntity> _repository;
@@ -50,7 +50,7 @@ public abstract class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> 
         {
             return null;
         }
-        return _mapper.Map<TListDto>(entity);
+        return _mapper.Map<TListDto>(entity); 
     }
 
     public virtual async Task<TListDto?> UpdateAsync(Guid guid, TUpdateDto dto, CancellationToken cancellationToken = default)

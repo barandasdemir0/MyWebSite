@@ -1,4 +1,5 @@
-﻿using DtoLayer.AuthDtos;
+﻿using DtoLayer.AuthDtos.Requests;
+using DtoLayer.AuthDtos.Responses;
 using WebUILayer.Services.Abstract;
 
 namespace WebUILayer.Services.Concrete;

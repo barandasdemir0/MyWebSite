@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.BlogPostDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateBlogPostDto
+namespace DtoLayer.BlogPostDtos;
+
+public class UpdateBlogPostDto : IHasId
 {
     public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string Title { get; set; } = string.Empty;

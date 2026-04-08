@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using DtoLayer.AuthDtos;
+using DtoLayer.AuthDtos.Items;
+using DtoLayer.AuthDtos.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

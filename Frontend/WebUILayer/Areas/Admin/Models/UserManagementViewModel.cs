@@ -1,4 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
+using DtoLayer.AuthDtos.Items;
+using DtoLayer.AuthDtos.Responses;
 
 namespace DtoLayer.AuthDtos;
 

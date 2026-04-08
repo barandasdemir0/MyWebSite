@@ -1,4 +1,6 @@
-﻿using DtoLayer.AuthDtos;
+﻿using DtoLayer.AuthDtos.Items;
+using DtoLayer.AuthDtos.Requests;
+using DtoLayer.AuthDtos.Responses;
 using SharedKernel.Enums;
 
 namespace BusinessLayer.Abstract;

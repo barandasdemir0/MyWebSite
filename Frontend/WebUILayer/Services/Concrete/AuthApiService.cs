@@ -1,4 +1,5 @@
-﻿using DtoLayer.AuthDtos;
+﻿using DtoLayer.AuthDtos.Requests;
+using DtoLayer.AuthDtos.Responses;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using WebUILayer.Services.Abstract;

@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using DtoLayer.AuthDtos;
+using DtoLayer.AuthDtos.Items;
+using DtoLayer.AuthDtos.Requests;
+using DtoLayer.AuthDtos.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

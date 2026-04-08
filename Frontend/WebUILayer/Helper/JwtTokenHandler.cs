@@ -1,4 +1,5 @@
-﻿using DtoLayer.AuthDtos;
+﻿using DtoLayer.AuthDtos.Items;
+using DtoLayer.AuthDtos.Responses;
 using System.Net.Http.Headers;
 
 namespace WebUILayer.Helper;

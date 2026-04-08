@@ -2,11 +2,11 @@
 
 namespace DtoLayer.HeroDtos;
 
-public class HeroDto : IHasId
+public record HeroDto : IHasId
 {
-    public Guid Id { get; set; }
-    public string FullName { get; set; } = string.Empty;
-    public string ProfessionalTitle { get; set; } = string.Empty;
-    public string ScrollingText { get; set; } = string.Empty;
-    public string HeroAbout { get; set; } = string.Empty;
+    public Guid Id { get; init; }
+    public string FullName { get; init; } = string.Empty;
+    public string ProfessionalTitle { get; init; } = string.Empty;
+    public string ScrollingText { get; init; } = string.Empty;
+    public string HeroAbout { get; init; } = string.Empty;
 }

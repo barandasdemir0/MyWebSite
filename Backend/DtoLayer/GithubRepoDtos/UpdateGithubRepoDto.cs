@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.GithubRepoDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateGithubRepoDto
+namespace DtoLayer.GithubRepoDtos;
+
+public class UpdateGithubRepoDto : IHasId
 {
     public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string RepoName { get; set; } = string.Empty;

@@ -2,10 +2,10 @@
 
 namespace DtoLayer.SkillDtos;
 
-public class SkillDto : IHasId
+public record SkillDto : IHasId
 {
-    public Guid Id { get; set; }
-    public string SkillName { get; set; } = string.Empty;
-    public string IconifyIcon { get; set; } = string.Empty;
+    public Guid Id { get; init; }
+    public string SkillName { get; init; } = string.Empty;
+    public string IconifyIcon { get; init; } = string.Empty;
 
 }

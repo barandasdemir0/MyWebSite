@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Enums;
 
-namespace DtoLayer.AuthDtos;
+namespace DtoLayer.AuthDtos.Requests;
 
 public class TwoFactorVerifyDto
 {

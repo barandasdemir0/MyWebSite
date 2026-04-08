@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.CertificateDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateCertificateDto
+namespace DtoLayer.CertificateDtos;
+
+public class UpdateCertificateDto : IHasId
 {
     public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string CertificateName { get; set; } = string.Empty;

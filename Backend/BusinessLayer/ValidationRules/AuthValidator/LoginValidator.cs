@@ -1,4 +1,4 @@
-﻿using DtoLayer.AuthDtos;
+﻿using DtoLayer.AuthDtos.Requests;
 using FluentValidation;
 
 namespace BusinessLayer.ValidationRules.AuthValidator;

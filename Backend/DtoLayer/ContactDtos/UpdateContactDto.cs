@@ -2,7 +2,6 @@
 
 public class UpdateContactDto
 {
-    //public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string? CvFileUrl { get; set; }
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;

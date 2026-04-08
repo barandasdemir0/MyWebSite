@@ -1,4 +1,5 @@
 ﻿using DtoLayer.AuthDtos;
+using DtoLayer.AuthDtos.Requests;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Enums;

@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.EducationDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateEducationDto
+namespace DtoLayer.EducationDtos;
+
+public class UpdateEducationDto : IHasId
 {
     public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string EducationDegree { get; set; } = string.Empty;

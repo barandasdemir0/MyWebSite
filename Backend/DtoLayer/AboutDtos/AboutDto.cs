@@ -2,14 +2,14 @@
 
 namespace DtoLayer.AboutDtos;
 
-public class AboutDto:IHasId
+public record AboutDto:IHasId
 {
-    public Guid Id { get; set; }
-    public string FullName { get; set; } = string.Empty;
-    public string Greeting { get; set; } = string.Empty;
-    public string Bio { get; set; } = string.Empty;
-    public string? ProfileImage { get; set; }
-    public int ProjectCount { get; set; }
-    public int ExperienceYear { get; set; }
-    public int ProjectDrink { get; set; }
+    public Guid Id { get; init; }
+    public string FullName { get; init; } = string.Empty;
+    public string Greeting { get; init; } = string.Empty;
+    public string Bio { get; init; } = string.Empty;
+    public string? ProfileImage { get; init; }
+    public int ProjectCount { get; init; }
+    public int ExperienceYear { get; init; }
+    public int ProjectDrink { get; init; }
 }

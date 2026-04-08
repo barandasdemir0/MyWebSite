@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.JobSkillCategoryDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateJobSkillCategoryDto
+namespace DtoLayer.JobSkillCategoryDtos;
+
+public class UpdateJobSkillCategoryDto : IHasId
 {
     public Guid Id { get; set; }
     public string CategoryName { get; set; } = string.Empty;

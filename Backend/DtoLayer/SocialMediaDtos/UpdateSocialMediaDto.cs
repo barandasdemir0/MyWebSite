@@ -1,6 +1,8 @@
-﻿namespace DtoLayer.SocialMediaDtos;
+﻿using SharedKernel.Shared;
 
-public class UpdateSocialMediaDto
+namespace DtoLayer.SocialMediaDtos;
+
+public class UpdateSocialMediaDto : IHasId
 {
     public Guid Id { get; set; } // --> güncelleme işleminde ıdyi almamız gerekir
     public string SocialMediaName { get; set; } = string.Empty;

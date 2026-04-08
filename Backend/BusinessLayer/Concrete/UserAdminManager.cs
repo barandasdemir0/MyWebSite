@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
-using DtoLayer.AuthDtos;
+using DtoLayer.AuthDtos.Responses;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 
@@ -68,13 +68,17 @@ public class UserAdminManager : IUserAdminService
         var userIds = users.Select(u => u.Id).ToList();
         var rolesMap = await _userDal.GetUserRolesBatchAsync(userIds, cancellationToken);
 
-        return users.Select(item => 
+        return users.Select(item =>
         {
 
             var dto = _mapper.Map<ApprovedUserDto>(item);
-            dto.Role = rolesMap.TryGetValue(item.Id, out var roles) ? roles.FirstOrDefault() ?? RoleConsts.User : RoleConsts.User;
+            //dto.Role = rolesMap.TryGetValue(item.Id, out var roles) ? roles.FirstOrDefault() ?? RoleConsts.User : RoleConsts.User;
+            dto = dto with
+            {
+                Role = rolesMap.TryGetValue(item.Id, out var roles) ? roles.FirstOrDefault() ?? RoleConsts.User : RoleConsts.User
+            };
             return dto;
-               
+
         }).ToList();
 
 

@@ -1,4 +1,4 @@
-﻿using DtoLayer.AuthDtos;
+﻿using DtoLayer.AuthDtos.Responses;
 
 namespace BusinessLayer.Abstract;
 
