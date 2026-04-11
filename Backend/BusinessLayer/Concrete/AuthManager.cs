@@ -33,24 +33,24 @@ public class AuthManager : IAuthService
 
 
 
-    public async Task<LoginResultDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
+    public async Task<LoginResultDto> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)//kullanıcıdan bir çok veri alacağız login işlemi olacak 
     {
-        var user = await _userManager.FindByEmailAsync(loginDto.Email);
+        var user = await _userManager.FindByEmailAsync(loginDto.Email); //kullanıcıyı bul
         
 
-        if (user==null)
+        if (user==null) //kullanıcı null sistemde yok
         {
             _logger.LogWarning("Başarısız giriş denemesi - kullanıcı yok: {Email}", loginDto.Email);
-            return Fail("Geçersiz Eposta veya şifre");
+            return Fail("Geçersiz Eposta veya şifre"); // kullanıcı sistemde varmı yokmu anlamamadı adına geçersiz diyoruz 
         }
 
-        if (!user.IsApproved)
+        if (!user.IsApproved) //şifren doğru olsa bile onayıma sunduruyorum böylelikle sorun yaşatmasın 
         {
             _logger.LogWarning("Onaylanmamış Hesap Giriş Denemesi:{Email}", loginDto.Email);
             return Fail("Hesabınız Henüz Admin Tarafından Onaylanmadı");
         }
 
-        if (await _userManager.IsLockedOutAsync(user))
+        if (await _userManager.IsLockedOutAsync(user)) // hesap kilitlimi bruteforce koruması yapıyorum 
         {
             _logger.LogWarning("Kilitli hesaba giriş denemesi: {Email}", loginDto.Email);
             return Fail("Hesabınız Geçiçi Olarak Kilitlendi");
@@ -59,17 +59,17 @@ public class AuthManager : IAuthService
         // EmailConfirmed kontrolü onay sistemi tarafından yönetiliyor (ApproveUserAsync → EmailConfirmed = true).
         // IsApproved kontrolü yukarıda yapıldığı için onaylanmamış kullanıcı buraya ulaşamaz.
 
-        if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
+        if (!await _userManager.CheckPasswordAsync(user, loginDto.Password)) //şifre ve kullanıcı adını yapıyorum
         {
-            await _userManager.AccessFailedAsync(user);
+            await _userManager.AccessFailedAsync(user); //eğer şifre yanlışsa hakkını bir azalt
             _logger.LogWarning("Başarısız giriş denemesi - yanlış şifre: {Email}", loginDto.Email);
-            return Fail("Geçersiz e-posta veya şifre");
+            return Fail("Geçersiz e-posta veya şifre"); //ve mesajı ver
         }
 
-        await _userManager.ResetAccessFailedCountAsync(user);
+        await _userManager.ResetAccessFailedCountAsync(user); //eğer şifre doğruysa hataları girişleri sıfırlıyoruz seni affettik gibi 
 
       
-
+        //2fa kontrolü
         if (await _userManager.GetTwoFactorEnabledAsync(user))
         {
           
@@ -89,10 +89,9 @@ public class AuthManager : IAuthService
 
 
         //direkt token ver
+        var accessToken = await _tokenService.CreateAccessTokenAsync(user);//access token verilir yani kısa süreli giriş bileti 
 
-
-
-        var accessToken = await _tokenService.CreateAccessTokenAsync(user);
+        //refresh token   burada deviceinfo gönderiyoruz çünkü kullanıcı hangi ortamdan giriş yaptı böylelikle aktif 2 refresh tokeni tutuyoruz refresh token uzun süreli tokenelrdir 
         var refreshToken = await _tokenService.CreateRefreshTokenAsync(user, loginDto.DeviceInfo,cancellationToken);
         _logger.LogInformation("Kullanıcı giriş yaptı: {UserId}", user.Id);
         return new LoginResultDto
@@ -104,53 +103,55 @@ public class AuthManager : IAuthService
 
     }
 
-    public async Task RevokeTokensAsync(string userId, CancellationToken cancellationToken)
+    public async Task RevokeTokensAsync(string userId, CancellationToken cancellationToken) //iptal kodu bu yani logout
     {
         await _tokenService.RevokeTokensAsync(userId, cancellationToken);
     } 
 
+
+    //kayıt ol fonksiyonu
     public async Task<RegisterResultDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
     {
-        var user = _mapper.Map<AppUser>(registerDto);
-        user.EmailConfirmed = false;
+        var user = _mapper.Map<AppUser>(registerDto); //register dtoyu manuel aktarmamak için yapılır 
+        user.EmailConfirmed = false; //burada kullanıcı admin tarafından onaylanmadığı sürece sen üye değilsin 
 
-        var result = await _userManager.CreateAsync(user, registerDto.Password);
-        if (!result.Succeeded)
+        var result = await _userManager.CreateAsync(user, registerDto.Password); //kullanıcı oluşturur
+        if (!result.Succeeded)//eğer hata bulursa
         {
             return new RegisterResultDto
             {
-                Success = false,
-                Errors = result.Errors.Select(x => x.Description).ToList()
+                Success = false,  //başarısız
+                Errors = result.Errors.Select(x => x.Description).ToList()//neden başarısız açıklar
             };
 
         }
-
-        if (!await _roleManager.RoleExistsAsync(RoleConsts.User))
+        //rol atama kısmı 
+        if (!await _roleManager.RoleExistsAsync(RoleConsts.User))//yeni üye olan herkesi user yapar böylelikle admin yetkisi olmaz
         {
             await _roleManager.CreateAsync(new IdentityRole<Guid>
             {
                 Name = RoleConsts.User
             });
         }
-        await _userManager.AddToRoleAsync(user, RoleConsts.User);
+        await _userManager.AddToRoleAsync(user, RoleConsts.User);//kuullanıcıya userı atadı 
 
         _logger.LogInformation("Yeni kullanıcı kaydı: {Email}", registerDto.Email);
         return new RegisterResultDto
         {
-            Success = true
+            Success = true //sisteme yeni üye geldi mesajı düşer
         };
     }
 
 
  
-
+    //tekrarı önlemek için azılan metottur
     
     private static LoginResultDto Fail(string error)
     {
         return new LoginResultDto
         {
-            Success = false,
-            Error = error
+            Success = false, //truemu falsemı
+            Error = error //nedeni
 
         };
     }
