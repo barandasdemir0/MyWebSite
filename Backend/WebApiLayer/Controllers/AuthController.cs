@@ -14,12 +14,15 @@ public class AuthController : ControllerBase
 {
 
     private readonly IAuthService _authService;
-  
+    private readonly ITokenService _tokenService;
+    private readonly IAccountService _accountService;
 
-    public AuthController(IAuthService authService)
+
+    public AuthController(IAuthService authService, ITokenService tokenService, IAccountService accountService)
     {
         _authService = authService;
-       
+        _tokenService = tokenService;
+        _accountService = accountService;
     }
 
     [HttpPost("login")]
@@ -44,7 +47,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> LogOut(CancellationToken cancellation)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        await _authService.RevokeTokensAsync(userId, cancellation);
+        await _tokenService.RevokeTokensAsync(userId, cancellation);
         return Ok();
 
     }
@@ -69,7 +72,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto dto,CancellationToken cancellationToken)
     {
         var deviceInfo = Request.Headers["User-Agent"].ToString();
-        var result = await _authService.RefreshTokenAsync(dto, deviceInfo, cancellationToken);
+        var result = await _tokenService.RefreshTokenAsync(dto, deviceInfo, cancellationToken);
         if (result.Success)
         {
             return Ok(result);
@@ -82,7 +85,7 @@ public class AuthController : ControllerBase
     [EnableRateLimiting("email")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto,CancellationToken cancellationToken)
     {
-        await _authService.ForgotPasswordAsync(forgotPasswordDto.Email, cancellationToken);
+        await _accountService.ForgotPasswordAsync(forgotPasswordDto.Email, cancellationToken);
         return Ok("Eğer bu eposta kayıtlıysa,sıfırlama bağlantısı gönderildi");
     }
 
@@ -91,7 +94,7 @@ public class AuthController : ControllerBase
     [EnableRateLimiting("email")]
     public async Task<IActionResult> VerifyResetOtp([FromBody]VerifyResetOtpDto verifyResetOtpDto,CancellationToken cancellationToken)
     {
-        var ok = await _authService.VerifyResetOtpAsync(verifyResetOtpDto.Email,verifyResetOtpDto.Code,verifyResetOtpDto.Provider,cancellationToken);
+        var ok = await _accountService.VerifyResetOtpAsync(verifyResetOtpDto.Email,verifyResetOtpDto.Code,verifyResetOtpDto.Provider,cancellationToken);
         if (ok!=null)
         {
             return Ok(new
@@ -106,7 +109,7 @@ public class AuthController : ControllerBase
     [EnableRateLimiting("email")]
     public async Task<IActionResult> SetNewPassword([FromBody] SetNewPasswordDto setNewPasswordDto,CancellationToken cancellationToken)
     {
-        var ok = await _authService.SetNewPasswordAsync(setNewPasswordDto.Email, setNewPasswordDto.NewPassword, setNewPasswordDto.ResetToken ,cancellationToken);
+        var ok = await _accountService.SetNewPasswordAsync(setNewPasswordDto.Email, setNewPasswordDto.NewPassword, setNewPasswordDto.ResetToken ,cancellationToken);
         if (ok)
         {
             return Ok();

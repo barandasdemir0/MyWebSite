@@ -131,6 +131,11 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
+        services.AddHttpClient<IAccountApiService, AccountApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
+
       
         #endregion
 

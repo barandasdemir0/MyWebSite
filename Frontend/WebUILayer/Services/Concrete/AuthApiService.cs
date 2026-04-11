@@ -15,11 +15,7 @@ public class AuthApiService : IAuthApiService
         _httpClient = httpClient; 
     }
 
-    public async Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
-    {
-        await _httpClient.PostAsJsonAsync("auth/forgot-password", forgotPasswordDto);
-    }
-
+  
     public async Task<LoginResultDto?> LoginAsync(LoginDto loginDto)
     {
         var response = await _httpClient.PostAsJsonAsync("auth/login", loginDto);
@@ -50,7 +46,7 @@ public class AuthApiService : IAuthApiService
             return new RegisterResultDto
             {
                 Success = false,
-                Errors = errors?? new List<string>
+                Errors = errors ?? new List<string>
                 {
                     "Kayıt Başarısız. Girdiğiniz bilgileri kontrol edip tekrar deneyin."
                 }
@@ -58,25 +54,8 @@ public class AuthApiService : IAuthApiService
         }
         return await response.Content.ReadFromJsonAsync<RegisterResultDto>();
     }
-   
-    public async Task<string?> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto)
-    {
 
-        var result = await _httpClient.PostAsJsonAsync("auth/verify-reset-otp", verifyResetOtpDto);
-        if (!result.IsSuccessStatusCode)
-        {
-            return null;
-        }
 
-        var body = await result.Content.ReadFromJsonAsync<JsonElement>();
-        return body.GetProperty("resetToken").GetString();
-      
-    }
 
-    public async Task<bool> SetNewPasswordAsync(SetNewPasswordDto setNewPasswordDto)
-    {
-        var result = await _httpClient.PostAsJsonAsync("auth/set-new-password", setNewPasswordDto);
-        return result.IsSuccessStatusCode;
-    }
 
 }

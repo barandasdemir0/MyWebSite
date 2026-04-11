@@ -17,24 +17,18 @@ public class AuthManager : IAuthService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
-    private readonly IEmailService _emailService;
     private readonly ILogger<AuthManager> _logger;
-    private readonly IRefreshTokenDal _refreshTokenDal;
     private readonly ITokenService _tokenService;
-    private readonly IPasswordResetTokenDal _passwordResetTokenDal;
     private readonly IMapper _mapper;
 
 
-    public AuthManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, IRefreshTokenDal refreshTokenDal, IEmailService emailService, ITokenService tokenService, IMapper mapper, IPasswordResetTokenDal passwordResetTokenDal)
+    public AuthManager(UserManager<AppUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, ILogger<AuthManager> logger, ITokenService tokenService, IMapper mapper)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _logger = logger;
-        _refreshTokenDal = refreshTokenDal;
-        _emailService = emailService;
         _tokenService = tokenService;
         _mapper = mapper;
-        _passwordResetTokenDal = passwordResetTokenDal;
     }
 
 
@@ -112,13 +106,7 @@ public class AuthManager : IAuthService
 
     public async Task RevokeTokensAsync(string userId, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user!=null)
-        {
-            await _userManager.UpdateSecurityStampAsync(user);
-
-            await _refreshTokenDal.RevokeAllByUserAsync(user.Id, cancellationToken);
-        }
+        await _tokenService.RevokeTokensAsync(userId, cancellationToken);
     } 
 
     public async Task<RegisterResultDto> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken)
@@ -154,59 +142,7 @@ public class AuthManager : IAuthService
     }
 
 
-   
-
  
-
-    public async Task<LoginResultDto> RefreshTokenAsync(RefreshTokenRequestDto dto, string deviceInfo, CancellationToken cancellationToken)
-    {
-        ClaimsPrincipal? principal;
-        try
-        {
-            principal = _tokenService.GetPrincipalFromExpiredToken(dto.AccessToken);
-        }
-        catch
-        {
-            return Fail("Geçersiz Token");
-        }
-
-        var userId = principal?.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-        {
-            return Fail("Geçersiz Token");
-        }
-        var storedToken = await _refreshTokenDal.GetValidTokenAsync(dto.RefreshToken, Guid.Parse(userId), cancellationToken);
-        if (storedToken==null)
-        {
-            return Fail("Refresh Token Geçersiz veya süresi dolmuş");
-        }
-
-        storedToken.IsRevoked = true;
-        await _refreshTokenDal.SaveChangesAsync(cancellationToken);
-
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
-        {
-            return Fail("Kullanıcı Bulunamadı");
-        }
-
-        var newAccessToken = await _tokenService.CreateAccessTokenAsync(user);
-
-        var newRefreshToken = await _tokenService.CreateRefreshTokenAsync(user, deviceInfo, cancellationToken);
-
-        return new LoginResultDto
-        {
-            Success = true,
-            Token = newAccessToken,
-            RefreshToken = newRefreshToken
-        };
-
-
-    }
-
-   
-
-   
 
     
     private static LoginResultDto Fail(string error)
@@ -219,86 +155,5 @@ public class AuthManager : IAuthService
         };
     }
 
-    public async Task ForgotPasswordAsync(string email, CancellationToken cancellationToken)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user==null)
-        {
-            return;
-        }
-
-        await _userManager.UpdateSecurityStampAsync(user);
-        var code = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
-
-
-        await _emailService.SendAsync(email, "Şifre Sıfırlama",
-       $"Şifre sıfırlama kodunuz: <b>{code}</b><br/>Bu kod 10 dakika geçerlidir.", cancellationToken);
-
-
-    }
-
    
-
-    public async Task<string?> VerifyResetOtpAsync(string email, string code, TwoFactorProvider provider, CancellationToken cancellationToken)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user ==null)
-        {
-            return null;
-        }
-
-        var tokenProvider = provider switch
-        {
-            TwoFactorProvider.Authenticator => _userManager.Options.Tokens.AuthenticatorTokenProvider,
-            TwoFactorProvider.Email => TokenOptions.DefaultEmailProvider,
-            _ => TokenOptions.DefaultEmailProvider
-        };
-
-        var valid = await _userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, code);
-
-        if (!valid)
-        {
-            //return ValidationProblemDetails
-            //    {
-
-            //}  --> bunları incele chatten örnek veri al
-            return null;
-        }
-
-        var resetToken = new PasswordResetToken
-        {
-            Email = email,
-            ExpiresAt = DateTime.UtcNow.AddMinutes(3)
-        };
-
-        await _passwordResetTokenDal.AddAsync(resetToken, cancellationToken);
-        return resetToken.Token;
-        
-    }
-
-    public async Task<bool> SetNewPasswordAsync(string email, string newPassword, string resetToken, CancellationToken cancellationToken)
-    {
-
-        var tokenEntity = await _passwordResetTokenDal.GetValidTokenAsync(resetToken, email, cancellationToken);
-        if (tokenEntity==null)
-        {
-            return false;
-        }
-
-        await _passwordResetTokenDal.MarkAsUsedAsync(tokenEntity, cancellationToken);
-
-
-
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user==null)
-        {
-            return false;
-        }
-
-
-
-        var identityResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var result = await _userManager.ResetPasswordAsync(user, identityResetToken, newPassword);
-        return result.Succeeded;
-    }
 }

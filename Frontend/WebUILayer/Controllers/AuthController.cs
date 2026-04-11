@@ -12,12 +12,14 @@ public class AuthController : Controller
     private readonly IAuthApiService _authApiService;
     private readonly ITwoFactorApiService _twoFactorApiService;
     private readonly ICookieAuthService _cookieAuthService;
+    private readonly IAccountApiService _accountApiService;
 
-    public AuthController(IAuthApiService authApiService, ITwoFactorApiService twoFactorApiService, ICookieAuthService cookieAuthService)
+    public AuthController(IAuthApiService authApiService, ITwoFactorApiService twoFactorApiService, ICookieAuthService cookieAuthService, IAccountApiService accountApiService)
     {
         _authApiService = authApiService;
         _twoFactorApiService = twoFactorApiService;
         _cookieAuthService = cookieAuthService;
+        _accountApiService = accountApiService;
     }
 
     [HttpGet("/auth/login")]
@@ -183,7 +185,7 @@ public class AuthController : Controller
         }
         if (SelectedProvider=="Email")
         {
-            await _authApiService.ForgotPasswordAsync(new ForgotPasswordDto
+            await _accountApiService.ForgotPasswordAsync(new ForgotPasswordDto
             {
                 Email = email
             });
@@ -200,7 +202,7 @@ public class AuthController : Controller
         var email = HttpContext.Session.GetString("reset_email");
         if (string.IsNullOrEmpty(email)) return RedirectToAction(nameof(Login));
 
-        await _authApiService.ForgotPasswordAsync(new ForgotPasswordDto { Email = email });
+        await _accountApiService.ForgotPasswordAsync(new ForgotPasswordDto { Email = email });
         TempData["Info"] = "Kod tekrar gönderildi.";
         return RedirectToAction(nameof(VerifyResetCode));
     }
@@ -228,7 +230,7 @@ public class AuthController : Controller
             return RedirectToAction(nameof(Login));
         }
         var provider = Enum.Parse<TwoFactorProvider>(providerStr);
-        var resetToken = await _authApiService.VerifyResetOtpAsync(new VerifyResetOtpDto
+        var resetToken = await _accountApiService.VerifyResetOtpAsync(new VerifyResetOtpDto
         {
             Email = email,
             Provider = provider,
@@ -271,7 +273,7 @@ public class AuthController : Controller
 
         setNewPasswordDto.Email = HttpContext.Session.GetString("reset_email")!;
         setNewPasswordDto.ResetToken = HttpContext.Session.GetString("reset_token")!;
-        var ok = await _authApiService.SetNewPasswordAsync(setNewPasswordDto);
+        var ok = await _accountApiService.SetNewPasswordAsync(setNewPasswordDto);
         if (!ok)
         {
             ModelState.AddModelError("", "Şifreler değiştirilemedi.");

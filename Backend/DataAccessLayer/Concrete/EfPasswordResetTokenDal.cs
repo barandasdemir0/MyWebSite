@@ -22,14 +22,15 @@ public class EfPasswordResetTokenDal : IPasswordResetTokenDal
 
     public async Task<PasswordResetToken?> GetValidTokenAsync(string token, string email, CancellationToken cancellationToken = default)
     {
-        return await _appDbContext.PasswordResetTokens.FirstOrDefaultAsync(
-            x => x.Token == token &&
-            x.Email == email &&
-            !x.IsUsed &&
-            x.ExpiresAt > DateTime.UtcNow, cancellationToken
+        return await _appDbContext.PasswordResetTokens.FirstOrDefaultAsync( //tabloya eriş 
+            x => x.Token == token && // girilen token ile veritabnındaki tokeni eşleştir 
+            x.Email == email && //token kullanıcıya ait olmalı
+            !x.IsUsed && // token daha önce kullanılmamış olmalı
+            x.ExpiresAt > DateTime.UtcNow, cancellationToken //token henüz geçerli  süresi dolmamış olmalı
         );
     }
 
+    //bu method parola sıfırlam tokeni kullanıldıktan sonra işaretlemek için kullanılır
     public async Task MarkAsUsedAsync(PasswordResetToken token, CancellationToken cancellationToken = default)
     {
         token.IsUsed = true;

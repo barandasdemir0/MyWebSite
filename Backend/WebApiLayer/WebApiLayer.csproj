@@ -7,6 +7,7 @@
 	  <SatelliteResourceLanguages>tr;en;</SatelliteResourceLanguages> 
 	  <!--bunun yardımı ile gereksiz dil dosyalarını temizliyoruz-->
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e4ff1848-41f5-49bc-a3a5-4571cd23f424</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

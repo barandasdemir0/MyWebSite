@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DtoLayer.AuthDtos.Items;
+using DtoLayer.AuthDtos.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -50,6 +52,63 @@ public class TokenManager : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    public async Task<LoginResultDto> RefreshTokenAsync(RefreshTokenRequestDto dto, string deviceInfo, CancellationToken cancellationToken)
+    {
+        ClaimsPrincipal? principal;
+        try
+        {
+            principal = GetPrincipalFromExpiredToken(dto.AccessToken);
+        }
+        catch
+        {
+            return Fail("Geçersiz Token");
+        }
+
+        var userId = principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+        {
+            return Fail("Geçersiz Token");
+        }
+        var storedToken = await _refreshTokenDal.GetValidTokenAsync(dto.RefreshToken, Guid.Parse(userId), cancellationToken);
+        if (storedToken == null)
+        {
+            return Fail("Refresh Token Geçersiz veya süresi dolmuş");
+        }
+
+        storedToken.IsRevoked = true;
+        await _refreshTokenDal.SaveChangesAsync(cancellationToken);
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return Fail("Kullanıcı Bulunamadı");
+        }
+
+        var newAccessToken = await CreateAccessTokenAsync(user);
+
+        var newRefreshToken = await CreateRefreshTokenAsync(user, deviceInfo, cancellationToken);
+
+        return new LoginResultDto
+        {
+            Success = true,
+            Token = newAccessToken,
+            RefreshToken = newRefreshToken
+        };
+
+
+    }
+
+
+    public async Task RevokeTokensAsync(string userId, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user != null)
+        {
+            await _userManager.UpdateSecurityStampAsync(user);
+
+            await _refreshTokenDal.RevokeAllByUserAsync(user.Id, cancellationToken);
+        }
+    }
     public async Task<string> CreateRefreshTokenAsync(AppUser user, string? deviceInfo, CancellationToken cancellation = default)
     {
         var tokenBytes = new byte[64];
@@ -88,5 +147,15 @@ public class TokenManager : ITokenService
         };
 
         return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+    }
+
+    private static LoginResultDto Fail(string error)
+    {
+        return new LoginResultDto
+        {
+            Success = false,
+            Error = error
+
+        };
     }
 }

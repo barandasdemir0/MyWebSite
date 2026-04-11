@@ -20,24 +20,24 @@ public class EfRefreshTokenDal : IRefreshTokenDal
         await _appDbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<RefreshToken?> GetValidTokenAsync(string token, Guid userId, CancellationToken cancellationToken = default)
+    public async Task<RefreshToken?> GetValidTokenAsync(string token, Guid userId, CancellationToken cancellationToken = default) //geçerli tokeni alma 
     {
-        return await _appDbContext.RefreshTokens.FirstOrDefaultAsync
+        return await _appDbContext.RefreshTokens.FirstOrDefaultAsync //ilk tokeni döndür
             (
-                t => t.Token == token
-                && t.UserId == userId
-                && !t.IsRevoked
-                && t.ExpiresAt > DateTime.UtcNow, cancellationToken
+                t => t.Token == token // tokenler eşleşmeli
+                && t.UserId == userId //kullanıcı esleşmeli
+                && !t.IsRevoked //iptal olmamalıu
+                && t.ExpiresAt > DateTime.UtcNow, cancellationToken //ve dolma süresi bugünden büyük olmalı
             );
     }
 
-    public async Task RevokeAllByUserAsync(Guid userId, CancellationToken cancellation = default)
+    public async Task RevokeAllByUserAsync(Guid userId, CancellationToken cancellation = default)//kullanıcıya ait tüm tokenleri iptal etme
     {
         var tokens = await _appDbContext.RefreshTokens
-            .Where(t => t.UserId == userId && !t.IsRevoked).ToListAsync(cancellation);
-        foreach (var token in tokens)
+            .Where(t => t.UserId == userId && !t.IsRevoked).ToListAsync(cancellation); // user elkelşyorsa ve iptal olmamışsa
+        foreach (var token in tokens) // tokenleri çek
         {
-            token.IsRevoked = true;
+            token.IsRevoked = true; // bütün eski tokenleri iptal et
         }
         await _appDbContext.SaveChangesAsync(cancellation);
     }
