@@ -52,7 +52,7 @@ public class TwoFactorController : ControllerBase
     [Authorize]
     public async Task<IActionResult> SetupAuthenticator(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!; // Kullanıcı ID'sini JWT'den alıyoruz 
         var result = await _twoFactorService.SetupAuthenticatorAsync(userId, cancellationToken);
         return Ok(result);
     }

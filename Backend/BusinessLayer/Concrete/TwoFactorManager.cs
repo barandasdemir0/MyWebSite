@@ -29,9 +29,9 @@ public class TwoFactorManager : ITwoFactorService
         {
             return false;
         } //kullanıcı doğrulama kısmında bulunmazsa false döndürürüz, bu durumda kullanıcıya "Kullanıcı Bulunamadı" mesajı gösterilir.
-        var valid = await _userManager.VerifyTwoFactorTokenAsync( //: Identity'ye "Bu kodu E-posta kodu gibi değil, TOTP (Time-based One-Time Password) algoritmasına göre kontrol et" diyoruz.
+        var valid = await _userManager.VerifyTwoFactorTokenAsync( 
             user, _userManager.Options.Tokens.AuthenticatorTokenProvider, Code
-            ); // kullanıcının doğrulama kodunu doğrularız, eğer kod geçersizse false döndürürüz, bu durumda kullanıcıya "Geçersiz veya süresi dolmuş kod" mesajı gösterilir.
+            );  //: Identity'ye "Bu kodu E-posta kodu gibi değil, TOTP (Time-based One-Time Password) algoritmasına göre kontrol et" diyoruz.// kullanıcının doğrulama kodunu doğrularız, eğer kod geçersizse false döndürürüz, bu durumda kullanıcıya "Geçersiz veya süresi dolmuş kod" mesajı gösterilir.
         if (!valid) //: Eğer kod geçersizse false döndürürüz, bu durumda kullanıcıya "Geçersiz veya süresi dolmuş kod" mesajı gösterilir.
         {
             return false;

@@ -14,15 +14,10 @@ public class AuthController : ControllerBase
 {
 
     private readonly IAuthService _authService;
-    private readonly ITokenService _tokenService;
-    private readonly IAccountService _accountService;
 
-
-    public AuthController(IAuthService authService, ITokenService tokenService, IAccountService accountService)
+    public AuthController(IAuthService authService)
     {
         _authService = authService;
-        _tokenService = tokenService;
-        _accountService = accountService;
     }
 
     [HttpPost("login")]
@@ -37,19 +32,6 @@ public class AuthController : ControllerBase
         {
             return Unauthorized(result.Error);
         }
-    }
-
-  
-
-
-    [HttpPost("logout")]
-    [Authorize]
-    public async Task<IActionResult> LogOut(CancellationToken cancellation)
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        await _tokenService.RevokeTokensAsync(userId, cancellation);
-        return Ok();
-
     }
 
     [HttpPost("register")]
@@ -68,54 +50,9 @@ public class AuthController : ControllerBase
 
 
 
-    [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto dto,CancellationToken cancellationToken)
-    {
-        var deviceInfo = Request.Headers["User-Agent"].ToString();
-        var result = await _tokenService.RefreshTokenAsync(dto, deviceInfo, cancellationToken);
-        if (result.Success)
-        {
-            return Ok(result);
-        }
-        return Unauthorized(result.Error);
-    }
 
 
-    [HttpPost("forgot-password")]
-    [EnableRateLimiting("email")]
-    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto,CancellationToken cancellationToken)
-    {
-        await _accountService.ForgotPasswordAsync(forgotPasswordDto.Email, cancellationToken);
-        return Ok("Eğer bu eposta kayıtlıysa,sıfırlama bağlantısı gönderildi");
-    }
-
-
-    [HttpPost("verify-reset-otp")]
-    [EnableRateLimiting("email")]
-    public async Task<IActionResult> VerifyResetOtp([FromBody]VerifyResetOtpDto verifyResetOtpDto,CancellationToken cancellationToken)
-    {
-        var ok = await _accountService.VerifyResetOtpAsync(verifyResetOtpDto.Email,verifyResetOtpDto.Code,verifyResetOtpDto.Provider,cancellationToken);
-        if (ok!=null)
-        {
-            return Ok(new
-            {
-                resetToken = ok
-            });
-        }
-        return BadRequest("Geçersiz veya süresi dolmuş kod");
-    }
-
-    [HttpPost("set-new-password")]
-    [EnableRateLimiting("email")]
-    public async Task<IActionResult> SetNewPassword([FromBody] SetNewPasswordDto setNewPasswordDto,CancellationToken cancellationToken)
-    {
-        var ok = await _accountService.SetNewPasswordAsync(setNewPasswordDto.Email, setNewPasswordDto.NewPassword, setNewPasswordDto.ResetToken ,cancellationToken);
-        if (ok)
-        {
-            return Ok();
-        }
-        return BadRequest("şifre değiştirilemedi veya token geçersiz");
-    }
+    
 
 
 }
