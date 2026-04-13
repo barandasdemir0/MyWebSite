@@ -6,7 +6,6 @@ public class CreateSiteSettingDto
     public string? CvFileUrlEn { get; set; }
     public string WorkStatus { get; set; } = string.Empty;  // "İşe Açık Yazısı"
     public bool IsAvailable { get; set; } // "İşe Açık checkbox"
-    public bool IsMaintenanceMode { get; set; } = false;
 
 
     // (SEO):
@@ -14,4 +13,9 @@ public class CreateSiteSettingDto
     public string? MetaDescription { get; set; }
     public string? GoogleAnalyticsId { get; set; }
     public string? SiteKeywords { get; set; }
+
+    // Yeni Alanlar
+    public bool IsMaintenanceMode { get; set; }
+    public DateTime? MaintenanceEndTime { get; set; }
+    public string? MaintenanceMessage { get; set; }
 }

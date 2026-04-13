@@ -1,0 +1,84 @@
+﻿@model MaintenanceViewModel
+@{
+    Layout = null;
+    // Model.Settings.MaintenanceMessage ve Model.Contact.Email gibi alanlara erişeceğiz
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <!-- ... Head kısımları aynı ... -->
+    <title>Bakımdayız - @Model.siteSettingDtos?.SiteTitle</title>
+    <!-- ... CSS linkleri ... -->
+</head>
+<body>
+    <!-- Preloader ve dekoratif elementler aynı kalabilir -->
+    
+    <div class="container">
+        <div class="badge">
+            <i class="fas fa-wrench"></i>
+            @(Model.siteSettingDtos?.MaintenanceMessage ?? "Planlı bakım sürüyor")
+        </div>
+
+        <h1>Bakımdayız</h1>
+        <p class="lead">Platformu daha güvenli hale getiriyoruz.</p>
+
+        <div class="status-grid">
+            <div class="card">
+                <span class="label">Tahmini dönüş</span>
+                <!-- Dinamik Tarih -->
+                <span class="value">
+                    @(Model.siteSettingDtos?.MaintenanceEndTime?.ToString("dd MMMM yyyy HH:mm") ?? "Yakında")
+                </span>
+            </div>
+            <!-- ... Diğer kartlar ... -->
+        </div>
+
+        <div class="contact">
+            <p class="contact-title">İhtiyacınız olursa ulaşabileceğiniz bilgiler</p>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="icon"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <div class="contact-label">E-posta</div>
+                        <!-- Dinamik Mail -->
+                        <div class="contact-value">
+                            <a href="mailto:@Model.contactDtos?.Email">@Model.contactDtos?.Email</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon"><i class="fas fa-phone"></i></div>
+                    <div>
+                        <div class="contact-label">Telefon</div>
+                        <!-- Dinamik Telefon -->
+                        <div class="contact-value">
+                            <a href="tel:@Model.contactDtos?.Phone">@Model.contactDtos?.Phone</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon"><i class="fas fa-phone"></i></div>
+                    <div>
+                        <div class="contact-label">Telefon</div>
+                        <!-- Dinamik Telefon -->
+                        <div class="contact-value">
+                            <a href="tel:https://wa.me/@Model.contactDtos?.Phone">@Model.contactDtos?.Phone</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon"><i class="fas fa-ticket"></i></div>
+                    <div>
+                        <div class="contact-label">Destek talebi</div>
+                        <div class="contact-value">
+                            <a href="https://barandasdemir.com" target="_blank"
+                               rel="noopener">barandasdemir.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

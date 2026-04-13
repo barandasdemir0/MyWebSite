@@ -52,5 +52,7 @@ public class TwoFactorApiService : ITwoFactorApiService
 
         }
         return await response.Content.ReadFromJsonAsync<LoginResultDto>();
+        // İki faktörlü doğrulama sonucunu LoginResultDto olarak döndürür. Başarısız olursa hata mesajını içerir.
+        //başarılı olursa JWT token'ı ve diğer bilgileri içerir.
     }
 }

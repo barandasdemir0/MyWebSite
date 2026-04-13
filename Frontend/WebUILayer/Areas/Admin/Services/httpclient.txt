@@ -1,0 +1,52 @@
+İşte `HttpClient` bünyesindeki tüm gönderim ve yönetim komutlarının tam listesi:
+
+### 1. HTTP Metot Komutları (Verbs)
+Bunlar doğrudan sunucuya bir işlem yaptırmak için kullanılan "fiillerdir":
+
+* **GetAsync**: Veri talep eder.
+* **PostAsync**: Yeni veri gönderir.
+* **PutAsync**: Mevcut veriyi tamamen değiştirir.
+* **PatchAsync**: Veriyi kısmi olarak günceller.
+* **DeleteAsync**: Veriyi siler.
+* **SendAsync**: En esnek komuttur; yukarıdaki tüm işlemleri ve özel HTTP metotlarını (HEAD, OPTIONS vb.) manuel yapılandırarak yapmanı sağlar.
+
+### 2. Hızlı İçeriğe Erişim Komutları
+Yanıtın detaylarıyla (Header, Status Code) uğraşmadan direkt veriyi almak için kullanılırlar:
+
+* **GetStringAsync**: İçeriği direkt metin (string) olarak alır.
+* **GetByteArrayAsync**: İçeriği bayt dizisi (byte array) olarak alır.
+* **GetStreamAsync**: İçeriği bir akış (stream) olarak açar.
+* **GetFromJsonAsync**: (Uzantı metodu) Gelen JSON'ı direkt nesneye çevirerek alır.
+
+### 3. JSON Uzantı Komutları (System.Net.Http.Json)
+Modern .NET projelerinde nesneleri JSON'a çevirip göndermek için kullanılırlar:
+
+* **PostAsJsonAsync**: Nesneyi JSON'a çevirip POST eder.
+* **PutAsJsonAsync**: Nesneyi JSON'a çevirip PUT eder.
+* **PatchAsJsonAsync**: Nesneyi JSON'a çevirip PATCH eder.
+
+### 4. Yaşam Döngüsü ve İptal Komutları
+Bağlantıyı yönetmek için kullanılan kritik komutlardır:
+
+* **CancelPendingRequests**: Devam eden tüm aktif istekleri o anda durdurur.
+* **Dispose**: Client nesnesini kapatır ve kaynakları serbest bırakır.
+
+### 5. Yapılandırma Özellikleri (Properties)
+Metot olmasalar da Client'ın davranışını belirleyen "komut niteliğinde" ayarlardır:
+
+* **BaseAddress**: İsteklerin atılacağı ana domain adresini belirler.
+* **DefaultRequestHeaders**: Her istekte gönderilecek ortak başlıkları (Token gibi) belirler.
+* **Timeout**: Bir isteğin ne kadar süre cevap gelmezse hata vereceğini belirler.
+* **MaxResponseContentBufferSize**: Alınacak maksimum veri boyutunu sınırlandırır.
+
+
+
+### 6. İçerik Tipleri (HttpContent Sınıfları)
+`PostAsync` veya `PutAsync` içine veri koyarken kullanılan paketleme komutları:
+
+* **StringContent**: Düz metin veya JSON metni paketler.
+* **FormUrlEncodedContent**: Anahtar-değer çiftlerini form formatında paketler.
+* **MultipartFormDataContent**: Dosya ve verileri bir arada paketler (Upload işlemleri).
+* **StreamContent**: Büyük verileri akış olarak paketler.
+* **ByteArrayContent**: Ham bayt verilerini paketler.
+

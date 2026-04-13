@@ -48,7 +48,7 @@
                 <form action="Toggle2FA" method="post" class="btn btn-secondary">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="Enable" value="false">
-                    <input type="hidden" name="Provider" value="@((int)Model.Preferred2FAProvider)">
+                    <input type="hidden" name="Provider" value="@Model.Preferred2FAProvider">
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-times"></i> 2FA'yı Kapat
                     </button>
@@ -66,7 +66,7 @@
                 
                 <div class="two-factor-options" style="margin-bottom: 16px;">
                     <label class="two-factor-option has-icon">
-                        <input type="radio" name="Provider" value="@((int)TwoFactorProvider.Email)" checked>
+                        <input type="radio" name="Provider" value="@TwoFactorProvider.Email" checked>
                         <span class="two-factor-option-icon"><i class="fas fa-envelope"></i></span>
                         <span class="two-factor-option-content">
                             <span class="two-factor-option-title">E-posta ile kod</span>
@@ -74,7 +74,7 @@
                         </span>
                     </label>
                     <label class="two-factor-option has-icon">
-                        <input type="radio" name="Provider" value="@((int)TwoFactorProvider.Authenticator)">
+                        <input type="radio" name="Provider" value="@TwoFactorProvider.Authenticator">
                         <span class="two-factor-option-icon"><i class="fas fa-mobile-alt"></i></span>
                         <span class="two-factor-option-content">
                             <span class="two-factor-option-title">Authenticator uygulaması</span>

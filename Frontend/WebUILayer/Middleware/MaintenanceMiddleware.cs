@@ -40,12 +40,12 @@ public class MaintenanceMiddleware
             await _next(context);
             return;
         }
-
+        bool isMaintenanceMode = false;
         try
         {
-            var isMaintenanceMode = await _cache.GetOrCreateAsync("IsMaintenanceMode", async entry =>
+             isMaintenanceMode = await _cache.GetOrCreateAsync("IsMaintenanceMode", async entry =>
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
 
 
                 var client = _httpClientFactory.CreateClient();
@@ -60,20 +60,19 @@ public class MaintenanceMiddleware
                 return doc.RootElement.GetProperty("isMaintenanceMode").GetBoolean();
             });
 
-            if (isMaintenanceMode)
-            {
-                context.Response.StatusCode = 503;
-                context.Response.Headers.Append("Retry-After", "3600");
-                context.Response.Redirect("/Mytheme/admin/maintenance.html");
-                return;
-            }
+           
         }
-        catch (Exception)
+        catch 
+        { 
+            isMaintenanceMode = false; 
+        } // Hata olursa site açık varsay
+
+
+        if (isMaintenanceMode)
         {
-
-            // API erişilemezse bakım modunu false kabul et, siteyi çalışır tut
+            context.Response.Redirect("/maintenance");
+            return; // Pipeline'ı kes
         }
-
         await _next(context);
 
 
