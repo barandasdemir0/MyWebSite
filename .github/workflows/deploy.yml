@@ -8,15 +8,15 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # 1. ADIM: Şifreleri appsettings.Production.json içine yerleştiriyoruz
+      # 1. ADIM: Şifreleri yerleştirme
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
           files: |
-            ./Backend/WebApiLayer/appsettings.Production.json
-            ./Frontend/WebUILayer/appsettings.Production.json
+            **/WebApiLayer/appsettings.Production.json
+            **/WebUILayer/appsettings.Production.json
         env:
           ConnectionStrings.SqlServer: "Server=.\\MSSQLSERVER2022;Database=barandb_api;User ID=baran_user;Password=${{ secrets.MSSQL_PASSWORD }};TrustServerCertificate=True;"
           Seed.AdminPassword: ${{ secrets.SEED_ADMIN_PASSWORD }}
@@ -25,21 +25,21 @@ jobs:
           OAuth.GitHub.ClientSecret: ${{ secrets.GITHUB_CLIENT_SECRET }}
           OAuth.LinkedIn.ClientSecret: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
 
-      # 2. ADIM: .NET Kurulumu
+      # 2. ADIM: .NET 10 Kurulumu
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       # 3. ADIM: API Projesini Derle
       - name: Publish API
         run: dotnet publish ./Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
 
-      # 4. ADIM: MVC (Frontend) Projesini Derle
+      # 4. ADIM: MVC Projesini Derle
       - name: Publish MVC
         run: dotnet publish ./Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
 
-      # 5. ADIM: API'yi Subdomain Klasörüne Gönder
+      # 5. ADIM: API Gönderimi
       - name: Deploy API via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -49,7 +49,7 @@ jobs:
           local-dir: ./publish-api/
           server-dir: /api.barandasdemir.com/
 
-      # 6. ADIM: MVC'yi Ana Site Klasörüne Gönder
+      # 6. ADIM: MVC Gönderimi
       - name: Deploy MVC via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
