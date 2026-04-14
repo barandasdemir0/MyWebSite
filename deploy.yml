@@ -1,0 +1,60 @@
+name: Deploy MyWebSite (API and MVC)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # 1. ADIM: Şifreleri appsettings.Production.json içine yerleştiriyoruz
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: |
+            ./Backend/WebApiLayer/appsettings.Production.json
+            ./Frontend/WebUILayer/appsettings.Production.json
+        env:
+          ConnectionStrings.SqlServer: "Server=.\\MSSQLSERVER2022;Database=barandb_api;User ID=baran_user;Password=${{ secrets.MSSQL_PASSWORD }};TrustServerCertificate=True;"
+          Seed.AdminPassword: ${{ secrets.SEED_ADMIN_PASSWORD }}
+          Jwt.SecretKey: ${{ secrets.JWT_SECRET_KEY }}
+          Email.Password: ${{ secrets.EMAIL_PASSWORD }}
+          OAuth.GitHub.ClientSecret: ${{ secrets.GITHUB_CLIENT_SECRET }}
+          OAuth.LinkedIn.ClientSecret: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+
+      # 2. ADIM: .NET Kurulumu
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      # 3. ADIM: API Projesini Derle
+      - name: Publish API
+        run: dotnet publish ./Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
+
+      # 4. ADIM: MVC (Frontend) Projesini Derle
+      - name: Publish MVC
+        run: dotnet publish ./Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
+
+      # 5. ADIM: API'yi Subdomain Klasörüne Gönder
+      - name: Deploy API via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./publish-api/
+          server-dir: /api.barandasdemir.com/
+
+      # 6. ADIM: MVC'yi Ana Site Klasörüne Gönder
+      - name: Deploy MVC via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./publish-mvc/
+          server-dir: /httpdocs/
