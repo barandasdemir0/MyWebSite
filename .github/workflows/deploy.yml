@@ -37,22 +37,24 @@ jobs:
           PROJECT_PATH=$(find . -name "WebUILayer.csproj" | head -n 1)
           dotnet publish "$PROJECT_PATH" -c Release -o ./publish-mvc
 
+      # 5. ADIM: API Gönderimi
       - name: Deploy API via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.MY_FTP_HOST }}
+          username: ${{ secrets.MY_FTP_USER }}
+          password: ${{ secrets.MY_FTP_PASS }}
           server-dir: /api.barandasdemir.com/
           local-dir: ./publish-api/
           protocol: ftp
 
+      # 6. ADIM: MVC Gönderimi
       - name: Deploy MVC via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.MY_FTP_HOST }}
+          username: ${{ secrets.MY_FTP_USER }}
+          password: ${{ secrets.MY_FTP_PASS }}
           server-dir: /httpdocs/
           local-dir: ./publish-mvc/
           protocol: ftp
