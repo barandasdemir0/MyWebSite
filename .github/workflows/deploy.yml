@@ -10,13 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1. ADIM: Şifreleri yerleştirme
+      # 1. ADIM: Şifreleri yerleştirme (Yıldız ekleyerek derin aramaya geçtik)
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
           files: |
-            **/WebApiLayer/appsettings.Production.json
-            **/WebUILayer/appsettings.Production.json
+            **/appsettings.Production.json
         env:
           ConnectionStrings.SqlServer: "Server=.\\MSSQLSERVER2022;Database=barandb_api;User ID=baran_user;Password=${{ secrets.MSSQL_PASSWORD }};TrustServerCertificate=True;"
           Seed.AdminPassword: ${{ secrets.SEED_ADMIN_PASSWORD }}
@@ -31,13 +30,13 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # 3. ADIM: API Projesini Derle
+      # 3. ADIM: API Projesini Derle (Yolu yıldızlı yaptık)
       - name: Publish API
-        run: dotnet publish ./Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
+        run: dotnet publish **/WebApiLayer.csproj -c Release -o ./publish-api
 
-      # 4. ADIM: MVC Projesini Derle
+      # 4. ADIM: MVC Projesini Derle (Yolu yıldızlı yaptık)
       - name: Publish MVC
-        run: dotnet publish ./Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
+        run: dotnet publish **/WebUILayer.csproj -c Release -o ./publish-mvc
 
       # 5. ADIM: API Gönderimi
       - name: Deploy API via FTP
