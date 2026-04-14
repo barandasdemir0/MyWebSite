@@ -10,7 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1. ADIM: Şifreleri appsettings içine basıyoruz
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
@@ -23,25 +22,21 @@ jobs:
           OAuth.GitHub.ClientSecret: ${{ secrets.GITHUB_CLIENT_SECRET }}
           OAuth.LinkedIn.ClientSecret: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
 
-      # 2. ADIM: .NET 10 Ortamı
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
-      # 3. ADIM: API Derleme
       - name: Publish API
         run: |
           PROJECT_PATH=$(find . -name "WebApiLayer.csproj" | head -n 1)
           dotnet publish "$PROJECT_PATH" -c Release -o ./publish-api
 
-      # 4. ADIM: MVC Derleme
       - name: Publish MVC
         run: |
           PROJECT_PATH=$(find . -name "WebUILayer.csproj" | head -n 1)
           dotnet publish "$PROJECT_PATH" -c Release -o ./publish-mvc
 
-      # 5. ADIM: API FTP Transfer (Hizalamaya dikkat!)
       - name: Deploy API via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -52,7 +47,6 @@ jobs:
           local-dir: ./publish-api/
           protocol: ftp
 
-      # 6. ADIM: MVC FTP Transfer
       - name: Deploy MVC via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
