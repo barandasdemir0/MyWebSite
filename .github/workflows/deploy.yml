@@ -42,7 +42,7 @@ jobs:
           dotnet publish "$PROJECT_PATH" -c Release -o ./publish-mvc
 
       # 5. ADIM: API Gönderimi
-      - name: Deploy API via FTP
+      - name: Deploy API
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -52,11 +52,11 @@ jobs:
           server-dir: /api.barandasdemir.com/
 
       # 6. ADIM: MVC Gönderimi
-      - name: Deploy MVC via FTP
+      - name: Deploy MVC
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./publish-mvc/
-          server-dir: /httpdocs/ 
+          server-dir: /httpdocs/
