@@ -15,8 +15,8 @@ jobs:
         uses: microsoft/variable-substitution@v1
         with:
           files: |
-            Backend/WebApiLayer/appsettings.Production.json
-            Frontend/WebUILayer/appsettings.Production.json
+            **/WebApiLayer/appsettings.Production.json
+            **/WebUILayer/appsettings.Production.json
         env:
           ConnectionStrings.SqlServer: "Server=.\\MSSQLSERVER2022;Database=barandb_api;User ID=baran_user;Password=${{ secrets.MSSQL_PASSWORD }};TrustServerCertificate=True;"
           Seed.AdminPassword: ${{ secrets.SEED_ADMIN_PASSWORD }}
