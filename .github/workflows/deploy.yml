@@ -31,11 +31,13 @@ jobs:
 
       # 3. ADIM: API Projesini Derle
       - name: Publish API
-        run: dotnet publish MyWebSite/Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
+        run: dotnet publish Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ../../publish-api
+        working-directory: MyWebSite
 
       # 4. ADIM: MVC Projesini Derle
       - name: Publish MVC
-        run: dotnet publish MyWebSite/Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
+        run: dotnet publish Frontend/WebUILayer/WebUILayer.csproj -c Release -o ../../publish-mvc
+        working-directory: MyWebSite
 
       # 5. ADIM: API Gönderimi
       - name: Deploy API via FTP
