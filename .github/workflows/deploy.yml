@@ -105,7 +105,7 @@ jobs:
       - name: MVC - Maintenance ON
         run: |
           curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
-      # 12. API deploy
+            # 12. API deploy
       - name: API - Deploy
         env:
           FTP_HOST: ${{ secrets.MY_FTP_HOST }}
@@ -118,7 +118,7 @@ jobs:
             set net:timeout 60
             set net:max-retries 5
             set net:reconnect-interval-base 5
-            mirror --reverse --delete --verbose ./publish-api/ /api.barandasdemir.com/
+            mirror --reverse --delete --no-perms --verbose ./publish-api/ /api.barandasdemir.com/
             quit
           EOF
       # 13. MVC deploy
@@ -134,7 +134,7 @@ jobs:
             set net:timeout 60
             set net:max-retries 5
             set net:reconnect-interval-base 5
-            mirror --reverse --delete --verbose ./publish-mvc/ /httpdocs/
+            mirror --reverse --delete --no-perms --verbose ./publish-mvc/ /httpdocs/
             quit
           EOF
       # 14. API bakimi kapat
