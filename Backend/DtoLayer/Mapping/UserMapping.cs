@@ -1,5 +1,7 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.AuthDtos;
+using DtoLayer.AuthDtos.Requests;
+using DtoLayer.AuthDtos.Responses;
 using Mapster;
 
 namespace DtoLayer.Mapping;
