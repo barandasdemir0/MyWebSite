@@ -102,26 +102,28 @@ jobs:
       - name: MVC - Maintenance ON
         run: |
           curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
-      # 11. API deploy (sadece değişen dosyalar)
+       # 11. API deploy
       - name: API - Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.MY_FTP_HOST }}
-          username: ${{ secrets.MY_FTP_USER }}
-          password: ${{ secrets.MY_FTP_PASS }}
-          server-dir: /api.barandasdemir.com/
-          local-dir: ./publish-api/
-          protocol: ftp
-      # 12. MVC deploy (sadece değişen dosyalar)
+        run: |
+          lftp -c "
+            set ftp:ssl-allow yes;
+            set ssl:verify-certificate no;
+            set net:timeout 60;
+            set net:max-retries 5;
+            set net:reconnect-interval-base 5;
+            open -u ${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }} ${{ secrets.MY_FTP_HOST }};
+            mirror --reverse --delete --verbose ./publish-api/ /api.barandasdemir.com/;"
+      # 12. MVC deploy
       - name: MVC - Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.MY_FTP_HOST }}
-          username: ${{ secrets.MY_FTP_USER }}
-          password: ${{ secrets.MY_FTP_PASS }}
-          server-dir: /httpdocs/
-          local-dir: ./publish-mvc/
-          protocol: ftp
+        run: |
+          lftp -c "
+            set ftp:ssl-allow yes;
+            set ssl:verify-certificate no;
+            set net:timeout 60;
+            set net:max-retries 5;
+            set net:reconnect-interval-base 5;
+            open -u ${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }} ${{ secrets.MY_FTP_HOST }};
+            mirror --reverse --delete --verbose ./publish-mvc/ /httpdocs/;"
       # 13. API bakımı kapat
       - name: API - Maintenance OFF
         continue-on-error: true
