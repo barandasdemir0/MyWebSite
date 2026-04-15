@@ -88,7 +88,7 @@ jobs:
           cat > ./maintenance-api/app_offline.htm << 'HTML'
           <!DOCTYPE html>
           <html>
-          <head><title>Bakım</title></head>
+          <head><title>Bakım</title><meta charset="utf-8"></head>
           <body style="font-family:Arial;text-align:center;padding:50px;">
             <h1>🔧 Güncelleme yapılıyor</h1>
             <p>Site birkaç dakika içinde tekrar aktif olacaktır.</p>
