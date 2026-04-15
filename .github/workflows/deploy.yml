@@ -122,14 +122,14 @@ jobs:
           server-dir: /httpdocs/
           local-dir: ./publish-mvc/
           protocol: ftp
-           # 13. API bakımı kapat
+      # 13. API bakımı kapat
       - name: API - Maintenance OFF
         continue-on-error: true
         run: |
-          curl ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "DELE app_offline.htm"
+          curl ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "-DELE app_offline.htm"
 
       # 14. MVC bakımı kapat
       - name: MVC - Maintenance OFF
         continue-on-error: true
         run: |
-          curl ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "DELE app_offline.htm"
+          curl ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "-DELE app_offline.htm"
