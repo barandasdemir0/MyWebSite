@@ -81,46 +81,28 @@ jobs:
       # 7. MVC derle
       - name: Publish MVC
         run: dotnet publish Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
-      # 8. Bakım sayfası oluştur (deploy sırasında gösterilecek)
+     # 8. Bakım sayfası oluştur
       - name: Create Maintenance Page
         run: |
-          mkdir -p ./maintenance-api
-          cat > ./maintenance-api/app_offline.htm << 'HTML'
+          cat > ./app_offline.htm << 'HTML'
           <!DOCTYPE html>
           <html>
-          <head><title>Bakım</title><meta charset="utf-8"></head>
+          <head><meta charset="utf-8"><title>Bakim</title></head>
           <body style="font-family:Arial;text-align:center;padding:50px;">
-            <h1>🔧 Güncelleme yapılıyor</h1>
-            <p>Site birkaç dakika içinde tekrar aktif olacaktır.</p>
+            <h1>Guncelleme yapiliyor</h1>
+            <p>Site birkac dakika icinde tekrar aktif olacaktir.</p>
           </body>
           </html>
           HTML
-          
-          mkdir -p ./maintenance-mvc
-          cp ./maintenance-api/app_offline.htm ./maintenance-mvc/app_offline.htm
-      # 9. API'yi bakıma al
+      # 9. API bakıma al (sadece 1 dosya yükle)
       - name: API - Maintenance ON
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.MY_FTP_HOST }}
-          username: ${{ secrets.MY_FTP_USER }}
-          password: ${{ secrets.MY_FTP_PASS }}
-          server-dir: /api.barandasdemir.com/
-          local-dir: ./maintenance-api/
-          protocol: ftp
-          dangerous-clean-slate: true
-      # 10. MVC'yi bakıma al
+        run: |
+          curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
+      # 10. MVC bakıma al (sadece 1 dosya yükle)
       - name: MVC - Maintenance ON
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.MY_FTP_HOST }}
-          username: ${{ secrets.MY_FTP_USER }}
-          password: ${{ secrets.MY_FTP_PASS }}
-          server-dir: /httpdocs/
-          local-dir: ./maintenance-mvc/
-          protocol: ftp
-          dangerous-clean-slate: true
-      # 11. API deploy (app_offline.htm publish-api'da yok → otomatik silinir → site açılır)
+        run: |
+          curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
+      # 11. API deploy (sadece değişen dosyalar)
       - name: API - Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -130,7 +112,7 @@ jobs:
           server-dir: /api.barandasdemir.com/
           local-dir: ./publish-api/
           protocol: ftp
-      # 12. MVC deploy (aynı mantık — site otomatik açılır)
+      # 12. MVC deploy (sadece değişen dosyalar)
       - name: MVC - Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -140,3 +122,11 @@ jobs:
           server-dir: /httpdocs/
           local-dir: ./publish-mvc/
           protocol: ftp
+      # 13. API bakımı kapat
+      - name: API - Maintenance OFF
+        run: |
+          curl ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "DELE app_offline.htm"
+      # 14. MVC bakımı kapat
+      - name: MVC - Maintenance OFF
+        run: |
+          curl ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "DELE app_offline.htm"
