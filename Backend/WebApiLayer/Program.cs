@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Container;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using WebApiLayer.Middleware;
 using WebApiLayer.Seed;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,7 +57,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DataAccessLayer.Context.AppDbContext>();
+    db.Database.Migrate();
+}
 await app.SeedDatabaseAsync();
 
 
