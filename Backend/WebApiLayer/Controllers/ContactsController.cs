@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.ContactDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
@@ -16,7 +17,7 @@ public sealed class ContactsController : CrudController<ContactDto,CreateContact
         _contactService = contactService;
     }
 
-   
+    [AllowAnonymous]
     [HttpGet("single")] //upsert için işlemler
     public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
     {
@@ -28,6 +29,7 @@ public sealed class ContactsController : CrudController<ContactDto,CreateContact
         return Ok(values);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateContactDto updateContactDto, CancellationToken cancellation)
     {

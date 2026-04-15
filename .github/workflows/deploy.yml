@@ -1,43 +1,127 @@
-name: Deploy MyWebSite (API and MVC)
-
+name: Deploy MyWebSite (API + MVC)
 on:
   push:
-    branches: [ "main" ]
-
+    branches: [ "dev" ]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: '**/appsettings.Production.json'
-        env:
-          ConnectionStrings.SqlServer: "Server=.\\MSSQLSERVER2022;Database=barandb_api;User ID=baran_user;Password=${{ secrets.MSSQL_PASSWORD }};TrustServerCertificate=True;"
-          Seed.AdminPassword: ${{ secrets.SEED_ADMIN_PASSWORD }}
-          Jwt.SecretKey: ${{ secrets.JWT_SECRET_KEY }}
-          Email.Password: ${{ secrets.EMAIL_PASSWORD }}
-          OAuth.GitHub.ClientSecret: ${{ secrets.GITHUB_CLIENT_SECRET }}
-          OAuth.LinkedIn.ClientSecret: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
-
+      # 1. Kodu çek
+      - name: Checkout
+        uses: actions/checkout@v4
+      # 2. .NET kur
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
-
+      # 3. NuGet cache (hızlı build)
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: nuget-
+      # 4. API appsettings.Production.json oluştur
+      - name: Create API Settings
+        env:
+          DB_CONN: ${{ secrets.DB_CONNECTION_STRING }}
+          SEED_PASS: ${{ secrets.SEED_ADMIN_PASSWORD }}
+          JWT_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          JWT_ISS: ${{ secrets.JWT_ISSUER }}
+          JWT_AUD: ${{ secrets.JWT_AUDIENCE }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASSWORD }}
+          CORS: ${{ secrets.CORS_ORIGIN }}
+        run: |
+          jq -n \
+            --arg db "$DB_CONN" \
+            --arg seed "$SEED_PASS" \
+            --arg jwt "$JWT_KEY" \
+            --arg iss "$JWT_ISS" \
+            --arg aud "$JWT_AUD" \
+            --arg email "$EMAIL_PASS" \
+            --arg cors "$CORS" \
+            '{
+              Logging: { LogLevel: { Default: "Warning" } },
+              ConnectionStrings: { SqlServer: $db },
+              Seed: { AdminPassword: $seed },
+              Jwt: { SecretKey: $jwt, Issuer: $iss, Audience: $aud },
+              Email: { Password: $email },
+              Cors: { AllowedOrigins: [$cors] }
+            }' > Backend/WebApiLayer/appsettings.Production.json
+      # 5. MVC appsettings.Production.json oluştur (Client ID'ler de secret'tan geliyor)
+      - name: Create MVC Settings
+        env:
+          GH_ID: ${{ secrets.CLIENT_ID_GITHUB }}
+          GH_SECRET: ${{ secrets.CLIENT_SECRET_GITHUB }}
+          LI_ID: ${{ secrets.CLIENT_ID_LINKEDIN }}
+          LI_SECRET: ${{ secrets.CLIENT_SECRET_LINKEDIN }}
+        run: |
+          jq -n \
+            --arg ghId "$GH_ID" \
+            --arg ghSecret "$GH_SECRET" \
+            --arg liId "$LI_ID" \
+            --arg liSecret "$LI_SECRET" \
+            '{
+              Logging: { LogLevel: { Default: "Warning" } },
+              ApiSettings: { BaseUrl: "https://api.barandasdemir.com/api/" },
+              OAuth: {
+                GitHub: {
+                  ClientId: $ghId,
+                  ClientSecret: $ghSecret
+                },
+                LinkedIn: {
+                  ClientId: $liId,
+                  ClientSecret: $liSecret
+                }
+              }
+            }' > Frontend/WebUILayer/appsettings.Production.json
+      # 6. API derle
       - name: Publish API
-        run: |
-          PROJECT_PATH=$(find . -name "WebApiLayer.csproj" | head -n 1)
-          dotnet publish "$PROJECT_PATH" -c Release -o ./publish-api
-
+        run: dotnet publish Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
+      # 7. MVC derle
       - name: Publish MVC
+        run: dotnet publish Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
+      # 8. Bakım sayfası oluştur (deploy sırasında gösterilecek)
+      - name: Create Maintenance Page
         run: |
-          PROJECT_PATH=$(find . -name "WebUILayer.csproj" | head -n 1)
-          dotnet publish "$PROJECT_PATH" -c Release -o ./publish-mvc
-
-      - name: Deploy API via FTP
+          mkdir -p ./maintenance-api
+          cat > ./maintenance-api/app_offline.htm << 'HTML'
+          <!DOCTYPE html>
+          <html>
+          <head><title>Bakım</title></head>
+          <body style="font-family:Arial;text-align:center;padding:50px;">
+            <h1>🔧 Güncelleme yapılıyor</h1>
+            <p>Site birkaç dakika içinde tekrar aktif olacaktır.</p>
+          </body>
+          </html>
+          HTML
+          
+          mkdir -p ./maintenance-mvc
+          cp ./maintenance-api/app_offline.htm ./maintenance-mvc/app_offline.htm
+      # 9. API'yi bakıma al
+      - name: API - Maintenance ON
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.MY_FTP_HOST }}
+          username: ${{ secrets.MY_FTP_USER }}
+          password: ${{ secrets.MY_FTP_PASS }}
+          server-dir: /api.barandasdemir.com/
+          local-dir: ./maintenance-api/
+          protocol: ftp
+          dangerous-clean-slate: true
+      # 10. MVC'yi bakıma al
+      - name: MVC - Maintenance ON
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.MY_FTP_HOST }}
+          username: ${{ secrets.MY_FTP_USER }}
+          password: ${{ secrets.MY_FTP_PASS }}
+          server-dir: /httpdocs/
+          local-dir: ./maintenance-mvc/
+          protocol: ftp
+          dangerous-clean-slate: true
+      # 11. API deploy (app_offline.htm publish-api'da yok → otomatik silinir → site açılır)
+      - name: API - Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.MY_FTP_HOST }}
@@ -46,8 +130,8 @@ jobs:
           server-dir: /api.barandasdemir.com/
           local-dir: ./publish-api/
           protocol: ftp
-
-      - name: Deploy MVC via FTP
+      # 12. MVC deploy (aynı mantık — site otomatik açılır)
+      - name: MVC - Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.MY_FTP_HOST }}

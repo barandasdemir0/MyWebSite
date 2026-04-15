@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AuthDtos.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -27,6 +28,7 @@ public class AccountController : ControllerBase
         return Ok("Eğer bu eposta kayıtlıysa,sıfırlama bağlantısı gönderildi");
     }
 
+ 
     //2. adım: kullanıcı eposta adresine gelen kodu ve sağlayıcıyı gönderir, eğer kod geçerliyse sıfırlama token'ı döner
     [HttpPost("verify-reset-otp")]
     [EnableRateLimiting("email")]//bu endpoint'e çok fazla istek gelmesini önlemek için rate limiting uygulanır
@@ -42,7 +44,6 @@ public class AccountController : ControllerBase
         }
         return BadRequest("Geçersiz veya süresi dolmuş kod");
     }
-
 
     //3. adım: kullanıcı yeni şifresini, eposta adresini ve sıfırlama token'ını gönderir, eğer token geçerliyse şifre sıfırlanır
     [HttpPost("set-new-password")]

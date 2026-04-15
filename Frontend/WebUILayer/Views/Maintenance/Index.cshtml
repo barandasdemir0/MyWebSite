@@ -6,32 +6,64 @@
 
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-    <!-- ... Head kısımları aynı ... -->
+    <script src="js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bakımdayız - @Model.siteSettingDtos?.SiteTitle</title>
-    <!-- ... CSS linkleri ... -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/variables.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/maintenance.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/preloader.css">
 </head>
+
 <body>
-    <!-- Preloader ve dekoratif elementler aynı kalabilir -->
-    
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader-container">
+            <div class="loader-logo"><span>B</span>aran<span>.</span></div>
+            <div class="loader"></div>
+            <div class="loader-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="loader-progress"></div>
+            <div class="loader-text">Yükleniyor</div>
+        </div>
+    </div>
+    <div class="decorative-circle c1"></div>
+    <div class="decorative-circle c2"></div>
+
     <div class="container">
+        <div class="theme-actions"></div>
         <div class="badge">
             <i class="fas fa-wrench"></i>
-            @(Model.siteSettingDtos?.MaintenanceMessage ?? "Planlı bakım sürüyor")
+            Planlı bakım sürüyor
         </div>
 
         <h1>Bakımdayız</h1>
-        <p class="lead">Platformu daha güvenli hale getiriyoruz.</p>
+        <p class="lead">@(Model.siteSettingDtos?.MaintenanceMessage)</p>
 
         <div class="status-grid">
             <div class="card">
                 <span class="label">Tahmini dönüş</span>
-                <!-- Dinamik Tarih -->
-                <span class="value">
-                    @(Model.siteSettingDtos?.MaintenanceEndTime?.ToString("dd MMMM yyyy HH:mm") ?? "Yakında")
-                </span>
+                <span class="value">@Model.siteSettingDtos?.MaintenanceEndTime</span>
+                <div class="progress">
+                    <div class="progress-bar"></div>
+                </div>
             </div>
-            <!-- ... Diğer kartlar ... -->
+            <div class="card">
+                <span class="label">Durum</span>
+                <span class="pill pill-warning"><i class="fas fa-clock"></i> Çalışmalar devam ediyor</span>
+            </div>
+            <div class="card">
+                <span class="label">Ne yapabilirsiniz?</span>
+                <p class="note-text">Acil destek için aşağıdan iletişime geçin.</p>
+            </div>
         </div>
 
         <div class="contact">
@@ -41,7 +73,6 @@
                     <div class="icon"><i class="fas fa-envelope"></i></div>
                     <div>
                         <div class="contact-label">E-posta</div>
-                        <!-- Dinamik Mail -->
                         <div class="contact-value">
                             <a href="mailto:@Model.contactDtos?.Email">@Model.contactDtos?.Email</a>
                         </div>
@@ -51,19 +82,16 @@
                     <div class="icon"><i class="fas fa-phone"></i></div>
                     <div>
                         <div class="contact-label">Telefon</div>
-                        <!-- Dinamik Telefon -->
-                        <div class="contact-value">
-                            <a href="tel:@Model.contactDtos?.Phone">@Model.contactDtos?.Phone</a>
-                        </div>
+                        <div class="contact-value"><a href="tel:@Model.contactDtos?.Phone">@Model.contactDtos?.Phone</a></div>
                     </div>
                 </div>
                 <div class="contact-item">
-                    <div class="icon"><i class="fas fa-phone"></i></div>
+                    <div class="icon"><i class="fab fa-whatsapp"></i></div>
                     <div>
-                        <div class="contact-label">Telefon</div>
-                        <!-- Dinamik Telefon -->
+                        <div class="contact-label">WhatsApp</div>
                         <div class="contact-value">
-                            <a href="tel:https://wa.me/@Model.contactDtos?.Phone">@Model.contactDtos?.Phone</a>
+                            <a href="https://wa.me/@Model.contactDtos?.Phone" target="_blank"
+                               rel="noopener">Canlı destek hattı</a>
                         </div>
                     </div>
                 </div>
@@ -80,5 +108,12 @@
             </div>
         </div>
     </div>
+
+
+    <script src="/Mytheme/admin/js/modules/notifications.js"></script>
+    <script src="/Mytheme/admin/js/modules/auth.js"></script>
+    <script src="/Mytheme/admin/js/modules/ui.js"></script>
+    <script src="/Mytheme/admin/js/admin.js"></script>
 </body>
+
 </html>

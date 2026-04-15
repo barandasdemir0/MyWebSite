@@ -43,10 +43,14 @@ else
     app.UseHsts();
 }
 
+app.MapOpenApi();
+app.MapScalarApiReference();
+
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseRateLimiter();
 app.UseMiddleware<ApiExceptionMiddleware>();
+app.HealthCheckEndpoints();
 app.UseAuthentication();
 app.UseAuthorization();
 

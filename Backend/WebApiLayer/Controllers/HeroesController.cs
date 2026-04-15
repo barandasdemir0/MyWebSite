@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.HeroDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
@@ -14,7 +15,7 @@ public sealed class HeroesController : CrudController<HeroDto,CreateHeroDto,Upda
     {
         _heroService = heroService;
     }
-
+    [AllowAnonymous]
     [HttpGet("single")] //upsert için işlemler
     public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
     {
@@ -26,7 +27,7 @@ public sealed class HeroesController : CrudController<HeroDto,CreateHeroDto,Upda
         return Ok(values);
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateHeroDto update, CancellationToken cancellationToken)
     {

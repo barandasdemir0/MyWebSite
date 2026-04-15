@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.BlogPostDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
+
 
 [Route("api/[controller]")]
 public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPostDto,UpdateBlogPostDto>
@@ -16,6 +18,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         _blogPostService = blogPostService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("admin-all")] // hepsini getirme 
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
     {
@@ -23,6 +26,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("user-all")] // hepsini getirme 
     public async Task<IActionResult> GetAllUser([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
     {
@@ -30,6 +34,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("slug/{slug}")] //burası kullanıcıya gösterilecek yazan yazı
     public async Task<IActionResult> GetDetail(string slug, CancellationToken cancellationToken)
     {
@@ -41,6 +46,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         return Ok(query);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken )
     {
@@ -52,7 +58,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         return Ok(entity);
     }
 
-
+    [AllowAnonymous]
     [HttpGet("latest/{count}")]
     public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
     {

@@ -1,11 +1,13 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.NotificationDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
+[Authorize(Roles = "Admin")]
 
 public class NotificationsController: CrudController<NotificationDto,CreateNotificationDto,UpdateNotificationDto>
 {
@@ -16,7 +18,9 @@ public class NotificationsController: CrudController<NotificationDto,CreateNotif
         _notificationService = notificationService;
     }
 
-    [HttpGet]
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin-all")] 
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
         var values = await _notificationService.GetAllAdminAsync(paginationQuery,cancellationToken);
@@ -24,6 +28,7 @@ public class NotificationsController: CrudController<NotificationDto,CreateNotif
     }
 
     [HttpPut("read/{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ReadMessage(Guid id,CancellationToken cancellationToken)
     {
         var values = await _notificationService.ReadByIdAsync(id, cancellationToken);
@@ -33,6 +38,8 @@ public class NotificationsController: CrudController<NotificationDto,CreateNotif
         }
         return Ok(values);
     }
+
+    [Authorize(Roles = "Admin")]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id,CancellationToken cancellationToken)
     {

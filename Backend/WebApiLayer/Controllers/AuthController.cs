@@ -20,6 +20,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto,CancellationToken cancellationToken)
     {

@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.ProjectDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 
@@ -18,12 +19,14 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
 
     
     [HttpGet("admin-all")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
     {
         var result = await _projectService.GetAllAdminAsync(query, cancellationToken);
         return Ok(result);
     }
     [HttpGet("user-all")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAllUser([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
     {
         var result = await _projectService.GetAllUserAsync(query, cancellationToken);
@@ -31,6 +34,7 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
     }
 
     [HttpGet("slug/{slug}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetDetails(string slug, CancellationToken cancellationToken)
     {
         var query = await _projectService.GetBySlugAsync(slug, cancellationToken);
@@ -41,7 +45,7 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
         return Ok(query);
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
@@ -54,6 +58,7 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
     }
 
     [HttpGet("latest/{count}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
     {
         var values = await _projectService.GetLatestAsync(count,cancellationToken);

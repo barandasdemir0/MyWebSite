@@ -1,12 +1,13 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.SiteSettingDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-
+[Authorize(Roles = "Admin")]
 public class SiteSettingsController:CrudController<SiteSettingDto,CreateSiteSettingDto,UpdateSiteSettingDto>
 {
     private readonly ISiteSettingsService _siteSettingsService;
@@ -15,7 +16,7 @@ public class SiteSettingsController:CrudController<SiteSettingDto,CreateSiteSett
     {
         _siteSettingsService = siteSettingsService;
     }
-
+    [AllowAnonymous]
     [HttpGet("single")] //upsert için işlemler
     public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
     {
@@ -26,7 +27,7 @@ public class SiteSettingsController:CrudController<SiteSettingDto,CreateSiteSett
         }
         return Ok(values);
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateSiteSettingDto update, CancellationToken cancellationToken)
     {

@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AboutDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
+[Authorize(Roles = "Admin")]
 [Route("api/[controller]")]
 public sealed class AboutsController : CrudController<AboutDto, CreateAboutDto, UpdateAboutDto>
 {
@@ -14,7 +16,7 @@ public sealed class AboutsController : CrudController<AboutDto, CreateAboutDto, 
         _aboutService = aboutService;
     }
 
-
+    [AllowAnonymous]
     [HttpGet("single")] //upsert için işlemler
     public async Task<IActionResult> GetSingle(CancellationToken cancellationToken)
     {
@@ -25,7 +27,7 @@ public sealed class AboutsController : CrudController<AboutDto, CreateAboutDto, 
         }
         return Ok(values);
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateAboutDto updateAboutDto, CancellationToken cancellation)
     {

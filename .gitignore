@@ -10,6 +10,11 @@
 *.userosscache
 *.sln.docstates
 
+# AppSettings - hassas bilgileri Git'e gönderme
+appsettings.Development.json
+appsettings.Production.json
+
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

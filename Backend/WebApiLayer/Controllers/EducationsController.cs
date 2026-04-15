@@ -1,6 +1,7 @@
 ﻿
 using BusinessLayer.Abstract;
 using DtoLayer.EducationDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
@@ -16,7 +17,7 @@ public sealed class EducationsController : CrudController<EducationDto,CreateEdu
         _educationService = educationService;
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpGet("admin-all")]
     public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
     {
@@ -24,6 +25,7 @@ public sealed class EducationsController : CrudController<EducationDto,CreateEdu
         return Ok(query);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {

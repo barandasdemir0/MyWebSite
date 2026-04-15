@@ -36,6 +36,7 @@ public abstract class CrudController<TListDto,TCreateDto,TUpdateDto> : Controlle
         return Ok(query);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public virtual async Task<IActionResult> Create([FromBody] TCreateDto createDto , CancellationToken cancellationToken)
     {
@@ -43,6 +44,7 @@ public abstract class CrudController<TListDto,TCreateDto,TUpdateDto> : Controlle
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public virtual async Task<IActionResult> Update(Guid id, [FromBody] TUpdateDto updateDto,CancellationToken cancellationToken)
     {
@@ -54,7 +56,7 @@ public abstract class CrudController<TListDto,TCreateDto,TUpdateDto> : Controlle
         return Ok(result);
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public virtual async Task<IActionResult> Delete(Guid id,CancellationToken cancellationToken)
     {

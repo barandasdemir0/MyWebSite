@@ -8,6 +8,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize] 
 public class UserProfileController : ControllerBase
 {
     private readonly IUserProfileService _userProfileService;
@@ -22,7 +23,7 @@ public class UserProfileController : ControllerBase
    
 
     [HttpGet("profile")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -31,7 +32,7 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpPost("change-password")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto, CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -44,7 +45,7 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpPost("toggle-2fa")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Toggle2FA([FromBody] Toggle2FADto toggle2FADto, CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;

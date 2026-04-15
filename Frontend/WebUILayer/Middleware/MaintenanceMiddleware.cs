@@ -45,7 +45,7 @@ public class MaintenanceMiddleware
         {
              isMaintenanceMode = await _cache.GetOrCreateAsync("IsMaintenanceMode", async entry =>
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
 
 
                 var client = _httpClientFactory.CreateClient();
@@ -55,15 +55,26 @@ public class MaintenanceMiddleware
                     return false;
                 var json = await response.Content.ReadAsStringAsync();
                 var doc = JsonDocument.Parse(json);
- 
-               
-                return doc.RootElement.GetProperty("isMaintenanceMode").GetBoolean();
+
+
+                if (doc.RootElement.TryGetProperty("isMaintenanceMode", out var prop))
+                {
+                    return prop.GetBoolean();
+                }
+
+
+                if (doc.RootElement.TryGetProperty("IsMaintenanceMode",out prop))
+                {
+                    return prop.GetBoolean();
+                }
+                return false;
             });
 
            
         }
-        catch 
-        { 
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Maintenance Check Hatası : {ex.Message}");
             isMaintenanceMode = false; 
         } // Hata olursa site açık varsay
 

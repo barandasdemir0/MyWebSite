@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.CertificateDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
@@ -15,8 +16,8 @@ public sealed class CertificatesController:CrudController<CertificateDto,CreateC
         _certificateService = certificateService;
     }
 
-   
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("admin-all")]
     public async Task<IActionResult> GetAllAdmin( CancellationToken cancellationToken)
     {
@@ -24,7 +25,7 @@ public sealed class CertificatesController:CrudController<CertificateDto,CreateC
         return Ok(values);
     }
 
-
+    [Authorize(Roles = "Admin")]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
