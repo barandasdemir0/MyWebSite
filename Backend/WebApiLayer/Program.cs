@@ -57,11 +57,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<DataAccessLayer.Context.AppDbContext>();
-    db.Database.Migrate();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<DataAccessLayer.Context.AppDbContext>();
+//    db.Database.Migrate();
+//}
 await app.SeedDatabaseAsync();
 
 
