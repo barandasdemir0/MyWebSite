@@ -48,7 +48,7 @@ jobs:
               Email: { Password: $email },
               Cors: { AllowedOrigins: [$cors] }
             }' > Backend/WebApiLayer/appsettings.Production.json
-      # 5. MVC appsettings.Production.json oluştur (Client ID'ler de secret'tan geliyor)
+      # 5. MVC appsettings.Production.json oluştur
       - name: Create MVC Settings
         env:
           GH_ID: ${{ secrets.CLIENT_ID_GITHUB }}
@@ -81,7 +81,10 @@ jobs:
       # 7. MVC derle
       - name: Publish MVC
         run: dotnet publish Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
-     # 8. Bakım sayfası oluştur
+      # 8. lftp kur
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+      # 9. Bakim sayfasi olustur
       - name: Create Maintenance Page
         run: |
           cat > ./app_offline.htm << 'HTML'
@@ -94,15 +97,15 @@ jobs:
           </body>
           </html>
           HTML
-      # 9. API bakıma al (sadece 1 dosya yükle)
+      # 10. API bakima al
       - name: API - Maintenance ON
         run: |
           curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
-      # 10. MVC bakıma al (sadece 1 dosya yükle)
+      # 11. MVC bakima al
       - name: MVC - Maintenance ON
         run: |
           curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
-       # 11. API deploy
+      # 12. API deploy
       - name: API - Deploy
         run: |
           lftp -c "
@@ -112,8 +115,9 @@ jobs:
             set net:max-retries 5;
             set net:reconnect-interval-base 5;
             open -u ${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }} ${{ secrets.MY_FTP_HOST }};
-            mirror --reverse --delete --verbose ./publish-api/ /api.barandasdemir.com/;"
-      # 12. MVC deploy
+            mirror --reverse --delete --verbose ./publish-api/ /api.barandasdemir.com/;
+          "
+      # 13. MVC deploy
       - name: MVC - Deploy
         run: |
           lftp -c "
@@ -123,14 +127,14 @@ jobs:
             set net:max-retries 5;
             set net:reconnect-interval-base 5;
             open -u ${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }} ${{ secrets.MY_FTP_HOST }};
-            mirror --reverse --delete --verbose ./publish-mvc/ /httpdocs/;"
-      # 13. API bakımı kapat
+            mirror --reverse --delete --verbose ./publish-mvc/ /httpdocs/;
+          "
+      # 14. API bakimi kapat
       - name: API - Maintenance OFF
         continue-on-error: true
         run: |
           curl ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "-DELE app_offline.htm"
-
-      # 14. MVC bakımı kapat
+      # 15. MVC bakimi kapat
       - name: MVC - Maintenance OFF
         continue-on-error: true
         run: |
