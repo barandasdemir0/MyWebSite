@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.GuestBookDtos;
 using DtoLayer.MessageDtos;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
     {
         _guestBookService = guestBookService;
     }
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("admin-all")]
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery pagination, CancellationToken cancellationToken)
     {
@@ -33,14 +34,14 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
         return Ok(query);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
 
     [HttpPut("{id}")] //Güncelleme Fonksiyonu bulunmamaktadır ziyaretçi mesajları güncellenemez
     public override async Task<IActionResult> Update(Guid id, [FromBody] UpdateGuestBookDto updateGuestBookDto, CancellationToken cancellationToken)
     {
         return Ok("MESAJLAR GÜNCELLENEMEZ");
     }
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {

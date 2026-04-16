@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.HeroDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ public sealed class HeroesController : CrudController<HeroDto,CreateHeroDto,Upda
         return Ok(values);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateHeroDto update, CancellationToken cancellationToken)
     {

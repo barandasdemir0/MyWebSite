@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.AuthDtos.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ public class UserProfileController : ControllerBase
    
 
     [HttpGet("profile")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -32,7 +33,7 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpPost("change-password")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto, CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -45,7 +46,7 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpPost("toggle-2fa")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> Toggle2FA([FromBody] Toggle2FADto toggle2FADto, CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;

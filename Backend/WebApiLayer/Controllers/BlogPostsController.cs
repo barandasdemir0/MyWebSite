@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.BlogPostDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         _blogPostService = blogPostService;
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("admin-all")] // hepsini getirme 
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
     {
@@ -46,7 +47,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
         return Ok(query);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken )
     {

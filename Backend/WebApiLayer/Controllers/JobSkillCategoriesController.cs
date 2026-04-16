@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.JobSkillCategoryDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-public class JobSkillCategoriesController : CrudController<JobSkillCategoryDto,CreateJobSkillCategoryDto,UpdateJobSkillCategoryDto>
+public class JobSkillCategoriesController : CrudController<JobSkillCategoryDto, CreateJobSkillCategoryDto, UpdateJobSkillCategoryDto>
 {
     private readonly IJobSkillCategoryService _jobSkillCategoryService;
 
@@ -15,7 +16,7 @@ public class JobSkillCategoriesController : CrudController<JobSkillCategoryDto,C
         _jobSkillCategoryService = jobSkillCategoryService;
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("admin-all")]
     public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
     {
@@ -24,7 +25,7 @@ public class JobSkillCategoriesController : CrudController<JobSkillCategoryDto,C
     }
 
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {
