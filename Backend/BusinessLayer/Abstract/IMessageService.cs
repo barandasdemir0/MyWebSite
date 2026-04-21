@@ -10,15 +10,15 @@ public interface IMessageService : IGenericService<Message, MessageDto, CreateMe
     Task<MessageDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default);
     //Task<List<MessageListDto>> GetAllAdminAsync(CancellationToken cancellationToken = default);
 
-    Task<PagedResult<MessageListDto>> GetAllAdmin(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
+    Task<PagedResult<MessageDto>> GetAllAdmin(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
 
 
     // ── YENİ: Listeleme ──
-    Task<PagedResult<MessageListDto>> GetByFolderAsync(MessageFolder folder, PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
+    Task<PagedResult<MessageDto>> GetByFolderAsync(MessageFolder folder, PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
 
-    Task<PagedResult<MessageListDto>> GetStarredAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
+    Task<PagedResult<MessageDto>> GetStarredAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
 
-    Task<PagedResult<MessageListDto>> GetReadAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
+    Task<PagedResult<MessageDto>> GetReadAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
 
     // ── YENİ: Sidebar badge sayıları ──
 
@@ -30,7 +30,7 @@ public interface IMessageService : IGenericService<Message, MessageDto, CreateMe
     Task<bool> ToggleStarAsync(Guid guid, CancellationToken cancellationToken = default);
    
     // ── YENİ: Restore ──
-    Task<MessageListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+    Task<MessageDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
 
 
 

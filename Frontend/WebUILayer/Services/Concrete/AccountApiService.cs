@@ -16,13 +16,13 @@ public class AccountApiService : IAccountApiService
 
     public async Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
     {
-        await _httpClient.PostAsJsonAsync("auth/forgot-password", forgotPasswordDto); // API'ye forgot password isteği gönderir. Bu istek, kullanıcının email adresine OTP gönderilmesini sağlar.
+        await _httpClient.PostAsJsonAsync("account/forgot-password", forgotPasswordDto); // API'ye forgot password isteği gönderir. Bu istek, kullanıcının email adresine OTP gönderilmesini sağlar.
     }
 
     public async Task<string?> VerifyResetOtpAsync(VerifyResetOtpDto verifyResetOtpDto)
     {
         // API'ye verify reset OTP isteği gönderir. Bu istek, kullanıcının girdiği OTP'nin doğruluğunu kontrol eder. Eğer OTP doğruysa, API bir reset token döner. Bu token, kullanıcının yeni şifre belirlemesi için gereklidir.
-        var result = await _httpClient.PostAsJsonAsync("auth/verify-reset-otp", verifyResetOtpDto);
+        var result = await _httpClient.PostAsJsonAsync("account/verify-reset-otp", verifyResetOtpDto);
         if (!result.IsSuccessStatusCode)
         {
             return null;
@@ -35,7 +35,7 @@ public class AccountApiService : IAccountApiService
 
     public async Task<bool> SetNewPasswordAsync(SetNewPasswordDto setNewPasswordDto)
     {
-        var result = await _httpClient.PostAsJsonAsync("auth/set-new-password", setNewPasswordDto);
+        var result = await _httpClient.PostAsJsonAsync("account/set-new-password", setNewPasswordDto);
         return result.IsSuccessStatusCode; // API'ye set new password isteği gönderir. Bu istek, kullanıcının yeni şifresini belirlemesini sağlar. Eğer istek başarılıysa, true döner; aksi takdirde false döner.
     }
 }

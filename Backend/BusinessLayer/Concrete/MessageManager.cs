@@ -35,50 +35,58 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
             {
                 // Ziyaretçi mesaj gönderdi → Admin'e bildirim maili
                 var emailBody = $@"
-                    <h3>Yeni Mesaj Bildirimi</h3>
+                    <h3>Sitenize Gelen Yeni Mesaj Bildirimi</h3>
                     <p><strong>Gönderen:</strong> {dto.SenderName} ({dto.SenderEmail})</p>
                     <p><strong>Konu:</strong> {dto.Subject}</p>
                     <hr/>
                     <p>{dto.Body}</p>
                     <hr/>
                     <p><em>Bu mesaj barandasdemir.com iletişim formundan gönderilmiştir.</em></p>";
-
-                await _emailService.SendAsync("barandasdemir.bd@gmail.com", $"Yeni Mesaj : {dto.Subject} ", emailBody, cancellationToken);
+                await _emailService.SendAsync(
+                    "barandasdemir.bd@gmail.com",
+                    $"Yeni Mesaj: {dto.Subject}",
+                    emailBody,
+                    cancellationToken);
             }
 
             else if (dto.Folder == MessageFolder.Sent)
             {
+                // Admin mesaj gönderdi → Alıcıya gerçek e-posta
                 var emailBody = $@"
                     <h3>{dto.Subject}</h3>
                     <p>{dto.Body}</p>
                     <hr/>
                     <p><em>Bu mesaj Baran Dasdemir tarafından gönderilmiştir.</em></p>
-                    <p><em>Yanıtlamak için:barandasdemir.bd@gmail.com</em></p>";
-
-                await _emailService.SendAsync(dto.ReceiverEmail, dto.Subject, emailBody, cancellationToken);
+                    <p><em>Yanıtlamak için: barandasdemir.com iletişim sayfasından veya barandasdemir.bd@gmail.com mailiden ulaşabilirsiniz.</em></p>";
+                await _emailService.SendAsync(
+                    dto.ReceiverEmail,
+                    dto.Subject,
+                    emailBody,
+                    cancellationToken
+                );
             }
             // Draft ise e-posta gönderilmez — sadece veritabanına kayıt
         }
-        catch
+        catch(Exception ex)
         {
-            // E-posta gönderilemese bile mesaj veritabanına kayıt edildi
-            // Loglama yapılabilir ama mesaj kaybedilmez
+            Console.WriteLine("MAIL GÖNDERME HATASI: " + ex.Message);
+           
         }
         return _mapper.Map<MessageDto>(entity);
 
     }
 
-    public async Task<PagedResult<MessageListDto>> GetAllAdmin(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MessageDto>> GetAllAdmin(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _messageDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
-        return _mapper.Map<List<MessageListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
+        return _mapper.Map<List<MessageDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
 
-    public async Task<PagedResult<MessageListDto>> GetByFolderAsync(MessageFolder folder, PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MessageDto>> GetByFolderAsync(MessageFolder folder, PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items,totalCount) = await _messageDal.GetByFolderPagesAsync(folder, paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
 
-        return _mapper.Map<List<MessageListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
+        return _mapper.Map<List<MessageDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
 
     public async Task<MessageDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
@@ -96,18 +104,18 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
         return await _messageDal.GetFolderCountAsync(cancellationToken);
     }
 
-    public async Task<PagedResult<MessageListDto>> GetReadAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MessageDto>> GetReadAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _messageDal.GetReadPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
 
-        return _mapper.Map<List<MessageListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
+        return _mapper.Map<List<MessageDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
 
-    public async Task<PagedResult<MessageListDto>> GetStarredAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MessageDto>> GetStarredAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _messageDal.GetStarredPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
 
-        return _mapper.Map<List<MessageListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
+        return _mapper.Map<List<MessageDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
 
     public async Task<bool> MarkAsReadAsync(Guid guid, CancellationToken cancellationToken = default)
@@ -125,7 +133,7 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
 
  
 
-    public async Task<MessageListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
+    public async Task<MessageDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _messageDal.RestoreDeletedByIdAsync(guid, cancellationToken);
         if (entity == null)
@@ -136,7 +144,7 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
         entity.DeletedAt = null;
         await _messageDal.UpdateAsync(entity, cancellationToken);
         await _messageDal.SaveAsync(cancellationToken);
-        return _mapper.Map<MessageListDto>(entity);
+        return _mapper.Map<MessageDto>(entity);
     }
 
     public async Task<bool> ToggleStarAsync(Guid guid, CancellationToken cancellationToken = default)

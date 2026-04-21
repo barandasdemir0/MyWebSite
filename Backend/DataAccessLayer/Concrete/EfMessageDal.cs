@@ -70,7 +70,7 @@ public class EfMessageDal : GenericRepository<Message>, IMessageDal
 
         counts[MessageFolder.Draft.ToString()] = await _context.Messages.AsNoTracking().Where(x => x.Folder == MessageFolder.Draft).CountAsync(cancellationToken);
 
-        counts[MessageFolder.Trash.ToString()] = await _context.Messages.AsNoTracking().Where(x => x.IsDeleted == true).CountAsync(cancellationToken);
+        counts[MessageFolder.Trash.ToString()] = await _context.Messages.IgnoreQueryFilters().AsNoTracking().Where(x => x.IsDeleted == true).CountAsync(cancellationToken);
 
 
         return counts;
