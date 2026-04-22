@@ -34,15 +34,15 @@ public class EmailManager : IEmailService
 
         using var smtp = new SmtpClient(); // SMTP istemcisi oluştur
         await smtp.ConnectAsync( // SMTP sunucusuna bağlan
-            _configuration["Email:Host"], // SMTP sunucusunun adresini yapılandırmadan al
+            _configuration["Email:Host"]!, // SMTP sunucusunun adresini yapılandırmadan al
             int.Parse(_configuration["Email:Port"]!), // SMTP sunucusunun portunu yapılandırmadan al
             SecureSocketOptions.StartTls,// Güvenli bağlantı seçeneklerini belirle
             cancellationToken // Bağlantı sırasında iptal işlemi için kullanılan token
             );
 
         await smtp.AuthenticateAsync(
-            _configuration["Email:Username"],// SMTP sunucusu için kullanıcı adını yapılandırmadan al
-            _configuration["Email:Password"], // SMTP sunucusu için şifreyi yapılandırmadan al
+            _configuration["Email:Username"]!,// SMTP sunucusu için kullanıcı adını yapılandırmadan al
+            _configuration["Email:Password"]!, // SMTP sunucusu için şifreyi yapılandırmadan al
             cancellationToken
             );
 
