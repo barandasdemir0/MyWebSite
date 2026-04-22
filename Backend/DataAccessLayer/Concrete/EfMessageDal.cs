@@ -43,7 +43,8 @@ public class EfMessageDal : GenericRepository<Message>, IMessageDal
         var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query
-            .OrderByDescending(x => x.CreatedAt)
+            .OrderBy(x=>x.IsRead) // Önce okunmamış mesajları sırala
+            .ThenByDescending(x=>x.CreatedAt)// Sonra oluşturulma tarihine göre sırala
             .Skip((page - 1) * size)
             .Take(size)
             .ToListAsync(cancellationToken);

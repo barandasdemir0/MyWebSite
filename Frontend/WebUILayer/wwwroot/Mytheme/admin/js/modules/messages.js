@@ -62,4 +62,29 @@ document.addEventListener('DOMContentLoaded', function () {
             r.style.display = (a.indexOf(t) > -1 || b.indexOf(t) > -1) ? '' : 'none';
         });
     });
+
+
+    // Draft düzenleme — compose modal'ı draft verisi ile doldur
+    document.querySelectorAll('[data-action="editDraft"]').forEach(function (b) {
+        b.addEventListener('click', function () {
+            // Eğer detail modal açıksa kapat
+            var openModal = this.closest('.admin-modal-overlay');
+            if (openModal) openModal.classList.remove('active');
+
+            // Compose form alanlarını doldur
+            var form = document.getElementById('composeForm');
+            if (!form) return;
+
+            form.querySelector('input[name="ReceiverEmail"]').value = this.dataset.receiver || '';
+            form.querySelector('input[name="Subject"]').value = this.dataset.subject || '';
+            document.getElementById('draftIdInput').value = this.dataset.id || '';
+
+            var editor = document.getElementById('editorContent');
+            if (editor) editor.innerHTML = this.dataset.body || '';
+
+            // Compose modal'ı aç
+            document.getElementById('composeModal').classList.add('active');
+        });
+    });
+
 });

@@ -1,4 +1,5 @@
 ﻿using DtoLayer.MessageDtos;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Enums;
@@ -75,7 +76,7 @@ public class MessagesController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> Compose(CreateMessageDto createMessageDto,string action = "send")
+    public async Task<IActionResult> Compose(CreateMessageDto createMessageDto,string action = "send", Guid? DraftId = null)
     {
         if (!ModelState.IsValid)
         {
@@ -84,8 +85,8 @@ public class MessagesController : Controller
         }
         try
         {
-            createMessageDto.SenderName = "Baran Daşdemir";
-            createMessageDto.SenderEmail = "barandasdemir.bd@gmail.com";
+            createMessageDto.SenderName = User.GetUserName();
+            createMessageDto.SenderEmail = User.GetUserEmail();
             if (action=="draft")
             {
                 createMessageDto.Folder = MessageFolder.Draft;
@@ -99,6 +100,13 @@ public class MessagesController : Controller
                 await _messageApiService.AddAsync(createMessageDto);
                 TempData["Success"] = "Mesaj başarıyla gönderildi.";
             }
+            // Eski draft'ı sil (düzenleme + gönderme durumu)
+            if (DraftId.HasValue && DraftId.Value != Guid.Empty)
+            {
+                createMessageDto.Folder = MessageFolder.Sent;
+                await _messageApiService.AddAsync(createMessageDto);
+                await _messageApiService.DeleteAsync(DraftId.Value);
+            }
         }
         catch (Exception ex)
         {
@@ -110,44 +118,105 @@ public class MessagesController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> ToggleStar(Guid id)
+    public async Task<IActionResult> SendDraft(Guid guid)
     {
-        return await this.SafeAction(
-            action: () => _messageApiService.ToggleStarAsync(id),
-            successMessage: "Yıldız durumu güncellendi",
-            ErrorMessage: "Yıldız güncellenemedi"
-            );
-        
+        try
+        {
+            var draft = await _messageApiService.GetDetailAsync(guid);
+            if (draft==null)
+            {
+                TempData["Error"] = "Taslak bulunamadı";
+                return RedirectToAction(nameof(Index), new
+                {
+                    category = "draft"
+                });
+            }
+
+            var createDto = draft.Adapt<CreateMessageDto>();
+            createDto.SenderName = User.GetUserName();
+            createDto.SenderEmail = User.GetUserEmail();
+            createDto.Folder = MessageFolder.Sent;
+
+
+           
+       
+
+
+
+
+            await _messageApiService.AddAsync(createDto);
+            await _messageApiService.DeleteAsync(guid);
+            TempData["Success"] = "Taslak başarıyla gönderildi";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Taslak gönderilemedi";
+        }
+        return RedirectToAction(nameof(Index), new
+        {
+            category = "sent"
+        });
     }
 
+
+
+
     [HttpPost]
-    public async Task<IActionResult> MarkAsRead(Guid id)
+    public async Task<IActionResult> ToggleStar(Guid id, string category = "inbox")
     {
-        return await this.SafeAction(
-            action: () => _messageApiService.MarkAsReadAsync(id),
-            successMessage: "Mesaj okundu olarak işaretlendi",
-            ErrorMessage: "İşlem başarısız"
-        );
+        try
+        {
+            await _messageApiService.ToggleStarAsync(id);
+            TempData["Success"] = "Yıldız durumu güncellendi";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Yıldız güncellenemedi";
+        }
+        return RedirectToAction(nameof(Index), new { category });
     }
     [HttpPost]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> MarkAsRead(Guid id, string category = "inbox")
     {
-        return await this.SafeAction(
-            action: () => _messageApiService.DeleteAsync(id),
-            successMessage: "Mesaj çöp kutusuna taşındı",
-            ErrorMessage: "Silme işlemi başarısız"
-        );
+        try
+        {
+            await _messageApiService.MarkAsReadAsync(id);
+            TempData["Success"] = "Mesaj okundu olarak işaretlendi";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "İşlem başarısız";
+        }
+        return RedirectToAction(nameof(Index), new { category });
+    }
+    [HttpPost]
+    public async Task<IActionResult> Delete(Guid id, string category = "inbox")
+    {
+        try
+        {
+            await _messageApiService.DeleteAsync(id);
+            TempData["Success"] = "Mesaj çöp kutusuna taşındı";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Silme işlemi başarısız";
+        }
+        return RedirectToAction(nameof(Index), new { category });
     }
     [HttpPost]
     public async Task<IActionResult> Restore(Guid id)
     {
-        return await this.SafeAction(
-            action: () => _messageApiService.RestoreAsync(id),
-            successMessage: "Mesaj geri yüklendi",
-            ErrorMessage: "Geri yükleme başarısız"
-        );
+        try
+        {
+            await _messageApiService.RestoreAsync(id);
+            TempData["Success"] = "Mesaj geri yüklendi";
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Geri yükleme başarısız";
+        }
+        return RedirectToAction(nameof(Index), new { category = "trash" });
     }
-
 
 
 
