@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.ContactDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ public sealed class ContactsController : CrudController<ContactDto,CreateContact
         return Ok(values);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateContactDto updateContactDto, CancellationToken cancellation)
     {

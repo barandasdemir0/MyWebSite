@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = RoleConsts.Admin)]
 [Route("api/[controller]")]
 [ApiController]
 public class RolePermissionController : ControllerBase

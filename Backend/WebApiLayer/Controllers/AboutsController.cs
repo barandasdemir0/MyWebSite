@@ -1,11 +1,12 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.AboutDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = RoleConsts.Admin)]
 [Route("api/[controller]")]
 public sealed class AboutsController : CrudController<AboutDto, CreateAboutDto, UpdateAboutDto>
 {
@@ -27,7 +28,7 @@ public sealed class AboutsController : CrudController<AboutDto, CreateAboutDto, 
         }
         return Ok(values);
     }
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateAboutDto updateAboutDto, CancellationToken cancellation)
     {

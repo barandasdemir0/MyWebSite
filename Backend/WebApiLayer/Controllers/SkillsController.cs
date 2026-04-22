@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.SkillDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = RoleConsts.Admin)]
 public sealed class SkillsController : CrudController<SkillDto,CreateSkillDto,UpdateSkillDto>
 {
     private readonly ISkillService _skillService;
@@ -17,7 +18,7 @@ public sealed class SkillsController : CrudController<SkillDto,CreateSkillDto,Up
     }
 
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {

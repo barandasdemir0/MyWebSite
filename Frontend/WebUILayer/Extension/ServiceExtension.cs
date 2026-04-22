@@ -112,6 +112,10 @@ public static class ServiceExtension
         {
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
+        services.AddHttpClient<IMessageApiService, MessageApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
 
 
 
@@ -136,7 +140,13 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
-      
+        services.AddHttpClient<IPublicMessageApiService, PublicMessageApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+
+
         #endregion
 
 

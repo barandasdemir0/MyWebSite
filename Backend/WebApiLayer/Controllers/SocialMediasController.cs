@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.SocialMediaDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,14 @@ public sealed class SocialMediasController : CrudController<SocialMediaDto,Creat
 
 
     [HttpGet("admin-all")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> GetAllAdminAsync(CancellationToken cancellationToken)
     {
         var query = await _socialMediaService.GetAllAdminAsync();
         return Ok(query);
     }
 
-    [Authorize(Roles = "Admin")]
-
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {

@@ -1,0 +1,418 @@
+﻿@using WebUILayer.Areas.Admin.Models
+@model MessageIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "messages-page blog-editor-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/editor.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/modal.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog-editor.css">
+}
+
+<div class="email-layout">
+    <div class="card email-sidebar">
+        <button class="btn btn-primary w-100" data-action="openCompose">
+            <i class="fas fa-pen me-2"></i> Yeni Mesaj
+        </button>
+        <div class="email-nav">
+            <a asp-action="Index" asp-route-category="inbox"
+                   class="email-nav-item @(Model.ActiveCategory == "inbox" ? "active" : "")">
+                <i class="fas fa-inbox"></i>
+                <span>Gelen Kutusu</span>
+                @if (Model.GetCount("Inbox") > 0)
+                {
+                    <span class="nav-badge danger">@Model.GetCount("Inbox")</span>
+                }
+            </a>
+            <a asp-action="Index" asp-route-category="starred"
+                   class="email-nav-item @(Model.ActiveCategory == "starred" ? "active" : "")">
+                <i class="fas fa-star"></i>
+                <span>Önemli</span>
+                @if (Model.GetCount("IsStarred") > 0)
+                {
+                    <span class="nav-badge warning">@Model.GetCount("IsStarred")</span>
+                }
+            </a>
+            <a asp-action="Index" asp-route-category="read"
+                   class="email-nav-item @(Model.ActiveCategory == "read" ? "active" : "")">
+                <i class="fas fa-envelope-open"></i>
+                <span>Okundu</span>
+                @if (Model.GetCount("IsRead") > 0)
+                {
+                    <span class="nav-badge success">@Model.GetCount("IsRead")</span>
+                }
+            </a>
+            <a asp-action="Index" asp-route-category="sent"
+                   class="email-nav-item @(Model.ActiveCategory == "sent" ? "active" : "")">
+                <i class="fas fa-paper-plane"></i>
+                <span>Gönderilenler</span>
+                @if (Model.GetCount("Sent") > 0)
+                {
+                    <span class="nav-badge primary">@Model.GetCount("Sent")</span>
+                }
+            </a>
+            <a asp-action="Index" asp-route-category="draft"
+                   class="email-nav-item @(Model.ActiveCategory == "draft" ? "active" : "")">
+                <i class="fas fa-file-alt"></i>
+                <span>Taslaklar</span>
+                @if (Model.GetCount("Draft") > 0)
+                {
+                    <span class="nav-badge draft">@Model.GetCount("Draft")</span>
+                }
+            </a>
+            <a asp-action="Index" asp-route-category="trash"
+                   class="email-nav-item @(Model.ActiveCategory == "trash" ? "active" : "")">
+                <i class="fas fa-trash"></i>
+                <span>Çöp Kutusu</span>
+                @if (Model.GetCount("Trash") > 0)
+                {
+                    <span class="nav-badge trash">@Model.GetCount("Trash")</span>
+                }
+            </a>
+        </div>
+    </div>
+
+    <div class="card email-list">
+        <div class="email-toolbar">
+            <h3>@Model.ActiveTitle</h3>
+            <button class="btn btn-primary btn-icon d-md-none mobile-compose-btn" data-action="openCompose">
+                <i class="fas fa-pen"></i>
+            </button>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Mesajlarda ara..." class="form-control" id="messageSearchInput">
+            </div>
+        </div>
+
+        <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" title="Klasörleri Göster">
+            <i class="fas fa-folder"></i>
+        </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success" style="margin: 15px 20px;">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger" style="margin: 15px 20px;">@TempData["Error"]</div>
+        }
+
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Gönderen</th>
+                        <th>Konu</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody id="messageTableBody">
+                    @foreach (var item in Model.messageDtos)
+                    {
+                        @if (item.IsDeleted)
+                        {
+                            <tr class="deleted-row">
+                                <td data-label="Gönderen">@item.SenderName</td>
+                                <td data-label="Konu">@item.Subject</td>
+                                <td data-label="Durum"><span class="status-badge trash">Çöp Kutusu</span></td>
+                                <td data-label="Tarih">@item.CreatedAt.AddHours(3).ToString("dd MMM yyyy HH:mm")</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn edit" title="Görüntüle"
+                                                data-action="openModal" data-target="msg-@item.Id">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <form asp-action="Restore" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="action-btn restore" title="Geri Yükle">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="@(item.IsRead ? "" : "unread-row")">
+                                <td data-label="Gönderen">@item.SenderName</td>
+                                <td data-label="Konu">@item.Subject</td>
+                                <td data-label="Durum">
+                                    @if (item.IsStarred)
+                                    {
+                                        <span class="status-badge warning">Önemli</span>
+                                    }
+                                    else if (!item.IsRead)
+                                    {
+                                        <span class="status-badge danger">Okunmadı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge active">Okundu</span>
+                                    }
+                                </td>
+                                <td data-label="Tarih">@item.CreatedAt.AddHours(3).ToString("dd MMM yyyy HH:mm")</td>
+                                <td data-label="İşlemler">
+                                    <div class="action-btns">
+                                        <button class="action-btn edit" title="Görüntüle"
+                                                data-action="openModal" data-target="msg-@item.Id">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        @if (Model.ActiveCategory == "draft")
+                                        {
+                                            <button class="action-btn edit" title="Düzenle"
+                                                    data-action="editDraft"
+                                                    data-id="@item.Id"
+                                                    data-receiver="@item.ReceiverEmail"
+                                                    data-subject="@item.Subject"
+                                                    data-body="@Html.Raw(System.Net.WebUtility.HtmlEncode(item.Body))">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                           
+                                        }
+                                        else
+                                        {
+                                            <button class="action-btn edit" title="Görüntüle"
+                                                    data-action="openModal" data-target="msg-@item.Id">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        }
+
+                                        <form asp-action="ToggleStar" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="category" value="@Model.ActiveCategory" />
+                                            <button type="submit" class="action-btn @(item.IsStarred ? "warning" : "")" title="Yıldızla">
+                                                <i class="fas fa-star"></i>
+                                            </button>
+                                        </form>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;"
+                                              onsubmit="return confirm('Bu mesajı çöp kutusuna taşımak istediğinizden emin misiniz?')">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="category" value="@Model.ActiveCategory" />
+                                            <button type="submit" class="action-btn delete" data-action="deleteMessage" title="Sil">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @await Component.InvokeAsync("_LayoutPaginationPartialComponent", new
+        {
+            currentPage = Model.CurrentPage,
+            totalPages = Model.TotalPages,
+            extraRouteValues = new Dictionary<string, string> { { "category", Model.ActiveCategory } }
+        })
+    </div>
+</div>
+
+<!-- Detail Modals -->
+@foreach (var item in Model.messageDtos)
+{
+    <div class="admin-modal-overlay" id="msg-@item.Id">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h3>@item.Subject</h3>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div>
+                        <span><i class="fas fa-user"></i> Gönderen:</span>
+                        <strong>@item.SenderName</strong>
+                    </div>
+                    <div>
+                        <span><i class="fas fa-envelope"></i> Email:</span>
+                        <span>@item.SenderEmail</span>
+                    </div>
+                    <div>
+                        <span><i class="fas fa-calendar"></i> Tarih:</span>
+                        <span>@item.CreatedAt.AddHours(3).ToString("dd MMMM yyyy HH:mm")</span>
+                    </div>
+                </div>
+                <div>
+                    <label>Mesaj İçeriği</label>
+                    <p>@Html.Raw(item.Body)</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (!item.IsDeleted)
+                {
+                    @if (Model.ActiveCategory == "draft")
+                    {
+                        <button class="btn btn-primary"
+                                data-action="editDraft"
+                                data-id="@item.Id"
+                                data-receiver="@item.ReceiverEmail"
+                                data-subject="@item.Subject"
+                                data-body="@Html.Raw(System.Net.WebUtility.HtmlEncode(item.Body))">
+                            <i class="fas fa-edit"></i> Düzenle ve Gönder
+                        </button>
+                    }
+
+                    <form asp-action="ToggleStar" asp-route-id="@item.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="category" value="@Model.ActiveCategory" />
+                        <button type="submit" class="btn btn-warning mr-auto">
+                            <i class="fas fa-star"></i> Önemli
+                        </button>
+                    </form>
+                    <form asp-action="MarkAsRead" asp-route-id="@item.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="category" value="@Model.ActiveCategory" />
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Okundu
+                        </button>
+                    </form>
+                }
+                <button class="btn btn-secondary" data-action="closeModal">İptal</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Compose Modal -->
+<div class="admin-modal-overlay" id="composeModal">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <h3>Yeni Mesaj</h3>
+        </div>
+        <form asp-action="Compose" method="post" id="composeForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="DraftId" id="draftIdInput" />
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Alıcı</label>
+                    <input type="email" name="ReceiverEmail" class="form-control"
+                           placeholder="Örn: ornek@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Konu</label>
+                    <input type="text" name="Subject" class="form-control"
+                           placeholder="Mesaj konusu..." required>
+                </div>
+                <div class="blog-editor">
+                    <div class="editor-tabs">
+                        <button type="button" class="editor-tab active" data-action="switchTab" data-tab="edit">
+                            <i class="fas fa-edit"></i> Düzenle
+                        </button>
+                        <button type="button" class="editor-tab" data-action="switchTab" data-tab="preview">
+                            <i class="fas fa-eye"></i> Önizleme
+                        </button>
+                    </div>
+                    <div class="editor-toolbar" id="editorToolbar">
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="bold" title="Kalın"><i class="fas fa-bold"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="italic" title="İtalik"><i class="fas fa-italic"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="underline" title="Altı Çizili"><i class="fas fa-underline"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="strikeThrough" title="Üstü Çizili"><i class="fas fa-strikethrough"></i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="decreaseFontSize" title="Küçült"><i class="fas fa-minus"></i></button>
+                            <select class="form-control editor-font-size-select" id="fontSizeSelect">
+                                <option value="1">8</option>
+                                <option value="2">10</option>
+                                <option value="3" selected>12</option>
+                                <option value="4">14</option>
+                                <option value="5">18</option>
+                                <option value="6">24</option>
+                                <option value="7">36</option>
+                            </select>
+                            <button type="button" class="toolbar-btn" data-action="increaseFontSize" title="Büyüt"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h1">H1</button>
+                            <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h2">H2</button>
+                            <button type="button" class="toolbar-btn toolbar-btn-wide" data-action="formatBlock" data-block="h3">H3</button>
+                        </div>
+                        <div class="toolbar-group">
+                            <div class="color-picker">
+                                <button type="button" class="toolbar-btn color-picker-btn" title="Yazı Rengi">
+                                    <i class="fas fa-font"></i>
+                                    <span id="textColorIndicator" class="color-indicator"></span>
+                                </button>
+                                <input type="color" id="textColorPicker" value="#ef4444" class="color-input">
+                            </div>
+                            <div class="color-picker">
+                                <button type="button" class="toolbar-btn color-picker-btn" title="Arka Plan Rengi">
+                                    <i class="fas fa-highlighter"></i>
+                                </button>
+                                <input type="color" id="bgColorPicker" value="#fef08a" class="color-input">
+                            </div>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="removeFormat" title="Temizle"><i class="fas fa-eraser"></i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="insertQuote"><i class="fas fa-quote-left"></i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="insertLink"><i class="fas fa-link"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="insertImage"><i class="fas fa-image"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="insertVideo"><i class="fas fa-video"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="insertCode"><i class="fas fa-code"></i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="justifyFull"><i class="fas fa-align-justify"></i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="insertTable"><i class="fas fa-table"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="insertHR"><i class="fas fa-minus"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="insertEmoji"><i class="fas fa-smile"></i></button>
+                        </div>
+                        <div class="toolbar-group">
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="undo"><i class="fas fa-undo"></i></button>
+                            <button type="button" class="toolbar-btn" data-action="formatText" data-command="redo"><i class="fas fa-redo"></i></button>
+                        </div>
+                    </div>
+                    <div class="editor-content" id="editorContent" contenteditable="true"
+                         data-placeholder="Mesajınızı buraya yazın..."></div>
+                    <div class="editor-content editor-preview" id="previewContent"></div>
+                    <input type="hidden" name="Body" id="hiddenBody" />
+                    <div class="editor-footer">
+                        <div class="editor-stats">
+                            <span><i class="fas fa-font"></i> <span id="wordCount">0</span> kelime</span>
+                            <span><i class="fas fa-clock"></i> <span id="readTime">0</span> dk okuma</span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline" data-action="clearEditor">
+                                <i class="fas fa-eraser"></i> Temizle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-action="closeComposeModal">Vazgeç</button>
+                <div>
+                    <button type="submit" name="action" value="draft" class="btn btn-secondary">
+                        <i class="fas fa-save me-2"></i> Taslağa Al
+                    </button>
+                    <button type="submit" name="action" value="send" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i> Gönder
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    <script src="/Mytheme/admin/js/modules/blog-editor.js"></script>
+    <script src="/Mytheme/admin/js/modules/messages.js"></script>
+}

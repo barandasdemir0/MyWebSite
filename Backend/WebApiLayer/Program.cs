@@ -45,8 +45,7 @@ else
     app.UseHsts();
 }
 
-app.MapOpenApi();
-app.MapScalarApiReference();
+
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();

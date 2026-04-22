@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.ExperienceDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ public sealed class ExperiencesController:CrudController<ExperienceDto,CreateExp
         _experienceService = experienceService;
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("admin-all")]
     public async Task<IActionResult> GetAllAdmin(CancellationToken cancellationToken)
     {
@@ -24,7 +25,7 @@ public sealed class ExperiencesController:CrudController<ExperienceDto,CreateExp
         return Ok(query);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id, CancellationToken cancellationToken)
     {

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.NotificationDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +8,7 @@ using SharedKernel.Shared;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
-
+[Authorize(Roles = RoleConsts.Admin)]
 public class NotificationsController: CrudController<NotificationDto,CreateNotificationDto,UpdateNotificationDto>
 {
     private readonly INotificationService _notificationService;
@@ -19,7 +19,7 @@ public class NotificationsController: CrudController<NotificationDto,CreateNotif
     }
 
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("admin-all")] 
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
@@ -28,7 +28,7 @@ public class NotificationsController: CrudController<NotificationDto,CreateNotif
     }
 
     [HttpPut("read/{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     public async Task<IActionResult> ReadMessage(Guid id,CancellationToken cancellationToken)
     {
         var values = await _notificationService.ReadByIdAsync(id, cancellationToken);
@@ -39,7 +39,7 @@ public class NotificationsController: CrudController<NotificationDto,CreateNotif
         return Ok(values);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id,CancellationToken cancellationToken)
     {

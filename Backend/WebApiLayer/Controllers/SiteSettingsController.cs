@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using CV.EntityLayer.Entities;
 using DtoLayer.SiteSettingDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = RoleConsts.Admin)]
 public class SiteSettingsController:CrudController<SiteSettingDto,CreateSiteSettingDto,UpdateSiteSettingDto>
 {
     private readonly ISiteSettingsService _siteSettingsService;
@@ -27,7 +28,7 @@ public class SiteSettingsController:CrudController<SiteSettingDto,CreateSiteSett
         }
         return Ok(values);
     }
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPost("save")]
     public async Task<IActionResult> Save([FromBody] UpdateSiteSettingDto update, CancellationToken cancellationToken)
     {

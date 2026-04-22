@@ -15,10 +15,10 @@ namespace WebUILayer.Controllers
             _accountApiService = accountApiService;
         }
 
-        [HttpGet("/auth/forgot-password")]
+        [HttpGet("/account/forgot-password")]
         public IActionResult ForgotPassword() => View();
 
-        [HttpPost("/auth/forgot-password")]
+        [HttpPost("/account/forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
         {
             // Not: Burada API çağrısı yapılmıyor çünkü kullanıcı önce doğrulama yöntemini
@@ -28,7 +28,7 @@ namespace WebUILayer.Controllers
             return RedirectToAction(nameof(ChooseResetMethod));
         }
 
-        [HttpGet("/auth/ChooseResetMethod")]
+        [HttpGet("/account/ChooseResetMethod")]
         public IActionResult ChooseResetMethod()
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("reset_email"))) // Güvenlik için, eğer email bilgisi yoksa doğrudan login sayfasına yönlendiriyoruz.
@@ -38,7 +38,7 @@ namespace WebUILayer.Controllers
             return View();
         }
 
-        [HttpPost("/auth/process-reset-choice")]
+        [HttpPost("/account/process-reset-choice")]
         public async Task<IActionResult> ProcessResetChoice(TwoFactorProvider SelectedProvider)
         {
             var email = HttpContext.Session.GetString("reset_email");  // Session'dan email bilgisini alıyoruz.
@@ -59,7 +59,7 @@ namespace WebUILayer.Controllers
         }
 
 
-        [HttpGet("/auth/resend-reset-code")]
+        [HttpGet("/account/resend-reset-code")]
         public async Task<IActionResult> ResendResetCode()
         {
             var email = HttpContext.Session.GetString("reset_email"); // Session'dan email bilgisini alıyoruz.
@@ -79,7 +79,7 @@ namespace WebUILayer.Controllers
 
 
 
-        [HttpGet("/auth/verify-reset-code")]
+        [HttpGet("/account/verify-reset-code")]
         public IActionResult VerifyResetCode()
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("reset_email"))) // Güvenlik için, eğer email bilgisi yoksa doğrudan login sayfasına yönlendiriyoruz.
@@ -89,7 +89,7 @@ namespace WebUILayer.Controllers
             return View();
         }
 
-        [HttpPost("/auth/verify-reset-code")]
+        [HttpPost("/account/verify-reset-code")]
         public async Task<IActionResult> VerifyResetCode(string code)
         {
             var email = HttpContext.Session.GetString("reset_email"); // Session'dan email bilgisini alıyoruz.
@@ -120,7 +120,7 @@ namespace WebUILayer.Controllers
         }
 
 
-        [HttpGet("/auth/set-new-password")]
+        [HttpGet("/account/set-new-password")]
         public IActionResult SetNewPassword()
         {
             if (HttpContext.Session.GetString("reset_verified") != "true")// eğer yukarıda doğrulama başarılı olduğunu belirten flag session'da yoksa veya değeri "true" değilse, kullanıcıyı doğrudan login sayfasına yönlendiriyoruz. Bu, güvenlik için önemlidir çünkü doğrulama yapılmadan yeni şifre belirleme sayfasına erişilmesini engeller.
@@ -130,7 +130,7 @@ namespace WebUILayer.Controllers
             return View();
         }
 
-        [HttpPost("/auth/set-new-password")]
+        [HttpPost("/account/set-new-password")]
         public async Task<IActionResult> SetNewPassword(string confirmPassword, SetNewPasswordDto setNewPasswordDto)
         {
             if (HttpContext.Session.GetString("reset_verified") != "true")
