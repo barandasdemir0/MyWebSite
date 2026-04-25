@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // View Comment
         const viewBtn = e.target.closest('[data-action="viewComment"]');
         if (viewBtn) {
-            e.preventDefault();
+           /* e.preventDefault();*/
             e.stopPropagation(); // Stop ui.js or others
             viewComment(viewBtn);
             return;
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Close Modal
         const closeBtn = e.target.closest('[data-action="closeModal"]');
         if (closeBtn) {
-            e.preventDefault();
+           /* e.preventDefault();*/
             e.stopPropagation();
             closeCommentModal();
             return;
@@ -236,7 +236,7 @@ document.body.addEventListener('click', function (e) {
         const btn = e.target.closest('[data-action="restoreItem"]');
 
         // Priority handling: Stop propagation immediately to prevent ui.js
-        e.preventDefault();
+      /*  e.preventDefault();*/
         e.stopPropagation();
 
         const row = btn.closest('tr');
@@ -352,7 +352,7 @@ document.body.addEventListener('click', function (e) {
     const btn = e.target.closest('.action-btn.delete');
     if (btn) {
         // Only run if we are inside guestbook table (safety check, though this file is only included in guestbook usually?)
-        e.preventDefault();
+       /* e.preventDefault();*/
         e.stopPropagation();
 
         const row = btn.closest('tr');
