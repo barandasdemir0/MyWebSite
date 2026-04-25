@@ -163,7 +163,11 @@ body>.admin-modal-overlay .admin-modal {
 }
 
 .guestbook-page .author-avatar {
+    width: 45px !important;
+    height: 45px !important;
     border-radius: 50%;
+    object-fit: cover; /* Resmi ezmeden, kaliteli bir şekilde dairenin içine sığdırır */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Admin paneline yakışacak çok hafif bir gölge */
 }
 
 .guestbook-page .author-meta {
