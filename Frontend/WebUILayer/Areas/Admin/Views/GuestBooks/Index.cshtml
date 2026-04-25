@@ -1,0 +1,258 @@
+﻿@using SharedKernel.Shared
+@using DtoLayer.GuestBookDtos
+@model PagedResult<GuestBookListDto>
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "guestbook-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var pendingMessages = Model.Items.Where(x => !x.IsApproved && !x.IsDeleted).ToList();
+    var approvedMessages = Model.Items.Where(x => x.IsApproved || x.IsDeleted).ToList();
+}
+@section Styles{
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/guestbook.css">
+
+
+   
+}
+
+
+    <!-- Header -->
+<!-- 1. KART: Onay Bekleyen Yorumlar -->
+<div class="card" data-table-type="pending">
+    <div class="card-header">
+        <h3><i class="fas fa-clock"></i> Onay Bekleyen Yorumlar</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Kullanıcı</th>
+                    <th>Mesaj</th>
+                    <th>Durum</th>
+                    <th>Tarih</th>
+                    <th>Görünürlük</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!pendingMessages.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Onay bekleyen yeni bir mesaj bulunmuyor.</td>
+                    </tr>
+                }
+                
+                @foreach (var item in pendingMessages)
+                {
+                    <tr>
+                        <td>
+                            <div class="author-wrapper">
+                                <img src="@item.AuthorAvatarUrl" alt="@item.AuthorName" class="author-avatar">
+                                <div>
+                                    <strong>@item.AuthorName</strong>
+                                    <p class="author-meta">Ziyaretçi</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="comment-text">@(item.Message.Length > 60 ? item.Message.Substring(0, 60) + "..." : item.Message)</td>
+                        <td><span class="status-badge warning">Onay Bekliyor</span></td>
+                        <td>@item.CreatedAt.AddHours(3).ToString("dd MMM yyyy HH:mm")</td>
+                        <td><span class="status-badge draft">Gizli</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <!-- Görüntüleme Butonu (Eğer View Comment Modal'ı varsa) -->
+                                <button class="action-btn" title="Görüntüle" data-action="viewComment"><i class="fas fa-eye"></i></button>
+                                
+                                <!-- Onaylama -->
+                                <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="action-btn success" title="Onayla">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                
+                                <!-- Silme/Reddetme -->
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="button" class="action-btn delete" title="Reddet/Sil" data-action="deleteRow">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <!-- All Comments -->
+    <div class="card" data-table-type="approved">
+    <div class="card" data-table-type="approved">
+        <div class="card-header">
+            <h3>Onaylananlar ve Arşiv</h3>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Mesajlarda ara..." class="form-control">
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Kullanıcı</th>
+                        <th>Mesaj</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th>Görünürlük</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!approvedMessages.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">Kayıt bulunamadı.</td>
+                        </tr>
+                    }
+                
+                    @foreach (var item in approvedMessages)
+                    {
+                        <tr class="@(item.IsDeleted ? "deleted-item" : "")">
+                            <td>
+                                <div class="author-wrapper">
+                                    <img src="@item.AuthorAvatarUrl" alt="@item.AuthorName" class="author-avatar">
+                                    <div>
+                                        <strong>@item.AuthorName</strong>
+                                        <p class="author-meta">Ziyaretçi</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="comment-text">@(item.Message.Length > 60 ? item.Message.Substring(0, 60) + "..." : item.Message)</td>
+                        
+                            @if (item.IsDeleted)
+                            {
+                                <td><span class="status-badge danger">Silindi</span></td>
+                                <td>@item.CreatedAt.AddHours(3).ToString("dd MMM yyyy HH:mm")</td>
+                                <td><span class="status-badge danger">Sitede Gizli</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="Görüntüle" data-action="viewComment"><i class="fas fa-eye"></i></button>
+                                    
+                                        <form asp-action="Restore" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="button" class="action-btn restore" title="Geri Yükle" data-action="restoreItem">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td><span class="status-badge active">Onaylandı</span></td>
+                                <td>@item.CreatedAt.AddHours(3).ToString("dd MMM yyyy HH:mm")</td>
+                                <td><span class="status-badge active">Sitede Aktif</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="action-btn" title="Görüntüle" data-action="viewComment"><i class="fas fa-eye"></i></button>
+                                    
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="button" class="action-btn delete" title="Sil" data-action="deleteRow">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+    @await Component.InvokeAsync("_LayoutPaginationPartialComponent", new { currentPage = Model.PageNumber, totalPages = Model.TotalPages })
+    </div>
+   
+
+
+
+<div class="admin-modal-overlay" id="commentModal">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-header-container">
+                <div class="modal-icon modal-icon-custom">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <h3 id="modalUserName" class="modal-title modal-title-custom">Kullanıcı Adı</h3>
+            </div>
+        </div>
+        <div class="modal-body modal-body-custom">
+            <div class="modal-meta">
+                <i class="fas fa-clock fa-clock-custom"></i>
+                <span id="modalDate" class="modal-date">Tarih</span>
+            </div>
+            <textarea id="modalMessage" readonly class="form-control modal-message"></textarea>
+        </div>
+        <div class="modal-footer modal-footer-custom">
+            <button class="btn btn-success btn-approve-custom hidden" id="approveBtn">
+                <i class="fas fa-check fa-clock-custom"></i>Onayla
+            </button>
+            <button class="btn btn-warning btn-approve-custom hidden" id="restoreBtn">
+                <i class="fas fa-undo fa-clock-custom"></i>Geri Yükle
+            </button>
+            <button class="btn btn-secondary" data-action="closeModal">Kapat</button>
+        </div>
+    </div>
+</div>
+
+<!-- Restore Modal Template -->
+<div id="restoreModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-restore">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div class="modal-title">Geri Yükle</div>
+        </div>
+        <div class="modal-body">
+            <strong id="restoreItemName"></strong> kullanıcısının yorumu geri yüklenecek ve sitede tekrar yayına
+            alınacaktır.<br><br>
+            Bu işlem geri alınamaz (tekrar silmeniz gerekir).
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelRestore">İptal</button>
+            <button class="btn btn-warning" id="confirmRestore">Onayla ve Yükle</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal Template -->
+<div id="deleteConfirmModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-delete">
+                <i class="fas fa-trash"></i>
+            </div>
+            <div class="modal-title">Silme Onayı</div>
+        </div>
+        <div class="modal-body">
+            <strong id="deleteItemName"></strong> silinecek. Bu işlem şimdilik geri alınabilir.<br><br>
+            Devam etmek istiyor musunuz?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelDelete">İptal</button>
+            <button class="btn btn-danger" id="confirmDelete">Evet, Sil</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="/Mytheme/admin/js/modules/pages.js"></script>
+    <script src="/Mytheme/admin/js/modules/guestbook.js"></script>
+}
+

@@ -18,7 +18,19 @@ public class GuestBookManager : GenericManager<GuestBook,GuestBookListDto,Create
         _guestBookDal = guestBookDal;
     }
 
-  
+    public async Task<GuestBookDto?> ApproveAsync(Guid guid, CancellationToken cancellationToken = default)
+    {
+        var entity = await _guestBookDal.GetByIdAsync(guid, tracking: true, cancellationToken: cancellationToken);
+        if (entity==null)
+        {
+            return null;
+        }
+        entity.IsApproved = true;
+        await _guestBookDal.UpdateAsync(entity, cancellationToken);
+        await _guestBookDal.SaveAsync(cancellationToken);
+        return _mapper.Map<GuestBookDto>(entity);
+    }
+
     public async Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery , CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _guestBookDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);

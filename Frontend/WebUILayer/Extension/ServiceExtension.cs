@@ -117,6 +117,11 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
+        services.AddHttpClient<IGuestBookApiService, GuestBookApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        }).AddHttpMessageHandler<JwtTokenHandler>();
+
 
 
 
@@ -141,6 +146,11 @@ public static class ServiceExtension
         }).AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IPublicMessageApiService, PublicMessageApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IOAuthApiService, OAuthApiService>(client =>
         {
             client.BaseAddress = new Uri(baseurl!);
         });

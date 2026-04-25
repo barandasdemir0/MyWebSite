@@ -34,6 +34,35 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
         return Ok(query);
     }
 
+    [AllowAnonymous]
+    [HttpPost]
+    public override async Task<IActionResult> Create([FromBody] CreateGuestBookDto createGuestBookDto,CancellationToken cancellationToken)
+    {
+        var result = await _guestBookService.AddAsync(createGuestBookDto, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new
+        {
+            id = result.Id
+        },result);
+    }
+
+    [Authorize(Roles =RoleConsts.Admin)]
+    [HttpPut("approve/{id}")]
+    public async Task<IActionResult> Approve(Guid id,CancellationToken cancellationToken)
+    {
+        var entity = await _guestBookService.GetByIdAsync(id, cancellationToken);
+        if (entity==null)
+        {
+            return NotFound();
+        }
+        return Ok(entity);
+    }
+
+
+
+
+
+
+
     [Authorize(Roles = RoleConsts.Admin)]
 
     [HttpPut("{id}")] //Güncelleme Fonksiyonu bulunmamaktadır ziyaretçi mesajları güncellenemez
