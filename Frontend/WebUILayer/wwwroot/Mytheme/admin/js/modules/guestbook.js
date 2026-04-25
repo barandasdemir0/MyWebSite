@@ -232,3 +232,14 @@ document.body.addEventListener('click', function (e) {
         }
     }
 }, true);
+// ==========================================
+// SATIRDAKİ ONAYLAMA BUTONU (GARANTİ SUBMİT)
+// ==========================================
+document.body.addEventListener('click', function (e) {
+    const btn = e.target.closest('.action-btn.success'); // Yeşil onay butonu
+    if (btn) {
+        e.stopPropagation(); // Temanın diğer engelleyici JS'lerini devre dışı bırak
+        const form = btn.closest('form'); // Butonun kapsayıcısı olan C# formunu bul
+        if (form) form.submit(); // Zorla Backend'e gönder!
+    }
+}, true);
