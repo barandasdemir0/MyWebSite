@@ -27,20 +27,20 @@ public class GuestBooksController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Approve(Guid guid)
+    public async Task<IActionResult> Approve(Guid id)
     {
         return await this.SafeAction(
-                action: () => _guestBookApiService.ApproveAsync(guid),
+                action: () => _guestBookApiService.ApproveAsync(id),
                 successMessage: "Mesaj başarıyla onaylandı ve yayına alındı.",
                 ErrorMessage: "Mesaj onaylanırken bir hata oluştu."
             );
     }
 
     [HttpPost]
-    public async Task<IActionResult> Delete(Guid guid)
+    public async Task<IActionResult> Delete(Guid id)
     {
         return await this.SafeAction(
-                action: () => _guestBookApiService.DeleteAsync(guid),
+                action: () => _guestBookApiService.DeleteAsync(id),
                 successMessage: "Mesaj başarıyla silindi.",
                 ErrorMessage: "Mesaj silinirken bir hata oluştu."
             );
