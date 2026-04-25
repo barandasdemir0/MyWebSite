@@ -45,20 +45,19 @@
 
         @if (guestUser == null)
         {
-            <!-- Auth / Sign In Call to Action -->
+            <!-- Giriş Yapılmamışsa Çıkacak Karanlık Kutu (Butonlar) -->
             <div class="guestbook-auth" data-aos="fade-up">
                 <p class="auth-text">Yorum bırakmak için sosyal medya hesaplarınızla giriş yapmanız gerekmektedir.</p>
                 <div class="auth-buttons">
-                    <a asp-action="LoginGithub" asp-controller="OAuth" class="btn-github">
+                    <a asp-action="LoginGithub" asp-controller="Auth" class="btn-github">
                         <i class="fab fa-github"></i> GitHub ile Giriş
                     </a>
-                    <a asp-action="LoginLinkedin" asp-controller="OAuth" class="btn-linkedin">
+                    <a asp-action="LoginLinkedin" asp-controller="Auth" class="btn-linkedin">
                         <i class="fab fa-linkedin"></i> LinkedIn ile Giriş
                     </a>
                 </div>
             </div>
-
-            <!-- Comment Form (Simulated) -->
+            <!-- Comment Form (Giriş Yapılmamış / Kapalı Form) -->
             <div class="guestbook-form" data-aos="fade-up" data-aos-delay="100">
                 <div class="form-header">
                     <h3>Bir Not Bırakın</h3>
@@ -66,12 +65,10 @@
                 </div>
                 <form>
                     <div class="form-group">
-                        <textarea class="form-control" id="guestbookMessage" name="message" rows="4"
-                                  placeholder="Mesajınız..."></textarea>
+                        <textarea class="form-control" name="message" rows="4" placeholder="Mesajınız..." disabled></textarea>
                     </div>
                     <div class="text-center">
-                        <button type="button" class="btn-primary-custom form-submit-btn" disabled
-                                title="Giriş yapmalısınız">
+                        <button type="button" class="btn-primary-custom form-submit-btn" disabled title="Giriş yapmalısınız">
                             <i class="fas fa-paper-plane me-2"></i>Gönder
                         </button>
                     </div>
@@ -80,33 +77,33 @@
         }
         else
         {
-            <!-- Auth / Sign In Call to Action -->
-            <div class="guestbook-auth" data-aos="fade-up">
-                <p class="auth-text">Yorum bırakmak için sosyal medya hesaplarınızla giriş yapmanız gerekmektedir.</p>
-                <div class="auth-buttons">
-                    <a asp-action="LoginGithub" asp-controller="OAuth" class="btn-github">
-                        <i class="fab fa-github"></i> GitHub ile Giriş
-                    </a>
-                    <a asp-action="LoginLinkedin" asp-controller="OAuth" class="btn-linkedin">
-                        <i class="fab fa-linkedin"></i> LinkedIn ile Giriş
-                    </a>
+            <!-- İSTEĞİNİZ BURASI: Giriş Yapılmışsa O Karanlık Kutunun İçinde Profilin Çıkacak -->
+            <div class="guestbook-auth" data-aos="fade-up" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; text-align: left;">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="@guestUser.AuthorAvatarUrl" alt="Avatar" class="rounded-circle" width="55" height="55" style="object-fit: cover; border: 2px solid var(--accent-primary);">
+                    <div class="d-flex flex-column">
+                        <strong class="text-white" style="font-size: 1.1rem;">@guestUser.AuthorName</strong>
+                        <small class="text-muted">@guestUser.AuthProvider ile giriş yapıldı</small>
+                    </div>
                 </div>
+                <a asp-action="Logout" asp-controller="Auth" class="btn btn-outline-danger btn-sm" style="padding: 8px 16px;">
+                    <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                </a>
             </div>
-
-            <!-- Comment Form (Simulated) -->
+            <!-- Comment Form (Giriş Yapılmış / Açık Form) -->
             <div class="guestbook-form" data-aos="fade-up" data-aos-delay="100">
                 <div class="form-header">
                     <h3>Bir Not Bırakın</h3>
                     <p>Mesajlarınız moderasyon sonrası yayınlanacaktır.</p>
                 </div>
-                <form>
+                
+                <!-- GERÇEK FORM BURASI: C# tarafına gidiyor -->
+                <form asp-action="PostMessage" asp-controller="GuestBook" method="post">
                     <div class="form-group">
-                        <textarea class="form-control" id="guestbookMessage" name="message" rows="4"
-                                  placeholder="Mesajınız..."></textarea>
+                        <textarea class="form-control" id="guestbookMessage" name="message" rows="4" placeholder="Mesajınız..." required></textarea>
                     </div>
                     <div class="text-center">
-                        <button type="button" class="btn-primary-custom form-submit-btn"
-                                title="Giriş yapmalısınız">
+                        <button type="submit" class="btn-primary-custom form-submit-btn">
                             <i class="fas fa-paper-plane me-2"></i>Gönder
                         </button>
                     </div>
@@ -160,8 +157,8 @@
 
 
 
-<!-- Guestbook Success Modal -->
-<div class="success-modal" id="guestbookSuccessModal">
+<!-- Guestbook Success Modal (Inline JS YOK!) -->
+<div class="success-modal" id="guestbookSuccessModal" data-success="@(TempData["SuccessMessage"] != null ? "true" : "false")">
     <div class="modal-content success-modal-content">
         <div class="modal-header success-modal-header">
             <div class="success-icon">
@@ -173,13 +170,12 @@
             <p>Yorumunuz başarıyla kaydedilmiştir. Moderasyon sonrası yayınlanacaktır.</p>
         </div>
         <div class="modal-footer success-modal-footer">
-            <button class="btn-primary-custom close-modal">
+            <button class="btn-primary-custom close-modal" id="closeSuccessModalBtn">
                 <i class="fas fa-check me-2"></i>Tamam
             </button>
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     <script src="/Mytheme/portfolio/js/guestbook.js"></script>
