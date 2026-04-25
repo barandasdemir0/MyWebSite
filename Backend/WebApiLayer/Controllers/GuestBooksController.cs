@@ -49,7 +49,7 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
     [HttpPut("approve/{id}")]
     public async Task<IActionResult> Approve(Guid id,CancellationToken cancellationToken)
     {
-        var entity = await _guestBookService.GetByIdAsync(id, cancellationToken);
+        var entity = await _guestBookService.ApproveAsync(id, cancellationToken);
         if (entity==null)
         {
             return NotFound();
