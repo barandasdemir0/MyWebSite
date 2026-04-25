@@ -27,7 +27,7 @@ public class OAuthController : ControllerBase
         {
             return BadRequest("Geçersiz Github Yetki Kodu");
         }
-        return Ok();
+        return Ok(profile);
     }
 
     [AllowAnonymous]
