@@ -21,7 +21,7 @@ jobs:
           path: ~/.nuget/packages
           key: nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: nuget-
-      # 4. API appsettings.Production.json olustur
+            # 4. API appsettings.Production.json olustur
       - name: Create API Settings
         env:
           DB_CONN: ${{ secrets.DB_CONNECTION_STRING }}
@@ -31,6 +31,10 @@ jobs:
           JWT_AUD: ${{ secrets.JWT_AUDIENCE }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASSWORD }}
           CORS: ${{ secrets.CORS_ORIGIN }}
+          GH_ID: ${{ secrets.CLIENT_ID_GITHUB }}
+          GH_SECRET: ${{ secrets.CLIENT_SECRET_GITHUB }}
+          LI_ID: ${{ secrets.CLIENT_ID_LINKEDIN }}
+          LI_SECRET: ${{ secrets.CLIENT_SECRET_LINKEDIN }}
         run: |
           jq -n \
             --arg db "$DB_CONN" \
@@ -40,13 +44,27 @@ jobs:
             --arg aud "$JWT_AUD" \
             --arg email "$EMAIL_PASS" \
             --arg cors "$CORS" \
+            --arg ghId "$GH_ID" \
+            --arg ghSecret "$GH_SECRET" \
+            --arg liId "$LI_ID" \
+            --arg liSecret "$LI_SECRET" \
             '{
               Logging: { LogLevel: { Default: "Warning" } },
               ConnectionStrings: { SqlServer: $db },
               Seed: { AdminEmail: "barandasdemir.bd@gmail.com", AdminPassword: $seed },
               Jwt: { SecretKey: $jwt, Issuer: $iss, Audience: $aud },
               Email: { Password: $email },
-              Cors: { AllowedOrigins: [$cors] }
+              Cors: { AllowedOrigins: [$cors] },
+              OAuth: {
+                GitHub: {
+                  ClientId: $ghId,
+                  ClientSecret: $ghSecret
+                },
+                LinkedIn: {
+                  ClientId: $liId,
+                  ClientSecret: $liSecret
+                }
+              }
             }' > Backend/WebApiLayer/appsettings.Production.json
       # 5. MVC appsettings.Production.json olustur
       - name: Create MVC Settings
