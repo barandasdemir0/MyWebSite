@@ -22,8 +22,8 @@ public class LinkedinAuthManager : ILinkedinAuthService
     public async Task<OAuthUserProfileDto?> AuthenticateAsync(LinkedinAuthRequestDto linkedinAuthRequestDto, CancellationToken cancellationToken = default)
     {
         // Linkedin OAuth işlemi için gerekli olan clientId ve clientSecret değerlerini appsettings.json dosyasından alıyoruz.
-        string clientId = _configuration["LinkedinOauth:ClientId"]!;
-        string clientSecret = _configuration["LinkedinOauth:ClientSecret"]!;
+        string clientId = _configuration["OAuth:LinkedIn:ClientId"]!;
+        string clientSecret = _configuration["OAuth:LinkedIn:ClientSecret"]!;
 
         // HttpClientFactory kullanarak bir HttpClient örneği oluşturuyoruz. httpClientFactory, HttpClient örneklerini yönetmek ve yeniden kullanmak için kullanılan bir yapıdır. Bu sayede her istek için yeni bir HttpClient oluşturmak yerine, var olanları kullanarak performansı artırır ve kaynak kullanımını optimize eder.
         var client = _httpClientFactory.CreateClient();

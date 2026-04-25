@@ -20,8 +20,8 @@ public class GithubAuthManager : IGithubAuthService
     public async Task<OAuthUserProfileDto?> AuthenticateAsync(GithubAuthRequestDto githubAuthRequestDto,CancellationToken cancellationToken=default)
     {
         // GitHub OAuth için Client ID ve Client Secret'ı yapılandırmadan al
-        string clientId = _configuration["GithubOauth:ClientId"]!;
-        string clientSecret = _configuration["GithubOauth:ClientSecret"]!;
+        string clientId = _configuration["OAuth:GitHub:ClientId"]!;
+        string clientSecret = _configuration["OAuth:GitHub:ClientSecret"]!;
 
         // GitHub API'sine istek göndermek için HttpClient oluştur
         var client = _httpClientFactory.CreateClient("GithubApi");
