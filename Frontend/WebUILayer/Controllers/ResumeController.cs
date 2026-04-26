@@ -9,3 +9,4 @@ public class ResumeController : Controller
         return View();
     }
 }
+//education experience certificate sitesettings

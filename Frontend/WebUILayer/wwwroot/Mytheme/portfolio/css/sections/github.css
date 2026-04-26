@@ -137,20 +137,29 @@
     color: var(--primary-color);
 }
 
-.github-card-header h4 {
-    margin: 0;
-    font-size: 1.1rem;
-}
+    .github-card-header h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        /* --- EKLENEN KISIM: Uzun metni tek satırda tutup sığmayana ... koyar --- */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
 
-.github-card-header h4 a {
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: var(--transition-fast);
-}
+        .github-card-header h4 a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            /* --- EKLENEN KISIM: Linkin (a) h4 içindeki kesme işlemine uyum sağlaması için --- */
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-.github-card-header h4 a:hover {
-    color: var(--primary-color);
-}
+            .github-card-header h4 a:hover {
+                color: var(--primary-color);
+            }
 
 .github-card-desc {
     color: var(--text-secondary);

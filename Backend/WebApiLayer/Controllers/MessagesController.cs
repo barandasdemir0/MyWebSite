@@ -157,7 +157,17 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     }
 
 
-
+    [HttpGet("latest/{count}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
+    {
+        var values = await _messageService.GetLatestAsync(count, cancellationToken);
+        if (values == null)
+        {
+            return NotFound();
+        }
+        return Ok(values);
+    }
 
 
 

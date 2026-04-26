@@ -14,3 +14,4 @@ public class BlogController : Controller
         return View();
     }
 }
+//blogtopic ve blog

@@ -54,6 +54,21 @@ public class MessageApiService : GenericApiService<MessageDto, CreateMessageDto,
         return result;
     }
 
+    public async Task<List<MessageListDto>> GetLatestAsync(int count)
+    {
+        var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
+        if (!response.IsSuccessStatusCode)
+        {
+            return new List<MessageListDto>();
+        }
+        var result = await response.Content.ReadFromJsonAsync<List<MessageListDto>>();
+        if (result==null)
+        {
+            return new List<MessageListDto>();
+        }
+        return result;
+    }
+
     public async Task<PagedResult<MessageDto>> GetReadAsync(PaginationQuery paginationQuery)
     {
         var url = $"{_endpoint}/read?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";

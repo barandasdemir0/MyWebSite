@@ -11,7 +11,7 @@ public sealed class AboutConfiguration : IEntityTypeConfiguration<About>
         builder.ToTable("About");
         builder.HasKey(x=> x.Id);
         builder.Property(x => x.FullName).IsRequired().HasMaxLength(50);
-        builder.Property(x=>x.Greeting).IsRequired().HasMaxLength(20);
+        builder.Property(x=>x.Greeting).IsRequired().HasMaxLength(2000);
         builder.Property(x => x.Bio).IsRequired().HasMaxLength(2000);
         
     }

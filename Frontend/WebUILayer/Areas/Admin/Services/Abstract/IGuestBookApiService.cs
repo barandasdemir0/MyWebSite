@@ -10,4 +10,6 @@ public interface IGuestBookApiService:IGenericApiService<GuestBookListDto,Create
 
     Task ApproveAsync(Guid guid);
     Task RestoreAsync(Guid guid);
+
+    Task<List<GuestBookListDto>> GetLatestAsync(int count);
 }

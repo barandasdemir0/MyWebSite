@@ -57,3 +57,4 @@ public class ContactController : Controller
 
 
 }
+//socialmedia da ekle ve resim sorununu çöz

@@ -14,10 +14,10 @@ public sealed class ContactConfiguration : IEntityTypeConfiguration<Contact>
         builder.Property(x=>x.Email).IsRequired().HasMaxLength(75);
         builder.Property(x=>x.Phone).IsRequired().HasMaxLength(20);
         builder.Property(x=>x.Location).IsRequired().HasMaxLength(200);
-        builder.Property(x=>x.LocationPicture).IsRequired().HasMaxLength(200);
+        builder.Property(x=>x.LocationPicture).IsRequired().HasMaxLength(500);
         builder.Property(x=>x.ContactTitle).IsRequired().HasMaxLength(50);
         builder.Property(x=>x.ContactText).IsRequired().HasMaxLength(200);
-        builder.Property(x=>x.SuccessMessageText).IsRequired().HasMaxLength(150);
+        builder.Property(x=>x.SuccessMessageText).IsRequired().HasMaxLength(350);
 
         
     }
