@@ -1,6 +1,11 @@
-﻿namespace WebUILayer.Services.Concrete
+﻿using DtoLayer.EducationDtos;
+using WebUILayer.Services.Abstract;
+
+namespace WebUILayer.Services.Concrete;
+
+public class PublicEducationApiService : PublicReadApiService<EducationDto>, IPublicEducationApiService
 {
-    public class PublicEducationApiService
+    public PublicEducationApiService(HttpClient httpClient/*, string endpoint*/) : base(httpClient, "educations")
     {
     }
 }

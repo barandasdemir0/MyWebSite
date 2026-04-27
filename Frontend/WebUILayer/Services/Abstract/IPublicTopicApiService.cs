@@ -1,6 +1,7 @@
-﻿namespace WebUILayer.Services.Abstract
+﻿using DtoLayer.TopicDtos;
+
+namespace WebUILayer.Services.Abstract;
+
+public interface IPublicTopicApiService:IPublicReadApiService<TopicDto>
 {
-    public interface IPublicTopicApiService
-    {
-    }
 }

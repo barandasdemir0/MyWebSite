@@ -1,6 +1,11 @@
-﻿namespace WebUILayer.Services.Concrete
+﻿using DtoLayer.ExperienceDtos;
+using WebUILayer.Services.Abstract;
+
+namespace WebUILayer.Services.Concrete;
+
+public class PublicExperienceApiService : PublicReadApiService<ExperienceDto>, IPublicExperienceApiService
 {
-    public class PublicExperienceApiService
+    public PublicExperienceApiService(HttpClient httpClient/*, string endpoint*/) : base(httpClient, "experiences")
     {
     }
 }

@@ -1,6 +1,7 @@
-﻿namespace WebUILayer.Services.Abstract
+﻿using DtoLayer.EducationDtos;
+
+namespace WebUILayer.Services.Abstract;
+
+public interface IPublicEducationApiService:IPublicReadApiService<EducationDto>
 {
-    public interface IPublicEducationApiService
-    {
-    }
 }

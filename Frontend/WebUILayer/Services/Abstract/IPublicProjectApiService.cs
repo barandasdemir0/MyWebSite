@@ -2,7 +2,7 @@
 
 namespace WebUILayer.Services.Abstract;
 
-public interface IPublicProjectApiService:IPublicReadApiService<ProjectListDto>
+public interface IPublicProjectApiService:IPublicReadApiService<ProjectDto>
 {
-    Task<List<ProjectListDto>> GetLatestAsync(int count);
+    Task<List<ProjectDto>> GetLatestAsync(int count);
 }

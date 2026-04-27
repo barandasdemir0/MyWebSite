@@ -1,6 +1,11 @@
-﻿namespace WebUILayer.Services.Concrete
+﻿using DtoLayer.CertificateDtos;
+using WebUILayer.Services.Abstract;
+
+namespace WebUILayer.Services.Concrete;
+
+public class PublicCertificateApiService : PublicReadApiService<CertificateDto>, IPublicCertificateApiService
 {
-    public class PublicCertificateApiService
+    public PublicCertificateApiService(HttpClient httpClient/*, string endpoint*/) : base(httpClient, "certificates")
     {
     }
 }

@@ -1,4 +1,4 @@
-﻿
+﻿@model ProjectViewModel
 @{
     ViewData["Title"] = "ProjectDetail";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="~/Mytheme/portfolio/css/components/related-content.css">
 }
 
+@foreach (var projects in Model.projectDtos)
+{
+    
 
 <!-- PROJECT HERO -->
 <section class="project-hero">
@@ -16,20 +19,20 @@
         <nav aria-label="breadcrumb" data-aos="fade-up" class="project-breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="portfolio.html">Projeler</a>
+                    <a href="/Project/Index/">Projeler</a>
                 </li>
-                <li class="breadcrumb-item active">E-Ticaret Platformu</li>
+                <li class="breadcrumb-item active">@projects.Name</li>
             </ol>
         </nav>
-        <h1 class="section-title" data-aos="fade-up">E-Ticaret <span class="gradient-text">Platformu</span></h1>
+            <h1 class="section-title" data-aos="fade-up">@projects.Name</h1>
         <p class="project-description" data-aos="fade-up">
-            Modern teknolojilerle geliştirilmiş, ölçeklenebilir ve kullanıcı dostu bir e-ticaret çözümü.
+                @projects.ShortDescription
         </p>
         <div class="project-meta" data-aos="fade-up">
-            <div class="project-meta-item"><i class="far fa-calendar"></i> 2024</div>
-            <div class="project-meta-item"><i class="fas fa-tag"></i> Web Uygulama</div>
-            <div class="project-meta-item"><i class="far fa-clock"></i> 3 Ay</div>
-            <div class="project-meta-item"><i class="fas fa-users"></i> 5 Kişilik Takım</div>
+                <div class="project-meta-item"><i class="far fa-calendar"></i> @projects.PublishedAt?.ToString("dd MMMM yyyy")</div>
+                <div class="project-meta-item"><i class="fas fa-tag"></i> @projects.Topics</div>
+                <div class="project-meta-item"><i class="far fa-clock"></i> @projects.Duration</div>
+                <div class="project-meta-item"><i class="fas fa-users"></i> @projects.Role</div>
         </div>
     </div>
 </section>
@@ -41,59 +44,18 @@
             <div class="col-lg-8" data-aos="fade-up">
 
                 <div class="project-image">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=600&fit=crop"
-                         alt="Proje Görsel">
+                        <img src="@projects.ImageUrl"
+                             alt="@projects.Name">
                 </div>
 
-                <h2>📋 Proje Hakkında</h2>
-                <p>
-                    Bu proje, modern e-ticaret ihtiyaçlarını karşılamak üzere sıfırdan tasarlanmış ve geliştirilmiş
-                    tam kapsamlı bir web uygulamasıdır. Kullanıcı deneyimi ön planda tutularak, mobil uyumlu ve
-                    performans odaklı bir yapı kurulmuştur.
-                </p>
-
-                <h2>🎯 Hedefler</h2>
-                <ul>
-                    <li>Kullanıcı dostu arayüz tasarımı</li>
-                    <li>Hızlı sayfa yüklenme süreleri</li>
-                    <li>Güvenli ödeme altyapısı</li>
-                    <li>Ölçeklenebilir mimari</li>
-                </ul>
-
-                <h2>🛠️ Kullanılan Teknolojiler</h2>
-                <div class="tech-stack">
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Node.js</span>
-                    <span class="tech-tag">MongoDB</span>
-                    <span class="tech-tag">Express.js</span>
-                    <span class="tech-tag">Stripe</span>
-                    <span class="tech-tag">Redis</span>
-                </div>
-
-                <h2>⚡ Öne Çıkan Özellikler</h2>
-                <ul>
-                    <li><strong>Gerçek Zamanlı Stok Takibi:</strong> WebSocket ile anlık stok güncellemeleri</li>
-                    <li><strong>Akıllı Arama:</strong> Elasticsearch entegrasyonlu hızlı arama</li>
-                    <li><strong>Çoklu Ödeme:</strong> Stripe, PayPal ve Banka transferi desteği</li>
-                    <li><strong>Admin Paneli:</strong> Kapsamlı istatistik ve yönetim araçları</li>
-                </ul>
-
-                <h2>📊 Sonuçlar</h2>
-                <p>
-                    Proje lansmanından sonra elde edilen metrikler:
-                </p>
-                <ul>
-                    <li>%40 dönüşüm oranı artışı</li>
-                    <li>Ortalama sayfa yüklenme süresi: 1.2 saniye</li>
-                    <li>İlk 3 ayda 10,000+ aktif kullanıcı</li>
-                </ul>
+                    @projects.Description
 
                 <div class="project-links">
-                    <a href="#" class="btn-primary-custom">
+                        <a href="@projects.WebsiteUrl" class="btn-primary-custom">
                         <i class="fas fa-external-link-alt me-2"></i>Canlı
                         Demo
                     </a>
-                    <a href="#" class="btn-outline-custom"><i class="fab fa-github me-2"></i>GitHub</a>
+                        <a href="@projects.GithubUrl" class="btn-outline-custom"><i class="fab fa-github me-2"></i>GitHub</a>
                 </div>
             </div>
 
@@ -102,55 +64,32 @@
                     <h4>Proje Bilgileri</h4>
                     <div class="project-info-item">
                         <span>Müşteri</span>
-                        <p>XYZ Şirketi</p>
+                            <p>@projects.ClientName</p>
                     </div>
                     <div class="project-info-item">
                         <span>Kategori</span>
-                        <p>Web Uygulama</p>
+                            <p>@projects.Topics</p>
                     </div>
                     <div class="project-info-item">
                         <span>Süre</span>
-                        <p>3 Ay</p>
+                            <p>@projects.Duration</p>
                     </div>
                     <div class="project-info-item">
                         <span>Rol</span>
-                        <p>Full-Stack Developer</p>
+                            <p>@projects.Role</p>
                     </div>
                     <hr>
-                    <a href="contact.html" class="btn-primary-custom w-100 text-center">
+                    <a href="/Contact/Index/" class="btn-primary-custom w-100 text-center">
                         <i class="fas fa-envelope me-2"></i>Benzer Proje İste
                     </a>
 
-                    <!-- Related Blog Posts in Sidebar -->
-                    <div class="related-posts-sidebar mt-4">
-                        <h5 class="mb-3">
-                            <i class="fas fa-newspaper me-2 sidebar-icon"></i>İlgili
-                            Yazılar
-                        </h5>
-                        <div class="related-post-item">
-                            <a href="blog-details.html">
-                                <span class="related-post-title">React vs Vue Karşılaştırması</span>
-                                <span class="related-post-meta"><i class="far fa-clock"></i> 5 dk</span>
-                            </a>
-                        </div>
-                        <div class="related-post-item">
-                            <a href="blog-details.html">
-                                <span class="related-post-title">Node.js ile RESTful API</span>
-                                <span class="related-post-meta"><i class="far fa-clock"></i> 8 dk</span>
-                            </a>
-                        </div>
-                        <div class="related-post-item">
-                            <a href="blog-details.html">
-                                <span class="related-post-title">MongoDB Best Practices</span>
-                                <span class="related-post-meta"><i class="far fa-clock"></i> 6 dk</span>
-                            </a>
-                        </div>
-                    </div>
+                  
                 </div>
             </div>
         </div>
     </div>
 </section>
+}
 
 <!-- Related Blog Posts Full Section -->
 <section class="section related-blog-section project-related-section">
@@ -164,66 +103,35 @@
         </div>
 
         <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
-            <!-- Blog Post 1 -->
-            <div class="col-md-4">
-                <div class="related-blog-card">
-                    <div class="related-blog-image">
-                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=200&fit=crop"
-                             alt="React vs Vue">
-                        <span class="blog-date">2 Ocak 2024</span>
-                        <div class="related-blog-overlay">
-                            <a href="blog-details.html" class="btn-icon"><i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                    <div class="related-blog-body">
-                        <span class="blog-category">Yazılım</span>
-                        <h5><a href="blog-details.html">React vs Vue Karşılaştırması</a></h5>
-                        <p>Front-end framework seçimi yaparken nelere dikkat etmelisiniz?</p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Blog Post 2 -->
-            <div class="col-md-4">
-                <div class="related-blog-card">
-                    <div class="related-blog-image">
-                        <img src="https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=400&h=200&fit=crop"
-                             alt="Node.js API">
-                        <span class="blog-date">28 Aralık 2023</span>
-                        <div class="related-blog-overlay">
-                            <a href="blog-details.html" class="btn-icon"><i class="fas fa-arrow-right"></i></a>
+            @foreach (var blogs in Model.blogPostDtos)
+            {
+                <!-- Blog Post 1 -->
+                <div class="col-md-4">
+                    <div class="related-blog-card">
+                        <div class="related-blog-image">
+                            <img src="@blogs.CoverImage"
+                                 alt="@blogs.Title">
+                            <span class="blog-date">@blogs.PublishedAt?.ToString("dd MMMM yyyy")</span>
+                            <div class="related-blog-overlay">
+                                <a href="/Blog/Index/@blogs.Slug" class="btn-icon"><i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="related-blog-body">
+                            <span class="blog-category">@blogs.Topics</span>
+                            <h5><a href="/Blog/Index/@blogs.Slug">@blogs.Title</a></h5>
+                            <p>@blogs.Content</p>
                         </div>
                     </div>
-                    <div class="related-blog-body">
-                        <span class="blog-category">Backend</span>
-                        <h5><a href="blog-details.html">Node.js ile RESTful API</a></h5>
-                        <p>Express.js kullanarak profesyonel API geliştirme rehberi.</p>
-                    </div>
                 </div>
-            </div>
+            }
+      
 
-            <!-- Blog Post 3 -->
-            <div class="col-md-4">
-                <div class="related-blog-card">
-                    <div class="related-blog-image">
-                        <img src="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=400&h=200&fit=crop"
-                             alt="MongoDB">
-                        <span class="blog-date">20 Aralık 2023</span>
-                        <div class="related-blog-overlay">
-                            <a href="blog-details.html" class="btn-icon"><i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                    <div class="related-blog-body">
-                        <span class="blog-category">Database</span>
-                        <h5><a href="blog-details.html">MongoDB Best Practices</a></h5>
-                        <p>NoSQL veritabanınızı optimize etmek için en iyi pratikler.</p>
-                    </div>
-                </div>
-            </div>
+          
         </div>
 
         <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="200">
-            <a href="blog.html" class="btn-outline-custom">
+            <a href="/Blog/Index/" class="btn-outline-custom">
                 <i class="fas fa-blog me-2"></i>Tüm Blog Yazıları
             </a>
         </div>

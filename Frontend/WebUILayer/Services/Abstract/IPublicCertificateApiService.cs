@@ -1,5 +1,7 @@
-﻿namespace WebUILayer.Services.Abstract;
+﻿using DtoLayer.CertificateDtos;
 
-public interface IPublicCertificateApiService
+namespace WebUILayer.Services.Abstract;
+
+public interface IPublicCertificateApiService:IPublicReadApiService<CertificateDto>
 {
 }

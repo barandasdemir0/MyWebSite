@@ -74,7 +74,7 @@
                             <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
-                                    <a href="#" class="action-btn disabled" title="Siteyi Görüntüle">
+                                    <a href="@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit hidden" title="Düzenle">
@@ -105,7 +105,7 @@
                             <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
-                                    <a href="#" class="action-btn disabled" title="Siteyi Görüntüle">
+                                    <a href="/Project/@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit" title="Düzenle">
@@ -134,7 +134,7 @@
                             <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
-                                    <a href="https://demo-eticaret.com" target="_blank" class="action-btn"
+                                    <a asp-controller="project" asp-action="Index" asp-route-guid="@item.Id" target="_blank" class="action-btn"
                                        title="Siteyi Görüntüle"><i class="fas fa-eye"></i></a>
                                     <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit" title="Düzenle">
                                         <i class="fas fa-pen"></i>

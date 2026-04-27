@@ -211,6 +211,31 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(baseurl!);
         });
 
+        services.AddHttpClient<IPublicCertificateApiService, PublicCertificateApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicEducationApiService, PublicEducationApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicExperienceApiService, PublicExperienceApiService >(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicBlogPostApiService, PublicBlogPostApiService >(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicTopicApiService, PublicTopicApiService >(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
 
 
         #endregion

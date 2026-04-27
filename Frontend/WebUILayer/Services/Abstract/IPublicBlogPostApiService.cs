@@ -1,5 +1,8 @@
-﻿namespace WebUILayer.Services.Abstract;
+﻿using DtoLayer.BlogPostDtos;
 
-public interface IPublicBlogPostApiService
+namespace WebUILayer.Services.Abstract;
+
+public interface IPublicBlogPostApiService:IPublicReadApiService<BlogPostDto>
 {
+    Task<List<BlogPostDto>> GetLatestAsync(int count);
 }
