@@ -77,10 +77,10 @@
                                     <a href="@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit hidden" title="Düzenle">
+                                    <a asp-action="Update" asp-route-id="@item.Id" class="action-btn edit hidden" title="Düzenle">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="Restore" asp-route-id="@item.Id" method="post">
                                         <button type="submit" class="action-btn restore" title="Geri Yükle"
                                                 data-action="restoreItem">
                                             <i class="fas fa-undo"></i>
@@ -108,10 +108,10 @@
                                     <a href="/Project/@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit" title="Düzenle">
+                                    <a asp-action="Update" asp-route-id="@item.Id" class="action-btn edit" title="Düzenle">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post">
                                         <button type="submit" data-action="deleteItem" class="action-btn delete" title="Sil">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -134,12 +134,12 @@
                             <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
-                                    <a asp-controller="project" asp-action="Index" asp-route-guid="@item.Id" target="_blank" class="action-btn"
+                                    <a asp-controller="project" asp-action="Index" asp-route-id="@item.Id" target="_blank" class="action-btn"
                                        title="Siteyi Görüntüle"><i class="fas fa-eye"></i></a>
-                                    <a asp-action="Update" asp-route-guid="@item.Id" class="action-btn edit" title="Düzenle">
+                                    <a asp-action="Update" asp-route-id="@item.Id" class="action-btn edit" title="Düzenle">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post">
                                         <button type="submit" data-action="deleteItem" class="action-btn delete" title="Sil">
                                             <i class="fas fa-trash"></i>
                                         </button>

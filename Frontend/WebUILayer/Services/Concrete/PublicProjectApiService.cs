@@ -9,9 +9,15 @@ public class PublicProjectApiService : PublicReadApiService<ProjectDto>, IPublic
     {
     }
 
-    public async Task<List<ProjectDto>> GetLatestAsync(int count)
+    public async Task<List<ProjectDto>> GetLatestAsync(int count, string? topic = null)
     {
-        var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
+        var url = $"{_endpoint}/latest/{count}";
+        if (!string.IsNullOrEmpty(topic))
+        {
+            url += $"?topic={topic}";
+        }
+
+        var response = await _httpClient.GetAsync(url);
         if (!response.IsSuccessStatusCode)
         {
             return new List<ProjectDto>();

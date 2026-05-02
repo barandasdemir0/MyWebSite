@@ -73,9 +73,9 @@ public class ProjectController : Controller
 
 
     [HttpGet]
-    public async Task<IActionResult> Update(Guid guid)
+    public async Task<IActionResult> Update(Guid id)
     {
-        var project = await _projectApiService.GetByIdAsync(guid);
+        var project = await _projectApiService.GetByIdAsync(id);
         if (project == null)
         {
             return NotFound();

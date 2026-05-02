@@ -1,102 +1,79 @@
-﻿@model BlogViewModel
+﻿@model BlogDetailViewModel
 @{
     ViewData["Title"] = "BlogDetail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var blog = Model.BlogPostDto; // Artık sadece tekil blog kullanıyoruz
 }
-
 @section styles {
     <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/blog-details.css">
     <link rel="stylesheet" href="~/Mytheme/portfolio/css/components/related-content.css">
 }
 <!-- HEADER -->
-@foreach (var blog in Model.blogPostListDtos)
-{
-    <section class="blog-header-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-10" data-aos="fade-up">
-               
-                    <span class="badge bg-primary mb-3">@blog.Topics</span>
-                    <h1 class="display-4 fw-bold mb-4">@blog.Title</h1>
-
-                
-                    <div class="blog-meta-large">
-                        <span><i class="far fa-calendar"></i> @blog.PublishedAt?.ToString("dd MM yyyy")</span>
-                        <span><i class="far fa-user"></i> @Model.aboutDto?.FullName</span>
-                        <span><i class="far fa-clock"></i> @blog.ReadTime dk okuma</span>
-                    </div>
-             
+<section class="blog-header-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10" data-aos="fade-up">
+                <span class="badge bg-primary mb-3">@string.Join(", ", blog?.Topics!)</span>
+                <h1 class="display-4 fw-bold mb-4">@blog?.Title</h1>
+                <div class="blog-meta-large">
+                    <span><i class="far fa-calendar"></i> @blog?.PublishedAt?.ToString("dd MM yyyy")</span>
+                    <span><i class="far fa-user"></i> @Model.AboutDto?.FullName</span>
+                    <span><i class="far fa-clock"></i> @blog?.ReadTime dk okuma</span>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- ARTICLE CONTENT -->
-    <section class="section pt-0">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
-                    <!-- Featured Image -->
-                    <img src="@blog.CoverImage"
-                         alt="@blog.Title" class="blog-featured-image">
-
-                    <article class="article-content">
-                        @blog.Content
-                    </article>
-
-                    <!-- Share & Author -->
-                    <div class="share-buttons">
-
-                        <span class="d-flex align-items-center me-3 fw-bold">Sosyal Medyalarım:</span>
-                        @foreach (var socialMedia in Model.socialMediaDtos)
-                        {
-                            <a href="@socialMedia.SocialMediaUrl" class="share-btn">
-                                <span class="iconify"
-                                      data-icon="@socialMedia.SocialMediaIcon"
-                                      data-width="48"
-                                      data-height="48"></span>
-                            </a>
-                            
-                        }
-                       
-                      
+    </div>
+</section>
+<!-- ARTICLE CONTENT -->
+<section class="section pt-0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+                
+                <img src="@blog?.CoverImage" alt="@blog?.Title" class="blog-featured-image">
+                <article class="article-content">
+                    @Html.Raw(blog?.Content)
+                </article>
+                <!-- Share & Author -->
+                <div class="share-buttons">
+                    <span class="d-flex align-items-center me-3 fw-bold">Sosyal Medyalarım:</span>
+                    @foreach (var socialMedia in Model.SocialMediaDtos)
+                    {
+                        <a href="@socialMedia.SocialMediaUrl" class="share-btn">
+                            <span class="iconify" data-icon="@socialMedia.SocialMediaIcon" data-width="48" data-height="48"></span>
+                        </a>
+                    }
+                </div>
+                
+                <div class="author-box">
+                    <img src="@Model.AboutDto?.ProfileImage" alt="@Model.AboutDto?.FullName" class="author-img">
+                    <div class="author-info">
+                        <h4>@Model.AboutDto?.FullName</h4>
+                        <p>@Model.AboutDto?.Greeting</p>
                     </div>
-
-                    <div class="author-box">
-                        <img src="@Model.aboutDto?.ProfileImage"
-                             alt="Baran Dasdemir" class="author-img">
-                        <div class="author-info">
-                            <h4>@Model.aboutDto?.FullName</h4>
-                            <p>
-                                @Model.aboutDto?.Greeting
-                            </p>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-       
-            <!-- Related Projects Section -->
+        </div>
+   
+        <!-- Related Projects Section -->
+        @if (Model.ProjectDtos != null && Model.ProjectDtos.Any())
+        {
             <div class="related-content-section" data-aos="fade-up">
                 <div class="section-header text-center">
                     <h3 class="h4">
-                        <i class="fas fa-folder-open me-2" style="color: var(--primary);"></i>Bu
-                        Kategorideki Projeler
+                        <i class="fas fa-folder-open me-2" style="color: var(--primary);"></i>Bu Kategorideki Projeler
                     </h3>
                     <p style="color: var(--text-secondary); margin-top: 15px;">
-                        Yazılım kategorisindeki projelerimi
-                        inceleyin
+                        @blog?.MainTopic kategorisindeki projelerimi inceleyin
                     </p>
                 </div>
-
                 <div class="row g-4">
-                    @foreach (var project in Model.projectListDtos)
+                    @foreach (var project in Model.ProjectDtos)
                     {
                         <div class="col-md-4">
                             <div class="related-card">
                                 <div class="related-card-image">
-                                    <img src="@project.ImageUrl"
-                                         alt="E-Ticaret Platformu">
+                                    <img src="@project.ImageUrl" alt="@project.Name">
                                     <span class="project-date">@project.PublishedAt?.ToString("dd MMMM yyyy")</span>
                                     <div class="related-card-overlay">
                                         <a href="/Project/@project.Slug" class="btn-icon">
@@ -105,31 +82,27 @@
                                     </div>
                                 </div>
                                 <div class="related-card-body">
-                                    <span class="related-category">@project.Topics</span>
+                                    <span class="related-category">@string.Join(", ", project.Topics)</span>
                                     <h5><a href="/Project/@project.Slug">@project.Name</a></h5>
+                                    
                                     <div class="related-tags">
-                                        @foreach (var languages in project.Technologies)
+                                        @foreach (var language in project.TechnologyList)
                                         {
-                                            <span>@project.Technologies</span>
+                                            <span>@language</span>
                                         }
-                                        
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
                     }
-                    <!-- Related Project 1 -->
-                    
-
                 </div>
-
                 <div class="text-center" style="margin-top: 25px;">
-                    <a href="portfolio.html" class="btn-outline-custom">
+                    <a href="/Project" class="btn-outline-custom">
                         <i class="fas fa-th me-2"></i>Tüm Projeleri Gör
                     </a>
                 </div>
             </div>
-        </div>
-    </section>
-
-}
+        }
+    </div>
+</section>

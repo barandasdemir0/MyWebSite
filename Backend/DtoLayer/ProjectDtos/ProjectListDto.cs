@@ -21,6 +21,9 @@ public class ProjectListDto : IHasId
     public bool IsPublished { get; set; } = false;
     public bool IsDeleted { get; set; } = false;
 
+    public List<string> TechnologyList { get; set; } = new();
+
+
     // Topic listesi (Navigation'dan gelecek isimler)
     public List<string> Topics { get; set; } = new();
 }

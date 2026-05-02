@@ -1,4 +1,5 @@
-﻿@model BlogViewModel
+﻿@using WebUILayer.Extension
+@model BlogViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -38,19 +39,17 @@
                 <button class="filter-btn" data-filter="@topic.Name">@topic.Name</button>
             }
           
-@*             <button class="filter-btn" data-filter="kariyer">Kariyer</button>
-            <button class="filter-btn" data-filter="saas">SaaS</button> *@
         </div>
 
         <div class="blog-grid">
             @foreach (var blogs in Model.blogPostListDtos)
             {
                 <!-- Blog Post 1 -->
-                <article class="blog-card" data-aos="fade-up" data-category="@blogs.Topics">
+                <article class="blog-card" data-aos="fade-up" data-category="@blogs.Topics.FirstOrDefault()">
                     <div class="blog-image">
-                        <span class="blog-category">@blogs.Topics</span>
+                        <span class="blog-category">@string.Join(", ", blogs.Topics)</span>
                         <img src="@blogs.CoverImage"
-                             alt="@blogs.Topics">
+                             alt="@string.Join(", ", blogs.Topics)">
                     </div>
                     <div class="blog-content">
                         <div class="blog-meta">
@@ -64,7 +63,7 @@
                             </a>
                         </h3>
                         <p class="blog-excerpt">
-                            @blogs.Content.Substring(5)
+                            @blogs.Content.StripHtmlAndTruncate(200)
                         </p>
                         <div class="blog-footer">
                             <a href="/blog/BlogDetail/@blogs.Slug" class="read-more">
@@ -77,16 +76,8 @@
 
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination-wrapper">
-            <button class="pagination-btn" id="prevPage">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="pagination-btn active">1</button>
-            <button class="pagination-btn">2</button>
-            <button class="pagination-btn" id="nextPage">
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        <div class="mt-4" data-aos="fade-up">
+            @await Component.InvokeAsync("LayoutPublicPagination", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
         </div>
     </div>
 </section>

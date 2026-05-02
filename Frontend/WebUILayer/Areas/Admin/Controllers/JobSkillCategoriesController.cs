@@ -60,9 +60,9 @@ public class JobSkillCategoriesController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Update(Guid guid)
+    public async Task<IActionResult> Update(Guid id)
     {
-        var query = await _jobSkillCategoryService.GetByIdAsync(guid);
+        var query = await _jobSkillCategoryService.GetByIdAsync(id);
         if (query == null)
         {
             return NotFound();

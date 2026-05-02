@@ -60,9 +60,9 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
 
     [HttpGet("latest/{count}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
+    public async Task<IActionResult> GetLatest(int count,[FromQuery] string? topic = null, CancellationToken cancellationToken=default)
     {
-        var values = await _projectService.GetLatestAsync(count,cancellationToken);
+        var values = await _projectService.GetLatestAsync(count,topic,cancellationToken);
         if (values == null)
         {
             return NotFound();
