@@ -15,7 +15,7 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
             .Must(x => !string.IsNullOrWhiteSpace(x))
             .WithMessage("Başlık sadece boşluklardan oluşamaz")
             .MaximumLength(200)
-            .WithMessage("200 Karakterden daha fazla bir başlık olamaz").MustBeSafeHtml();
+            .WithMessage("200 Karakterden daha fazla bir başlık olamaz");
 
         RuleFor(x => x.ShortDescription)
             .NotEmpty()
@@ -23,17 +23,17 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
             .Must(x => !string.IsNullOrWhiteSpace(x))
             .WithMessage("Başlık sadece boşluklardan oluşamaz")
             .MaximumLength(1000)
-            .WithMessage("1000 Karakterden daha fazla bir Kısa Açıklama olamaz").MustBeSafeHtml();
+            .WithMessage("1000 Karakterden daha fazla bir Kısa Açıklama olamaz");
 
         RuleFor(x => x.Description)
             .NotEmpty()
             .WithMessage("Açıklama Boş Geçilemez")
             .Must(x => !string.IsNullOrWhiteSpace(x))
-            .WithMessage("Başlık sadece boşluklardan oluşamaz").MustBeSafeHtml();
+            .WithMessage("Başlık sadece boşluklardan oluşamaz");
 
         RuleFor(x => x.Technologies)
             .NotEmpty()
-            .WithMessage("Açıklama Boş Geçilemez").MustBeSafeHtml();
+            .WithMessage("Açıklama Boş Geçilemez");
 
 
         RuleFor(x => x.ImageUrl)
@@ -42,7 +42,7 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
 
         RuleFor(x => x.ClientName)
             .MaximumLength(200)
-            .WithMessage("200 Karakterden daha fazla bir Müşteri ismi olamaz").MustBeSafeHtml();
+            .WithMessage("200 Karakterden daha fazla bir Müşteri ismi olamaz");
 
         RuleFor(x => x.Duration)
             .MaximumLength(50)
@@ -50,11 +50,11 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
 
         RuleFor(x => x.Role)
             .MaximumLength(100)
-            .WithMessage("100 Karakterden daha fazla bir ekip sayısı olamaz").MustBeSafeHtml();
+            .WithMessage("100 Karakterden daha fazla bir ekip sayısı olamaz");
 
         RuleFor(x => x.Goals)
             .MaximumLength(3000)
-            .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz").MustBeSafeHtml();
+            .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz");
 
         RuleFor(x => x.WebsiteUrl)
             .MaximumLength(300)
@@ -81,8 +81,7 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
             .Must(url => string.IsNullOrEmpty(url) || url.StartsWith("http")).WithMessage("Geçerli bir URL giriniz.");
         // 3. XSS (Güvenlik) Kontrolü: Description alanı editörden (HTML) geliyorsa zararlı script içeremez!
         RuleFor(x => x.Description)
-           .NotEmpty().WithMessage("Proje detayı gereklidir.")
-          .MustBeSafeHtml();
+           .NotEmpty().WithMessage("Proje detayı gereklidir.");
 
     }
 }

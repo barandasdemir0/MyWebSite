@@ -10,7 +10,7 @@ public interface IGuestBookService:IGenericService<GuestBook,GuestBookListDto,Cr
     Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default);
 
     Task<GuestBookDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
-    Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery , CancellationToken cancellationToken = default);
+    Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery , bool? isApproved = null, CancellationToken cancellationToken = default);
     Task<PagedResult<GuestBookListDto>> GetAllUserAsync(PaginationQuery paginationQuery , CancellationToken cancellationToken = default);
 
     Task<GuestBookDto?> ApproveAsync(Guid guid, CancellationToken cancellationToken = default);

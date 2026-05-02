@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using HtmlAgilityPack;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace WebUILayer.Extension;
 
@@ -11,15 +13,19 @@ public static class StringExtensions
             return string.Empty;
         }
 
+        var htmlDoc = new HtmlDocument();
+        htmlDoc.LoadHtml(input);
 
-        // burası HTML etiketlerini kaldırmak için basit bir regex kullanır. Daha karmaşık HTML yapıları için daha gelişmiş bir yöntem gerekebilir.
-        var plaintText = Regex.Replace(input, "<.*?>", string.Empty);
+        // Bütün HTML etiketlerini uçur, sadece saf metni (plain text) al
+        string plainText = htmlDoc.DocumentNode.InnerText;
+        // Ekranda çirkin görünen &nbsp; gibi HTML kodlarını normal boşluğa çevir
+        plainText = WebUtility.HtmlDecode(plainText).Trim();
 
-        if (plaintText.Length<= length)
+        if (plainText.Length<= length)
         {
-            return plaintText;
+            return plainText;
         }
 
-        return plaintText.Substring(0, length) + "...";
+        return plainText.Substring(0, length) + "...";
     }
 }

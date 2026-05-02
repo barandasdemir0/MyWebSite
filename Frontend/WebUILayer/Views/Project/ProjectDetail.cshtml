@@ -20,7 +20,7 @@
         <p class="project-description" data-aos="fade-up">@Model.ProjectDto?.ShortDescription</p>
         <div class="project-meta" data-aos="fade-up">
             <div class="project-meta-item"><i class="far fa-calendar"></i> @Model.ProjectDto?.PublishedAt?.ToString("dd MMMM yyyy")</div>
-            <div class="project-meta-item"><i class="fas fa-tag"></i> @string.Join(", ", @Model.ProjectDto?.Topics!)</div>
+            <div class="project-meta-item"><i class="fas fa-tag"></i> @(Model.ProjectDto?.Topics != null ? string.Join(", ", Model.ProjectDto.Topics) : "Genel")</div>
             <div class="project-meta-item"><i class="far fa-clock"></i> @Model.ProjectDto?.Duration</div>
             <div class="project-meta-item"><i class="fas fa-users"></i> @Model.ProjectDto?.Role</div>
         </div>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="project-info-item">
                         <span>Kategori</span>
-                        <p>@string.Join(", ", @Model.ProjectDto?.Topics!)</p>
+                        <p>@(Model.ProjectDto?.Topics != null ? string.Join(", ", Model.ProjectDto.Topics) : "Genel")</p>
                     </div>
                     <div class="project-info-item">
                         <span>Süre</span>

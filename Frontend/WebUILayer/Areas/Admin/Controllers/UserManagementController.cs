@@ -59,17 +59,31 @@ public class UserManagementController : Controller
     [HttpPost]
     public async Task<IActionResult> Approve(string id, string role = RoleConsts.User)
     {
-        var ok = await _userAdminApiService.ApproveUserAsync(id, role); // Kullanıcıyı onayla ve rolünü ata
+        try
+        {
+            var ok = await _userAdminApiService.ApproveUserAsync(id, role); // Kullanıcıyı onayla ve rolünü ata
         TempData[ok ? "Success" : "Error"] = ok
             ? "Kullanıcı onaylandı." : "Kullanıcı onaylanamadı.";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "Onaylama sırasında bir hata oluştu: " + ex.Message;
+        }
         return RedirectToAction(nameof(PendingUser)); // Onaylama işleminden sonra bekleyen kullanıcılar sayfasına yönlendir
     }
 
     [HttpPost]
     public async Task<IActionResult> Reject(string id) // Kullanıcıyı reddet
     {
-        var ok = await _userAdminApiService.RejectUserAsync(id);
+        try
+        {
+            var ok = await _userAdminApiService.RejectUserAsync(id);
         TempData[ok ? "Success" : "Error"] = ok ? "Kullanıcı reddedildi." : "Reddetme başarısız.";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "Reddetme sırasında bir hata oluştu: " + ex.Message;
+        }
         return RedirectToAction(nameof(PendingUser));
 
     }
@@ -106,9 +120,16 @@ public class UserManagementController : Controller
     [HttpPost]
     public async Task<IActionResult> SavePermissions(string selectedRole, List<string> permissions)//seçilen rolldeki izni listeye al kaydet.
     {
-        var ok = await _rolePermissionApiService.SaveRolePermissions(selectedRole, permissions ?? new());
+        try
+        {
+            var ok = await _rolePermissionApiService.SaveRolePermissions(selectedRole, permissions ?? new());
         TempData[ok ? "Success" : "Error"] = ok
             ? "İzinler kaydedildi." : "İzinler kaydedilemedi.";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "İzinler kaydedilirken hata oluştu: " + ex.Message;
+        }
         return RedirectToAction(nameof(PendingUser), new { selectedRole }); // İzin kaydetme işleminden sonra bekleyen kullanıcılar sayfasına yönlendir, seçilen rolü de koru
     }
 

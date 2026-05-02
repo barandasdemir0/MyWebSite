@@ -1,10 +1,9 @@
 ﻿@using SharedKernel.Shared
 @using DtoLayer.GuestBookDtos
-@model PagedResult<GuestBookListDto>
+@model GuestBookViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var guestUser = ViewBag.GuestUser as CreateGuestBookDto;
 }
 
 @section Styles {
@@ -43,7 +42,7 @@
             <div class="alert alert-danger text-center mb-4" data-aos="fade-up">@TempData["ErrorMessage"]</div>
         }
 
-        @if (guestUser == null)
+        @if (Model.GuestUser == null)
         {
             <!-- Giriş Yapılmamışsa Çıkacak Karanlık Kutu (Butonlar) -->
             <div class="guestbook-auth" data-aos="fade-up">
@@ -80,10 +79,10 @@
             <!-- İSTEĞİNİZ BURASI: Giriş Yapılmışsa O Karanlık Kutunun İçinde Profilin Çıkacak -->
             <div class="guestbook-auth" data-aos="fade-up" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; text-align: left;">
                 <div class="d-flex align-items-center gap-3">
-                    <img src="@guestUser.AuthorAvatarUrl" alt="Avatar" class="rounded-circle" width="55" height="55" style="object-fit: cover; border: 2px solid var(--accent-primary);">
+                    <img src="@Model.GuestUser.AuthorAvatarUrl" alt="Avatar" class="rounded-circle" width="55" height="55" style="object-fit: cover; border: 2px solid var(--accent-primary);">
                     <div class="d-flex flex-column">
-                        <strong class="text-white" style="font-size: 1.1rem;">@guestUser.AuthorName</strong>
-                        <small class="text-muted">@guestUser.AuthProvider ile giriş yapıldı</small>
+                        <strong class="text-white" style="font-size: 1.1rem;">@Model.GuestUser.AuthorName</strong>
+                        <small class="text-muted">@Model.GuestUser.AuthProvider ile giriş yapıldı</small>
                     </div>
                 </div>
                 <a asp-action="Logout" asp-controller="Auth" class="btn btn-outline-danger btn-sm" style="padding: 8px 16px;">
@@ -115,9 +114,9 @@
 
         <!-- Comments List -->
         <div class="comments-list mt-5">
-            <h3 class="mb-4">Son Mesajlar (@Model.TotalCount)</h3>
+            <h3 class="mb-4">Son Mesajlar (@Model.Messages.TotalCount)</h3>
 
-            @if (!Model.Items.Any())
+            @if (!Model.Messages.Items.Any())
             {
                 <p class="text-muted" data-aos="fade-up">Henüz onaylanmış mesaj bulunmuyor. İlk yazan siz olun!</p>
             }
@@ -125,7 +124,7 @@
             @{
                 int delay = 200;
             }
-            @foreach (var item in Model.Items)
+            @foreach (var item in Model.Messages.Items)
             {
                 <div class="comment-card" data-aos="fade-up" data-aos-delay="@delay">
                     <div class="comment-avatar">
@@ -150,7 +149,7 @@
 
         <!-- Pagination (Senin Özel ViewComponentin) -->
         <div class="mt-4" data-aos="fade-up">
-            @await Component.InvokeAsync("LayoutPublicPagination", new { currentPage = Model.PageNumber, totalPages = Model.TotalPages })
+            @await Component.InvokeAsync("LayoutPublicPagination", new { currentPage = Model.Messages.PageNumber, totalPages = Model.Messages.TotalPages })
         </div>
     </div>
 </section>

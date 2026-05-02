@@ -30,7 +30,7 @@ public class TwoFactorApiService : ITwoFactorApiService
 
     public async Task<Setup2FAResultDto?> SetupAuthenticatorAsync()
     {
-        var response = await _httpClient.GetAsync($"twofactor/setup-authenticator");
+        var response = await _httpClient.GetAsync("twofactor/setup-authenticator");
         if (!response.IsSuccessStatusCode)
         {
             return null;

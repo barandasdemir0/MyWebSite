@@ -3,13 +3,13 @@ using SharedKernel.Shared;
 
 namespace WebUILayer.Areas.Admin.Services.Abstract;
 
-public interface IGuestBookApiService:IGenericApiService<GuestBookListDto,CreateGuestBookDto,UpdateGuestBookDto>
+public interface IGuestBookApiService:IGenericApiService<GuestBookDto,CreateGuestBookDto,UpdateGuestBookDto>
 {
-    Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery);
-    Task<PagedResult<GuestBookListDto>> GetAllUserAsync(PaginationQuery paginationQuery);
+    Task<PagedResult<GuestBookDto>> GetAllAdminAsync(PaginationQuery paginationQuery, bool? isApproved = null);
+    Task<PagedResult<GuestBookDto>> GetAllUserAsync(PaginationQuery paginationQuery);
 
     Task ApproveAsync(Guid guid);
     Task RestoreAsync(Guid guid);
 
-    Task<List<GuestBookListDto>> GetLatestAsync(int count);
+    Task<List<GuestBookDto>> GetLatestAsync(int count);
 }

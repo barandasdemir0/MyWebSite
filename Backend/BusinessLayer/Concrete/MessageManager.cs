@@ -3,6 +3,7 @@ using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.MessageDtos;
+using Ganss.Xss;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
@@ -27,6 +28,8 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
 
     public override async Task<MessageDto> AddAsync(CreateMessageDto dto, CancellationToken cancellationToken = default)
     {
+        var sanitizer = new HtmlSanitizer();
+        dto.Body = sanitizer.Sanitize(dto.Body);
         ArgumentNullException.ThrowIfNull(dto);
         var entity = _mapper.Map<Message>(dto);
         await _repository.AddAsync(entity, cancellationToken);

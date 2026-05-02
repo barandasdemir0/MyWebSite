@@ -32,9 +32,9 @@ public class GuestBookManager : GenericManager<GuestBook, GuestBookListDto, Crea
         return _mapper.Map<GuestBookDto>(entity);
     }
 
-    public async Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery,  bool? isApproved = null, CancellationToken cancellationToken = default)
     {
-        var (items, totalCount) = await _guestBookDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
+        var (items, totalCount) = await _guestBookDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize,isApproved, cancellationToken);
         return _mapper.Map<List<GuestBookListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
 

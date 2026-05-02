@@ -29,7 +29,13 @@ public class AccountApiService : IAccountApiService
         }
 
         var body = await result.Content.ReadFromJsonAsync<JsonElement>();// API'den dönen yanıtın gövdesini JSON formatında okur ve reset token'ı çıkarır. neden jsonelement kullandık : Çünkü API'den dönen yanıtın yapısı önceden bilinmediği için, JSON verisini dinamik olarak işlemek için JsonElement kullanılır.
-        return body.GetProperty("resetToken").GetString(); // JSON verisinden "resetToken" adlı özelliği alır ve string olarak döner. Bu token, kullanıcının yeni şifre belirlemesi için gereklidir.
+        if (body.TryGetProperty("resetToken", out var tokenElement))
+        {
+            return tokenElement.GetString();
+        } // JSON verisinden "resetToken" adlı özelliği alır ve string olarak döner. Bu token, kullanıcının yeni şifre belirlemesi için gereklidir.
+
+        // API beklenen "resetToken" değerini göndermediyse sistem çökmez (KeyNotFoundException fırlatmaz), güvenli bir şekilde null döner.
+        return null;
 
     }
 

@@ -1,6 +1,7 @@
 ﻿using DtoLayer.ProjectDtos;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete;
 
@@ -12,11 +13,7 @@ public class ProjectApiService : GenericApiService<ProjectDto, CreateProjectDto,
 
     public async Task<PagedResult<ProjectDto>> GetAllAdminAsync(PaginationQuery paginationQuery)
     {
-        var url = $"{_endpoint}/admin-all?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";
-        if (paginationQuery.TopicId.HasValue)
-        {
-            url += $"&TopicId={paginationQuery.TopicId}";
-        }
+        var url = paginationQuery.ToQueryString($"{_endpoint}/admin-all");
         var result = await _httpClient.GetFromJsonAsync<PagedResult<ProjectDto>>(url);
         if (result== null)
         {
@@ -25,14 +22,14 @@ public class ProjectApiService : GenericApiService<ProjectDto, CreateProjectDto,
         return result;
     }
 
-    public async Task<ProjectListDto?> GetDetailBySlug(string slug)
+    public async Task<ProjectDto?> GetDetailBySlug(string slug)
     {
-        return await _httpClient.GetFromJsonAsync<ProjectListDto>($"{_endpoint}/{slug}");
+        return await _httpClient.GetFromJsonAsync<ProjectDto>($"{_endpoint}/{slug}");
     }
 
-    public async Task<ProjectListDto?> GetDetailtById(Guid guid)
+    public async Task<ProjectDto?> GetDetailById(Guid guid)
     {
-        return await _httpClient.GetFromJsonAsync<ProjectListDto>($"{_endpoint}/{guid}");
+        return await _httpClient.GetFromJsonAsync<ProjectDto>($"{_endpoint}/{guid}");
     }
 
     public async Task<List<ProjectDto>> GetLatestAsync(int count)

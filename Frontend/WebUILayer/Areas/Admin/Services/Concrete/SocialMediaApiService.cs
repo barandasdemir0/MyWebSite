@@ -9,7 +9,7 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
         {
         }
 
-        public async Task<List<SocialMediaDto>> GetAdminAllAsync()
+        public async Task<List<SocialMediaDto>> GetAllAdminAsync()
         {
             var query = await _httpClient.GetFromJsonAsync<List<SocialMediaDto>>($"{_endpoint}/admin-all");
             if (query==null)

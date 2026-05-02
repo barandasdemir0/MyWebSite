@@ -41,7 +41,6 @@ public class GithubRepoController : Controller
         return View(model);
     }
     [HttpPost]
-    [IgnoreAntiforgeryToken] 
     public async Task<IActionResult> Sync([FromBody] SyncGithubRequest request)
     {
         try

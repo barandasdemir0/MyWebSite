@@ -23,9 +23,9 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
 
     [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery pagination, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery pagination, [FromQuery] bool? isApproved, CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.GetAllAdminAsync(pagination, cancellationToken);
+        var query = await _guestBookService.GetAllAdminAsync(pagination, isApproved,cancellationToken);
         return Ok(query);
     }
     [HttpGet("user-all")]

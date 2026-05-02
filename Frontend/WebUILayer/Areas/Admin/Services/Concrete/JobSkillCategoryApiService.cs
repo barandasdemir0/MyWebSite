@@ -9,7 +9,7 @@ public class JobSkillCategoryApiService : GenericApiService<JobSkillCategoryDto,
     {
     }
 
-    public async Task<List<JobSkillCategoryDto>> GetAdminAllAsync()
+    public async Task<List<JobSkillCategoryDto>> GetAllAdminAsync()
     {
         var query = await _httpClient.GetFromJsonAsync<List<JobSkillCategoryDto>>($"{_endpoint}/admin-all");
         if (query == null)

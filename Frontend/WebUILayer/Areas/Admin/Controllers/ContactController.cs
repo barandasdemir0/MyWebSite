@@ -30,19 +30,8 @@ public class ContactController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(UpdateContactDto updateContactDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(updateContactDto);
-        }
-        try
-        {
-            await _contactApiService.SaveContactAsync(updateContactDto);
-            return RedirectToAction(nameof(Index));
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddApiError(ex);
-            return View(updateContactDto);
-        }
+        if (!ModelState.IsValid) return View(updateContactDto);
+        await _contactApiService.SaveContactAsync(updateContactDto);
+        return RedirectToAction(nameof(Index));
     }
 }

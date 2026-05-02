@@ -1,6 +1,8 @@
 ﻿using DtoLayer.BlogPostDtos;
 using DtoLayer.ProjectDtos;
+using Microsoft.AspNetCore.WebUtilities;
 using SharedKernel.Shared;
+using WebUILayer.Extension;
 using WebUILayer.Services.Abstract;
 
 namespace WebUILayer.Services.Concrete;
@@ -13,12 +15,10 @@ public class PublicProjectApiService : PublicReadApiService<ProjectDto>, IPublic
 
     public async Task<PagedResult<ProjectDto>> GetAllPagedAsync(PaginationQuery paginationQuery)
     {
-        var queryString = $"?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";
-        if (paginationQuery.TopicId.HasValue)
-        {
-            queryString += $"&TopicId={paginationQuery.TopicId}";
-        }
-        var response = await _httpClient.GetAsync($"{_endpoint}/user-all{queryString}");
+    
+        var url = paginationQuery.ToQueryString($"{_endpoint}/user-all");
+
+        var response = await _httpClient.GetAsync(url);
         if (!response.IsSuccessStatusCode)
         {
             return new PagedResult<ProjectDto>
@@ -53,7 +53,7 @@ public class PublicProjectApiService : PublicReadApiService<ProjectDto>, IPublic
         var url = $"{_endpoint}/latest/{count}";
         if (!string.IsNullOrEmpty(topic))
         {
-            url += $"?Topic={topic}";
+            url = QueryHelpers.AddQueryString(url, "Topic", topic);
         }
 
         var response = await _httpClient.GetAsync(url);

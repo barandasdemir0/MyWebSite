@@ -9,11 +9,13 @@ public class OAuthController : Controller
 {
     private readonly IOAuthApiService _oAuthApiService;
     private readonly IConfiguration _configuration;
+    private readonly IGuestSessionService _guestSessionService;
 
-    public OAuthController(IOAuthApiService oAuthApiService, IConfiguration configuration)
+    public OAuthController(IOAuthApiService oAuthApiService, IConfiguration configuration, IGuestSessionService guestSessionService)
     {
         _oAuthApiService = oAuthApiService;
         _configuration = configuration;
+        _guestSessionService = guestSessionService;
     }
 
     // GitHub OAuth Giriş
@@ -31,7 +33,7 @@ public class OAuthController : Controller
 
     // GitHub OAuth callback işlemi
     [HttpGet]
-    public async Task<IActionResult> GithubCallback(string code,string state)
+    public async Task<IActionResult> GithubCallback(string code, string state)
     {
         // GitHub tarafından dönen kodu al ve API üzerinden kullanıcı bilgilerini al
         if (string.IsNullOrEmpty(code))
@@ -44,15 +46,22 @@ public class OAuthController : Controller
             return RedirectToGuestBook("CSRF Güvenlik İhlali Tespit Edildi!"); // Uyuşmazsa saldırıdır
         }
 
-
-        // API üzerinden GitHub kullanıcı bilgilerini al
-        var profile = await _oAuthApiService.GithubLoginAsync(new GithubAuthRequestDto
+        try
         {
-            Code = code
-            // RedirectUri genellikle GitHub OAuth için gerekli değildir, ancak API'niz bunu bekliyorsa ekleyebilirsiniz
-        });
+            // API üzerinden GitHub kullanıcı bilgilerini al
+            var profile = await _oAuthApiService.GithubLoginAsync(new GithubAuthRequestDto
+            {
+                Code = code
+                // RedirectUri genellikle GitHub OAuth için gerekli değildir, ancak API'niz bunu bekliyorsa ekleyebilirsiniz
+            });
 
-        return HandleOAuthProfile(profile);
+            return HandleOAuthProfile(profile);
+        }
+        catch (Exception)
+        {
+            // GitHub veya API anlık yanıt vermezse
+            return RedirectToGuestBook("GitHub ile bağlantı kurulurken bir hata oluştu.");
+        }
     }
 
 
@@ -76,7 +85,7 @@ public class OAuthController : Controller
 
     // LinkedIn OAuth callback işlemi
     [HttpGet]
-    public async Task<IActionResult> LinkedinCallback(string code,string state)
+    public async Task<IActionResult> LinkedinCallback(string code, string state)
     {
         if (string.IsNullOrEmpty(code))
         {
@@ -92,14 +101,22 @@ public class OAuthController : Controller
         // LinkedIn tarafından dönen kodu al ve API üzerinden kullanıcı bilgilerini al
         string redirectUri = Url.Action("LinkedinCallback", "OAuth", null, Request.Scheme)!;
 
-        // API üzerinden LinkedIn kullanıcı bilgilerini al
-        var profile = await _oAuthApiService.LinkedinLoginAsync(new LinkedinAuthRequestDto
+        try
+        {
+            // API üzerinden LinkedIn kullanıcı bilgilerini al
+            var profile = await _oAuthApiService.LinkedinLoginAsync(new LinkedinAuthRequestDto
         {
             Code = code,
             RedirectUri = redirectUri
         });
 
         return HandleOAuthProfile(profile);
+        }
+        catch (Exception)
+        {
+            // LinkedIn veya API anlık yanıt vermezse
+            return RedirectToGuestBook("LinkedIn ile bağlantı kurulurken bir hata oluştu.");
+        }
     }
 
 
@@ -118,9 +135,8 @@ public class OAuthController : Controller
                 AuthorAvatarUrl = oAuthUserProfileDto.AuthorAvatarUrl,// API'den dönen kullanıcı avatar URL'sini kullanarak oturum aç
                 AuthorProfileUrl = oAuthUserProfileDto.AuthorProfileUrl// API'den dönen kullanıcı profil URL'sini kullanarak oturum aç
             };
-            // Oturumda kullanıcı bilgilerini sakla (örneğin, Session veya TempData kullanarak)
-            HttpContext.Session.SetString("GuestUser", JsonSerializer.Serialize(guestUser));
-            // Giriş başarılı, misafir defteri sayfasına yönlendir
+            _guestSessionService.SetCurrentGuest(guestUser);
+
             return RedirectToAction(nameof(GuestBookController.Index), GuestBookController.name);
         }
         return RedirectToGuestBook("Giriş Başarısız");

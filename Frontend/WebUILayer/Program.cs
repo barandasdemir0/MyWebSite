@@ -45,9 +45,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
-app.UseMiddleware<MaintenanceMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<MaintenanceMiddleware>();
+
 
 app.UseRouting();
 app.UseSession();

@@ -21,6 +21,11 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 
     public override async Task<ProjectDto> AddAsync(CreateProjectDto dto, CancellationToken cancellationToken = default)
     {
+        var sanitizer = new Ganss.Xss.HtmlSanitizer();
+        if (!string.IsNullOrEmpty(dto.Description))
+        {
+            dto.Description = sanitizer.Sanitize(dto.Description);
+        }
         var entity = _mapper.Map<Project>(dto);
         entity.Slug = await UniqueSlugAsync(dto.Name, cancellationToken);
         if (entity.IsPublished && entity.PublishedAt == null)
@@ -79,6 +84,11 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 
     public override async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto, CancellationToken cancellationToken = default)
     {
+        var sanitizer = new Ganss.Xss.HtmlSanitizer();
+        if (!string.IsNullOrEmpty(dto.Description))
+        {
+            dto.Description = sanitizer.Sanitize(dto.Description);
+        }
         var entity = await _projectDal.GetAsync(x => x.Id == guid,
         tracking: true,
         includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);

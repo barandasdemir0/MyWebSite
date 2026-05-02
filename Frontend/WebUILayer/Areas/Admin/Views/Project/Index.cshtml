@@ -74,7 +74,7 @@
                             <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
-                                    <a href="@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
+                                    <a asp-controller="project" asp-action="Index" asp-route-id="@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a asp-action="Update" asp-route-id="@item.Id" class="action-btn edit hidden" title="Düzenle">
@@ -105,7 +105,7 @@
                             <td data-label="Tarih">@(item.PublishedAt?.AddHours(3).ToString("dd MMM yyyy HH:mm") ?? "-")</td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
-                                    <a href="/Project/@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
+                                    <a asp-controller="project" asp-action="Index" asp-route-id="@item.Id" class="action-btn disabled" title="Siteyi Görüntüle">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a asp-action="Update" asp-route-id="@item.Id" class="action-btn edit" title="Düzenle">

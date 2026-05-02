@@ -22,38 +22,57 @@ public class ContactController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var contact = await _contactApiService.GetContactForEditAsync();
+        try
+        {
+            var contact = await _contactApiService.GetContactForEditAsync();
         var viewModel = new ContactMessageViewModel
         {
             contactDto = contact,
             createMessageDto = new CreateMessageDto() // Form için boş bir nesne yarat
         };
         return View(viewModel);
+        }
+        catch (Exception)
+        {
+            // Eğer API veya DB çökerse sayfa patlamasın
+            TempData["Error"] = "İletişim bilgileri şu anda yüklenemiyor.";
+            return RedirectToAction("Index", "Default"); // Veya anasayfana (Home) yönlendir
+        }
     }
 
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(ContactMessageViewModel ContactMessageViewModel)
     {
         if (!ModelState.IsValid)
         {
             return View(ContactMessageViewModel);
         }
-        ContactMessageViewModel.createMessageDto?.ReceiverEmail = "barandasdemir.bd@gmail.com";
 
-        ContactMessageViewModel.createMessageDto?.Folder = SharedKernel.Enums.MessageFolder.Inbox;
-
-        var result = await _publicMessageApiService.SendContactMessageAsync(ContactMessageViewModel.createMessageDto!);
-        if (result)
+        try
         {
-            TempData["Success"] = "Mesajınız başarıyla gönderildi!";
-            return RedirectToAction(nameof(Index));
+            
+            if (ContactMessageViewModel.createMessageDto != null)
+            {
+                ContactMessageViewModel.createMessageDto.ReceiverEmail = "barandasdemir.bd@gmail.com";
+                ContactMessageViewModel.createMessageDto.Folder = SharedKernel.Enums.MessageFolder.Inbox;
+            }
+            var result = await _publicMessageApiService.SendContactMessageAsync(ContactMessageViewModel.createMessageDto!);
+            if (result)
+            {
+                TempData["Success"] = "Mesajınız başarıyla gönderildi!";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["Error"] = "Mesaj gönderilemedi, lütfen tekrar deneyin.";
+            return View(ContactMessageViewModel);
         }
-
-        TempData["Error"] = "Mesaj gönderilemedi, lütfen tekrar deneyin.";
-        return View(ContactMessageViewModel.createMessageDto);
+        catch (Exception)
+        {
+            TempData["Error"] = "Sistemsel bir hata oluştu. Mesajınız gönderilemedi.";
+            return View(ContactMessageViewModel);
+        }
     }
-
 
 
 }

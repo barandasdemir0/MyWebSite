@@ -29,7 +29,9 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var aboutTask = _publicAboutApiService.GetAllAsync();
+        try
+        {
+            var aboutTask = _publicAboutApiService.GetAllAsync();
         var siteSettingsTask = _publicSiteSettingsApiService.GetAllAsync();
         var heroTask = _publicHeroApiService.GetAllAsync();
         var socialMediaTask = _publicSocialMediaApiService.GetAllAsync();
@@ -54,5 +56,11 @@ public class HomeController : Controller
             githubRepoDtos = githubTask.Result
         };
         return View(models);
+        }
+        catch (Exception)
+        {
+            // API çökerse anasayfa 500 hatası vermesin, View'a boş bir nesne dönsün
+            return View(new IndexViewModel());
+        }
     }
 }

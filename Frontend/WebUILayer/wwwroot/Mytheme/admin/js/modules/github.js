@@ -75,33 +75,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // Publish / Sync
     // =============================
     publishBtn?.addEventListener('click', async function () {
-
         if (selectedRepos.length === 0) return;
-
         const syncUrl = publishBtn.dataset.syncUrl;
         const username = publishBtn.dataset.username;
-
-
         publishBtn.disabled = true;
-
         try {
+            // 1. SATIR EKLENDİ: Sayfadaki gizli anahtarı al
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            const token = tokenInput ? tokenInput.value : '';
             const response = await fetch(syncUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token // 2. SATIR EKLENDİ: Anahtarı Header ile API'ye yolla
+                },
                 body: JSON.stringify({
                     username,
                     repoNames: selectedRepos
                 })
             });
-
             const result = await response.json();
-
             if (result.success) {
                 // Sync başarılıysa localStorage temizle
                 localStorage.removeItem(STORAGE_KEY);
                 location.reload();
             }
-
         } catch (err) {
             console.error('Sync hatası:', err);
         } finally {

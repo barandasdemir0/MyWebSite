@@ -32,7 +32,8 @@ public class SkillController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View(createSkillDto);
+            TempData["Error"] = "Lütfen form alanlarını eksiksiz doldurun.";
+            return RedirectToAction(nameof(Index));
         }
         try
         {
@@ -42,10 +43,11 @@ public class SkillController : Controller
         }
         catch (Exception ex)
         {
-            ModelState.AddApiError(ex);
-            return View(createSkillDto);
+            TempData["Error"] = ex.Message;
         }
-       
+        return RedirectToAction(nameof(Index));
+
+
     }
 
     [HttpPost]
@@ -53,7 +55,8 @@ public class SkillController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View(updateSkillDto);
+            TempData["Error"] = "Lütfen form alanlarını eksiksiz doldurun.";
+            return RedirectToAction(nameof(Index));
         }
         try
         {
@@ -62,10 +65,10 @@ public class SkillController : Controller
         }
         catch (Exception ex)
         {
-            ModelState.AddApiError(ex);
-            return View(updateSkillDto);
+            TempData["Error"] = ex.Message;
         }
-      
+        return RedirectToAction(nameof(Index));
+
     }
 
 

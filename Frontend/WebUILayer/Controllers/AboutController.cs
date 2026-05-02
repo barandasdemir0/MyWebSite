@@ -25,26 +25,23 @@ public class AboutController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var abouts = await _publicAboutApiService.GetAllAsync();
-
-
-        var jobSkills = await _publicJobSkillApiService.GetAllAsync();
-        var jobSkillCategories = await _publicJobSkillCategoryService.GetAllAsync();
-        var contact = await _publicContactApiService.GetAllAsync();
-        var siteSettings = await _publicSiteSettingsApiService.GetAllAsync();
-
-
+        // 1. Tüm istekleri "await" kullanmadan AYNI ANDA başlat
+        var aboutsTask = _publicAboutApiService.GetAllAsync();
+        var jobSkillsTask = _publicJobSkillApiService.GetAllAsync();
+        var jobSkillCategoriesTask = _publicJobSkillCategoryService.GetAllAsync();
+        var contactTask = _publicContactApiService.GetAllAsync();
+        var siteSettingsTask = _publicSiteSettingsApiService.GetAllAsync();
+        // 2. Bütün görevlerin bitmesini paralel olarak bekle
+        await Task.WhenAll(aboutsTask, jobSkillsTask, jobSkillCategoriesTask, contactTask, siteSettingsTask);
+        // 3. Gelen sonuçları (Result) modele aktar
         var model = new AboutViewModel
         {
-            About = abouts.FirstOrDefault(),
-            jobSkillDtos = jobSkills,
-            jobSkillCategoryDtos = jobSkillCategories,
-            Contact = contact.FirstOrDefault(),
-            SiteSetting = siteSettings.FirstOrDefault()
-
+            About = aboutsTask.Result.FirstOrDefault(),
+            jobSkillDtos = jobSkillsTask.Result,
+            jobSkillCategoryDtos = jobSkillCategoriesTask.Result,
+            Contact = contactTask.Result.FirstOrDefault(),
+            SiteSetting = siteSettingsTask.Result.FirstOrDefault()
         };
-
-
         return View(model);
     }
 }

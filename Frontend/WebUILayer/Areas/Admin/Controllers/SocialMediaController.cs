@@ -23,7 +23,7 @@ public class SocialMediaController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var query = await _socialMediaApiService.GetAdminAllAsync();
+        var query = await _socialMediaApiService.GetAllAdminAsync();
         return View(query);
     }
 

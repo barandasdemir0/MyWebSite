@@ -1,11 +1,12 @@
 ﻿using DtoLayer.GuestBookDtos;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete;
 
-public class GuestBookApiService : GenericApiService<GuestBookListDto,CreateGuestBookDto,UpdateGuestBookDto>   , IGuestBookApiService
+public class GuestBookApiService : GenericApiService<GuestBookDto, CreateGuestBookDto,UpdateGuestBookDto>   , IGuestBookApiService
 {
     public GuestBookApiService(HttpClient httpClient/*, string endpoint*/) : base(httpClient, "guestbooks")
     {
@@ -22,30 +23,36 @@ public class GuestBookApiService : GenericApiService<GuestBookListDto,CreateGues
         // Eğer başarılı ise, işlem tamamlanır ve herhangi bir değer döndürülmez
     }
 
-    public async Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery)
+    public async Task<PagedResult<GuestBookDto>> GetAllAdminAsync(PaginationQuery paginationQuery, bool? isApproved = null)
     {
-        var result = await _httpClient.GetFromJsonAsync<PagedResult<GuestBookListDto>>($"{_endpoint}/admin-all?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}");
-        return result ?? new PagedResult<GuestBookListDto>();
+        var url = paginationQuery.ToQueryString($"{_endpoint}/admin-all");
+        if (isApproved.HasValue)
+        {
+            url += $"&isApproved={isApproved.Value}";
+        }
+        var result = await _httpClient.GetFromJsonAsync<PagedResult<GuestBookDto>>(url);
+        return result ?? new PagedResult<GuestBookDto>();
 
     }
 
-    public async Task<PagedResult<GuestBookListDto>> GetAllUserAsync(PaginationQuery paginationQuery)
+    public async Task<PagedResult<GuestBookDto>> GetAllUserAsync(PaginationQuery paginationQuery)
     {
-        var result = await _httpClient.GetFromJsonAsync<PagedResult<GuestBookListDto>>($"{_endpoint}/user-all?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}");
-        return result ?? new PagedResult<GuestBookListDto>();
+        var url = paginationQuery.ToQueryString($"{_endpoint}/user-all");
+        var result = await _httpClient.GetFromJsonAsync<PagedResult<GuestBookDto>>(url);
+        return result ?? new PagedResult<GuestBookDto>();
     }
 
-    public async Task<List<GuestBookListDto>> GetLatestAsync(int count)
+    public async Task<List<GuestBookDto>> GetLatestAsync(int count)
     {
         var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
         if (!response.IsSuccessStatusCode)
         {
-            return new List<GuestBookListDto>();
+            return new List<GuestBookDto>();
         }
-        var result = await response.Content.ReadFromJsonAsync<List<GuestBookListDto>>();
+        var result = await response.Content.ReadFromJsonAsync<List<GuestBookDto>>();
         if (result==null)
         {
-            return new List<GuestBookListDto>();
+            return new List<GuestBookDto>();
         }
         return result;
     }

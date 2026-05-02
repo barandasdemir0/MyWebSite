@@ -40,11 +40,25 @@ public class SecurityController : Controller
     [HttpPost]
     public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
     {
-        var ok = await _userProfileApiService.ChangePasswordAsync( changePasswordDto); // API üzerinden şifre değiştirme işlemini gerçekleştirir
+
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Lütfen şifre alanlarını kurallara uygun doldurun.";
+            return RedirectToAction("Index");
+        }
+        try
+        {
+            var ok = await _userProfileApiService.ChangePasswordAsync( changePasswordDto); // API üzerinden şifre değiştirme işlemini gerçekleştirir
         TempData[ok ? "Success" : "Error"] = ok // Sonuç durumuna göre kullanıcıya mesaj gösterir
            ? "Şifre başarıyla değiştirildi."
            : "Şifre değiştirilemedi. Mevcut şifrenizi kontrol edin.";
-        return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            // 3. API'den Gelen Hata (Örn: "Şifre 8 karakter olmalı")
+            TempData["Error"] = ex.Message;
+        }
+        return RedirectToAction(nameof(Index));
     }
 
 
@@ -52,15 +66,35 @@ public class SecurityController : Controller
     [HttpPost]
     public async Task<IActionResult> Toggle2FA(Toggle2FADto toggle2FADto)
     {
+
+        // 1. Eklemeyi unuttuğumuz Validasyon Kontrolü
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Geçersiz işlem talebi.";
+            return RedirectToAction(nameof(Index));
+        }
+
         if (toggle2FADto.Enable && toggle2FADto.Provider == TwoFactorProvider.Authenticator) // Eğer 2FA açılmak isteniyor ve sağlayıcı Authenticator ise, kullanıcıyı kurulum sayfasına yönlendir
         {
             return RedirectToAction(nameof(SetupAuthenticator)); 
         }
 
-        var ok = await _userProfileApiService.Toggle2FAAsync( toggle2FADto); // API üzerinden 2FA açma/kapama işlemini gerçekleştirir
+        
+
+        try
+        {
+
+
+            var ok = await _userProfileApiService.Toggle2FAAsync( toggle2FADto); // API üzerinden 2FA açma/kapama işlemini gerçekleştirir
         TempData[ok ? "Success" : "Error"] = ok
           ? (toggle2FADto.Enable ? "2FA başarıyla açıldı." : "2FA kapatıldı.")
           : "2FA ayarı değiştirilemedi.";
+        }
+        catch (Exception ex)
+        {
+            // 3. API'den Gelen Hata
+            TempData["Error"] = "İşlem başarısız: " + ex.Message;
+        }
         return RedirectToAction(nameof(Index));
 
     }
@@ -77,8 +111,16 @@ public class SecurityController : Controller
     [HttpPost]
     public async Task<IActionResult> ConfirmAuthenticator(string code)
     {
-        // API üzerinden Authenticator doğrulama işlemini gerçekleştirir. Kullanıcının girdiği kodu ve kullanıcı ID'sini gönderir.
-        var ok = await _twoFactorApiService.ConfirmAuthenticatorAsync(new TwoFactorVerifyDto
+
+        if (string.IsNullOrEmpty(code))
+        {
+            TempData["Error"] = "Lütfen uygulamadaki 6 haneli kodu girin.";
+            return RedirectToAction(nameof(SetupAuthenticator));
+        }
+        try
+        {
+            // API üzerinden Authenticator doğrulama işlemini gerçekleştirir. Kullanıcının girdiği kodu ve kullanıcı ID'sini gönderir.
+            var ok = await _twoFactorApiService.ConfirmAuthenticatorAsync(new TwoFactorVerifyDto
         {
             UserId = User.GetUserId(),
             Code = code,
@@ -90,6 +132,11 @@ public class SecurityController : Controller
             return RedirectToAction("Index");
         }
         TempData["Error"] = "Geçersiz kod. Tekrar deneyin.";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = "Doğrulama başarısız: " + ex.Message;
+        }
         return RedirectToAction(nameof(SetupAuthenticator));
     }
 

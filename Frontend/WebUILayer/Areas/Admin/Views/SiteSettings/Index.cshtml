@@ -110,16 +110,19 @@
             <div class="form-group">
                 <label><i class="fas fa-heading mr-5"></i>Site İsmi</label>
                 <input type="text" class="form-control" asp-for="SiteTitle" placeholder="site ismi">
+                <span asp-validation-for="SiteTitle" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label><i class="fas fa-tags mr-5"></i>Site Keywords</label>
                 <input type="text" class="form-control" asp-for="SiteKeywords" placeholder="Site Keywords">
+                <span asp-validation-for="SiteKeywords" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label><i class="fas fa-file-alt mr-5"></i>Meta Description </label>
                 <input type="text" class="form-control" asp-for="MetaDescription" placeholder="meta description">
+                <span asp-validation-for="MetaDescription" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -128,6 +131,7 @@
                     Google Analitic Id
                 </label>
                 <input type="text" class="form-control" asp-for="GoogleAnalyticsId" placeholder="Google Analitik Id">
+                <span asp-validation-for="GoogleAnalyticsId" class="text-danger"></span>
             </div>
         </div>
 
@@ -145,11 +149,13 @@
                     <div class="form-group">
                         <label>Bakım Mesajı</label>
                         <textarea class="form-control" asp-for="MaintenanceMessage" rows="2" placeholder="Örn: Veritabanı güncellemesi yapılıyor."></textarea>
+                        <span asp-validation-for="MaintenanceMessage" class="text-danger"></span>
                     </div>
 
                     <div class="form-group mt-2">
                         <label>Tahmini Bitiş Tarihi</label>
                         <input type="datetime-local" class="form-control" asp-for="MaintenanceEndTime" />
+                        <span asp-validation-for="MaintenanceEndTime" class="text-danger"></span>
                     </div>
                 </div>
             </div>

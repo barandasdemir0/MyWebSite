@@ -58,9 +58,11 @@ public class JwtTokenHandler : DelegatingHandler
             RefreshToken = refreshToken
         };
 
-        var response = await http.PostAsJsonAsync("auth/refresh-token", dto, cancellationToken);
+        var response = await http.PostAsJsonAsync("token/refresh-token", dto, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("AccessToken");
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("RefreshToken");
             return null;
         }
 

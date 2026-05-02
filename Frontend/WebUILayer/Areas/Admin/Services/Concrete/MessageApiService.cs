@@ -2,6 +2,7 @@
 using SharedKernel.Enums;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete;
 
@@ -13,7 +14,7 @@ public class MessageApiService : GenericApiService<MessageDto, CreateMessageDto,
 
     public async Task<PagedResult<MessageDto>> GetAllAdminAsync(PaginationQuery paginationQuery)
     {
-        var url = $"{_endpoint}/user-all?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";
+        var url = paginationQuery.ToQueryString($"{_endpoint}/user-all");
         var result = await _httpClient.GetFromJsonAsync<PagedResult<MessageDto>>(url);
         if (result==null)
         {
@@ -24,7 +25,7 @@ public class MessageApiService : GenericApiService<MessageDto, CreateMessageDto,
 
     public async Task<PagedResult<MessageDto>> GetByFolderAsync(MessageFolder folder, PaginationQuery paginationQuery)
     {
-        var url = $"{_endpoint}/folder/{folder}?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";
+        var url = paginationQuery.ToQueryString($"{_endpoint}/folder/{folder}");
         var result = await _httpClient.GetFromJsonAsync<PagedResult<MessageDto>>(url);
         if (result==null)
         {
@@ -54,24 +55,24 @@ public class MessageApiService : GenericApiService<MessageDto, CreateMessageDto,
         return result;
     }
 
-    public async Task<List<MessageListDto>> GetLatestAsync(int count)
+    public async Task<List<MessageDto>> GetLatestAsync(int count)
     {
         var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
         if (!response.IsSuccessStatusCode)
         {
-            return new List<MessageListDto>();
+            return new List<MessageDto>();
         }
-        var result = await response.Content.ReadFromJsonAsync<List<MessageListDto>>();
+        var result = await response.Content.ReadFromJsonAsync<List<MessageDto>>();
         if (result==null)
         {
-            return new List<MessageListDto>();
+            return new List<MessageDto>();
         }
         return result;
     }
 
     public async Task<PagedResult<MessageDto>> GetReadAsync(PaginationQuery paginationQuery)
     {
-        var url = $"{_endpoint}/read?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";
+        var url = paginationQuery.ToQueryString($"{_endpoint}/read");
         var result = await _httpClient.GetFromJsonAsync<PagedResult<MessageDto>>(url);
         if (result==null)
         {
@@ -82,7 +83,7 @@ public class MessageApiService : GenericApiService<MessageDto, CreateMessageDto,
 
     public async Task<PagedResult<MessageDto>> GetStarredAsync(PaginationQuery paginationQuery)
     {
-        var url = $"{_endpoint}/starred?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";
+        var url = paginationQuery.ToQueryString($"{_endpoint}/starred");
         var result = await _httpClient.GetFromJsonAsync<PagedResult<MessageDto>>(url);
         if (result==null)
         {

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DtoLayer.ContactDtos;
+using DtoLayer.SiteSettingDtos;
+using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Models;
@@ -19,22 +21,44 @@ public class MaintenanceController : Controller
     [HttpGet("/maintenance")]
     public async Task<IActionResult> Index()
     {
-        var settings = await _siteSettingsApiService.GetSiteSettingForEditAsync();
-        if (settings == null||!settings.IsMaintenanceMode)
+        try
         {
-            return RedirectToAction("Index", "Home");
+            var settings = await _siteSettingsApiService.GetSiteSettingForEditAsync();
+            if (settings == null || !settings.IsMaintenanceMode)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var contact = await _contactApiService.GetContactForEditAsync();
+
+            //var model = (Settings: settings, Contact: contact);
+
+            var model = new MaintenanceViewModel
+            {
+                contactDtos = contact,
+                siteSettingDtos = settings
+
+            };
+            return View(model);
         }
-
-        var contact = await _contactApiService.GetContactForEditAsync();
-
-        //var model = (Settings: settings, Contact: contact);
-
-        var model = new MaintenanceViewModel
+        catch (Exception)
         {
-            contactDtos = contact,
-            siteSettingDtos = settings
-            
-        };
-        return View(model);
+            // Veritabanı komple çökerse "Ayarları" okuyamaz. 
+            // O zaman statik veriler göndererek sayfanın (Bakımdayız ekranının) patlamasını engelleriz.
+            var fallbackModel = new MaintenanceViewModel
+            {
+                siteSettingDtos = new UpdateSiteSettingDto
+                {
+                    MaintenanceMessage = "Sistemde geçici bir sorun yaşanıyor, hemen ilgileniyoruz.",
+                    SiteTitle = "Sistem Bakımı"
+                },
+                contactDtos = new UpdateContactDto
+                {
+                    Email = "barandasdemir.bd@gmail.com",
+                    Phone = "-"
+                }
+            };
+            return View(fallbackModel);
+        }
     }
 }

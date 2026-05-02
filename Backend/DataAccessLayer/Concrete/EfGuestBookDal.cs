@@ -11,9 +11,25 @@ public class EfGuestBookDal : GenericRepository<GuestBook>, IGuestBookDal
     {
     }
 
-    public async Task<(List<GuestBook> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, CancellationToken cancellationToken = default)
+    public async Task<(List<GuestBook> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, bool? isApproved = null, CancellationToken cancellationToken = default)
     {
         IQueryable<GuestBook> query = _context.GuestBooks.AsNoTrackingWithIdentityResolution().IgnoreQueryFilters();
+
+        if (isApproved.HasValue)
+        {
+            if (isApproved.Value)
+            {
+                query = query.Where(x => x.IsApproved || x.IsDeleted);
+            }
+            else
+            {
+                query = query.Where(x => !x.IsApproved && !x.IsDeleted);
+            }
+
+        }
+
+
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query

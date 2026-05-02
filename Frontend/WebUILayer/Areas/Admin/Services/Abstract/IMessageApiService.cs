@@ -16,5 +16,5 @@ public interface IMessageApiService : IGenericApiService<MessageDto, CreateMessa
     Task ToggleStarAsync(Guid guid);
     Task RestoreAsync(Guid guid);
 
-    Task<List<MessageListDto>> GetLatestAsync(int count);
+    Task<List<MessageDto>> GetLatestAsync(int count);
 }
