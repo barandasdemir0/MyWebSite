@@ -189,11 +189,19 @@
 
 .portfolio-info {
     padding: 25px;
+    overflow: hidden; /* BUNU EKLEYİN - Yatay taşmayı önler */
+    min-width: 0;
 }
 
-.portfolio-info h4 {
-    margin-bottom: 10px;
-}
+    .portfolio-info h4 {
+        margin-bottom: 10px;
+        overflow: hidden;
+        min-width: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        word-break: break-word; /* Bu satırı ekleyin */
+    }
 
 .portfolio-category {
     color: var(--primary-color);

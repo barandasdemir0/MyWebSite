@@ -18,7 +18,7 @@ public interface IBlogPostService : IGenericService<BlogPost, BlogPostDto, Creat
     Task<PagedResult<BlogPostListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default);
 
     //count ile kaçtane blog yazısı istiyorsun bunu hallettik
-    Task<List<BlogPostDto>> GetLatestAsync(int count, CancellationToken cancellationToken=default);
+    Task<List<BlogPostDto>> GetLatestAsync(int count, string? topic = null, CancellationToken cancellationToken = default);
 
 
 

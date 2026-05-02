@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 using WebUILayer.Models;
 using WebUILayer.Services.Abstract;
 
@@ -17,24 +18,41 @@ public class ProjectController : Controller
         _publicProjectApiService = publicProjectApiService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([FromQuery] PaginationQuery query)
     {
+        var pagedResult = await _publicProjectApiService.GetAllPagedAsync(query);
         var models = new ProjectViewModel
         {
             topicDtos = await _publicTopicApiService.GetAllAsync(),
-            projectDtos = await _publicProjectApiService.GetAllAsync()
+            projectDtos = await _publicProjectApiService.GetAllAsync(),
+            CurrentPage = pagedResult.PageNumber,
+            TotalPages = pagedResult.TotalPages
         };
 
         return View(models);
     }
-    public async Task<IActionResult> ProjectDetail()
+    public async Task<IActionResult> ProjectDetail(string id)
     {
+        if (string.IsNullOrEmpty(id))
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        var project = await _publicProjectApiService.GetBySlugAsync(id);
+        if (project==null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+        var mainTopic = project.Topics.FirstOrDefault();
+        var relatedBlogs = await _publicBlogPostApiService.GetLatestAsync(3, mainTopic);
+
+
         var blogs = await _publicBlogPostApiService.GetLatestAsync(3);
 
         var models = new ProjectViewModel
         {
-            topicDtos = await _publicTopicApiService.GetAllAsync(),
-            projectDtos = await _publicProjectApiService.GetAllAsync()
+            ProjectDto = project,
+            blogPostDtos = relatedBlogs
         };
 
         return View(models);

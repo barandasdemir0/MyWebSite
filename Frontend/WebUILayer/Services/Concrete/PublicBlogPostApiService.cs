@@ -51,9 +51,14 @@ public class PublicBlogPostApiService : PublicReadApiService<BlogPostDto>, IPubl
         
     }
 
-    public async Task<List<BlogPostDto>> GetLatestAsync(int count)
+    public async Task<List<BlogPostDto>> GetLatestAsync(int count, string? topic = null)
     {
-        var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
+        var url = $"{_endpoint}/latest/{count}";
+        if (!string.IsNullOrEmpty(topic))
+        {
+            url += $"?Topic={topic}";
+        }
+        var response = await _httpClient.GetAsync(url);
         if (!response.IsSuccessStatusCode)
         {
             return new List<BlogPostDto>();

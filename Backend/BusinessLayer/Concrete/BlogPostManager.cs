@@ -148,10 +148,10 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
 
     }
 
-    public async Task<List<BlogPostDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
+    public async Task<List<BlogPostDto>> GetLatestAsync(int count,string? topic=null, CancellationToken cancellationToken = default)
     {
         var entities = await _repository.GetAllAsync(
-            filter: x => x.IsPublished, //sadece published olanları getir yani yayınlanmışları
+            filter: x => x.IsPublished&& (string.IsNullOrEmpty(topic)||x.BlogTopics.Any(bt=>bt.Topic.Name == topic)), //sadece published olanları getir yani yayınlanmışları
             tracking: false, //izleme kapalı performans için
             includes: source => source.Include(x => x.BlogTopics).ThenInclude(y => y.Topic), //topicleri çekebilmek adına includeda yaptık
             options: new QueryOptions<BlogPost> //zurnanın zırt dediği asıl metot yeri

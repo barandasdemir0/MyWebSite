@@ -3,138 +3,116 @@
     ViewData["Title"] = "ProjectDetail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @section styles {
     <link rel="stylesheet" href="~/Mytheme/portfolio/css/pages/project-detail.css">
     <link rel="stylesheet" href="~/Mytheme/portfolio/css/components/related-content.css">
 }
-
-@foreach (var projects in Model.projectDtos)
-{
-    
-
 <!-- PROJECT HERO -->
 <section class="project-hero">
     <div class="container">
         <nav aria-label="breadcrumb" data-aos="fade-up" class="project-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="/Project/Index/">Projeler</a>
-                </li>
-                <li class="breadcrumb-item active">@projects.Name</li>
+                <li class="breadcrumb-item"><a href="/Project/Index/">Projeler</a></li>
+                <li class="breadcrumb-item active">@Model.ProjectDto?.Name</li>
             </ol>
         </nav>
-            <h1 class="section-title" data-aos="fade-up">@projects.Name</h1>
-        <p class="project-description" data-aos="fade-up">
-                @projects.ShortDescription
-        </p>
+        <h1 class="section-title" data-aos="fade-up">@Model.ProjectDto?.Name</h1>
+        <p class="project-description" data-aos="fade-up">@Model.ProjectDto?.ShortDescription</p>
         <div class="project-meta" data-aos="fade-up">
-                <div class="project-meta-item"><i class="far fa-calendar"></i> @projects.PublishedAt?.ToString("dd MMMM yyyy")</div>
-                <div class="project-meta-item"><i class="fas fa-tag"></i> @projects.Topics</div>
-                <div class="project-meta-item"><i class="far fa-clock"></i> @projects.Duration</div>
-                <div class="project-meta-item"><i class="fas fa-users"></i> @projects.Role</div>
+            <div class="project-meta-item"><i class="far fa-calendar"></i> @Model.ProjectDto?.PublishedAt?.ToString("dd MMMM yyyy")</div>
+            <div class="project-meta-item"><i class="fas fa-tag"></i> @string.Join(", ", @Model.ProjectDto?.Topics!)</div>
+            <div class="project-meta-item"><i class="far fa-clock"></i> @Model.ProjectDto?.Duration</div>
+            <div class="project-meta-item"><i class="fas fa-users"></i> @Model.ProjectDto?.Role</div>
         </div>
     </div>
 </section>
-
 <!-- PROJECT CONTENT -->
 <section class="project-content">
     <div class="container">
         <div class="row">
             <div class="col-lg-8" data-aos="fade-up">
-
                 <div class="project-image">
-                        <img src="@projects.ImageUrl"
-                             alt="@projects.Name">
+                    <img src="@Model.ProjectDto?.ImageUrl" alt="@Model.ProjectDto?.Name">
                 </div>
-
-                    @projects.Description
-
-                <div class="project-links">
-                        <a href="@projects.WebsiteUrl" class="btn-primary-custom">
-                        <i class="fas fa-external-link-alt me-2"></i>Canlı
-                        Demo
+                
+                <!-- HTML Kodlarının düzgün çalışması için Html.Raw KULLANILDI -->
+                <article class="mt-4" style="color: var(--text-secondary); line-height: 1.8;">
+                    @Html.Raw(@Model.ProjectDto?.Description)
+                </article>
+                <div class="project-links mt-5">
+                    <a href="@Model.ProjectDto?.WebsiteUrl" target="_blank" class="btn-primary-custom">
+                        <i class="fas fa-external-link-alt me-2"></i>Canlı Demo
                     </a>
-                        <a href="@projects.GithubUrl" class="btn-outline-custom"><i class="fab fa-github me-2"></i>GitHub</a>
+                    <a href="@Model.ProjectDto?.GithubUrl" target="_blank" class="btn-outline-custom">
+                        <i class="fab fa-github me-2"></i>GitHub
+                    </a>
                 </div>
             </div>
-
             <div class="col-lg-4" data-aos="fade-left">
                 <div class="project-detail-sidebar">
                     <h4>Proje Bilgileri</h4>
                     <div class="project-info-item">
                         <span>Müşteri</span>
-                            <p>@projects.ClientName</p>
+                        <p>@Model.ProjectDto?.ClientName</p>
                     </div>
                     <div class="project-info-item">
                         <span>Kategori</span>
-                            <p>@projects.Topics</p>
+                        <p>@string.Join(", ", @Model.ProjectDto?.Topics!)</p>
                     </div>
                     <div class="project-info-item">
                         <span>Süre</span>
-                            <p>@projects.Duration</p>
+                        <p>@Model.ProjectDto?.Duration</p>
                     </div>
                     <div class="project-info-item">
                         <span>Rol</span>
-                            <p>@projects.Role</p>
+                        <p>@Model.ProjectDto?.Role</p>
                     </div>
                     <hr>
                     <a href="/Contact/Index/" class="btn-primary-custom w-100 text-center">
                         <i class="fas fa-envelope me-2"></i>Benzer Proje İste
                     </a>
-
-                  
                 </div>
             </div>
         </div>
     </div>
 </section>
-}
-
-<!-- Related Blog Posts Full Section -->
-<section class="section related-blog-section project-related-section">
-    <div class="container">
-        <div class="section-header text-center mb-5" data-aos="fade-up">
-            <h3 class="h4 mb-2">
-                <i class="fas fa-blog me-2 section-icon"></i>Bu Teknoloji Hakkında
-                Yazılar
-            </h3>
-            <p class="section-description">React, Node.js ve MongoDB konularındaki blog yazılarım</p>
-        </div>
-
-        <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
-
-            @foreach (var blogs in Model.blogPostDtos)
-            {
-                <!-- Blog Post 1 -->
-                <div class="col-md-4">
-                    <div class="related-blog-card">
-                        <div class="related-blog-image">
-                            <img src="@blogs.CoverImage"
-                                 alt="@blogs.Title">
-                            <span class="blog-date">@blogs.PublishedAt?.ToString("dd MMMM yyyy")</span>
-                            <div class="related-blog-overlay">
-                                <a href="/Blog/Index/@blogs.Slug" class="btn-icon"><i class="fas fa-arrow-right"></i></a>
+<!-- RELATED BLOG POSTS -->
+@if (Model.blogPostDtos != null && Model.blogPostDtos.Any())
+{
+    <section class="section related-blog-section project-related-section">
+        <div class="container">
+            <div class="section-header text-center mb-5" data-aos="fade-up">
+                <h3 class="h4 mb-2">
+                    <i class="fas fa-blog me-2 section-icon"></i>Bu Teknoloji Hakkında Yazılar
+                </h3>
+                <p class="section-description">@Model.ProjectDto?.Topics.FirstOrDefault() konularındaki blog yazılarım</p>
+            </div>
+            <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+                @foreach (var blog in Model.blogPostDtos)
+                {
+                    <div class="col-md-4">
+                        <div class="related-blog-card">
+                            <div class="related-blog-image">
+                                <img src="@blog.CoverImage" alt="@blog.Title">
+                                <span class="blog-date">@blog.PublishedAt?.ToString("dd MMMM yyyy")</span>
+                                <div class="related-blog-overlay">
+                                    <a href="/Blog/BlogDetail/@blog.Slug" class="btn-icon"><i class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="related-blog-body">
+                                <span class="blog-category">@string.Join(", ", blog.Topics)</span>
+                                <h5><a href="/Blog/BlogDetail/@blog.Slug">@blog.Title</a></h5>
+                                <p>@blog.ReadTime dk okuma süresi</p>
                             </div>
                         </div>
-                        <div class="related-blog-body">
-                            <span class="blog-category">@blogs.Topics</span>
-                            <h5><a href="/Blog/Index/@blogs.Slug">@blogs.Title</a></h5>
-                            <p>@blogs.Content</p>
-                        </div>
                     </div>
-                </div>
-            }
-      
-
-          
+                }
+            </div>
+            <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="200">
+                <a href="/Blog/Index/" class="btn-outline-custom">
+                    <i class="fas fa-blog me-2"></i>Tüm Blog Yazıları
+                </a>
+            </div>
         </div>
-
-        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="200">
-            <a href="/Blog/Index/" class="btn-outline-custom">
-                <i class="fas fa-blog me-2"></i>Tüm Blog Yazıları
-            </a>
-        </div>
-    </div>
-</section>
-
+    </section>
+}

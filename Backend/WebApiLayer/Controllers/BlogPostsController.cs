@@ -61,9 +61,9 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
 
     [AllowAnonymous]
     [HttpGet("latest/{count}")]
-    public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
+    public async Task<IActionResult> GetLatest(int count, [FromQuery]string? topic=null,CancellationToken cancellationToken=default)
     {
-        var values = await _blogPostService.GetLatestAsync(count, cancellationToken);
+        var values = await _blogPostService.GetLatestAsync(count,topic,cancellationToken);
         if (values==null)
         {
             return NotFound();
