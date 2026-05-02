@@ -35,6 +35,21 @@ public class GuestBookApiService : GenericApiService<GuestBookListDto,CreateGues
         return result ?? new PagedResult<GuestBookListDto>();
     }
 
+    public async Task<List<GuestBookListDto>> GetLatestAsync(int count)
+    {
+        var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
+        if (!response.IsSuccessStatusCode)
+        {
+            return new List<GuestBookListDto>();
+        }
+        var result = await response.Content.ReadFromJsonAsync<List<GuestBookListDto>>();
+        if (result==null)
+        {
+            return new List<GuestBookListDto>();
+        }
+        return result;
+    }
+
     public async Task RestoreAsync(Guid guid)
     {
         var response = await _httpClient.PutAsync($"{_endpoint}/restore/{guid}", null);

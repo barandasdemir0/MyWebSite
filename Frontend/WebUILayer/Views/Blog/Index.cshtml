@@ -1,4 +1,5 @@
-﻿
+﻿@using WebUILayer.Extension
+@model BlogViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -33,108 +34,50 @@
         <!-- Category Filters -->
         <div class="portfolio-filters" data-aos="fade-up" style="margin-bottom: 50px;">
             <button class="filter-btn active" data-filter="*">Tümü</button>
-            <button class="filter-btn" data-filter="yazilim">Yazılım</button>
-            <button class="filter-btn" data-filter="kariyer">Kariyer</button>
-            <button class="filter-btn" data-filter="saas">SaaS</button>
+            @foreach (var topic in Model.topicDtos)
+            {
+                <button class="filter-btn" data-filter="@topic.Name">@topic.Name</button>
+            }
+          
         </div>
 
         <div class="blog-grid">
-
-            <!-- Blog Post 1 -->
-            <article class="blog-card" data-aos="fade-up" data-category="yazilim">
-                <div class="blog-image">
-                    <span class="blog-category">Yazılım</span>
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop"
-                         alt="Kodlama">
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="far fa-calendar"></i> 2 Ocak 2024</span>
-                        <span><i class="far fa-user"></i> Baran D.</span>
-                        <span><i class="far fa-clock"></i> 5 dk okuma</span>
+            @foreach (var blogs in Model.blogPostListDtos)
+            {
+                <!-- Blog Post 1 -->
+                <article class="blog-card" data-aos="fade-up" data-category="@blogs.Topics.FirstOrDefault()">
+                    <div class="blog-image">
+                        <span class="blog-category">@string.Join(", ", blogs.Topics)</span>
+                        <img src="@blogs.CoverImage"
+                             alt="@string.Join(", ", blogs.Topics)">
                     </div>
-                    <h3 class="blog-title">
-                        <a href="blog-details.html">
-                            Modern Web Geliştirmede React vs Vue
-                            Karşılaştırması
-                        </a>
-                    </h3>
-                    <p class="blog-excerpt">
-                        Front-end dünyasının iki devi arasındaki farklar, avantajlar ve hangi
-                        projede hangisini seçmeli?
-                    </p>
-                    <div class="blog-footer">
-                        <a href="blog-details.html" class="read-more">
-                            Devamını Oku <i class="fas fa-arrow-right"></i>
-                        </a>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> @blogs.PublishedAt?.ToString("hh MMMM yyyy")</span>
+                            <span><i class="far fa-user"></i> @Model.aboutDto?.FullName</span>
+                            <span><i class="far fa-clock"></i>@blogs.ReadTime Okuma Süresi</span>
+                        </div>
+                        <h3 class="blog-title">
+                            <a href="/blog/BlogDetail/@blogs.Slug">
+                                @blogs.Title
+                            </a>
+                        </h3>
+                        <p class="blog-excerpt">
+                            @blogs.Content.StripHtmlAndTruncate(200)
+                        </p>
+                        <div class="blog-footer">
+                            <a href="/blog/BlogDetail/@blogs.Slug" class="read-more">
+                                Devamını Oku <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </article>
-
-            <!-- Blog Post 2 -->
-            <article class="blog-card" data-aos="fade-up" data-aos-delay="100" data-category="kariyer">
-                <div class="blog-image">
-                    <span class="blog-category">Kariyer</span>
-                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop"
-                         alt="Ofis">
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="far fa-calendar"></i> 28 Aralık 2023</span>
-                        <span><i class="far fa-user"></i> Baran D.</span>
-                        <span><i class="far fa-clock"></i> 7 dk okuma</span>
-                    </div>
-                    <h3 class="blog-title">
-                        <a href="blog-details.html">Junior Developer'dan Senior'a Giden Yol</a>
-                    </h3>
-                    <p class="blog-excerpt">
-                        Yazılım kariyerinde basamakları tırmanırken dikkat edilmesi gerekenler
-                        &nbsp;ve soft skill'lerin önemi.
-                    </p>
-                    <div class="blog-footer">
-                        <a href="blog-details.html" class="read-more">
-                            Devamını Oku <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Blog Post 3 -->
-            <article class="blog-card" data-aos="fade-up" data-aos-delay="200" data-category="saas">
-                <div class="blog-image">
-                    <span class="blog-category">SaaS</span>
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop"
-                         alt="SaaS">
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="far fa-calendar"></i> 15 Aralık 2023</span>
-                        <span><i class="far fa-user"></i> Baran D.</span>
-                        <span><i class="far fa-clock"></i> 6 dk okuma</span>
-                    </div>
-                    <h3 class="blog-title"><a href="#">Micro SaaS Fikri Nasıl Bulunur ve Doğrulanır?</a></h3>
-                    <p class="blog-excerpt">
-                        Kârlı bir Micro SaaS projesi geliştirmek için izlenmesi gereken adımlar
-                        ve pazar araştırması teknikleri.
-                    </p>
-                    <div class="blog-footer">
-                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </article>
+                </article>
+            }
 
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination-wrapper">
-            <button class="pagination-btn" id="prevPage">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="pagination-btn active">1</button>
-            <button class="pagination-btn">2</button>
-            <button class="pagination-btn" id="nextPage">
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        <div class="mt-4" data-aos="fade-up">
+            @await Component.InvokeAsync("LayoutPublicPagination", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
         </div>
     </div>
 </section>

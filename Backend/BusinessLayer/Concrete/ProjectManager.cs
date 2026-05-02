@@ -154,11 +154,11 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
         return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
     }
 
-    public async Task<List<ProjectDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
+    public async Task<List<ProjectDto>> GetLatestAsync(int count, string? topic = null, CancellationToken cancellationToken = default)
     {
         var entities = await _projectDal.GetAllAsync
             (
-            filter: x => x.IsPublished,
+            filter: x => x.IsPublished && (string.IsNullOrEmpty(topic) || x.ProjectTopics.Any(pt=>pt.Topic.Name== topic)) ,
             tracking: false,
             includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic),
             options: new QueryOptions<Project>

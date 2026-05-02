@@ -118,7 +118,7 @@
                             <td data-label="Yetenek Sayısı"><span class="skill-count">@item.JobSkills.Count</span></td>
                             <td data-label="İşlemler">
                                 <div class="action-btns">
-                                    <form asp-action="Restore" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="Restore" asp-route-id="@item.Id" method="post">
                                         <button class="action-btn restore" title="Geri Yükle" data-action="restoreCategory"><i class="fas fa-undo"></i></button>
                                     </form>
 
@@ -143,8 +143,8 @@
                             <td data-label="İşlemler">
                                 <div class="action-btns">
                                     <button class="action-btn" title="Yetenekleri Yönet" data-action="manageSkills"><i class="fas fa-list"></i></button>
-                                    <a asp-action="Update" asp-route-guid="@item.Id" method="post" class="action-btn edit" title="Düzenle" data-action="editCategory"><i class="fas fa-pen"></i></a>
-                                    <form asp-action="Delete" asp-route-guid="@item.Id" method="post">
+                                    <a asp-action="Update" asp-route-id="@item.Id" method="post" class="action-btn edit" title="Düzenle" data-action="editCategory"><i class="fas fa-pen"></i></a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post">
                                         <button class="action-btn delete" title="Sil" data-action="deleteCategory"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </div>

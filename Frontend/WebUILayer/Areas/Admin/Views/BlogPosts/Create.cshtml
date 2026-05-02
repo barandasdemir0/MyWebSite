@@ -5,9 +5,14 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 @section Styles {
+
+   
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/editor.css">
     <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog-editor.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+ 
 
 }
 <form asp-action="Create" id="createPostForm" method="post" enctype="multipart/form-data">
@@ -239,29 +244,27 @@
                 </div>
 
                 <!-- Category -->
-                <div class="sidebar-section">
-                    <h4><i class="fas fa-folder"></i>Kategori</h4>
-                    <select name="createBlogPostDto.TopicIds" class="form-control select2-multiple" id="postCategory" multiple>
-                   
-              
-                        @if (Model.topicDtos != null)
+            <div class="sidebar-section">
+                <h4><i class="fas fa-folder"></i>Kategori</h4>
+                <select asp-for="createBlogPostDto.TopicIds" class="form-control select2-multiple" id="postCategory" multiple="multiple" style="width: 100%">
+                    @if (Model.topicDtos != null)
+                    {
+                        @foreach (var item in Model.topicDtos)
                         {
-                            foreach (var item in Model.topicDtos)
+                            @if (Model.createBlogPostDto.TopicIds.Contains(item.Id))
                             {
-                                if (Model.createBlogPostDto.TopicIds.Contains(item.Id))
-                                {
-                                    <option value="@item.Id">@item.Name</option>
-                                }
-                                else
-                                {
-                                    <option value="@item.Id">@item.Name</option>
-                                }
-                     
+                                <option value="@item.Id" selected>@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
                             }
                         }
-                    </select>
-                    <span asp-validation-for="createBlogPostDto.TopicIds" class="text-danger"></span>
-                </div>
+                    }
+                </select>
+                <span asp-validation-for="createBlogPostDto.TopicIds" class="text-danger"></span>
+            </div>
+
 
                 <!-- Tags -->
                 <div class="sidebar-section">
@@ -330,8 +333,11 @@
     </form>
 
     @section Scripts {
-        <script src="/Mytheme/admin/js/theme-init.js" defer></script>
-        <script src="/Mytheme/admin/js/modules/blog-editor.js" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <script src="/Mytheme/admin/js/theme-init.js"></script>
+    <script src="/Mytheme/admin/js/modules/blog-editor.js"></script>
+}
+

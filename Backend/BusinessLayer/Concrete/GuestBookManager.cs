@@ -3,13 +3,14 @@ using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.GuestBookDtos;
+using DtoLayer.ProjectDtos;
 using MapsterMapper;
 using SharedKernel.Exceptions;
 using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
 
-public class GuestBookManager : GenericManager<GuestBook,GuestBookListDto,CreateGuestBookDto,UpdateGuestBookDto> ,IGuestBookService
+public class GuestBookManager : GenericManager<GuestBook, GuestBookListDto, CreateGuestBookDto, UpdateGuestBookDto>, IGuestBookService
 {
     private readonly IGuestBookDal _guestBookDal;
 
@@ -21,7 +22,7 @@ public class GuestBookManager : GenericManager<GuestBook,GuestBookListDto,Create
     public async Task<GuestBookDto?> ApproveAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _guestBookDal.GetByIdAsync(guid, tracking: true, cancellationToken: cancellationToken);
-        if (entity==null)
+        if (entity == null)
         {
             return null;
         }
@@ -31,13 +32,13 @@ public class GuestBookManager : GenericManager<GuestBook,GuestBookListDto,Create
         return _mapper.Map<GuestBookDto>(entity);
     }
 
-    public async Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery , CancellationToken cancellationToken = default)
+    public async Task<PagedResult<GuestBookListDto>> GetAllAdminAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _guestBookDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
         return _mapper.Map<List<GuestBookListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
 
-  
+
 
     public async Task<PagedResult<GuestBookListDto>> GetAllUserAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
@@ -45,11 +46,11 @@ public class GuestBookManager : GenericManager<GuestBook,GuestBookListDto,Create
         return _mapper.Map<List<GuestBookListDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
 
- 
+
 
     public async Task<GuestBookDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        var entity = await _guestBookDal.GetByIdAsync(guid, tracking: false,cancellationToken:cancellationToken);
+        var entity = await _guestBookDal.GetByIdAsync(guid, tracking: false, cancellationToken: cancellationToken);
         if (entity == null)
         {
             return null;
@@ -57,9 +58,24 @@ public class GuestBookManager : GenericManager<GuestBook,GuestBookListDto,Create
         return _mapper.Map<GuestBookDto>(entity);
     }
 
+    public async Task<List<GuestBookListDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
+    {
+        var entities = await _repository.GetAllAsync(
+            filter: x => x.IsApproved,
+            tracking: false,
+            options: new QueryOptions<GuestBook>
+            {
+                OrderBy = x => x.IsApproved!,
+                Descending = true,
+                Take = count,
+            }, cancellationToken: cancellationToken);
+
+        return _mapper.Map<List<GuestBookListDto>>(entities);
+    }
+
     public async Task<GuestBookDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        var entity = await _guestBookDal.RestoreDeleteByIdAsync(guid,cancellationToken:cancellationToken);
+        var entity = await _guestBookDal.RestoreDeleteByIdAsync(guid, cancellationToken: cancellationToken);
         if (entity == null)
         {
             return null;

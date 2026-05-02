@@ -1,5 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.MessageDtos;
+using DtoLayer.ProjectDtos;
 using SharedKernel.Enums;
 using SharedKernel.Shared;
 
@@ -31,6 +32,9 @@ public interface IMessageService : IGenericService<Message, MessageDto, CreateMe
    
     // ── YENİ: Restore ──
     Task<MessageDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+
+    //son 2 mesaj listeleme
+    Task<List<MessageDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default);
 
 
 

@@ -16,8 +16,8 @@ public class CreateAboutValidator : AbstractValidator<CreateAboutDto>
 
         RuleFor(x => x.Greeting).NotEmpty()
             .WithMessage("Bu Alan Boş Bırakılamaz")
-            .MaximumLength(20)
-            .WithMessage("Bu alan 20 karakterden fazla olamaz");
+            .MaximumLength(2000)
+            .WithMessage("Bu alan 2000 karakterden fazla olamaz");
 
         RuleFor(x => x.Bio).NotEmpty()
             .WithMessage("Bu Alan Boş Bırakılamaz")

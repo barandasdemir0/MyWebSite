@@ -78,9 +78,9 @@ public class BlogPostsController : Controller
 
 
     [HttpGet]
-    public async Task<IActionResult> Update(Guid guid)
+    public async Task<IActionResult> Update(Guid id)
     {
-        var blog = await _blogPostApiService.GetByIdAsync(guid);
+        var blog = await _blogPostApiService.GetByIdAsync(id);
         if (blog == null)
         {
             return NotFound();

@@ -1,5 +1,6 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.GuestBookDtos;
+using DtoLayer.ProjectDtos;
 using SharedKernel.Shared;
 
 namespace BusinessLayer.Abstract;
@@ -13,4 +14,8 @@ public interface IGuestBookService:IGenericService<GuestBook,GuestBookListDto,Cr
     Task<PagedResult<GuestBookListDto>> GetAllUserAsync(PaginationQuery paginationQuery , CancellationToken cancellationToken = default);
 
     Task<GuestBookDto?> ApproveAsync(Guid guid, CancellationToken cancellationToken = default);
+
+
+    //son 2 mesaj listeleme
+    Task<List<GuestBookListDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default);
 }

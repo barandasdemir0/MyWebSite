@@ -156,6 +156,87 @@ public static class ServiceExtension
         });
 
 
+        services.AddHttpClient<IPublicAboutApiService, PublicAboutApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicContactApiService, PublicContactApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicJobSkillApiService, PublicJobSkillApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicJobSkillCategoryService, PublicJobSkillCategoryService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicSiteSettingsApiService, PublicSiteSettingsApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicHeroApiService, PublicHeroApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicSocialMediaApiService, PublicSocialMediaApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicSkillApiService, PublicSkillApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicProjectApiService, PublicProjectApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicGuestBookApiService, PublicGuestBookApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicGithubApiService, PublicGithubApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicCertificateApiService, PublicCertificateApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicEducationApiService, PublicEducationApiService>(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicExperienceApiService, PublicExperienceApiService >(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicBlogPostApiService, PublicBlogPostApiService >(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+        services.AddHttpClient<IPublicTopicApiService, PublicTopicApiService >(client =>
+        {
+            client.BaseAddress = new Uri(baseurl!);
+        });
+
+
 
         #endregion
 

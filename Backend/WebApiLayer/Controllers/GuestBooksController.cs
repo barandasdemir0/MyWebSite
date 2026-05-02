@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DtoLayer.GuestBookDtos;
-using DtoLayer.MessageDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
@@ -82,7 +81,17 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
         return Ok(entity);
     }
 
-   
+    [HttpGet("latest/{count}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetLatest(int count,CancellationToken cancellation)
+    {
+        var values = await _guestBookService.GetLatestAsync(count, cancellation);
+        if (values==null)
+        {
+            return NotFound();
+        }
+        return Ok(values);
+    }
 
    
 

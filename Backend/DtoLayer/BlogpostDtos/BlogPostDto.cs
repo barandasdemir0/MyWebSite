@@ -16,6 +16,10 @@ public class BlogPostDto : IHasId
     public bool IsDeleted { get; set; } = false;
     public string Technologies { get; set; } = string.Empty;  // ← EKLE
 
+    //ek 
+    public string MainTopic { get; set; } = string.Empty;
+
+
     // İlişkiler (Okuma)
     public List<string> RelatedProjects { get; set; } = new(); // Proje isimleri
     public List<Guid> TopicIds { get; set; } = new();

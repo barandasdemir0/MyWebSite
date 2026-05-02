@@ -13,5 +13,5 @@ public interface IProjectService:IGenericService<Project, ProjectDto, CreateProj
     Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default);
     Task<PagedResult<ProjectListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default);
+    Task<List<ProjectDto>> GetLatestAsync(int count, string? topic = null ,CancellationToken cancellationToken = default);
 }

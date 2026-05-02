@@ -10,7 +10,7 @@ using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
 
-public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto,UpdateMessageDto> ,IMessageService
+public class MessageManager : GenericManager<Message, MessageDto, CreateMessageDto, UpdateMessageDto>, IMessageService
 {
 
     private readonly IMessageDal _messageDal;
@@ -26,7 +26,7 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
     {
         ArgumentNullException.ThrowIfNull(dto);
         var entity = _mapper.Map<Message>(dto);
-        await _repository.AddAsync(entity,cancellationToken);
+        await _repository.AddAsync(entity, cancellationToken);
         await _repository.SaveAsync(cancellationToken);
 
         try
@@ -67,10 +67,10 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
             }
             // Draft ise e-posta gönderilmez — sadece veritabanına kayıt
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine("MAIL GÖNDERME HATASI: " + ex.Message);
-           
+
         }
         return _mapper.Map<MessageDto>(entity);
 
@@ -84,7 +84,7 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
 
     public async Task<PagedResult<MessageDto>> GetByFolderAsync(MessageFolder folder, PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
-        var (items,totalCount) = await _messageDal.GetByFolderPagesAsync(folder, paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
+        var (items, totalCount) = await _messageDal.GetByFolderPagesAsync(folder, paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
 
         return _mapper.Map<List<MessageDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
     }
@@ -104,6 +104,20 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
         return await _messageDal.GetFolderCountAsync(cancellationToken);
     }
 
+    public async Task<List<MessageDto>> GetLatestAsync(int count, CancellationToken cancellationToken = default)
+    {
+        var entities = await _repository.GetAllAsync(
+               tracking: false,
+               options: new QueryOptions<Message>
+               {
+                   OrderBy = x => x.CreatedAt!,
+                   Descending = true,
+                   Take = count,
+               }, cancellationToken: cancellationToken
+            );
+        return _mapper.Map<List<MessageDto>>(entities);
+    }
+
     public async Task<PagedResult<MessageDto>> GetReadAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _messageDal.GetReadPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
@@ -121,7 +135,7 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
     public async Task<bool> MarkAsReadAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _messageDal.GetByIdAsync(guid, cancellationToken: cancellationToken);
-        if (entity==null)
+        if (entity == null)
         {
             return false;
         }
@@ -131,7 +145,7 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
         return true;
     }
 
- 
+
 
     public async Task<MessageDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
     {
@@ -150,7 +164,7 @@ public class MessageManager : GenericManager<Message,MessageDto,CreateMessageDto
     public async Task<bool> ToggleStarAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _messageDal.GetByIdAsync(guid, cancellationToken: cancellationToken);
-        if (entity==null)
+        if (entity == null)
         {
             return false;
         }
