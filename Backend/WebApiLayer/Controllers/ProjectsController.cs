@@ -62,6 +62,7 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
     [AllowAnonymous]
     public async Task<IActionResult> GetLatest(int count,[FromQuery] string? topic = null, CancellationToken cancellationToken=default)
     {
+        count = Math.Clamp(count, 1, 20);
         var values = await _projectService.GetLatestAsync(count,topic,cancellationToken);
         if (values == null)
         {

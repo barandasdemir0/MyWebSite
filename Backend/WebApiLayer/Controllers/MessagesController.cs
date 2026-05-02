@@ -3,6 +3,7 @@ using DtoLayer.MessageDtos;
 using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SharedKernel.Enums;
 using SharedKernel.Shared;
 
@@ -20,6 +21,7 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     }
 
     [AllowAnonymous]
+    [EnableRateLimiting(RateLimitConsts.Message)]
     [HttpPost]
     public override async Task<IActionResult> Create([FromBody] CreateMessageDto createDto, CancellationToken cancellationToken)
     {
@@ -39,7 +41,7 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     [Authorize(Roles = RoleConsts.Admin)]
     public override async Task<IActionResult> Update(Guid id, [FromBody] UpdateMessageDto updateMessageDto, CancellationToken cancellationToken)
     {
-        return Ok("MESAJLAR GÜNCELLENEMEZ");
+        return BadRequest("İş Kuralı İhlali: Mesajlar güncellenemez!");
     }
 
 
@@ -157,8 +159,8 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     }
 
 
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("latest/{count}")]
-    [AllowAnonymous]
     public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
     {
         var values = await _messageService.GetLatestAsync(count, cancellationToken);

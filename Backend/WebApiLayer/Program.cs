@@ -25,7 +25,6 @@ builder.Services.AddDatabaseLayers(builder.Configuration);
 builder.Services.ContainerDependencies();
 builder.Services.AddThirdPartyServices();
 builder.Services.AddIdentityAndJwt(builder.Configuration);
-builder.Services.AddEmailRateLimiter();
 builder.Services.CorsPolicy(builder.Configuration);
 
 
