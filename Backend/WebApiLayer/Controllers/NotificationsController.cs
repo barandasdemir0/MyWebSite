@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.NotificationDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;

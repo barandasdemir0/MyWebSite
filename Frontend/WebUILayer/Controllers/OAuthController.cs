@@ -1,5 +1,4 @@
-﻿using CV.EntityLayer.Entities;
-using DtoLayer.GuestBookDtos;
+﻿using DtoLayer.GuestBookDtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using WebUILayer.Services.Abstract;
@@ -23,20 +22,29 @@ public class OAuthController : Controller
     {
         // GitHub OAuth yetkilendirme URL'sine yönlendirmek için gerekli parametreleri hazırla
         string clientId = _configuration["OAuth:GitHub:ClientId"]!;
+        var state = Guid.NewGuid().ToString("N");
+        HttpContext.Session.SetString("GithubOAuthState", state);
         // GitHub OAuth yetkilendirme URL'sine yönlendir
-        return Redirect($"https://github.com/login/oauth/authorize?client_id={clientId}");
+        return Redirect($"https://github.com/login/oauth/authorize?client_id={clientId}&state={state}");
     }
 
 
     // GitHub OAuth callback işlemi
     [HttpGet]
-    public async Task<IActionResult> GithubCallback(string code)
+    public async Task<IActionResult> GithubCallback(string code,string state)
     {
         // GitHub tarafından dönen kodu al ve API üzerinden kullanıcı bilgilerini al
         if (string.IsNullOrEmpty(code))
         {
             return RedirectToGuestBook("İptal Edildi");
         }
+        var savedState = HttpContext.Session.GetString("GithubOAuthState");
+        if (string.IsNullOrEmpty(savedState) || state != savedState)
+        {
+            return RedirectToGuestBook("CSRF Güvenlik İhlali Tespit Edildi!"); // Uyuşmazsa saldırıdır
+        }
+
+
         // API üzerinden GitHub kullanıcı bilgilerini al
         var profile = await _oAuthApiService.GithubLoginAsync(new GithubAuthRequestDto
         {
@@ -58,18 +66,27 @@ public class OAuthController : Controller
         // redirectUri, LinkedIn OAuth callback URL'si olarak API'nizde tanımladığınız URL ile aynı olmalıdır redirectUri nedir = API'nizde LinkedIn OAuth callback işlemi için tanımladığınız URL'dir. Genellikle, bu URL, API'nizin LinkedIn OAuth işlemlerini yönettiği bir endpoint'e işaret eder. Örneğin, API'nizde "/api/auth/linkedin/callback" gibi bir endpoint tanımladıysanız, redirectUri de bu URL'ye işaret etmelidir. Bu URL, LinkedIn tarafından kullanıcı yetkilendirme işlemi tamamlandıktan sonra geri çağrılacak ve API'nize kodu iletecektir. Bu nedenle, redirectUri'yi API'nizde tanımladığınız LinkedIn OAuth callback URL'si ile aynı yapmanız önemlidir.
         string redirectUri = Url.Action("LinkedinCallback", "OAuth", null, Request.Scheme)!;
 
+        var state = Guid.NewGuid().ToString("N");
+        HttpContext.Session.SetString("LinkedinOAuthState", state);
+
         // LinkedIn OAuth yetkilendirme URL'sine yönlendir
-        return Redirect($"https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={clientId}&redirect_uri={redirectUri}&scope=openid%20profile%20email");
+        return Redirect($"https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={clientId}&redirect_uri={redirectUri}&state={state}&scope=openid%20profile%20email");
     }
 
 
     // LinkedIn OAuth callback işlemi
     [HttpGet]
-    public async Task<IActionResult> LinkedinCallback(string code)
+    public async Task<IActionResult> LinkedinCallback(string code,string state)
     {
         if (string.IsNullOrEmpty(code))
         {
             return RedirectToGuestBook("İptal Edildi");
+        }
+
+        var savedState = HttpContext.Session.GetString("LinkedinOAuthState");
+        if (string.IsNullOrEmpty(savedState) || state != savedState)
+        {
+            return RedirectToGuestBook("CSRF Güvenlik İhlali Tespit Edildi!");
         }
 
         // LinkedIn tarafından dönen kodu al ve API üzerinden kullanıcı bilgilerini al

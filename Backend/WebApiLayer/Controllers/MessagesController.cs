@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.MessageDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Enums;
@@ -32,7 +32,7 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     [HttpGet("user-all")]
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery paginationQuery,CancellationToken cancellationToken)
     {
-        var query = await _messageService.GetAllAdmin(paginationQuery, cancellationToken);
+        var query = await _messageService.GetAllAdminAsync(paginationQuery, cancellationToken);
         return Ok(query);
     }
 

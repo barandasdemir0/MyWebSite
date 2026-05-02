@@ -11,12 +11,12 @@ public class UpdateJobSkillCategoryValidator:AbstractValidator<UpdateJobSkillCat
            .NotEmpty()
            .WithMessage("Lütfen Bu Alanı Boş geçmeyiniz.")
            .MaximumLength(50)
-           .WithMessage("Maksimum Girilecek Kategori Adı 50dir.");
+           .WithMessage("Maksimum Girilecek Kategori Adı 50dir.").MustBeSafeHtml();
         RuleFor(x => x.CategoryDescription)
             .NotEmpty()
             .WithMessage("Lütfen Bu Alanı Boş geçmeyiniz.")
             .MaximumLength(200)
-            .WithMessage("Maksimum Girilecek açıklama 200 karakterdir.");
+            .WithMessage("Maksimum Girilecek açıklama 200 karakterdir.").MustBeSafeHtml();
         RuleFor(x => x.CategoryIcon)
             .NotEmpty()
             .WithMessage("Lütfen Bu Alanı Boş geçmeyiniz.")

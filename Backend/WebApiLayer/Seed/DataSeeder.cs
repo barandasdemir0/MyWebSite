@@ -1,4 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Identity;
 
 namespace WebApiLayer.Seed;

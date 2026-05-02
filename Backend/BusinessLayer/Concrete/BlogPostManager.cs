@@ -13,7 +13,7 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
 {
     private readonly IBlogPostDal _blogPostDal;
 
-    public BlogPostManager(IBlogPostDal blogPostDal, IMapper mapper) : base(blogPostDal, mapper)
+    public BlogPostManager(IBlogPostDal blogPostDal, IMapper mapper, IUnitOfWork unitOfWork) : base(blogPostDal, mapper, unitOfWork)
     {
         _blogPostDal = blogPostDal;
     }
@@ -35,7 +35,7 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
             }
         }
         await _repository.AddAsync(entity, cancellationToken);
-        await _repository.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<BlogPostDto>(entity);
     }
 
@@ -92,7 +92,7 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
         entity.IsDeleted = false;
         entity.DeletedAt = null;
         await _repository.UpdateAsync(entity, cancellationToken);
-        await _repository.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<BlogPostListDto>(entity);
     }
 
@@ -120,7 +120,7 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
             }
         }
         await _repository.UpdateAsync(entity, cancellationToken);
-        await _repository.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<BlogPostDto>(entity);
     }
 

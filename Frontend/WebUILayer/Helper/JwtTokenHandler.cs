@@ -6,13 +6,15 @@ namespace WebUILayer.Helper;
 
 public class JwtTokenHandler : DelegatingHandler
 {
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IConfiguration _configuration;
 
-    public JwtTokenHandler(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    public JwtTokenHandler(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IHttpClientFactory httpClientFactory)
     {
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
+        _httpClientFactory = httpClientFactory;
     }
 
 
@@ -46,10 +48,9 @@ public class JwtTokenHandler : DelegatingHandler
     private async Task<string?> TryRefreshAsync(string accessToken, string refreshToken, CancellationToken cancellationToken)
     {
         var baseUrl = _configuration["ApiSettings:Baseurl"];
-        using var http = new HttpClient
-        {
-            BaseAddress = new Uri(baseUrl!)
-        };
+        using var http = _httpClientFactory.CreateClient();
+
+        http.BaseAddress = new Uri(baseUrl!);
 
         var dto = new RefreshTokenRequestDto
         {

@@ -9,13 +9,13 @@ public class CreateChatbotSettingsValidator:AbstractValidator<CreateChatbotSetti
     {
         RuleFor(x => x.AssistantName)
            .NotEmpty().WithMessage("Asistan adı boş geçilemez.")
-           .MaximumLength(100).WithMessage("Asistan adı 100 karakterden fazla olamaz.");
+           .MaximumLength(100).WithMessage("Asistan adı 100 karakterden fazla olamaz.").MustBeSafeHtml();
         RuleFor(x => x.WelcomeMessage)
-            .MaximumLength(500).WithMessage("Karşılama mesajı 500 karakteri geçmemelidir.");
+            .MaximumLength(500).WithMessage("Karşılama mesajı 500 karakteri geçmemelidir.").MustBeSafeHtml();
         RuleFor(x => x.SystemPrompt)
             .NotEmpty().WithMessage("System Prompt (Talimatlar) boş olamaz, yapay zeka ne yapacağını bilmeli.")
-            .MaximumLength(5000).WithMessage("System Prompt çok uzun.");
+            .MaximumLength(5000).WithMessage("System Prompt çok uzun.").MustBeSafeHtml();
         RuleFor(x => x.ModelName)
-           .MaximumLength(100).WithMessage("Model adı çok uzun.");
+           .MaximumLength(100).WithMessage("Model adı çok uzun.").MustBeSafeHtml();
     }
 }

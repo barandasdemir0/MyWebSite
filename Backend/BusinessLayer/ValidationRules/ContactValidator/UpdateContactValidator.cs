@@ -8,11 +8,11 @@ public class UpdateContactValidator:AbstractValidator<UpdateContactDto>
     public UpdateContactValidator()
     {
         RuleFor(x => x.Email).NotEmpty()
-       .WithMessage("Bu Alan Boş Geçilemez")
-       .EmailAddress()
-       .WithMessage("Geçerli Bir E-Posta Adresi giriniz")
-       .MaximumLength(75)
-       .WithMessage("Mailiniz Standarttan uzundur tekrar Kontrol ediniz");
+             .WithMessage("Bu Alan Boş Geçilemez")
+             .EmailAddress()
+             .WithMessage("Geçerli Bir E-Posta Adresi giriniz")
+             .MaximumLength(75)
+             .WithMessage("Mailiniz Standarttan uzundur tekrar Kontrol ediniz");
 
         RuleFor(x => x.Phone).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
@@ -26,28 +26,33 @@ public class UpdateContactValidator:AbstractValidator<UpdateContactDto>
         RuleFor(x => x.Location).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(200)
-            .WithMessage("Adresiniz Standarttan uzundur tekrar Kontrol ediniz");
+            .WithMessage("Adresiniz Standarttan uzundur tekrar Kontrol ediniz").MustBeSafeHtml();
 
         RuleFor(x => x.LocationPicture).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(200)
-            .WithMessage("Adresiniz Resmi Standarttan uzundur tekrar Kontrol ediniz");
+            .WithMessage("Adresiniz Resmi Standarttan uzundur tekrar Kontrol ediniz").MustBeSafeHtml();
 
         RuleFor(x => x.ContactTitle).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(50)
-            .WithMessage("Başlık 50 Karakterden fazla olamaz");
+            .WithMessage("Başlık 50 Karakterden fazla olamaz").MustBeSafeHtml();
 
 
         RuleFor(x => x.ContactText).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(200)
-            .WithMessage("Başlık 200 Karakterden fazla olamaz");
+            .WithMessage("Başlık 200 Karakterden fazla olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.SuccessMessageText).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(150)
-            .WithMessage("Başlık 150 Karakterden fazla olamaz");
+            .WithMessage("Başlık 150 Karakterden fazla olamaz").MustBeSafeHtml();
+
+        RuleFor(x => x.WorkStatus).NotEmpty()
+            .WithMessage("Bu Alan Boş Geçilemez")
+            .MaximumLength(100)
+            .WithMessage("Başlık 100 Karakterden fazla olamaz").MustBeSafeHtml();
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.SiteSettingDtos;
 using MapsterMapper;
 
@@ -10,7 +11,7 @@ public class SiteSettingsManager : GenericManager<SiteSettings,SiteSettingDto,Cr
 {
     private readonly ISiteSettingsDal _siteSettingsDal;
 
-    public SiteSettingsManager(ISiteSettingsDal siteSettingsDal, IMapper mapper) : base(siteSettingsDal, mapper)
+    public SiteSettingsManager(ISiteSettingsDal siteSettingsDal, IMapper mapper, IUnitOfWork unitOfWork) : base(siteSettingsDal, mapper, unitOfWork)
     {
         _siteSettingsDal = siteSettingsDal;
     }
@@ -41,7 +42,7 @@ public class SiteSettingsManager : GenericManager<SiteSettings,SiteSettingDto,Cr
             await _siteSettingsDal.UpdateAsync(entity, cancellation);
         }
 
-        await _siteSettingsDal.SaveAsync(cancellation);
+        await _unitOfWork.SaveChangesAsync(cancellation);
         return _mapper.Map<SiteSettingDto>(entity);
 
 

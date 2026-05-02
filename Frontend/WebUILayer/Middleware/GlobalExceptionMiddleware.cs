@@ -20,18 +20,27 @@ public class GlobalExceptionMiddleware
         {
             await _next(httpContext);
         }
+
         catch (Exception ex)
         {
             _logger.LogError(ex, "Beklenmeyen Hata : {message}", ex.Message);
-
-            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            httpContext.Response.ContentType = "application/json";
-
-            var response = new
+            if (httpContext.Request.Path.StartsWithSegments("/api"))
             {
-                error = "Sunucu hatası oluştu"
-            };
-            await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
+
+                httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                httpContext.Response.ContentType = "application/json";
+
+                var response = new
+                {
+                    error = "Sunucu hatası oluştu"
+                };
+                await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
+            }
+            else
+            {
+                httpContext.Response.Redirect("/Home/Error");
+            }
+
         }
     }
 

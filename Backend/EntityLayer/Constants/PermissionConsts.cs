@@ -1,4 +1,4 @@
-﻿namespace CV.EntityLayer.Entities;
+﻿namespace EntityLayer.Constants;
 
 public static class PermissionConsts//staticdeki amacımız newleme olmaz sabit verş tutmak için idealdir
 {

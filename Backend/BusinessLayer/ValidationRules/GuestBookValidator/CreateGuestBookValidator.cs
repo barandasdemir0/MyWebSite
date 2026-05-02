@@ -11,6 +11,6 @@ public class CreateGuestBookValidator : AbstractValidator<CreateGuestBookDto>
             .NotEmpty()
             .WithMessage("Mesaj Girmeniz Zorunludur")
             .Must(x => !string.IsNullOrWhiteSpace(x))
-            .WithMessage("Konu Alanı Sadece Boşluklardan oluşamaz");
+            .WithMessage("Konu Alanı Sadece Boşluklardan oluşamaz").MustBeSafeHtml();
     }
 }

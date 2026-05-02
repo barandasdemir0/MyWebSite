@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Enums;
 using SharedKernel.Shared;
-using System.Security.Cryptography.X509Certificates;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;

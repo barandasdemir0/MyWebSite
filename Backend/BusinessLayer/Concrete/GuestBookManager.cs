@@ -14,7 +14,7 @@ public class GuestBookManager : GenericManager<GuestBook, GuestBookListDto, Crea
 {
     private readonly IGuestBookDal _guestBookDal;
 
-    public GuestBookManager(IGuestBookDal guestBookDal, IMapper mapper) : base(guestBookDal, mapper)
+    public GuestBookManager(IGuestBookDal guestBookDal, IMapper mapper, IUnitOfWork unitOfWork) : base(guestBookDal, mapper, unitOfWork)
     {
         _guestBookDal = guestBookDal;
     }
@@ -28,7 +28,7 @@ public class GuestBookManager : GenericManager<GuestBook, GuestBookListDto, Crea
         }
         entity.IsApproved = true;
         await _guestBookDal.UpdateAsync(entity, cancellationToken);
-        await _guestBookDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<GuestBookDto>(entity);
     }
 
@@ -84,7 +84,7 @@ public class GuestBookManager : GenericManager<GuestBook, GuestBookListDto, Crea
         entity.DeletedAt = null;
 
         await _guestBookDal.UpdateAsync(entity, cancellationToken);
-        await _guestBookDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return _mapper.Map<GuestBookDto>(entity);
     }

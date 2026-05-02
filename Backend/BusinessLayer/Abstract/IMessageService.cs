@@ -1,6 +1,5 @@
 ﻿using CV.EntityLayer.Entities;
 using DtoLayer.MessageDtos;
-using DtoLayer.ProjectDtos;
 using SharedKernel.Enums;
 using SharedKernel.Shared;
 
@@ -11,7 +10,7 @@ public interface IMessageService : IGenericService<Message, MessageDto, CreateMe
     Task<MessageDto?> GetDetailsByIdAsync(Guid guid, CancellationToken cancellationToken = default);
     //Task<List<MessageListDto>> GetAllAdminAsync(CancellationToken cancellationToken = default);
 
-    Task<PagedResult<MessageDto>> GetAllAdmin(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
+    Task<PagedResult<MessageDto>> GetAllAdminAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
 
 
     // ── YENİ: Listeleme ──

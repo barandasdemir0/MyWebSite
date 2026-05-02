@@ -42,8 +42,8 @@ public class EfRefreshTokenDal : IRefreshTokenDal
         await _appDbContext.SaveChangesAsync(cancellation);
     }
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        await _appDbContext.SaveChangesAsync(cancellationToken);
-    }
+    //public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    //{
+    //    await _appDbContext.SaveChangesAsync(cancellationToken);
+    //}
 }

@@ -29,28 +29,30 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var about = await _publicAboutApiService.GetAllAsync();
-        var siteSettings = await _publicSiteSettingsApiService.GetAllAsync();
-        var hero = await _publicHeroApiService.GetAllAsync();
-        var socialMedia = await _publicSocialMediaApiService.GetAllAsync();
-        var skill = await _publicSkillApiService.GetAllAsync();
-        var project = await _publicProjectApiService.GetLatestAsync(3);
-        var guestBook = await _publicGuestBookApiService.GetAllAsync();
-        var github = await _publicGithubApiService.GetAllAsync();
+        var aboutTask = _publicAboutApiService.GetAllAsync();
+        var siteSettingsTask = _publicSiteSettingsApiService.GetAllAsync();
+        var heroTask = _publicHeroApiService.GetAllAsync();
+        var socialMediaTask = _publicSocialMediaApiService.GetAllAsync();
+        var skillTask = _publicSkillApiService.GetAllAsync();
+        var projectTask = _publicProjectApiService.GetLatestAsync(3);
+        var guestBookTask = _publicGuestBookApiService.GetAllAsync();
+        var githubTask = _publicGithubApiService.GetAllAsync();
 
+        await Task.WhenAll(
+        aboutTask, siteSettingsTask, heroTask, socialMediaTask,
+        skillTask, projectTask, guestBookTask, githubTask
+    );
         var models = new IndexViewModel
         {
-            aboutDto = about.FirstOrDefault(),
-            siteSettingDto = siteSettings.FirstOrDefault(),
-            heroDto = hero.FirstOrDefault(),
-            socialMediaDtos = socialMedia,
-            skillDtos = skill,
-            projectListDtos = project,
-            guestBookListDtos = guestBook,
-            githubRepoDtos = github
+            aboutDto = aboutTask.Result.FirstOrDefault(),
+            siteSettingDto = siteSettingsTask.Result.FirstOrDefault(),
+            heroDto = heroTask.Result.FirstOrDefault(),
+            socialMediaDtos = socialMediaTask.Result,
+            skillDtos = skillTask.Result,
+            projectListDtos = projectTask.Result,
+            guestBookListDtos = guestBookTask.Result,
+            githubRepoDtos = githubTask.Result
         };
-
-
         return View(models);
     }
 }

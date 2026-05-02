@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Abstract;
 using DtoLayer.ProjectDtos;
 using FluentValidation;
+using Ganss.Xss;
 
 namespace BusinessLayer.ValidationRules.ProjectValidator;
 
@@ -14,7 +15,7 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
             .Must(x => !string.IsNullOrWhiteSpace(x))
             .WithMessage("Başlık sadece boşluklardan oluşamaz")
             .MaximumLength(200)
-            .WithMessage("200 Karakterden daha fazla bir başlık olamaz");
+            .WithMessage("200 Karakterden daha fazla bir başlık olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.ShortDescription)
             .NotEmpty()
@@ -22,17 +23,17 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
             .Must(x => !string.IsNullOrWhiteSpace(x))
             .WithMessage("Başlık sadece boşluklardan oluşamaz")
             .MaximumLength(1000)
-            .WithMessage("1000 Karakterden daha fazla bir Kısa Açıklama olamaz");
+            .WithMessage("1000 Karakterden daha fazla bir Kısa Açıklama olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.Description)
             .NotEmpty()
             .WithMessage("Açıklama Boş Geçilemez")
             .Must(x => !string.IsNullOrWhiteSpace(x))
-            .WithMessage("Başlık sadece boşluklardan oluşamaz");
+            .WithMessage("Başlık sadece boşluklardan oluşamaz").MustBeSafeHtml();
 
         RuleFor(x => x.Technologies)
             .NotEmpty()
-            .WithMessage("Açıklama Boş Geçilemez");
+            .WithMessage("Açıklama Boş Geçilemez").MustBeSafeHtml();
 
 
         RuleFor(x => x.ImageUrl)
@@ -41,7 +42,7 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
 
         RuleFor(x => x.ClientName)
             .MaximumLength(200)
-            .WithMessage("200 Karakterden daha fazla bir Müşteri ismi olamaz");
+            .WithMessage("200 Karakterden daha fazla bir Müşteri ismi olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.Duration)
             .MaximumLength(50)
@@ -49,11 +50,11 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
 
         RuleFor(x => x.Role)
             .MaximumLength(100)
-            .WithMessage("100 Karakterden daha fazla bir ekip sayısı olamaz");
+            .WithMessage("100 Karakterden daha fazla bir ekip sayısı olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.Goals)
             .MaximumLength(3000)
-            .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz");
+            .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.WebsiteUrl)
             .MaximumLength(300)
@@ -74,7 +75,14 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectDto>
             }).WithMessage("Seçilen Kategori Mevcut değil veya silinmiş");
 
 
-
+        // 2. Link Kontrolleri (İsteğe bağlı güvenlik)
+        RuleFor(x => x.GithubUrl)
+            .MaximumLength(300)
+            .Must(url => string.IsNullOrEmpty(url) || url.StartsWith("http")).WithMessage("Geçerli bir URL giriniz.");
+        // 3. XSS (Güvenlik) Kontrolü: Description alanı editörden (HTML) geliyorsa zararlı script içeremez!
+        RuleFor(x => x.Description)
+           .NotEmpty().WithMessage("Proje detayı gereklidir.")
+          .MustBeSafeHtml();
 
     }
 }

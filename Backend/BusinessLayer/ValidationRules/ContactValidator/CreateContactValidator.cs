@@ -26,33 +26,33 @@ public class CreateContactValidator : AbstractValidator<CreateContactDto>
         RuleFor(x => x.Location).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(200)
-            .WithMessage("Adresiniz Standarttan uzundur tekrar Kontrol ediniz");
+            .WithMessage("Adresiniz Standarttan uzundur tekrar Kontrol ediniz").MustBeSafeHtml();
 
         RuleFor(x => x.LocationPicture).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(200)
-            .WithMessage("Adresiniz Resmi Standarttan uzundur tekrar Kontrol ediniz");
+            .WithMessage("Adresiniz Resmi Standarttan uzundur tekrar Kontrol ediniz").MustBeSafeHtml();
 
         RuleFor(x => x.ContactTitle).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(50)
-            .WithMessage("Başlık 50 Karakterden fazla olamaz");
+            .WithMessage("Başlık 50 Karakterden fazla olamaz").MustBeSafeHtml();
 
 
         RuleFor(x => x.ContactText).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(200)
-            .WithMessage("Başlık 200 Karakterden fazla olamaz");
+            .WithMessage("Başlık 200 Karakterden fazla olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.SuccessMessageText).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(150)
-            .WithMessage("Başlık 150 Karakterden fazla olamaz");
+            .WithMessage("Başlık 150 Karakterden fazla olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.WorkStatus).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(100)
-            .WithMessage("Başlık 100 Karakterden fazla olamaz");
+            .WithMessage("Başlık 100 Karakterden fazla olamaz").MustBeSafeHtml();
 
 
     }

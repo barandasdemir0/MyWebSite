@@ -1,13 +1,10 @@
-﻿using DtoLayer.BlogPostDtos;
-using DtoLayer.ProjectDtos;
+﻿using DtoLayer.ProjectDtos;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
-using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;

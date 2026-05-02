@@ -10,23 +10,31 @@ public class UpdateProjectValidator:AbstractValidator<UpdateProjectDto>
     {
 
         RuleFor(x => x.Name)
-            .NotEmpty()
-            .WithMessage("Başlık Boş Geçilemez")
-            .MaximumLength(200)
-            .WithMessage("200 Karakterden daha fazla bir başlık olamaz");
+           .NotEmpty()
+           .WithMessage("Başlık Boş Geçilemez")
+           .Must(x => !string.IsNullOrWhiteSpace(x))
+           .WithMessage("Başlık sadece boşluklardan oluşamaz")
+           .MaximumLength(200)
+           .WithMessage("200 Karakterden daha fazla bir başlık olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.ShortDescription)
             .NotEmpty()
             .WithMessage("Kısa Açıklama Boş Geçilemez")
+            .Must(x => !string.IsNullOrWhiteSpace(x))
+            .WithMessage("Başlık sadece boşluklardan oluşamaz")
             .MaximumLength(1000)
-            .WithMessage("1000 Karakterden daha fazla bir Kısa Açıklama olamaz");
-        RuleFor(x => x.Technologies)
-          .NotEmpty()
-          .WithMessage("Açıklama Boş Geçilemez");
+            .WithMessage("1000 Karakterden daha fazla bir Kısa Açıklama olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.Description)
             .NotEmpty()
-            .WithMessage("Açıklama Boş Geçilemez");
+            .WithMessage("Açıklama Boş Geçilemez")
+            .Must(x => !string.IsNullOrWhiteSpace(x))
+            .WithMessage("Başlık sadece boşluklardan oluşamaz").MustBeSafeHtml();
+
+        RuleFor(x => x.Technologies)
+            .NotEmpty()
+            .WithMessage("Açıklama Boş Geçilemez").MustBeSafeHtml();
+
 
         RuleFor(x => x.ImageUrl)
             .MaximumLength(200)
@@ -34,7 +42,7 @@ public class UpdateProjectValidator:AbstractValidator<UpdateProjectDto>
 
         RuleFor(x => x.ClientName)
             .MaximumLength(200)
-            .WithMessage("200 Karakterden daha fazla bir Müşteri ismi olamaz");
+            .WithMessage("200 Karakterden daha fazla bir Müşteri ismi olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.Duration)
             .MaximumLength(50)
@@ -42,11 +50,11 @@ public class UpdateProjectValidator:AbstractValidator<UpdateProjectDto>
 
         RuleFor(x => x.Role)
             .MaximumLength(100)
-            .WithMessage("100 Karakterden daha fazla bir ekip sayısı olamaz");
+            .WithMessage("100 Karakterden daha fazla bir ekip sayısı olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.Goals)
             .MaximumLength(3000)
-            .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz");
+            .WithMessage("3000 Karakterden daha fazla bir bu iş neden yapıldı olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.WebsiteUrl)
             .MaximumLength(300)
@@ -59,13 +67,22 @@ public class UpdateProjectValidator:AbstractValidator<UpdateProjectDto>
         RuleFor(x => x.TopicIds).NotEmpty()
           .WithMessage("Kategori Girilmesi zorunludur");
 
-
-        RuleForEach(x=>x.TopicIds)
+        RuleForEach(x => x.TopicIds)
             .MustAsync(async (topic, cancelation) =>
             {
                 var query = await topicDal.GetByIdAsync(topic);
                 return query != null;
             }).WithMessage("Seçilen Kategori Mevcut değil veya silinmiş");
+
+
+        // 2. Link Kontrolleri (İsteğe bağlı güvenlik)
+        RuleFor(x => x.GithubUrl)
+            .MaximumLength(300)
+            .Must(url => string.IsNullOrEmpty(url) || url.StartsWith("http")).WithMessage("Geçerli bir URL giriniz.");
+        // 3. XSS (Güvenlik) Kontrolü: Description alanı editörden (HTML) geliyorsa zararlı script içeremez!
+        RuleFor(x => x.Description)
+           .NotEmpty().WithMessage("Proje detayı gereklidir.")
+          .MustBeSafeHtml();
 
     }
 }

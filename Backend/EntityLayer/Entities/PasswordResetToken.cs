@@ -5,7 +5,7 @@ public class PasswordResetToken
     public PasswordResetToken()
     {
         Id = Guid.CreateVersion7();
-        Token = Guid.CreateVersion7().ToString("N");//32 char hex amacımız boşluksuz ve tiresiz bir yapıya sokmak
+        Token = Guid.NewGuid().ToString("N");//32 char hex amacımız boşluksuz ve tiresiz bir yapıya sokmak
         
     }
     public Guid Id { get; protected set; }

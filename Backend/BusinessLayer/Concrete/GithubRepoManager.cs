@@ -2,6 +2,7 @@
 using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.GithubRepoDtos;
 using MapsterMapper;
 using SharedKernel.Exceptions;
@@ -17,7 +18,7 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
     private readonly IGithubRepoDal _githubRepoDal;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public GithubRepoManager(IGithubRepoDal githubRepoDal, IMapper mapper, IHttpClientFactory httpClientFactory) : base(githubRepoDal, mapper)
+    public GithubRepoManager(IGithubRepoDal githubRepoDal, IMapper mapper, IHttpClientFactory httpClientFactory, IUnitOfWork unitOfWork) : base(githubRepoDal, mapper, unitOfWork)
     {
         _githubRepoDal = githubRepoDal;
         _httpClientFactory = httpClientFactory;
@@ -104,7 +105,7 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
                 await _repository.AddAsync(entity, cancellationToken); // ekleme işlemini yap
             }
         }
-        await _repository.SaveAsync(cancellationToken); // güncelleme veya ekleme her ne yaparsan bunu veritabanına ekle
+        await _unitOfWork.SaveChangesAsync(cancellationToken); // güncelleme veya ekleme her ne yaparsan bunu veritabanına ekle
         return await GetAllAsync(cancellationToken); // hepsini listele
     }
 
@@ -131,7 +132,7 @@ public class GithubRepoManager : GenericManager<GithubRepo,GithubRepoDto,CreateG
         }
         entity.IsVisible = !entity.IsVisible; // eğer true ise false false ise true olur
         await _repository.UpdateAsync(entity, cancellationToken); // sonra bunu update yap
-        await _repository.SaveAsync(cancellationToken); // sonra bunu güncelle veritabanında
+        await _unitOfWork.SaveChangesAsync(cancellationToken); // sonra bunu güncelle veritabanında
         return _mapper.Map<GithubRepoDto>(entity); //ve mapleme işlemi yap 
     }
 

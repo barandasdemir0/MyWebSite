@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.ChatbotSettingsDtos;
 using MapsterMapper;
 
@@ -10,7 +11,7 @@ public class ChatbotSettingsManager : GenericManager<ChatbotSettings,ChatbotSett
 {
     private readonly IChatbotSettingsDal _chatbotSettingsDal;
 
-    public ChatbotSettingsManager(IChatbotSettingsDal chatbotSettingsDal, IMapper mapper) : base(chatbotSettingsDal, mapper)
+    public ChatbotSettingsManager(IChatbotSettingsDal chatbotSettingsDal, IMapper mapper,IUnitOfWork unitOfWork) : base(chatbotSettingsDal, mapper, unitOfWork)
     {
         _chatbotSettingsDal = chatbotSettingsDal;
 

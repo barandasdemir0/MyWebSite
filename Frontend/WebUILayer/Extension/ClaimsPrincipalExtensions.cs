@@ -1,4 +1,4 @@
-﻿using CV.EntityLayer.Entities;
+﻿using EntityLayer.Constants;
 using System.Security.Claims;
 
 namespace WebUILayer.Extension;

@@ -4,6 +4,7 @@ using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DtoLayer.MessageDtos;
 using MapsterMapper;
+using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Shared;
@@ -15,11 +16,13 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
 
     private readonly IMessageDal _messageDal;
     private readonly IEmailService _emailService;
+    private readonly ILogger<MessageManager> _logger;
 
-    public MessageManager(IMessageDal messageDal, IMapper mapper, IEmailService emailService) : base(messageDal, mapper)
+    public MessageManager(IMessageDal messageDal, IMapper mapper, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<MessageManager> logger) : base(messageDal, mapper, unitOfWork)
     {
         _messageDal = messageDal;
         _emailService = emailService;
+        _logger = logger;
     }
 
     public override async Task<MessageDto> AddAsync(CreateMessageDto dto, CancellationToken cancellationToken = default)
@@ -27,7 +30,7 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
         ArgumentNullException.ThrowIfNull(dto);
         var entity = _mapper.Map<Message>(dto);
         await _repository.AddAsync(entity, cancellationToken);
-        await _repository.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         try
         {
@@ -69,14 +72,14 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
         }
         catch (Exception ex)
         {
-            Console.WriteLine("MAIL GÖNDERME HATASI: " + ex.Message);
+            _logger.LogError(ex, "Mail gönderme hatası");
 
         }
         return _mapper.Map<MessageDto>(entity);
 
     }
 
-    public async Task<PagedResult<MessageDto>> GetAllAdmin(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MessageDto>> GetAllAdminAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _messageDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
         return _mapper.Map<List<MessageDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, totalCount);
@@ -141,7 +144,7 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
         }
         entity.IsRead = true;
         await _messageDal.UpdateAsync(entity, cancellationToken);
-        await _messageDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
     }
 
@@ -157,7 +160,7 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
         entity.IsDeleted = false;
         entity.DeletedAt = null;
         await _messageDal.UpdateAsync(entity, cancellationToken);
-        await _messageDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<MessageDto>(entity);
     }
 
@@ -170,7 +173,7 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
         }
         entity.IsStarred = !entity.IsStarred;
         await _messageDal.UpdateAsync(entity, cancellationToken);
-        await _messageDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
     }
 

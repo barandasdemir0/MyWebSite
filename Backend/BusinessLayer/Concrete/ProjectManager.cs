@@ -2,6 +2,7 @@
 using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.ProjectDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 {
     private readonly IProjectDal _projectDal;
 
-    public ProjectManager(IProjectDal projectDal, IMapper mapper) : base(projectDal, mapper)
+    public ProjectManager(IProjectDal projectDal, IMapper mapper, IUnitOfWork unitOfWork) : base(projectDal, mapper, unitOfWork)
     {
         _projectDal = projectDal;
     }
@@ -34,7 +35,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
             }
         }
         await _projectDal.AddAsync(entity, cancellationToken);
-        await _projectDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<ProjectDto>(entity);
     }
 
@@ -44,7 +45,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
         if (entity != null)
         {
             await _projectDal.DeleteAsync(entity, cancellationToken);
-            await _projectDal.SaveAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 
@@ -100,7 +101,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
             }
         }
         await _projectDal.UpdateAsync(entity, cancellationToken: cancellationToken);
-        await _projectDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<ProjectDto>(entity);
     }
 
@@ -130,7 +131,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
         entity.DeletedAt = null;
 
         await _projectDal.UpdateAsync(entity, cancellationToken);
-        await _projectDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return _mapper.Map<ProjectListDto>(entity);
     }

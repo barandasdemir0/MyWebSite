@@ -8,11 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mapster" Version="10.0.7" />
+
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EntityLayer\EntityLayer.csproj" />
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 

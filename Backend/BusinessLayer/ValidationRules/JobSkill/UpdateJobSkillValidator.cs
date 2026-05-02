@@ -10,7 +10,7 @@ public class UpdateJobSkillValidator:AbstractValidator<UpdateJobSkillDto>
         RuleFor(x => x.JobSkillName).NotEmpty()
            .WithMessage("Lütfen Boş Geçmeyiniz")
            .MaximumLength(50)
-           .WithMessage("50 Karakterden fazla olamaz");
+           .WithMessage("50 Karakterden fazla olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.JobSkillPercentage)
      .NotNull().WithMessage("Lütfen boş geçmeyiniz")

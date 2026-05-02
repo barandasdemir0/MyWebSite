@@ -11,19 +11,19 @@ public class CreateEducationValidator:AbstractValidator<CreateEducationDto>
             .NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(50)
-            .WithMessage("Bu Alan 50 Karakterden fazla olamaz");
+            .WithMessage("Bu Alan 50 Karakterden fazla olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.EducationSchoolName)
             .NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MaximumLength(100)
-            .WithMessage("Bu Alan 100 Karakterden fazla olamaz");
+            .WithMessage("Bu Alan 100 Karakterden fazla olamaz").MustBeSafeHtml();
 
         RuleFor(x => x.EducationDescription)
             .NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
             .MinimumLength(10)
-            .WithMessage("Açıklama En az 10 Karakter olmalıdır");
+            .WithMessage("Açıklama En az 10 Karakter olmalıdır").MustBeSafeHtml();
 
         RuleFor(x=>x.EducationStartDate)
              .NotNull()

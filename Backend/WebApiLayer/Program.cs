@@ -44,17 +44,17 @@ else
 {
     app.UseHsts();
 }
-
+app.UseForwardedHeaders();
 
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseRateLimiter();
-app.UseMiddleware<ApiExceptionMiddleware>();
+
 app.HealthCheckEndpoints();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<ApiExceptionMiddleware>();
 app.MapControllers();
 
 await app.SeedDatabaseAsync();

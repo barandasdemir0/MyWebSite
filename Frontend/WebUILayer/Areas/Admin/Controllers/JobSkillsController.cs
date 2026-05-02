@@ -1,10 +1,7 @@
-﻿using DtoLayer.JobSkillCategoryDtos;
-using DtoLayer.JobSkillsDtos;
+﻿using DtoLayer.JobSkillsDtos;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Extension;

@@ -22,6 +22,10 @@ public static class SlugExtension
                    .Replace("ö", "o")
                    .Replace("ç", "c");
 
+        text = text.Replace("c#", "c-sharp")
+           .Replace(".net", "dot-net");
+
+
         text = Regex.Replace(text, @"[^a-z0-9\s-]", "");  // harf rakam tire dışındaki ifadeleri sil
         text = Regex.Replace(text, @"\s+", "-").Trim(); // boşlukları tire yap
 

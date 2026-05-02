@@ -2,6 +2,7 @@
 using BusinessLayer.ValidationRules;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Context;
 using DtoLayer.Mapping;
 using FluentValidation;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Text;
+using System.Threading.RateLimiting;
 
 
 namespace BusinessLayer.Container;
@@ -45,6 +47,18 @@ public static class Extension
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
         services.AddFluentValidationAutoValidation();
 
+        services.AddRateLimiter(options => {
+            // Auth Spesifik Policy (Brute-Force / Registration Flood Koruması)
+            options.AddPolicy("AuthPolicy", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3, // 5 dakikada maksimum 3 deneme
+                        Window = TimeSpan.FromMinutes(5)
+                    }));
+        });
+
 
 
         services.AddHttpClient("GithubApi", client =>
@@ -62,6 +76,9 @@ public static class Extension
         services.Scan(scan => scan.FromAssemblyOf<IDalMarker>().AddClasses(c => c.Where(t => t.Name.StartsWith("Ef") && t.Name.EndsWith("Dal"))).AsImplementedInterfaces().WithScopedLifetime());
 
         services.Scan(scan => scan.FromAssemblyOf<IBusinessMarker>().AddClasses(c => c.Where(t => t.Name.EndsWith("Manager"))).AsImplementedInterfaces().WithScopedLifetime());
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
     }
 
 

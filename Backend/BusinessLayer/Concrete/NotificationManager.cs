@@ -13,7 +13,7 @@ public class NotificationManager : GenericManager<Notification,NotificationDto,C
 {
     private readonly INotificationDal _notificationDal;
 
-    public NotificationManager(INotificationDal notificationDal, IMapper mapper) : base(notificationDal, mapper)
+    public NotificationManager(INotificationDal notificationDal, IMapper mapper, IUnitOfWork unitOfWork) : base(notificationDal, mapper, unitOfWork)
     {
         _notificationDal = notificationDal;
     }
@@ -40,7 +40,7 @@ public class NotificationManager : GenericManager<Notification,NotificationDto,C
         entity.IsRead = true;
         entity.UpdatedAt = DateTime.UtcNow;
         await _notificationDal.UpdateAsync(entity, cancellationToken);
-        await _notificationDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<NotificationDto>(entity);
     }
 
@@ -54,7 +54,7 @@ public class NotificationManager : GenericManager<Notification,NotificationDto,C
         entity.IsDeleted = false;
         entity.DeletedAt = null;
         await _notificationDal.UpdateAsync(entity,cancellationToken);
-        await _notificationDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<NotificationDto>(entity);
     }
 

@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.HeroDtos;
 using MapsterMapper;
 
@@ -10,7 +11,7 @@ public class HeroManager :GenericManager<Hero,HeroDto,CreateHeroDto,UpdateHeroDt
 {
     private readonly IHeroDal _heroDal;
 
-    public HeroManager(IHeroDal heroDal, IMapper mapper) : base(heroDal, mapper)
+    public HeroManager(IHeroDal heroDal, IMapper mapper, IUnitOfWork unitOfWork) : base(heroDal, mapper, unitOfWork)
     {
         _heroDal = heroDal;
     }
@@ -38,7 +39,7 @@ public class HeroManager :GenericManager<Hero,HeroDto,CreateHeroDto,UpdateHeroDt
             _mapper.Map(updateHeroDto, entity);
             await _heroDal.UpdateAsync(entity, cancellationToken);
         }
-        await _heroDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<HeroDto>(entity);
 
     }

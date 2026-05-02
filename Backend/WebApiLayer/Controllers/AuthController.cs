@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-
+    [EnableRateLimiting("AuthPolicy")]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto,CancellationToken cancellationToken)
     {
@@ -35,6 +35,7 @@ public class AuthController : ControllerBase
         }
     }
 
+    [EnableRateLimiting("AuthPolicy")]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto,CancellationToken cancellationToken)
     {

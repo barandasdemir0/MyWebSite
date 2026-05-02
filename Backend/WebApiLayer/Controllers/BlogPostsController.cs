@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.BlogPostDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
@@ -63,6 +63,7 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
     [HttpGet("latest/{count}")]
     public async Task<IActionResult> GetLatest(int count, [FromQuery]string? topic=null,CancellationToken cancellationToken=default)
     {
+        count = Math.Clamp(count, 1, 20);
         var values = await _blogPostService.GetLatestAsync(count,topic,cancellationToken);
         if (values==null)
         {

@@ -2,14 +2,14 @@
 
 namespace DtoLayer.ExperienceDtos;
 
-public class ExperienceDto : IHasId
+public record ExperienceDto : IHasId
 {
-    public Guid Id { get; set; }
-    public string ExperienceTitle { get; set; } = string.Empty;
-    public DateTime? ExperienceStartDate { get; set; }
-    public DateTime? ExperienceFinishDate { get; set; }
-    public string ExperienceCompanyName { get; set; } = string.Empty;
-    public string ExperienceDescription { get; set; } = string.Empty;
-    public int? DisplayOrder { get; set; }   // Sıralama için
-    public bool IsDeleted { get; set; } = false;
+    public Guid Id { get; init; }
+    public string ExperienceTitle { get; init; } = string.Empty;
+    public DateTime? ExperienceStartDate { get; init; }
+    public DateTime? ExperienceFinishDate { get; init; }
+    public string ExperienceCompanyName { get; init; } = string.Empty;
+    public string ExperienceDescription { get; init; } = string.Empty;
+    public int? DisplayOrder { get; init; }   // Sıralama için
+    public bool IsDeleted { get; init; } = false;
 }

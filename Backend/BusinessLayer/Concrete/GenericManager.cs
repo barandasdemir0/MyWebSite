@@ -11,11 +11,13 @@ public abstract class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> 
 
     protected readonly IGenericRepository<TEntity> _repository;
     protected readonly IMapper _mapper;
+    protected readonly IUnitOfWork _unitOfWork;
 
-    public GenericManager(IGenericRepository<TEntity> repository, IMapper mapper)
+    public GenericManager(IGenericRepository<TEntity> repository, IMapper mapper, IUnitOfWork unitOfWork)
     {
         _repository = repository;
         _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
 
     public virtual async Task<TListDto> AddAsync(TCreateDto dto, CancellationToken cancellationToken = default)
@@ -23,7 +25,7 @@ public abstract class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> 
         ArgumentNullException.ThrowIfNull(dto); //dto eğer null ise anında çıkış yap alttaki işlemleri yapma Metot burada durur repositorye girmez dbye gitmez about eklenmez 
         var entity = _mapper.Map<TEntity>(dto);
         await _repository.AddAsync(entity, cancellationToken);
-        await _repository.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<TListDto>(entity);
     }
 
@@ -33,7 +35,7 @@ public abstract class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> 
         if (entity != null)
         {
             await _repository.DeleteAsync(entity, cancellationToken);
-            await _repository.SaveAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 
@@ -62,7 +64,7 @@ public abstract class GenericManager<TEntity, TListDto, TCreateDto, TUpdateDto> 
         }
         _mapper.Map(dto, entity);
         await _repository.UpdateAsync(entity,cancellationToken);
-        await _repository.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<TListDto>(entity);
     }
 }

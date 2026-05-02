@@ -18,12 +18,14 @@ public class TokenManager : ITokenService
     private readonly UserManager<AppUser> _userManager;
     private readonly IRefreshTokenDal _refreshTokenDal;
     private readonly IConfiguration _configuration;// bunun amacı dsyadaki secret key apsetting json gibi yerleride okumak
+    private readonly IUnitOfWork _unitOfWork;
 
-    public TokenManager(IRefreshTokenDal refreshTokenDal, IConfiguration configuration, UserManager<AppUser> userManager)
+    public TokenManager(IRefreshTokenDal refreshTokenDal, IConfiguration configuration, UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
     {
         _refreshTokenDal = refreshTokenDal;
         _configuration = configuration;
         _userManager = userManager;
+        _unitOfWork = unitOfWork;
     }
 
     // Access token oluşturma metodu
@@ -88,7 +90,7 @@ public class TokenManager : ITokenService
 
         // Eski refresh token'ı geçersiz kıl
         storedToken.IsRevoked = true; 
-        await _refreshTokenDal.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Kullanıcıyı bul
         var user = await _userManager.FindByIdAsync(userId);
@@ -121,6 +123,7 @@ public class TokenManager : ITokenService
             await _userManager.UpdateSecurityStampAsync(user);  // Kullanıcının security stamp'ini güncellemek, mevcut tüm token'ların geçersiz olmasını sağlar
 
             await _refreshTokenDal.RevokeAllByUserAsync(user.Id, cancellationToken);  // Veritabanındaki tüm refresh token'ları geçersiz kıl
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
     public async Task<string> CreateRefreshTokenAsync(AppUser user, string? deviceInfo, CancellationToken cancellation = default)
@@ -139,6 +142,7 @@ public class TokenManager : ITokenService
         };
 
         await _refreshTokenDal.AddAsync(refreshToken, cancellation); // Oluşturulan refresh token'ı veritabanına kaydet
+        await _unitOfWork.SaveChangesAsync(cancellation);
         return tokenString;// Oluşturulan refresh token'ı string formatında döndür
     }
 

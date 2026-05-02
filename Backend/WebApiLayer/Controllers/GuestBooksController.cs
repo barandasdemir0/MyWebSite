@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.GuestBookDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;

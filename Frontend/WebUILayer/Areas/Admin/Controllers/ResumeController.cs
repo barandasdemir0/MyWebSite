@@ -5,9 +5,7 @@ using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 

@@ -8,28 +8,29 @@ public class UpdateCertificateValidator : AbstractValidator<UpdateCertificateDto
     public UpdateCertificateValidator()
     {
         RuleFor(x => x.CertificateName).NotEmpty()
-            .WithMessage("Bu Alan Boş Geçilemez")
-            .MaximumLength(100)
-            .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.");
+           .WithMessage("Bu Alan Boş Geçilemez")
+           .MaximumLength(100)
+           .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.").MustBeSafeHtml();
 
         RuleFor(x => x.IssuingCompany).NotEmpty()
            .WithMessage("Bu Alan Boş Geçilemez")
            .MaximumLength(100)
-           .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.");
+           .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.").MustBeSafeHtml();
 
         RuleFor(x => x.CertificateDescription).NotEmpty()
-           .WithMessage("Bu Alan Boş Geçilemez");
+           .WithMessage("Bu Alan Boş Geçilemez")
+           .MinimumLength(10)
+           .WithMessage("En az 10 karakter veri girmeniz gerekiyor").MustBeSafeHtml();
 
         RuleFor(x => x.IssueDate)
-              .NotNull()
+            .NotNull()
             .WithMessage("Tarih Boş Olamaz")
-       .LessThanOrEqualTo(DateTime.UtcNow)
-       .WithMessage("Sertifika tarihi bugünden ileri olamaz");
-
+          .LessThanOrEqualTo(DateTime.UtcNow)
+          .WithMessage("Sertifika tarihi bugünden ileri olamaz");
 
         RuleFor(x => x.DisplayOrder).NotNull()
-          .WithMessage("Boş geçilemez")
-          .GreaterThan(0)
-            .WithMessage("Sıralama 0'dan büyük olmalıdır");
+            .WithMessage("Boş geçilemez")
+            .GreaterThan(0)
+              .WithMessage("Sıralama 0'dan büyük olmalıdır");
     }
 }
