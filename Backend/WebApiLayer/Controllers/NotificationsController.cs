@@ -8,8 +8,7 @@ using SharedKernel.Shared;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = RoleConsts.Admin)]
-public class NotificationsController: CrudController<NotificationDto,CreateNotificationDto,UpdateNotificationDto>
+public class NotificationsController: SecureCrudController<NotificationDto,CreateNotificationDto,UpdateNotificationDto>
 {
     private readonly INotificationService _notificationService;
 

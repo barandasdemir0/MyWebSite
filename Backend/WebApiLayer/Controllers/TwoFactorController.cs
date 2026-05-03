@@ -19,7 +19,9 @@ public class TwoFactorController : ControllerBase
         _twoFactorService = twoFactorService;
     }
 
+
     [EnableRateLimiting(RateLimitConsts.Email)]
+    [Authorize]
     [HttpPost("send-email-code")]
     public async Task<IActionResult> SendEmailCode([FromBody] SendEmailCodeDto sendEmailCodeDto, CancellationToken cancellationToken)
     {
@@ -35,6 +37,7 @@ public class TwoFactorController : ControllerBase
     }
 
 
+    [EnableRateLimiting(RateLimitConsts.Auth)]
     [HttpPost("verify-2fa")]
     public async Task<IActionResult> VerifyTwoFactor([FromBody] TwoFactorVerifyDto dto, CancellationToken cancellationToken)
     {

@@ -9,7 +9,7 @@ namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
 
-public sealed class ContactsController : CrudController<ContactDto,CreateContactDto,UpdateContactDto>
+public sealed class ContactsController : SecureCrudController<ContactDto,CreateContactDto,UpdateContactDto>
 {
     private readonly IContactService _contactService;
 

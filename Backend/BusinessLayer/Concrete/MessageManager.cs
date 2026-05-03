@@ -6,6 +6,7 @@ using DtoLayer.MessageDtos;
 using Ganss.Xss;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SharedKernel.Enums;
 using SharedKernel.Exceptions;
 using SharedKernel.Shared;
@@ -18,12 +19,14 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
     private readonly IMessageDal _messageDal;
     private readonly IEmailService _emailService;
     private readonly ILogger<MessageManager> _logger;
+    private readonly AdminSettings _adminSettings;
 
-    public MessageManager(IMessageDal messageDal, IMapper mapper, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<MessageManager> logger) : base(messageDal, mapper, unitOfWork)
+    public MessageManager(IMessageDal messageDal, IMapper mapper, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<MessageManager> logger, IOptions<AdminSettings> adminSettings) : base(messageDal, mapper, unitOfWork)
     {
         _messageDal = messageDal;
         _emailService = emailService;
         _logger = logger;
+        _adminSettings = adminSettings.Value;
     }
 
     public override async Task<MessageDto> AddAsync(CreateMessageDto dto, CancellationToken cancellationToken = default)
@@ -49,7 +52,7 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
                     <hr/>
                     <p><em>Bu mesaj barandasdemir.com iletişim formundan gönderilmiştir.</em></p>";
                 await _emailService.SendAsync(
-                    "barandasdemir.bd@gmail.com",
+                    $"{_adminSettings.NotificationEmail}",
                     $"Yeni Mesaj: {dto.Subject}",
                     emailBody,
                     cancellationToken);
@@ -62,8 +65,8 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
                     <h3>{dto.Subject}</h3>
                     <p>{dto.Body}</p>
                     <hr/>
-                    <p><em>Bu mesaj Baran Dasdemir tarafından gönderilmiştir.</em></p>
-                    <p><em>Yanıtlamak için: barandasdemir.com iletişim sayfasından veya barandasdemir.bd@gmail.com mailiden ulaşabilirsiniz.</em></p>";
+                    <p><em>Bu mesaj {_adminSettings.FullName} tarafından gönderilmiştir.</em></p>
+                    <p><em>Yanıtlamak için: barandasdemir.com iletişim sayfasından veya {_adminSettings.NotificationEmail} mailiden ulaşabilirsiniz.</em></p>";
                 await _emailService.SendAsync(
                     dto.ReceiverEmail,
                     dto.Subject,

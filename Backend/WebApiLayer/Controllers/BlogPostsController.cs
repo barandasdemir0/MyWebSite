@@ -9,7 +9,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPostDto,UpdateBlogPostDto>
+public sealed class BlogPostsController:SecureCrudController<BlogPostDto,CreateBlogPostDto,UpdateBlogPostDto>
 {
 
     private readonly IBlogPostService _blogPostService;

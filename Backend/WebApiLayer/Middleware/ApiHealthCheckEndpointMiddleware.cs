@@ -8,7 +8,6 @@ public static class ApiHealthCheckEndpointMiddleware
         {
             status = "healthy",
             service = "Baran Dasdemir Portfolio API",
-            documentation = "/scalar/v1",
             timestamp = DateTime.UtcNow
         }));
     }

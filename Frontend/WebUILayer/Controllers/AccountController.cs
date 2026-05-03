@@ -9,9 +9,11 @@ public class AccountController : Controller
 {
 
     private readonly IAccountApiService _accountApiService;
-    public AccountController(IAccountApiService accountApiService)
+    private readonly ILogger<IAccountApiService> _logger;
+    public AccountController(IAccountApiService accountApiService, ILogger<IAccountApiService> logger)
     {
         _accountApiService = accountApiService;
+        _logger = logger;
     }
 
     [HttpGet("/account/forgot-password")]
@@ -64,8 +66,9 @@ public class AccountController : Controller
             catch (Exception ex)
             {
                 // API çökerse uygulamayı patlatma, kullanıcıya mesaj ver
-                TempData["Error"] = "Kod gönderilemedi: " + ex.Message;
-                return RedirectToAction(nameof(ChooseResetMethod));
+                // ex.Message YERİNE:
+                TempData["Error"] = "İşlem sırasında beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin.";
+                _logger.LogError(ex, "Kullanıcı işlemi sırasında hata.");
             }
         }
 
@@ -95,7 +98,8 @@ public class AccountController : Controller
         }
         catch (Exception ex)
         {
-            TempData["Error"] = "Kod gönderilirken hata oluştu: " + ex.Message;
+            TempData["Error"] = "İşlem sırasında beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin.";
+            _logger.LogError(ex, "Kullanıcı işlemi sırasında hata.");
         }
 
         return RedirectToAction(nameof(VerifyResetCode));
@@ -148,7 +152,8 @@ public class AccountController : Controller
         }
         catch (Exception ex)
         {
-            ModelState.AddModelError("", "Doğrulama başarısız: " + ex.Message);
+            TempData["Error"] = "İşlem sırasında beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin.";
+            _logger.LogError(ex, "Kullanıcı işlemi sırasında hata.");
             return View();
         }
     }
@@ -197,7 +202,8 @@ public class AccountController : Controller
         }
         catch (Exception ex)
         {
-            ModelState.AddModelError("", "Şifre değiştirilemedi: " + ex.Message);
+            TempData["Error"] = "İşlem sırasında beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin.";
+            _logger.LogError(ex, "Kullanıcı işlemi sırasında hata.");
             return View(setNewPasswordDto);
         }
     }

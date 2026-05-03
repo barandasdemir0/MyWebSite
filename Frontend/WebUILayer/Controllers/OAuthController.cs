@@ -54,8 +54,11 @@ public class OAuthController : Controller
                 Code = code
                 // RedirectUri genellikle GitHub OAuth için gerekli değildir, ancak API'niz bunu bekliyorsa ekleyebilirsiniz
             });
+            HttpContext.Session.Remove("GithubOAuthState");
+
 
             return HandleOAuthProfile(profile);
+
         }
         catch (Exception)
         {
@@ -109,8 +112,9 @@ public class OAuthController : Controller
             Code = code,
             RedirectUri = redirectUri
         });
+            HttpContext.Session.Remove("LinkedinOAuthState");
 
-        return HandleOAuthProfile(profile);
+            return HandleOAuthProfile(profile);
         }
         catch (Exception)
         {

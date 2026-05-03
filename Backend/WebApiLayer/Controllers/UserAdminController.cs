@@ -8,7 +8,6 @@ namespace WebApiLayer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = RoleConsts.Admin)]
     public class UserAdminController : ControllerBase
     {
         private readonly IUserAdminService _userAdminService;

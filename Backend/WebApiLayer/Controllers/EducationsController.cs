@@ -9,7 +9,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class EducationsController : CrudController<EducationDto,CreateEducationDto,UpdateEducationDto>
+public sealed class EducationsController : PublicCrudController<EducationDto,CreateEducationDto,UpdateEducationDto>
 {
     private readonly IEducationService _educationService;
 

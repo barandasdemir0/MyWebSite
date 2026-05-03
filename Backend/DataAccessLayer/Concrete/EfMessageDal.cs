@@ -60,20 +60,30 @@ public class EfMessageDal : GenericRepository<Message>, IMessageDal
 
     public async Task<Dictionary<string, int>> GetFolderCountAsync(CancellationToken cancellationToken = default)
     {
+        // Veritabanına TEK BİR KERE gider ve SQL tarafında "COUNT(CASE WHEN...)" sorguları oluşturur.
+        var stats = await _context.Messages.IgnoreQueryFilters().AsNoTracking()
+            .GroupBy(x => 1) // Hepsini tek bir grupta topla ki toplu hesap yapabilelim
+            .Select(g => new
+            {
+                InboxCount = g.Count(x => x.Folder == MessageFolder.Inbox && x.IsRead == false && x.IsDeleted == false),
+                ReadCount = g.Count(x => x.IsRead == true && x.IsDeleted == false),
+                StarredCount = g.Count(x => x.IsStarred == true && x.IsDeleted == false),
+                SentCount = g.Count(x => x.Folder == MessageFolder.Sent && x.IsDeleted == false),
+                DraftCount = g.Count(x => x.Folder == MessageFolder.Draft && x.IsDeleted == false),
+                TrashCount = g.Count(x => x.IsDeleted == true)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
         var counts = new Dictionary<string, int>();
 
-        counts[MessageFolder.Inbox.ToString()] = await _context.Messages.AsNoTracking().Where(x => x.Folder == MessageFolder.Inbox && x.IsRead == false).CountAsync(cancellationToken);
-
-        counts["IsRead"] = await _context.Messages.AsNoTracking().Where(x => x.IsRead == true).CountAsync(cancellationToken);
-        counts["IsStarred"] = await _context.Messages.AsNoTracking().Where(x => x.IsStarred == true).CountAsync(cancellationToken);
-
-        counts[MessageFolder.Sent.ToString()] = await _context.Messages.AsNoTracking().Where(x => x.Folder == MessageFolder.Sent).CountAsync(cancellationToken);
-
-        counts[MessageFolder.Draft.ToString()] = await _context.Messages.AsNoTracking().Where(x => x.Folder == MessageFolder.Draft).CountAsync(cancellationToken);
-
-        counts[MessageFolder.Trash.ToString()] = await _context.Messages.IgnoreQueryFilters().AsNoTracking().Where(x => x.IsDeleted == true).CountAsync(cancellationToken);
-
-
+        if (stats != null)
+        {
+            counts[MessageFolder.Inbox.ToString()] = stats.InboxCount;
+            counts["IsRead"] = stats.ReadCount;
+            counts["IsStarred"] = stats.StarredCount;
+            counts[MessageFolder.Sent.ToString()] = stats.SentCount;
+            counts[MessageFolder.Draft.ToString()] = stats.DraftCount;
+            counts[MessageFolder.Trash.ToString()] = stats.TrashCount;
+        }
         return counts;
     }
 

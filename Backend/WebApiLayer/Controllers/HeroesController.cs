@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class HeroesController : CrudController<HeroDto,CreateHeroDto,UpdateHeroDto>
+public sealed class HeroesController : PublicCrudController<HeroDto,CreateHeroDto,UpdateHeroDto>
 {
     private readonly IHeroService _heroService;
 

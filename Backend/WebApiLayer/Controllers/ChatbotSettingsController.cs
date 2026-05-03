@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-public class ChatbotSettingsController : CrudController<ChatbotSettingsDto,CreateChatbotSettingsDto,UpdateChatbotSettingsDto>
+public class ChatbotSettingsController : SecureCrudController<ChatbotSettingsDto,CreateChatbotSettingsDto,UpdateChatbotSettingsDto>
 {
 
     private readonly IChatbotSettingsService _chatbotSettingsService;

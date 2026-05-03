@@ -11,12 +11,14 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SharedKernel.Shared;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Text;
 using System.Threading.RateLimiting;
@@ -36,7 +38,7 @@ public static class Extension
         });
     }
 
-    public static void AddThirdPartyServices(this IServiceCollection services)
+    public static void AddThirdPartyServices(this IServiceCollection services,IConfiguration configuration)
     {
         //mapster için
         // DtoLayer assembly'sindeki TÜM IRegister'ları tarar (AboutMapping referans noktası)
@@ -87,6 +89,30 @@ public static class Extension
                         PermitLimit = 3,
                         Window = TimeSpan.FromMinutes(1)
                     }));
+
+
+            
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 100, // 1 dakikada max 100 istek
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0
+                    }));
+
+
+            // Github metodu için daha sert bir kural (Örn: dakikada 5 istek):
+            options.AddPolicy("GithubLimit", httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
         });
 
 
@@ -97,6 +123,9 @@ public static class Extension
             client.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
             client.DefaultRequestHeaders.Add("User-Agent", "MyWebSite-App");
         });
+
+
+        services.Configure<AdminSettings>(configuration.GetSection("AdminSettings"));
 
     }
 

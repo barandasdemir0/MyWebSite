@@ -3,14 +3,14 @@ using DtoLayer.GithubRepoDtos;
 using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-[Authorize(Roles = RoleConsts.Admin)]
-public sealed class GithubReposController : CrudController<GithubRepoDto,CreateGithubRepoDto,UpdateGithubRepoDto>
+public sealed class GithubReposController : PublicCrudController<GithubRepoDto,CreateGithubRepoDto,UpdateGithubRepoDto>
 {
     private readonly IGithubRepoService _githubRepoService;
 
@@ -27,6 +27,7 @@ public sealed class GithubReposController : CrudController<GithubRepoDto,CreateG
         return Ok(result);
     }
 
+    [EnableRateLimiting(RateLimitConsts.GithubLimit)]
     [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("fetch/{username}")]
     public async Task<IActionResult> FetchFromGithub([FromQuery] PaginationQuery query, string username, CancellationToken cancellationToken)

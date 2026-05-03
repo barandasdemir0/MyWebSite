@@ -1,6 +1,8 @@
 ﻿using DtoLayer.ContactDtos;
 using DtoLayer.SiteSettingDtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Models;
@@ -11,11 +13,13 @@ public class MaintenanceController : Controller
 {
     private readonly ISiteSettingsApiService _siteSettingsApiService;
     private readonly IContactApiService _contactApiService;
+    private readonly AdminSettings _adminSettings;
 
-    public MaintenanceController(ISiteSettingsApiService siteSettingsApiService, IContactApiService contactApiService)
+    public MaintenanceController(ISiteSettingsApiService siteSettingsApiService, IContactApiService contactApiService, IOptions<AdminSettings> adminSettings)
     {
         _siteSettingsApiService = siteSettingsApiService;
         _contactApiService = contactApiService;
+        _adminSettings = adminSettings.Value;
     }
 
     [HttpGet("/maintenance")]
@@ -54,7 +58,7 @@ public class MaintenanceController : Controller
                 },
                 contactDtos = new UpdateContactDto
                 {
-                    Email = "barandasdemir.bd@gmail.com",
+                    Email = _adminSettings.NotificationEmail,
                     Phone = "-"
                 }
             };

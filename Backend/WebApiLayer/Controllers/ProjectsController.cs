@@ -8,8 +8,7 @@ using SharedKernel.Shared;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-
-public sealed class ProjectsController : CrudController<ProjectDto,CreateProjectDto,UpdateProjectDto>
+public sealed class ProjectsController : SecureCrudController<ProjectDto,CreateProjectDto,UpdateProjectDto>
 {
     private readonly IProjectService _projectService;
 

@@ -10,4 +10,5 @@ public static class RateLimitConsts
     public const string GuestBook = "guestbookPolicy";
     public const string Message = "messagePolicy";
     public const string Email = "email";
+    public const string GithubLimit = "GithubLimit";
 }

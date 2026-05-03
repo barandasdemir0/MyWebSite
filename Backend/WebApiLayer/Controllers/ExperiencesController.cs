@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class ExperiencesController:CrudController<ExperienceDto,CreateExperienceDto,UpdateExperienceDto>
+public sealed class ExperiencesController: PublicCrudController<ExperienceDto,CreateExperienceDto,UpdateExperienceDto>
 {
     private readonly IExperienceService _experienceService;
 

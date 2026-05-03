@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
-[Authorize(Roles = RoleConsts.Admin)]
+
 [Route("api/[controller]")]
-public class JobSkillsController : CrudController<JobSkillDto, CreateJobSkillDto, UpdateJobSkillDto>
+public class JobSkillsController : PublicCrudController<JobSkillDto, CreateJobSkillDto, UpdateJobSkillDto>
 {
     private readonly IJobSkillService _jobSkillService;
 

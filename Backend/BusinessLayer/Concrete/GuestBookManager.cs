@@ -65,7 +65,7 @@ public class GuestBookManager : GenericManager<GuestBook, GuestBookListDto, Crea
             tracking: false,
             options: new QueryOptions<GuestBook>
             {
-                OrderBy = x => x.IsApproved!,
+                OrderBy = x => x.CreatedAt,
                 Descending = true,
                 Take = count,
             }, cancellationToken: cancellationToken);

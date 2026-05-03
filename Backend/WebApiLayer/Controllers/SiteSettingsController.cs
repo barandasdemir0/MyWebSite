@@ -8,8 +8,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-[Authorize(Roles = RoleConsts.Admin)]
-public class SiteSettingsController:CrudController<SiteSettingDto,CreateSiteSettingDto,UpdateSiteSettingDto>
+public class SiteSettingsController:PublicCrudController<SiteSettingDto,CreateSiteSettingDto,UpdateSiteSettingDto>
 {
     private readonly ISiteSettingsService _siteSettingsService;
 

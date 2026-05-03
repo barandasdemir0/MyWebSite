@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-public class JobSkillCategoriesController : CrudController<JobSkillCategoryDto, CreateJobSkillCategoryDto, UpdateJobSkillCategoryDto>
+public class JobSkillCategoriesController : PublicCrudController<JobSkillCategoryDto, CreateJobSkillCategoryDto, UpdateJobSkillCategoryDto>
 {
     private readonly IJobSkillCategoryService _jobSkillCategoryService;
 

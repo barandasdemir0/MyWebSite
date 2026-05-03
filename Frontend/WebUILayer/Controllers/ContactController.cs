@@ -1,6 +1,8 @@
 ﻿using DtoLayer.ContactDtos;
 using DtoLayer.MessageDtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Models;
 using WebUILayer.Services.Abstract;
@@ -12,11 +14,13 @@ public class ContactController : Controller
 
     private readonly IPublicMessageApiService _publicMessageApiService;
     private readonly IContactApiService _contactApiService;
+    private readonly AdminSettings _adminSettings;
 
-    public ContactController(IPublicMessageApiService publicMessageApiService, IContactApiService contactApiService)
+    public ContactController(IPublicMessageApiService publicMessageApiService, IContactApiService contactApiService, IOptions<AdminSettings> adminSettings)
     {
         _publicMessageApiService = publicMessageApiService;
         _contactApiService = contactApiService;
+        _adminSettings = adminSettings.Value;
     }
 
     [HttpGet]
@@ -55,7 +59,7 @@ public class ContactController : Controller
             
             if (ContactMessageViewModel.createMessageDto != null)
             {
-                ContactMessageViewModel.createMessageDto.ReceiverEmail = "barandasdemir.bd@gmail.com";
+                ContactMessageViewModel.createMessageDto.ReceiverEmail = _adminSettings.NotificationEmail;
                 ContactMessageViewModel.createMessageDto.Folder = SharedKernel.Enums.MessageFolder.Inbox;
             }
             var result = await _publicMessageApiService.SendContactMessageAsync(ContactMessageViewModel.createMessageDto!);

@@ -23,7 +23,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDatabaseLayers(builder.Configuration);
 builder.Services.ContainerDependencies();
-builder.Services.AddThirdPartyServices();
+builder.Services.AddThirdPartyServices(builder.Configuration);
 builder.Services.AddIdentityAndJwt(builder.Configuration);
 builder.Services.CorsPolicy(builder.Configuration);
 
