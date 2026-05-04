@@ -37,14 +37,17 @@ public class ChatbotManager : IChatbotManagerService
     public async Task<string> ProcessUserMessageAsync(string question, string currentUrl)
     {
 
-        string normalizedQuestion = question.ToLowerInvariant();
+        string normalizedQuestion = question.Trim().ToLowerInvariant().TrimEnd('?');
+        string normalizedUrl = currentUrl.Split('?')[0].ToLowerInvariant().TrimEnd('/');
+        if (string.IsNullOrEmpty(normalizedUrl)) normalizedUrl = "/";
+
         // 1. Giriş Koruması (Input Guardrail)
         if (!IsInputSafe(normalizedQuestion))
         {
             return "Size sadece Baran'ın profesyonel portföyü hakkında yardımcı olabilirim.";
         }
         // 2. Önbellek (Cache) Kontrolü
-        var cached = await _chatbotCacheDal.GetAnswerByQuestionAsync(normalizedQuestion);
+        var cached = await _chatbotCacheDal.GetAnswerByQuestionAsync(normalizedQuestion,normalizedUrl);
         if (cached != null) return cached.BotResponse;
         // 3. Ayarları Çek
         var settings = await _chatbotSettingsService.GetActiveSettingsAsync();
@@ -52,8 +55,8 @@ public class ChatbotManager : IChatbotManagerService
         // 4. Veritabanı Bağlamını (Context) Oluştur
         string contextData = await _contextService.BuildContextAsync(currentUrl, normalizedQuestion);
         string finalPromt = $@"{settings.SystemPrompt}
-         <SystemNote>Kullanıcı şu anda '{currentUrl}' sayfasında bulunuyor. Eğer bağlamı sorarsa, sayfa içeriği hakkında bilgi verebilirsin.</SystemNote>
-         <DatabaseContext> {contextData} </DatabaseContext>";
+        <SystemNote>Kullanıcı şu anda '{normalizedUrl}' sayfasında bulunuyor.</SystemNote>
+        <DatabaseContext> {contextData} </DatabaseContext>";
         try
         {
             // 5. Groq API İsteği
@@ -64,13 +67,20 @@ public class ChatbotManager : IChatbotManagerService
                 return "Size sadece Baran'ın profesyonel portföyü hakkında yardımcı olabilirim.";
             }
             // 7. Başarılı Cevabı Kaydet ve Dön
-            await _chatbotCacheDal.AddAsync(new EntityLayer.Entities.ChatbotCache
+            var exists = await _chatbotCacheDal.GetAnswerByQuestionAsync(normalizedQuestion, normalizedUrl);
+            if (exists == null)
             {
-                UserQuestion = normalizedQuestion,
-                BotResponse = botReply,
-                CreatedAt = DateTime.UtcNow
-            });
-            await _unitOfWork.SaveChangesAsync();
+                await _chatbotCacheDal.AddAsync(new EntityLayer.Entities.ChatbotCache
+                {
+                    UserQuestion = normalizedQuestion,
+                    BotResponse = botReply,
+                    CurrentUrl = normalizedUrl,
+                    CreatedAt = DateTime.UtcNow
+                });
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+      
             return botReply;
         }
         catch (Exception ex)

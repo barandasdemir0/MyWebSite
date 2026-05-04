@@ -11,9 +11,10 @@ public class EfChatbotCacheDal : GenericRepository<ChatbotCache>, IChatbotCacheD
     {
     }
 
-    public async Task<ChatbotCache?> GetAnswerByQuestionAsync(string question)
+    public async Task<ChatbotCache?> GetAnswerByQuestionAsync(string question, string url)
     {
-        var trimmed = question.Trim();
-        return await _context.ChatbotCaches.FirstOrDefaultAsync(x => x.UserQuestion == trimmed);
+        var trimmed = question.Trim().ToLowerInvariant();
+        var trimmedUrl = url.Trim().ToLowerInvariant();
+        return await _context.ChatbotCaches.FirstOrDefaultAsync(x => x.UserQuestion == trimmed && x.CurrentUrl == trimmedUrl );
     }
 }
