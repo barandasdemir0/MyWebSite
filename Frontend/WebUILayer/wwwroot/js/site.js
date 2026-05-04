@@ -43,3 +43,12 @@ document.addEventListener('languageChange', function (e) {
 
     setTimeout(() => { location.reload(); }, 150);
 });
+// --- HİLE: Geri butonuna basıldığında takılı kalan Loader'ı kapatır ---
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+        const preloader = document.querySelector('.preloader');
+        if (preloader) {
+            preloader.classList.add('hidden'); // Loader'ı sakla
+        }
+    }
+});
