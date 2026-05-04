@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
@@ -7,26 +7,26 @@ using SharedKernel.Shared;
 namespace WebApiLayer.Controllers;
 
 [ApiController]
-[Authorize]
-public abstract class CrudController<TListDto,TCreateDto,TUpdateDto> : ControllerBase where TListDto:class,IHasId
+[Authorize(Roles = RoleConsts.Admin)]
+public abstract class SecureCrudController<TListDto,TCreateDto,TUpdateDto> : ControllerBase where TListDto:class,IHasId
 {
     protected readonly ICrudService<TListDto, TCreateDto, TUpdateDto> _crudService;
 
-    protected CrudController(ICrudService<TListDto, TCreateDto, TUpdateDto> crudService)
+    protected SecureCrudController(ICrudService<TListDto, TCreateDto, TUpdateDto> crudService)
     {
         _crudService = crudService;
     }
 
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet]
-    [AllowAnonymous]
     public virtual async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var query = await _crudService.GetAllAsync(cancellationToken);
         return Ok(query);
     }
 
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("{id}")]
-    [AllowAnonymous]
     public virtual async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         var query = await _crudService.GetByIdAsync(id, cancellationToken);

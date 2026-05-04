@@ -40,16 +40,16 @@
                             <td><span class="status-badge draft">Geçmiş</span></td>
                             <td>
                                 <div class="action-btns">
-                                    <a asp-action="UpdateExperience" asp-route-guid="@item.Id" class="action-btn edit"
+                                    <a asp-action="UpdateExperience" asp-route-id="@item.Id" class="action-btn edit"
                                        title="Detaylar">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form asp-action="DeleteExperience" asp-route-guid="@item.Id">
+                                    <form asp-action="DeleteExperience" asp-route-id="@item.Id" method="post">
                                         <button class="action-btn delete hidden" title="Sil" data-action="deleteRow">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                    <form asp-action="RestoreExperience" asp-route-guid="@item.Id">
+                                    <form asp-action="RestoreExperience" asp-route-id="@item.Id" method="post">
                                         <button class="action-btn restore" title="Geri Yükle" data-action="restoreRow">
                                             <i class="fas fa-undo"></i>
                                         </button>
@@ -71,16 +71,16 @@
                             <td><span class="status-badge active">Devam Ediyor</span></td>
                             <td>
                                 <div class="action-btns">
-                                    <a asp-action="UpdateExperience" asp-route-guid="@item.Id" class="action-btn edit"
+                                    <a asp-action="UpdateExperience" asp-route-id="@item.Id" class="action-btn edit"
                                        title="Düzenle">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form asp-action="DeleteExperience" asp-route-guid="@item.Id">
+                                    <form asp-action="DeleteExperience" asp-route-id="@item.Id" method="post">
                                         <button class="action-btn delete" title="Sil" data-action="deleteRow">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                    <form asp-action="RestoreExperience" asp-route-guid="@item.Id">
+                                    <form asp-action="RestoreExperience" asp-route-id="@item.Id" method="post">
                                         <button class="action-btn restore hidden" title="Geri Yükle" data-action="restoreRow">
                                             <i class="fas fa-undo"></i>
                                         </button>
@@ -91,30 +91,6 @@
                     }
                 }
 
-
-                @*  
-                <tr>
-                    <td><strong>Frontend Developer</strong></td>
-                    <td>Digital Agency</td>
-                    <td>2019 - 2020</td>
-                    <td><span class="status-badge active">Sitede Aktif</span></td>
-                    <td><span class="status-badge draft">Geçmiş</span></td>
-                    <td>
-                        <div class="action-btns">
-                            <a href="resume-editor.html?type=job&id=3" class="action-btn edit"
-                               title="Düzenle">
-                                <i class="fas fa-pen"></i>
-                            </a>
-                            <button class="action-btn delete" title="Sil" data-action="deleteRow">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <button class="action-btn restore hidden" title="Geri Yükle"
-                                    data-action="restoreRow">
-                                <i class="fas fa-undo"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr> *@
             </tbody>
         </table>
     </div>

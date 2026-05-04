@@ -2,9 +2,7 @@
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
@@ -25,7 +23,7 @@ public class SocialMediaController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var query = await _socialMediaApiService.GetAdminAllAsync();
+        var query = await _socialMediaApiService.GetAllAdminAsync();
         return View(query);
     }
 

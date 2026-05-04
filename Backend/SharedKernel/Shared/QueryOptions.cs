@@ -14,5 +14,6 @@ public class QueryOptions<T> where T :class
     public int? Take { get; set; }
     public int? Skip { get; set; }
 
+    public bool IgnoreQueryFilters { get; set; } = false;
 
 }

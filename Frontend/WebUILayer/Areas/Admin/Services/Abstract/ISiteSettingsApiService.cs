@@ -6,5 +6,5 @@ public interface ISiteSettingsApiService:IGenericApiService<SiteSettingDto,Creat
 {
     Task<UpdateSiteSettingDto> GetSiteSettingForEditAsync();
 
-    Task SaveAboutAsync(UpdateSiteSettingDto updateSiteSettingDto);
+    Task SaveSiteSettingAsync(UpdateSiteSettingDto updateSiteSettingDto);
 }

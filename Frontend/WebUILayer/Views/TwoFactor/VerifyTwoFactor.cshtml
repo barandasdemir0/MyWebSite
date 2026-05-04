@@ -57,14 +57,14 @@
                 <i class="fas fa-shield-alt"></i>
                 Devam Et
             </button>
-
+            </form>
                 @if (isEmail)
                 {
-                    <div class="form-group mt-12">
-                        <a asp-action="SendEmailCode">Kodu tekrar gönder</a>
-                    </div>
+                    <form asp-action="SendEmailCode" method="post" class="mt-3">
+                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline" style="text-decoration: none;">Kodu tekrar gönder</button>
+                    </form>
                 }
-        </form>
+        
 
         <div class="security-section">
             <p><i class="fas fa-lock"></i> Hesabınız iki aşamalı doğrulama ile korunur.</p>

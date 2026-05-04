@@ -33,16 +33,16 @@
         <div class="hero-typed">
             <span class="typed-text" data-words="@Model.heroDto?.ScrollingText"></span>
         </div>
-        <p class="hero-description">
+      @*   <p class="hero-description">
             @Model.heroDto?.ProfessionalTitle
-        </p>
+        </p> *@
 
         <!-- CTA Buttons -->
         <div class="hero-buttons">
             <a href="/project/Index/" class="btn-primary-custom">
                 <i class="fas fa-rocket me-2"></i>Projelerim
             </a>
-            <a href="assets/cv-baran-dasdemir.pdf" class="btn-outline-custom" download>
+            <a href="/Home/DownloadCv" class="btn-outline-custom" target="_blank" download>
                 <i class="fas fa-download me-2"></i>CV İndir
             </a>
             <a href="/Contact/Index/" class="btn-outline-custom">
@@ -187,66 +187,30 @@
         <div class="portfolio-grid">
             <!-- Project 1 -->
             <div class="portfolio-card" data-aos="fade-up" data-aos-delay="0">
-                <div class="portfolio-image">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop"
-                         alt="E-Commerce Platform">
-                    <div class="portfolio-overlay">
-                        <a href="#" class="btn-icon" title="Detay"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn-icon" title="Demo"><i class="fas fa-external-link-alt"></i></a>
+                @foreach (var project in Model.projectListDtos)
+                {
+                    <div class="portfolio-image">
+                        <img src="@project.ImageUrl"
+                             alt="@project.Name">
+                        <div class="portfolio-overlay">
+                            <a href="/Project/ProjectDetail/@project.Slug" class="btn-icon" title="Detay"><i class="fas fa-eye"></i></a>
+                            <a href="@project.WebsiteUrl" class="btn-icon" title="Demo"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="portfolio-info">
-                    <span class="portfolio-category">Web Uygulama</span>
-                    <h4>E-Ticaret Platformu</h4>
-                    <div class="portfolio-tags">
-                        <span class="portfolio-tag">React</span>
-                        <span class="portfolio-tag">Node.js</span>
-                        <span class="portfolio-tag">MongoDB</span>
+                    <div class="portfolio-info">
+                        <span class="portfolio-category">@string.Join(", ", project.Topics)</span>
+                        <h4>@project.Name</h4>
+                        <div class="portfolio-tags">
+                            @foreach (var lang in project.TechnologyList)
+                            {
+                                <span class="portfolio-tag">@lang</span>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
+               
             </div>
 
-            <!-- Project 2 -->
-            <div class="portfolio-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="portfolio-image">
-                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=400&fit=crop"
-                         alt="Mobile App">
-                    <div class="portfolio-overlay">
-                        <a href="#" class="btn-icon" title="Detay"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn-icon" title="Demo"><i class="fas fa-external-link-alt"></i></a>
-                    </div>
-                </div>
-                <div class="portfolio-info">
-                    <span class="portfolio-category">Mobil Uygulama</span>
-                    <h4>Fitness Tracker App</h4>
-                    <div class="portfolio-tags">
-                        <span class="portfolio-tag">Flutter</span>
-                        <span class="portfolio-tag">Firebase</span>
-                        <span class="portfolio-tag">Dart</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project 3 -->
-            <div class="portfolio-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="portfolio-image">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop"
-                         alt="SaaS Dashboard">
-                    <div class="portfolio-overlay">
-                        <a href="#" class="btn-icon" title="Detay"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="btn-icon" title="Demo"><i class="fas fa-external-link-alt"></i></a>
-                    </div>
-                </div>
-                <div class="portfolio-info">
-                    <span class="portfolio-category">Micro SaaS</span>
-                    <h4>Analytics Dashboard</h4>
-                    <div class="portfolio-tags">
-                        <span class="portfolio-tag">Vue.js</span>
-                        <span class="portfolio-tag">Python</span>
-                        <span class="portfolio-tag">PostgreSQL</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="text-center mt-5" data-aos="fade-up">
@@ -272,58 +236,26 @@
             <div class="col-lg-10" data-aos="fade-up" data-aos-delay="100">
                 <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        <!-- Testimonial 1 -->
-                        <div class="carousel-item active">
-                            <div class="testimonial-card text-center">
-                                <div class="testimonial-avatar mb-4 d-inline-block">
-                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client 1">
-                                </div>
-                                <p class="testimonial-text">
-                                    "Baran ile çalışmak harika bir deneyimdi. Projemizi tam zamanında ve
-                                    beklediğimizden çok daha iyi bir kalitede teslim etti. İletişimi ve teknik
-                                    bilgisi
-                                    üst düzeyde."
-                                </p>
-                                <div class="testimonial-info">
-                                    <h5 class="testimonial-name">Ahmet Yılmaz</h5>
-                                    <span class="testimonial-role">CEO, TechStart</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Testimonial 2 -->
-                        <div class="carousel-item">
-                            <div class="testimonial-card text-center">
-                                <div class="testimonial-avatar mb-4 d-inline-block">
-                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Client 2">
-                                </div>
-                                <p class="testimonial-text">
-                                    "Mobil uygulamamızın arayüz tasarımı ve geliştirmesi konusunda Baran'ın vurduğu
-                                    dokunuşlar mükemmeldi. Kullanıcı geri dönüşleri çok olumlu."
-                                </p>
-                                <div class="testimonial-info">
-                                    <h5 class="testimonial-name">Ayşe Demir</h5>
-                                    <span class="testimonial-role">Product Manager, SoftApp</span>
+                        @foreach (var guestBook in Model.guestBookListDtos)
+                        {
+                            <!-- Testimonial 1 -->
+                            <div class="carousel-item active">
+                                <div class="testimonial-card text-center">
+                                    <div class="testimonial-avatar mb-4 d-inline-block">
+                                        <img src="@guestBook.AuthorAvatarUrl" alt="Client 1">
+                                    </div>
+                                    <p class="testimonial-text">
+                                        @guestBook.Message
+                                    </p>
+                                    <div class="testimonial-info">
+                                        <h5 class="testimonial-name">@guestBook.AuthorName</h5>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
+                       
 
-                        <!-- Testimonial 3 -->
-                        <div class="carousel-item">
-                            <div class="testimonial-card text-center">
-                                <div class="testimonial-avatar mb-4 d-inline-block">
-                                    <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Client 3">
-                                </div>
-                                <p class="testimonial-text">
-                                    "SaaS projemizin dashboard geliştirmesinde gösterdiği performans takdire şayan.
-                                    Karmaşık veri setlerini bu kadar temiz bir arayüzle sunması etkileyici."
-                                </p>
-                                <div class="testimonial-info">
-                                    <h5 class="testimonial-name">Mehmet Kaya</h5>
-                                    <span class="testimonial-role">CTO, DataFlow</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Controls -->

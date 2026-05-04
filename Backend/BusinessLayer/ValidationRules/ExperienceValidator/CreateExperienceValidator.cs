@@ -19,12 +19,7 @@ public class CreateExperienceValidator:AbstractValidator<CreateExperienceDto>
             .MaximumLength(200)
             .WithMessage("Bu Alan 200 Karakterden fazla olamaz");
 
-        RuleFor(x => x.ExperienceTitle)
-            .NotEmpty()
-            .WithMessage("Bu Alan Boş geçilemez")
-            .MinimumLength(10)
-            .WithMessage("Bu Alan 10 Karakterden az olamaz");
-
+        
 
         RuleFor(x => x.ExperienceStartDate)
              .NotNull()

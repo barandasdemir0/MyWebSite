@@ -1,13 +1,13 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.SocialMediaDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-public sealed class SocialMediasController : CrudController<SocialMediaDto,CreateSocialMediaDto,UpdateSocialMediaDto>
+public sealed class SocialMediasController : PublicCrudController<SocialMediaDto,CreateSocialMediaDto,UpdateSocialMediaDto>
 {
     private readonly ISocialMediaService _socialMediaService;
 

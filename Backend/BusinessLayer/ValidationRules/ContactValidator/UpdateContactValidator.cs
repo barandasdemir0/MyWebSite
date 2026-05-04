@@ -8,11 +8,11 @@ public class UpdateContactValidator:AbstractValidator<UpdateContactDto>
     public UpdateContactValidator()
     {
         RuleFor(x => x.Email).NotEmpty()
-       .WithMessage("Bu Alan Boş Geçilemez")
-       .EmailAddress()
-       .WithMessage("Geçerli Bir E-Posta Adresi giriniz")
-       .MaximumLength(75)
-       .WithMessage("Mailiniz Standarttan uzundur tekrar Kontrol ediniz");
+             .WithMessage("Bu Alan Boş Geçilemez")
+             .EmailAddress()
+             .WithMessage("Geçerli Bir E-Posta Adresi giriniz")
+             .MaximumLength(75)
+             .WithMessage("Mailiniz Standarttan uzundur tekrar Kontrol ediniz");
 
         RuleFor(x => x.Phone).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
@@ -30,7 +30,7 @@ public class UpdateContactValidator:AbstractValidator<UpdateContactDto>
 
         RuleFor(x => x.LocationPicture).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
-            .MaximumLength(200)
+            .MaximumLength(2000)
             .WithMessage("Adresiniz Resmi Standarttan uzundur tekrar Kontrol ediniz");
 
         RuleFor(x => x.ContactTitle).NotEmpty()
@@ -41,13 +41,15 @@ public class UpdateContactValidator:AbstractValidator<UpdateContactDto>
 
         RuleFor(x => x.ContactText).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
-            .MaximumLength(200)
-            .WithMessage("Başlık 200 Karakterden fazla olamaz");
+            .MaximumLength(2000)
+            .WithMessage("Başlık 2000  Karakterden fazla olamaz");
 
         RuleFor(x => x.SuccessMessageText).NotEmpty()
             .WithMessage("Bu Alan Boş Geçilemez")
-            .MaximumLength(150)
-            .WithMessage("Başlık 150 Karakterden fazla olamaz");
+            .MaximumLength(2000)
+            .WithMessage("Başlık 2000  Karakterden fazla olamaz");
+
+      
 
     }
 }

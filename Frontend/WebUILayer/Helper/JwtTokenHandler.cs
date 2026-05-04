@@ -6,13 +6,15 @@ namespace WebUILayer.Helper;
 
 public class JwtTokenHandler : DelegatingHandler
 {
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IConfiguration _configuration;
 
-    public JwtTokenHandler(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    public JwtTokenHandler(IHttpContextAccessor httpContextAccessor, IConfiguration configuration, IHttpClientFactory httpClientFactory)
     {
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
+        _httpClientFactory = httpClientFactory;
     }
 
 
@@ -46,10 +48,9 @@ public class JwtTokenHandler : DelegatingHandler
     private async Task<string?> TryRefreshAsync(string accessToken, string refreshToken, CancellationToken cancellationToken)
     {
         var baseUrl = _configuration["ApiSettings:Baseurl"];
-        using var http = new HttpClient
-        {
-            BaseAddress = new Uri(baseUrl!)
-        };
+        using var http = _httpClientFactory.CreateClient();
+
+        http.BaseAddress = new Uri(baseUrl!);
 
         var dto = new RefreshTokenRequestDto
         {
@@ -57,9 +58,11 @@ public class JwtTokenHandler : DelegatingHandler
             RefreshToken = refreshToken
         };
 
-        var response = await http.PostAsJsonAsync("auth/refresh-token", dto, cancellationToken);
+        var response = await http.PostAsJsonAsync("token/refresh-token", dto, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("AccessToken");
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("RefreshToken");
             return null;
         }
 

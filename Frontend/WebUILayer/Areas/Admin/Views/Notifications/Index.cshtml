@@ -1,0 +1,188 @@
+﻿@using WebUILayer.Areas.Admin.Models
+@model NotificationIndexViewModel
+
+@{
+    ViewData["Title"] = "Bildirimler";
+    ViewData["BodyClass"] = "notifications-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/notifications.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/notifications-page.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/blog.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/modal.css">
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3>Bildirim Geçmişi</h3>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Tür</th>
+                    <th>Mesaj</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.NotificationDtos == null || Model.NotificationDtos.Count == 0)
+                {
+                    <tr>
+                        <td colspan="5" class="text-center p-4">Hiç bildirim bulunamadı.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model.NotificationDtos)
+                    {
+                        string iconClass = "fa-info";
+                        string colorClass = "icon-blue";
+                        string typeText = "Bilgi";
+                        if (item.Type == "comment") { iconClass = "fa-comment-alt"; colorClass = "icon-blue"; typeText = "Yeni Yorum"; }
+                        else if (item.Type == "project") { iconClass = "fa-check-circle"; colorClass = "icon-green"; typeText = "Proje Onaylandı"; }
+                        else if (item.Type == "system") { iconClass = "fa-exclamation-triangle"; colorClass = "icon-yellow"; typeText = "Sistem Uyarısı"; }
+                        else if (item.Type == "user") { iconClass = "fa-user-plus"; colorClass = "icon-purple"; typeText = "Yeni Üye"; }
+
+                        // ===== DURUM MANTIĞI (Resimdeki gibi 3 hal) =====
+                        // 1. IsDeleted = true  → "Silindi"  (kırmızı badge) + Geri Yükle butonu
+                        // 2. IsRead = true     → "Okundu"   (yeşil badge)  + Sil butonu
+                        // 3. IsRead = false    → "Okunmadı" (sarı badge)   + Okundu butonu
+
+                        if (item.IsDeleted)
+                        {
+                            <tr class="deleted-item">
+                                <td width="60">
+                                    <div class="notif-icon-sm @colorClass">
+                                        <i class="fas @iconClass"></i>
+                                    </div>
+                                </td>
+                                <td style="color: #aaa; text-decoration: line-through;">
+                                    <strong>@typeText:</strong> @item.Message
+                                </td>
+                                <td><span class="status-badge danger">Silindi</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <form asp-action="Restore" method="post" class="d-inline notif-restore-form">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="button" class="action-btn restore"
+                                                    title="Geri Yükle"
+                                                    data-action="restoreRow"
+                                                    data-name="@typeText">
+                                                <i class="fas fa-undo"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else if (item.IsRead)
+                        {
+                            <tr>
+                                <td width="60">
+                                    <div class="notif-icon-sm @colorClass">
+                                        <i class="fas @iconClass"></i>
+                                    </div>
+                                </td>
+                                <td style="color: #eee;">
+                                    <strong>@typeText:</strong> @item.Message
+                                </td>
+                                <td><span class="status-badge active">Okundu</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <form asp-action="Delete" method="post" class="d-inline notif-delete-form">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="button" class="action-btn delete"
+                                                    title="Sil"
+                                                    data-action="deleteRow"
+                                                    data-name="@typeText">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="unread-row">
+                                <td width="60">
+                                    <div class="notif-icon-sm @colorClass">
+                                        <i class="fas @iconClass"></i>
+                                    </div>
+                                </td>
+                                <td style="color: #eee;">
+                                    <strong>@typeText:</strong> @item.Message
+                                </td>
+                                <td><span class="status-badge pending">Okunmadı</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <form asp-action="Read" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="action-btn edit" title="Okundu İşaretle">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @await Component.InvokeAsync("_LayoutPaginationPartialComponent", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
+</div>
+
+<!-- Silme Modal -->
+<div id="notifDeleteModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+            <div class="modal-title">Bildirimi Sil</div>
+        </div>
+        <div class="modal-body">
+            <strong id="notifDeleteItemName"></strong> bildirimini silmek istediğinize emin misiniz?<br><br>
+            Bu işlem geri alınabilir (Restore ile).
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelNotifDelete">İptal</button>
+            <button class="btn btn-danger" id="confirmNotifDelete">Evet, Sil</button>
+        </div>
+    </div>
+</div>
+
+<!-- Geri Yükleme Modal -->
+<div id="notifRestoreModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-restore">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div class="modal-title">Bildirimi Geri Yükle</div>
+        </div>
+        <div class="modal-body">
+            <strong id="notifRestoreItemName"></strong> bildirimini geri yüklemek istediğinize emin misiniz?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelNotifRestore">İptal</button>
+            <button class="btn btn-warning" id="confirmNotifRestore">Onayla ve Yükle</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* pages.js ve notifications.js global layout'tan geliyor, burada tekrar yükleme! *@
+}

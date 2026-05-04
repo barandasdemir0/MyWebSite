@@ -14,7 +14,7 @@ public class _ResumeCertificatePartialComponent:ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var values = await _certificateApiService.GetAdminAllAsync();
+        var values = await _certificateApiService.GetAllAdminAsync();
         return View(values);
     }
 }

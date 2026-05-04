@@ -2,6 +2,6 @@
 
 namespace WebUILayer.Services.Abstract;
 
-public interface IPublicGuestBookApiService:IPublicReadApiService<GuestBookListDto>
+public interface IPublicGuestBookApiService:IPublicReadApiService<GuestBookDto>
 {
 }

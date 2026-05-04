@@ -45,6 +45,7 @@ public class ApiExceptionMiddleware
         {
             _logger.LogWarning(ex, "Validasyon Hatası:{Message}", ex.Message);
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
                 error = ex.Message

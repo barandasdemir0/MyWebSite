@@ -9,7 +9,8 @@ public sealed class BlogPost : BaseEntity
     public string? CoverImage { get; set; }
     public int ReadTime { get; set; }
     public bool IsPublished { get; set; } = false;
-    public DateTime? PublishedAt { get; set; } 
+    public DateTime? PublishedAt { get; set; }
+    public string? AiSummary { get; set; }
 
     //// Many-to-Many Navigation
     public ICollection<BlogTopic> BlogTopics { get; set; } = new List<BlogTopic>();

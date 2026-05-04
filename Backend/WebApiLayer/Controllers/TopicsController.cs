@@ -1,14 +1,13 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.TopicDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = RoleConsts.Admin)]
-public sealed class TopicsController : CrudController<TopicDto,CreateTopicDto,UpdateTopicDto>
+public sealed class TopicsController : PublicCrudController<TopicDto,CreateTopicDto,UpdateTopicDto>
 {
     private readonly ITopicService _topicService;
 

@@ -5,6 +5,7 @@ using DtoLayer.JobSkillCategoryDtos;
 using DtoLayer.JobSkillsDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
 
@@ -12,14 +13,17 @@ public class JobSkillCategoryManager : GenericManager<JobSkillCategory,JobSkillC
 {
     private readonly IJobSkillCategoryDal _jobSkillCategoryDal;
 
-    public JobSkillCategoryManager(IJobSkillCategoryDal jobSkillCategoryDal, IMapper mapper) : base(jobSkillCategoryDal, mapper)
+    public JobSkillCategoryManager(IJobSkillCategoryDal jobSkillCategoryDal, IMapper mapper, IUnitOfWork unitOfWork) : base(jobSkillCategoryDal, mapper, unitOfWork)
     {
         _jobSkillCategoryDal = jobSkillCategoryDal;
     }
 
     public async Task<List<JobSkillCategoryDto>> GetAdminAllAsync( CancellationToken cancellationToken = default)
     {
-        var entity = await _jobSkillCategoryDal.GetAllAdminAsync(tracking:false,includes:source=>source.Include(x=>x.JobSkills),cancellationToken:cancellationToken); //tracking yani izlemeyi kapat yetenekleride dahil et yani backend klasöründe C# ve yüzdeliği getir
+        var entity = await _jobSkillCategoryDal.GetAllAsync(tracking:false,includes:source=>source.Include(x=>x.JobSkills), options: new QueryOptions<JobSkillCategory>
+        {
+            IgnoreQueryFilters = true // Sihir burada! Silinenleri de getirir.
+        }, cancellationToken:cancellationToken); //tracking yani izlemeyi kapat yetenekleride dahil et yani backend klasöründe C# ve yüzdeliği getir
         return _mapper.Map<List<JobSkillCategoryDto>>(entity); //entityi dtoya dönüştür
     }
 
@@ -49,7 +53,7 @@ public class JobSkillCategoryManager : GenericManager<JobSkillCategory,JobSkillC
         query.IsDeleted = false;
         query.DeletedAt = null;
         await _jobSkillCategoryDal.UpdateAsync(query,cancellationToken);
-        await _jobSkillCategoryDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<JobSkillCategoryDto>(query);
     }
 

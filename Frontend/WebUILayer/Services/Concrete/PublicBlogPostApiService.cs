@@ -1,5 +1,7 @@
 ﻿using DtoLayer.BlogPostDtos;
+using Microsoft.AspNetCore.WebUtilities;
 using SharedKernel.Shared;
+using WebUILayer.Extension;
 using WebUILayer.Services.Abstract;
 
 namespace WebUILayer.Services.Concrete;
@@ -12,13 +14,9 @@ public class PublicBlogPostApiService : PublicReadApiService<BlogPostDto>, IPubl
 
     public async Task<PagedResult<BlogPostDto>> GetAllPagedAsync(PaginationQuery paginationQuery)
     {
-        var queryString = $"?PageNumber={paginationQuery.PageNumber}&PageSize={paginationQuery.PageSize}";
-        if (paginationQuery.TopicId.HasValue)
-        {
-            queryString += $"&TopicId={paginationQuery.TopicId}";
-        }
+        var url = paginationQuery.ToQueryString($"{_endpoint}/user-all");
 
-        var response = await _httpClient.GetAsync($"{_endpoint}/user-all{queryString}");
+        var response = await _httpClient.GetAsync(url);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -51,9 +49,14 @@ public class PublicBlogPostApiService : PublicReadApiService<BlogPostDto>, IPubl
         
     }
 
-    public async Task<List<BlogPostDto>> GetLatestAsync(int count)
+    public async Task<List<BlogPostDto>> GetLatestAsync(int count, string? topic = null)
     {
-        var response = await _httpClient.GetAsync($"{_endpoint}/latest/{count}");
+        var url = $"{_endpoint}/latest/{count}";
+        if (!string.IsNullOrEmpty(topic))
+        {
+            url = QueryHelpers.AddQueryString(url, "Topic", topic);
+        }
+        var response = await _httpClient.GetAsync(url);
         if (!response.IsSuccessStatusCode)
         {
             return new List<BlogPostDto>();

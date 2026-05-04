@@ -9,7 +9,7 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
         {
         }
 
-        public async Task<List<CertificateDto>> GetAdminAllAsync()
+        public async Task<List<CertificateDto>> GetAllAdminAsync()
         {
             var query = await _httpClient.GetFromJsonAsync<List<CertificateDto>>($"{_endpoint}/admin-all");
             if (query == null)

@@ -19,7 +19,7 @@ public class CreateSocialMediaValidator:AbstractValidator<CreateSocialMediaDto>
             .MaximumLength(250)
             .WithMessage("250 karakterden uzun sosyal medya urli olamaz");
 
-        RuleFor(x => x.SocialMediaName)
+        RuleFor(x => x.SocialMediaIcon)
             .NotEmpty()
             .WithMessage("Lütfen bu alanı boş bırakmayın")
             .MaximumLength(100)

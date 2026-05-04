@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.AboutDtos;
 using MapsterMapper;
 
@@ -10,7 +11,7 @@ public class AboutManager : GenericManager<About, AboutDto, CreateAboutDto, Upda
 {
     private readonly IAboutDal _aboutDal;
 
-    public AboutManager(IAboutDal aboutDal, IMapper mapper) : base(aboutDal, mapper)
+    public AboutManager(IAboutDal aboutDal, IMapper mapper, IUnitOfWork unitOfWork) : base(aboutDal, mapper, unitOfWork)
     {
         _aboutDal = aboutDal;
     }
@@ -38,7 +39,7 @@ public class AboutManager : GenericManager<About, AboutDto, CreateAboutDto, Upda
             _mapper.Map(update, query);
             await _repository.UpdateAsync(query, cancellation);
         }
-        await _repository.SaveAsync(cancellation);
+        await _unitOfWork.SaveChangesAsync(cancellation);
         return _mapper.Map<AboutDto>(query);
     }
 

@@ -4,6 +4,7 @@ using DataAccessLayer.Abstract;
 using DtoLayer.JobSkillsDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
 
@@ -11,7 +12,7 @@ public class JobSkillManager : GenericManager<JobSkill,JobSkillDto,CreateJobSkil
 {
     private readonly IJobSkillDal _jobSkillDal;
 
-    public JobSkillManager(IJobSkillDal jobSkillDal, IMapper mapper) : base(jobSkillDal, mapper)
+    public JobSkillManager(IJobSkillDal jobSkillDal, IMapper mapper, IUnitOfWork unitOfWork) : base(jobSkillDal, mapper, unitOfWork)
     {
         _jobSkillDal = jobSkillDal;
     }
@@ -19,7 +20,11 @@ public class JobSkillManager : GenericManager<JobSkill,JobSkillDto,CreateJobSkil
 
     public async Task<List<JobSkillDto>> GetAdminAllAsync( CancellationToken cancellationToken = default)
     {
-        var entity = await _jobSkillDal.GetAllAdminAsync(tracking: false,includes:source=>source.Include(x=>x.JobSkillCategory), cancellationToken: cancellationToken);
+        var entity = await _jobSkillDal.GetAllAsync(tracking: false,includes:source=>source.Include(x=>x.JobSkillCategory),
+        options: new QueryOptions<JobSkill>
+        {
+            IgnoreQueryFilters = true // Sihir burada!
+        }, cancellationToken: cancellationToken);
         return _mapper.Map<List<JobSkillDto>>(entity);
     }
 
@@ -50,7 +55,7 @@ public class JobSkillManager : GenericManager<JobSkill,JobSkillDto,CreateJobSkil
         query.DeletedAt = null;
 
         await _jobSkillDal.UpdateAsync(query, cancellationToken);
-        await _jobSkillDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<JobSkillDto>(query);
     }
 }

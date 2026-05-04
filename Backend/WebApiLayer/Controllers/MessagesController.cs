@@ -1,8 +1,9 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.MessageDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SharedKernel.Enums;
 using SharedKernel.Shared;
 
@@ -10,7 +11,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class MessagesController : CrudController<MessageDto,CreateMessageDto,UpdateMessageDto>
+public sealed class MessagesController : SecureCrudController<MessageDto,CreateMessageDto,UpdateMessageDto>
 {
     private readonly IMessageService _messageService;
 
@@ -20,6 +21,7 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     }
 
     [AllowAnonymous]
+    [EnableRateLimiting(RateLimitConsts.Message)]
     [HttpPost]
     public override async Task<IActionResult> Create([FromBody] CreateMessageDto createDto, CancellationToken cancellationToken)
     {
@@ -32,43 +34,19 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     [HttpGet("user-all")]
     public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery paginationQuery,CancellationToken cancellationToken)
     {
-        var query = await _messageService.GetAllAdmin(paginationQuery, cancellationToken);
+        var query = await _messageService.GetAllAdminAsync(paginationQuery, cancellationToken);
         return Ok(query);
     }
 
     [Authorize(Roles = RoleConsts.Admin)]
     public override async Task<IActionResult> Update(Guid id, [FromBody] UpdateMessageDto updateMessageDto, CancellationToken cancellationToken)
     {
-        return Ok("MESAJLAR GÜNCELLENEMEZ");
+        return BadRequest("İş Kuralı İhlali: Mesajlar güncellenemez!");
     }
 
 
 
-    [HttpGet]
-    public override async Task<IActionResult> GetAll(CancellationToken cancellationToken)
-    {
-        if (!User.IsInRole(RoleConsts.Admin))
-        {
-            return Forbid();
-        }
-        var result = await _messageService.GetAllAsync(cancellationToken);
-        return Ok(result);
-    }
-
-    [HttpGet("{id}")]
-    public override async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
-    {
-        if (!User.IsInRole(RoleConsts.Admin))
-        {
-            return Forbid();
-        }
-        var result =  await _messageService.GetByIdAsync(id, cancellationToken);
-        if (result==null)
-        {
-            return NotFound();
-        }
-        return Ok(result);
-    }
+   
 
     [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("folder/{folder}")]
@@ -157,10 +135,11 @@ public sealed class MessagesController : CrudController<MessageDto,CreateMessage
     }
 
 
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("latest/{count}")]
-    [AllowAnonymous]
     public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
     {
+        count = Math.Clamp(count, 1, 50);
         var values = await _messageService.GetLatestAsync(count, cancellationToken);
         if (values == null)
         {

@@ -1,15 +1,16 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.GuestBookDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SharedKernel.Shared;
 
 namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class GuestBooksController : CrudController<GuestBookListDto,CreateGuestBookDto,UpdateGuestBookDto>
+public sealed class GuestBooksController : SecureCrudController<GuestBookDto, CreateGuestBookDto,UpdateGuestBookDto>
 {
 
     private readonly IGuestBookService _guestBookService;
@@ -18,11 +19,13 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
     {
         _guestBookService = guestBookService;
     }
+
+
     [Authorize(Roles = RoleConsts.Admin)]
     [HttpGet("admin-all")]
-    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery pagination, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAdmin([FromQuery] PaginationQuery pagination, [FromQuery] bool? isApproved, CancellationToken cancellationToken)
     {
-        var query = await _guestBookService.GetAllAdminAsync(pagination, cancellationToken);
+        var query = await _guestBookService.GetAllAdminAsync(pagination, isApproved,cancellationToken);
         return Ok(query);
     }
     [HttpGet("user-all")]
@@ -34,6 +37,7 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
     }
 
     [AllowAnonymous]
+    [EnableRateLimiting(RateLimitConsts.GuestBook)]
     [HttpPost]
     public override async Task<IActionResult> Create([FromBody] CreateGuestBookDto createGuestBookDto,CancellationToken cancellationToken)
     {
@@ -85,6 +89,7 @@ public sealed class GuestBooksController : CrudController<GuestBookListDto,Creat
     [AllowAnonymous]
     public async Task<IActionResult> GetLatest(int count,CancellationToken cancellation)
     {
+        count = Math.Clamp(count, 1, 20);
         var values = await _guestBookService.GetLatestAsync(count, cancellation);
         if (values==null)
         {

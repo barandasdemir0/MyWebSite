@@ -2,10 +2,7 @@
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
@@ -28,12 +25,8 @@ public class JobSkillCategoriesController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        //var model = new JobSkillIndexViewModel
-        //{
-        //    jobSkillDtos = await _jobSkillApiService.GetAllAdminAsync(),
-        //    jobSkillCategoryDtos = await _jobSkillCategoryService.GetAdminAllAsync()
-        //};
-        var query = await _jobSkillCategoryService.GetAdminAllAsync();
+       
+        var query = await _jobSkillCategoryService.GetAllAdminAsync();
         return View(query);
     }
 

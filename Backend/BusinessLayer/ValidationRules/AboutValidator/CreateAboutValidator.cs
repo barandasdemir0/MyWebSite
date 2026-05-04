@@ -27,10 +27,6 @@ public class CreateAboutValidator : AbstractValidator<CreateAboutDto>
             .WithMessage("En fazla 2000 karakterde yazı yazabilirsiniz");
 
 
-        //RuleFor(x => x.ProfileImage)
-        //    .NotNull()
-        //    .WithMessage("Resim Yüklemek Zorunludur");
-
         RuleFor(x => x.ProjectCount)
             .GreaterThanOrEqualTo(0)
             .WithMessage("Proje Sayısı 0 dan küçük olamaz");

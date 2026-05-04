@@ -1,6 +1,8 @@
 ﻿using DataAccessLayer.Abstract;
 using DtoLayer.BlogPostDtos;
 using FluentValidation;
+using Ganss.Xss;
+
 
 namespace BusinessLayer.ValidationRules.BlogPostValidator;
 
@@ -13,6 +15,8 @@ public class CreateBlogPostValidator:AbstractValidator<CreateBlogPostDto>
             .MaximumLength(150)
             .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır");
 
+        RuleFor(x => x.Content)
+           .NotEmpty().MustBeSafeHtml();
 
         RuleFor(x => x.CoverImage)
            .MaximumLength(200)

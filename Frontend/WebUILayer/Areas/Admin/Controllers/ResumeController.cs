@@ -5,9 +5,7 @@ using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Extension;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
@@ -57,9 +55,9 @@ public class ResumeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdateExperience(Guid guid)
+    public async Task<IActionResult> UpdateExperience(Guid id)
     {
-        var query = await _experienceApiService.GetByIdAsync(guid);
+        var query = await _experienceApiService.GetByIdAsync(id);
         if (query == null)
         {
             return NotFound();
@@ -141,9 +139,9 @@ public class ResumeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdateEducation(Guid guid)
+    public async Task<IActionResult> UpdateEducation(Guid id)
     {
-        var query = await _educationApiService.GetByIdAsync(guid);
+        var query = await _educationApiService.GetByIdAsync(id);
         if (query == null)
         {
             return NotFound();
@@ -160,7 +158,7 @@ public class ResumeController : Controller
         try
         {
             await _educationApiService.UpdateAsync(updateEducationDto.Id, updateEducationDto);
-            return View(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception ex)
         {
@@ -220,9 +218,9 @@ public class ResumeController : Controller
       
     }
     [HttpGet]
-    public async Task<IActionResult> UpdateCertificates(Guid guid)
+    public async Task<IActionResult> UpdateCertificates(Guid id)
     {
-        var values = await _certificateApiService.GetByIdAsync(guid);
+        var values = await _certificateApiService.GetByIdAsync(id);
         if (values == null)
         {
             return NotFound();

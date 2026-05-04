@@ -27,7 +27,7 @@ public class SiteSettingsApiService : GenericApiService<SiteSettingDto, CreateSi
 
 
     //upsert tarafıdır
-    public async Task SaveAboutAsync(UpdateSiteSettingDto updateSiteSettingDto)
+    public async Task SaveSiteSettingAsync(UpdateSiteSettingDto updateSiteSettingDto)
     {
         var response = await _httpClient.PostAsJsonAsync($"{_endpoint}/save", updateSiteSettingDto);
         if (!response.IsSuccessStatusCode)

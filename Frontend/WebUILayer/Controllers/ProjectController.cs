@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DtoLayer.BlogPostDtos;
+using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Shared;
 using WebUILayer.Models;
 using WebUILayer.Services.Abstract;
 
@@ -17,26 +19,66 @@ public class ProjectController : Controller
         _publicProjectApiService = publicProjectApiService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index([FromQuery] PaginationQuery query)
     {
-        var models = new ProjectViewModel
+        try
         {
-            topicDtos = await _publicTopicApiService.GetAllAsync(),
-            projectDtos = await _publicProjectApiService.GetAllAsync()
-        };
-
-        return View(models);
+            var pagedResult = await _publicProjectApiService.GetAllPagedAsync(query);
+            var models = new ProjectViewModel
+            {
+                topicDtos = await _publicTopicApiService.GetAllAsync(),
+                projectDtos = await _publicProjectApiService.GetLatestAsync(3),
+                CurrentPage = pagedResult.PageNumber,
+                TotalPages = pagedResult.TotalPages
+            };
+            return View(models);
+        }
+        catch (Exception)
+        {
+            // API çökerse sayfa boş açılsın ama 500 fırlatmasın
+            return View(new ProjectViewModel());
+        }
     }
-    public async Task<IActionResult> ProjectDetail()
+    public async Task<IActionResult> ProjectDetail(string id)
     {
-        var blogs = await _publicBlogPostApiService.GetLatestAsync(3);
-
-        var models = new ProjectViewModel
+        if (string.IsNullOrEmpty(id))
         {
-            topicDtos = await _publicTopicApiService.GetAllAsync(),
-            projectDtos = await _publicProjectApiService.GetAllAsync()
-        };
+            return RedirectToAction(nameof(Index));
+        }
+        try
+        {
+            var project = await _publicProjectApiService.GetBySlugAsync(id);
+            if (project == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+           
 
-        return View(models);
+            string? mainTopic = null;
+            if (project.Topics!=null)
+            {
+                mainTopic = project.Topics.FirstOrDefault();
+            }
+
+            List<BlogPostDto> relatedBlogs = new();
+
+            // 2. KISIM: mainTopic doluysa API'ye gidiyoruz, boşsa hiçbir şey yapmıyoruz (null kalıyor)
+            if (mainTopic != null)
+            {
+                relatedBlogs = await _publicBlogPostApiService.GetLatestAsync(3, mainTopic);
+            }
+
+            var models = new ProjectViewModel
+            {
+                ProjectDto = project,
+                blogPostDtos = relatedBlogs
+            };
+
+            return View(models);
+        }
+        catch (Exception)
+        {
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

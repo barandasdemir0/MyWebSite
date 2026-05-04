@@ -1,4 +1,4 @@
-﻿namespace CV.EntityLayer.Entities;
+﻿namespace EntityLayer.Constants;
 
 public static class RoleConsts
 {

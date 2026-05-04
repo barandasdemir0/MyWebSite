@@ -2,21 +2,25 @@
 using BusinessLayer.ValidationRules;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DataAccessLayer.Context;
 using DtoLayer.Mapping;
+using EntityLayer.Constants;
 using FluentValidation;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SharedKernel.Shared;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Text;
+using System.Threading.RateLimiting;
 
 
 namespace BusinessLayer.Container;
@@ -33,7 +37,7 @@ public static class Extension
         });
     }
 
-    public static void AddThirdPartyServices(this IServiceCollection services)
+    public static void AddThirdPartyServices(this IServiceCollection services,IConfiguration configuration)
     {
         //mapster için
         // DtoLayer assembly'sindeki TÜM IRegister'ları tarar (AboutMapping referans noktası)
@@ -45,6 +49,71 @@ public static class Extension
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
         services.AddFluentValidationAutoValidation();
 
+        services.AddRateLimiter(options =>
+        {
+            // 1. Auth Koruması (IP Başına)
+            options.AddPolicy(RateLimitConsts.Auth, context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromMinutes(5)
+                    }));
+            // 2. Ziyaretçi Defteri Koruması (IP Başına)
+            options.AddPolicy(RateLimitConsts.GuestBook, context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 1,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+            // 3. İletişim Formu Koruması (IP Başına)
+            options.AddPolicy(RateLimitConsts.Message, context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 2,
+                        Window = TimeSpan.FromMinutes(5)
+                    }));
+
+            // 4. Email Şifre Sıfırlama Koruması (IP Başına)
+            options.AddPolicy(RateLimitConsts.Email, context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+
+
+            
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 100, // 1 dakikada max 100 istek
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0
+                    }));
+
+
+            // Github metodu için daha sert bir kural (Örn: dakikada 5 istek):
+            options.AddPolicy("GithubLimit", httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+        });
+
 
 
         services.AddHttpClient("GithubApi", client =>
@@ -54,6 +123,9 @@ public static class Extension
             client.DefaultRequestHeaders.Add("User-Agent", "MyWebSite-App");
         });
 
+
+        services.Configure<AdminSettings>(configuration.GetSection("AdminSettings"));
+
     }
 
     public static void ContainerDependencies(this IServiceCollection services)
@@ -62,6 +134,9 @@ public static class Extension
         services.Scan(scan => scan.FromAssemblyOf<IDalMarker>().AddClasses(c => c.Where(t => t.Name.StartsWith("Ef") && t.Name.EndsWith("Dal"))).AsImplementedInterfaces().WithScopedLifetime());
 
         services.Scan(scan => scan.FromAssemblyOf<IBusinessMarker>().AddClasses(c => c.Where(t => t.Name.EndsWith("Manager"))).AsImplementedInterfaces().WithScopedLifetime());
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
     }
 
 
@@ -107,20 +182,6 @@ public static class Extension
             });
     }
 
-    //RateLimiter için tanımlamalar
-    public static void AddEmailRateLimiter(this IServiceCollection services) 
-    {
-        // Sabit pencere sınırlayıcısı ekler, "email" adlı bir sınırlayıcı tanımlar
-        services.AddRateLimiter(options =>
-        {
-            options.AddFixedWindowLimiter("email", opt =>
-            {
-                opt.Window = TimeSpan.FromMinutes(1); // Her 1 dakikalık pencere için sınırlama uygular
-                opt.PermitLimit = 3; // Her pencere için maksimum 3 izin verir (örneğin, her dakika en fazla 3 e-posta gönderimine izin verir)
-            });
-        });
-    }
-
     public static void CorsPolicy(this IServiceCollection services, IConfiguration configuration)
     {
         // CORS politikası ekler, "Cors:AllowedOrigins" yapılandırma bölümünden izin verilen kökenleri alır
@@ -131,7 +192,8 @@ public static class Extension
             options.AddPolicy("AllowFrontend", policy => // CORS politikasını yapılandırır
             policy.WithOrigins(origins) // Belirtilen kökenlere izin verir (örneğin, "http://localhost:3000" gibi)
             .AllowAnyHeader() // Herhangi bir HTTP başlığına izin verir
-            .AllowAnyMethod()); // Herhangi bir HTTP yöntemine izin verir (GET, POST, PUT, DELETE vb.)
+            .AllowAnyMethod()
+            .AllowCredentials()); // Herhangi bir HTTP yöntemine izin verir (GET, POST, PUT, DELETE vb.)
         });
     }
 

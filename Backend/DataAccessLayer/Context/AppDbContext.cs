@@ -1,8 +1,13 @@
 ﻿using CV.EntityLayer.Entities;
+using DataAccessLayer.Configurations;
+using EntityLayer.Entities;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace DataAccessLayer.Context;
 
@@ -36,6 +41,7 @@ public sealed class AppDbContext:IdentityDbContext<AppUser,IdentityRole<Guid>,Gu
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+    public DbSet<ChatbotCache> ChatbotCaches { get; set; }
 
 
     //global query filter otomatik soft delete filtresi
@@ -44,7 +50,12 @@ public sealed class AppDbContext:IdentityDbContext<AppUser,IdentityRole<Guid>,Gu
 
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        // Diğer parametresiz olanları otomatik bul
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Parametreli olan ChatbotConfigurations'ı ELDEN (MANUEL) ekle!
+        var protector = this.GetService<IDataProtectionProvider>().CreateProtector("ChatbotApiKeySecurity");
+        modelBuilder.ApplyConfiguration(new ChatbotConfigurations(protector));
         //bu configurasyon dosyalarımızı bulup otomatik uygular hani biz fluentapi yaptık ya
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())

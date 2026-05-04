@@ -21,17 +21,22 @@ public class ResumeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var siteSettings = await _publicSiteSettingsApiService.GetAllAsync();
-
-        var models = new ResumeViewModel
+        try
         {
-            certificateDtos = await _publicCertificateApiService.GetAllAsync(),
-            educationDtos = await _publicEducationApiService.GetAllAsync(),
-            experienceDtos = await _publicExperienceApiService.GetAllAsync(),
-            siteSettingDto = siteSettings.FirstOrDefault()
-        };
-
-
-        return View(models);
+            var siteSettings = await _publicSiteSettingsApiService.GetAllAsync();
+            var models = new ResumeViewModel
+            {
+                certificateDtos = await _publicCertificateApiService.GetAllAsync(),
+                educationDtos = await _publicEducationApiService.GetAllAsync(),
+                experienceDtos = await _publicExperienceApiService.GetAllAsync(),
+                siteSettingDto = siteSettings.FirstOrDefault()
+            };
+            return View(models);
+        }
+        catch (Exception)
+        {
+            // API Çökerse CV sayfası patlamadan boş başlasın
+            return View(new ResumeViewModel());
+        }
     }
 }

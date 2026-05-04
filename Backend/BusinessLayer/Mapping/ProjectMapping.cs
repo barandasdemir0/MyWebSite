@@ -14,7 +14,7 @@ public sealed class ProjectMapping : IRegister
             .Map(dest => dest.TechnologyList, src => string.IsNullOrEmpty(src.Technologies)
             ? new List<string>()
             : src.Technologies.Split(',', StringSplitOptions.TrimEntries).ToList());
-        config.NewConfig<Project, ProjectDtos.ProjectListDto>()
+        config.NewConfig<Project, ProjectDtos.ProjectDto>()
             .Map(x => x.Topics, y => y.ProjectTopics.Select(z => z.Topic.Name).ToList());
         config.NewConfig<CreateProjectDto, Project>().Ignore(x => x.Id);
         config.NewConfig<UpdateProjectDto, Project>().Ignore(x => x.Id);

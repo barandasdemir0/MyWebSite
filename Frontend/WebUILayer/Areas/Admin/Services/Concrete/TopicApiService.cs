@@ -1,5 +1,4 @@
 ﻿using DtoLayer.TopicDtos;
-using Mapster;
 using WebUILayer.Areas.Admin.Services.Abstract;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete
@@ -31,30 +30,6 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
             }
         }
 
-        //public async Task<UpdateTopicDto> GetTopicForEditAsync()
-        //{
-        //    var list = await GetAllAsync();
-        //    var query = list.FirstOrDefault();
-        //    if (query == null)
-        //    {
-        //        return new UpdateTopicDto();
-        //    }
-        //    return query.Adapt<UpdateTopicDto>();
-        //}
-
-        //public async Task SaveTopicAsync(UpdateTopicDto updateTopicDto)
-        //{
-        //    var list = await GetAllAsync();
-        //    var query = list.FirstOrDefault();
-        //    if (query == null)
-        //    {
-        //        var create = updateTopicDto.Adapt<CreateTopicDto>();
-        //        await AddAsync(create);
-        //    }
-        //    else
-        //    {
-        //        await UpdateAsync(query.Id, updateTopicDto);
-        //    }
-        //}
+      
     }
 }

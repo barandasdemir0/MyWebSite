@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AuthDtos.Requests;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -18,7 +19,9 @@ public class TwoFactorController : ControllerBase
         _twoFactorService = twoFactorService;
     }
 
-    [EnableRateLimiting("email")]
+
+    [EnableRateLimiting(RateLimitConsts.Email)]
+    [Authorize]
     [HttpPost("send-email-code")]
     public async Task<IActionResult> SendEmailCode([FromBody] SendEmailCodeDto sendEmailCodeDto, CancellationToken cancellationToken)
     {
@@ -34,6 +37,7 @@ public class TwoFactorController : ControllerBase
     }
 
 
+    [EnableRateLimiting(RateLimitConsts.Auth)]
     [HttpPost("verify-2fa")]
     public async Task<IActionResult> VerifyTwoFactor([FromBody] TwoFactorVerifyDto dto, CancellationToken cancellationToken)
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
+using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Extension;
 
@@ -20,10 +21,28 @@ public class GuestBooksController : Controller
     
 
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] PaginationQuery paginationQuery)
+    public async Task<IActionResult> Index([FromQuery] PaginationQuery paginationQuery, string tab = "pending")
     {
-        var pagedResult = await _guestBookApiService.GetAllAdminAsync(paginationQuery);
-        return View(pagedResult);
+        bool? isApprovedFilter;
+        if (tab=="pending")
+        {
+            isApprovedFilter = false;
+        }
+        else
+        {
+            isApprovedFilter = true;
+        }
+
+
+        var pagedResult = await _guestBookApiService.GetAllAdminAsync(paginationQuery,isApprovedFilter);
+        var model = new GuestBookIndexViewModel
+        {
+            Messages = pagedResult.Items,
+            ActiveTab = tab,
+            CurrentPage = pagedResult.PageNumber,
+            TotalPages = pagedResult.TotalPages
+        };
+        return View(model);
     }
 
     [HttpPost]

@@ -39,7 +39,7 @@ public class SiteSettingsController : Controller
         }
         try
         {
-            await _siteSettingsApiService.SaveAboutAsync(updateSiteSettingDto);
+            await _siteSettingsApiService.SaveSiteSettingAsync(updateSiteSettingDto);
             _memoryCache.Remove("IsMaintenanceMode");
             return RedirectToAction(nameof(Index));
         }

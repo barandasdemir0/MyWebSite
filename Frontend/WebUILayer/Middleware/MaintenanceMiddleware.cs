@@ -9,13 +9,15 @@ public class MaintenanceMiddleware
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
     private readonly IMemoryCache _cache;
+    private readonly ILogger<MaintenanceMiddleware> _logger;
 
-    public MaintenanceMiddleware(RequestDelegate next, IHttpClientFactory httpClientFactory, IConfiguration configuration, IMemoryCache cache)
+    public MaintenanceMiddleware(RequestDelegate next, IHttpClientFactory httpClientFactory, IConfiguration configuration, IMemoryCache cache, ILogger<MaintenanceMiddleware> logger)
     {
         _next = next;
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
         _cache = cache;
+        _logger = logger;
     }
 
 
@@ -74,7 +76,7 @@ public class MaintenanceMiddleware
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Maintenance Check Hatası : {ex.Message}");
+            _logger.LogWarning(ex, "Maintenance Check Hatası : {Message}", ex.Message);
             isMaintenanceMode = false; 
         } // Hata olursa site açık varsay
 

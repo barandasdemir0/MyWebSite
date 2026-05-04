@@ -32,25 +32,10 @@ public class AboutsController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(UpdateAboutDto updateAboutDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(updateAboutDto);
-        }
+        if (!ModelState.IsValid) return View(updateAboutDto);
+        await _aboutApiService.SaveAboutAsync(updateAboutDto);
+        return RedirectToAction(nameof(Index));
 
-        try
-        {
-            await _aboutApiService.SaveAboutAsync(updateAboutDto);
-            return RedirectToAction(nameof(Index));
-        }
-        catch (Exception ex)
-        {
-
-
-            ModelState.AddApiError(ex);
-            return View(updateAboutDto);
-      
-        }
-      
     }
 
     [HttpPost]

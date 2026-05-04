@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.ProjectDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
@@ -8,8 +8,7 @@ using SharedKernel.Shared;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-
-public sealed class ProjectsController : CrudController<ProjectDto,CreateProjectDto,UpdateProjectDto>
+public sealed class ProjectsController : SecureCrudController<ProjectDto,CreateProjectDto,UpdateProjectDto>
 {
     private readonly IProjectService _projectService;
 
@@ -62,6 +61,7 @@ public sealed class ProjectsController : CrudController<ProjectDto,CreateProject
     [AllowAnonymous]
     public async Task<IActionResult> GetLatest(int count,[FromQuery] string? topic = null, CancellationToken cancellationToken=default)
     {
+        count = Math.Clamp(count, 1, 20);
         var values = await _projectService.GetLatestAsync(count,topic,cancellationToken);
         if (values == null)
         {

@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Container;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using WebApiLayer.Hubs;
 using WebApiLayer.Middleware;
 using WebApiLayer.Seed;
 
@@ -23,10 +24,13 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDatabaseLayers(builder.Configuration);
 builder.Services.ContainerDependencies();
-builder.Services.AddThirdPartyServices();
+builder.Services.AddThirdPartyServices(builder.Configuration);
 builder.Services.AddIdentityAndJwt(builder.Configuration);
-builder.Services.AddEmailRateLimiter();
 builder.Services.CorsPolicy(builder.Configuration);
+builder.Services.AddMemoryCache();
+
+builder.Services.AddSignalR();
+
 
 
 #endregion
@@ -44,18 +48,19 @@ else
 {
     app.UseHsts();
 }
-
+app.UseForwardedHeaders();
 
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseRateLimiter();
-app.UseMiddleware<ApiExceptionMiddleware>();
+
 app.HealthCheckEndpoints();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<ApiExceptionMiddleware>();
 app.MapControllers();
+app.MapHub<ChatHub>("/chatHub");
 
 await app.SeedDatabaseAsync();
 

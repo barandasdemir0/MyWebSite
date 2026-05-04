@@ -20,25 +20,36 @@ public class AuthController : Controller
     public IActionResult Login() => View();
 
     [HttpPost("/auth/login")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
-
- 
-        loginDto.DeviceInfo = Request.Headers["User-Agent"].ToString();//sadece bu satırı 5 kelime ile anlat : Kullanıcının tarayıcı bilgilerini alır. user-agent nedir : User-Agent, tarayıcı tanımlayıcısıdır. 
-        var result = await _authApiService.LoginAsync(loginDto); // API'ye login bilgilerini gönderir ve sonucu alır.
-        if (result == null || !result.Success) // Eğer sonuç başarısızsa, hata mesajını model durumuna ekler ve login sayfasını tekrar gösterir.
+        if (!ModelState.IsValid)
         {
-            ModelState.AddModelError("", result?.Error ?? "Bağlantı Hatası");
             return View(loginDto);
         }
-        if (result.RequiresTwoFactor) // Eğer iki faktörlü doğrulama gerekiyorsa, kullanıcı ID'sini session'a kaydeder ve iki faktör seçme sayfasına yönlendirir.
+        try
         {
-            HttpContext.Session.SetString("2FA_UserId", result.UserId!);  // kısaca kullanıcının ID'sini session'a kaydeder. Bu ID, iki faktörlü doğrulama sürecinde kullanılacaktır.
-            return RedirectToAction(nameof(TwoFactorController.ChooseTwoFactor), TwoFactorController.Name); // İki faktörlü doğrulama seçme sayfasına yönlendirir.
+            loginDto.DeviceInfo = Request.Headers["User-Agent"].ToString();//sadece bu satırı 5 kelime ile anlat : Kullanıcının tarayıcı bilgilerini alır. user-agent nedir : User-Agent, tarayıcı tanımlayıcısıdır. 
+            var result = await _authApiService.LoginAsync(loginDto); // API'ye login bilgilerini gönderir ve sonucu alır.
+            if (result == null || !result.Success) // Eğer sonuç başarısızsa, hata mesajını model durumuna ekler ve login sayfasını tekrar gösterir.
+            {
+                ModelState.AddModelError("", result?.Error ?? "Bağlantı Hatası");
+                return View(loginDto);
+            }
+            if (result.RequiresTwoFactor) // Eğer iki faktörlü doğrulama gerekiyorsa, kullanıcı ID'sini session'a kaydeder ve iki faktör seçme sayfasına yönlendirir.
+            {
+                HttpContext.Session.SetString("2FA_UserId", result.UserId!);  // kısaca kullanıcının ID'sini session'a kaydeder. Bu ID, iki faktörlü doğrulama sürecinde kullanılacaktır.
+                return RedirectToAction(nameof(TwoFactorController.ChooseTwoFactor), TwoFactorController.Name); // İki faktörlü doğrulama seçme sayfasına yönlendirir.
+            }
+            await _cookieAuthService.SignInWithJwtAsync(result.Token!, result.RefreshToken, loginDto.RememberMe); // Eğer iki faktörlü doğrulama gerekmiyorsa, JWT token'ını cookie'ye kaydeder ve kullanıcıyı admin paneline yönlendirir.
+            return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
         }
-        await _cookieAuthService.SignInWithJwtAsync(result.Token!,result.RefreshToken,loginDto.RememberMe); // Eğer iki faktörlü doğrulama gerekmiyorsa, JWT token'ını cookie'ye kaydeder ve kullanıcıyı admin paneline yönlendirir.
-        return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-
+        catch (Exception ex)
+        {
+            // Sunucu/API çökerse beyaz 500 hatası yerine, kullanıcıya kırmızı uyarı gösterir
+            ModelState.AddModelError("", "Sisteme giriş yapılırken bir hata oluştu: " + ex.Message);
+            return View(loginDto);
+        }
     }
 
 
@@ -48,27 +59,50 @@ public class AuthController : Controller
     public IActionResult Register() => View();
 
     [HttpPost("/auth/register")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {
-        var result = await _authApiService.RegisterAsync(registerDto);
-        if (result == null || !result.Success)
+        // Validasyon kontrolü eklendi
+        if (!ModelState.IsValid)
         {
-            foreach (var error in result?.Errors ?? []) // Eğer kayıt başarısızsa, hata mesajlarını model durumuna ekler ve kayıt sayfasını tekrar gösterir. [] ifadesi, result.Errors null ise boş bir liste döndürür, böylece foreach döngüsü hata vermez.
-            {
-                ModelState.AddModelError("", error);
-            }
             return View(registerDto);
         }
-        TempData["Success"] = "Kayıt başarılı, giriş yapabilirsiniz.";
-        return RedirectToAction(nameof(Login));
+        try
+        {
+            var result = await _authApiService.RegisterAsync(registerDto);
+            if (result == null || !result.Success)
+            {
+                foreach (var error in result?.Errors ?? []) // Eğer kayıt başarısızsa, hata mesajlarını model durumuna ekler ve kayıt sayfasını tekrar gösterir. [] ifadesi, result.Errors null ise boş bir liste döndürür, böylece foreach döngüsü hata vermez.
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return View(registerDto);
+            }
+            TempData["Success"] = "Kayıt başarılı, giriş yapabilirsiniz.";
+            return RedirectToAction(nameof(Login));
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", "Kayıt işlemi sırasında bir sunucu hatası oluştu: " + ex.Message);
+            return View(registerDto);
+        }
     }
 
 
     [HttpPost("/auth/logout")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        await _authApiService.LogoutAsync();
-        await _cookieAuthService.SignOutAsync();
+        try
+        {
+            await _authApiService.LogoutAsync();
+            await _cookieAuthService.SignOutAsync();
+        }
+        catch (Exception)
+        {
+            // API hata verse bile kullanıcının tarayıcı Cookie'sini silerek güvenli çıkışı garantileriz
+            await _cookieAuthService.SignOutAsync();
+        }
         return RedirectToAction(nameof(Login));
     }
 

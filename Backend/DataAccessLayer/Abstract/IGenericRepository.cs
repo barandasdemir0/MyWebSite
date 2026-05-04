@@ -27,8 +27,7 @@ public interface IGenericRepository<T> where T : BaseEntity //bu repositori sade
     Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null, QueryOptions<T>? options = null,
     CancellationToken cancellationToken = default); //projeleri getir kategorilerini dahil et ama ek olarak yazarlarınıda dahil et gibi bir anlam
 
-    Task<List<T>> GetAllAdminAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
-    CancellationToken cancellationToken = default); // hepsini getir ama ignorefiltersi geç yani admin kısmında silinenleride göstermek için bu
+ 
 
     #endregion
 
@@ -51,17 +50,19 @@ public interface IGenericRepository<T> where T : BaseEntity //bu repositori sade
     #region temel crud
 
     Task AddAsync(T entity,
-    CancellationToken cancellationToken = default);   // Yeni kayıt ekle (INSERT)
+    CancellationToken cancellationToken = default);   // Yeni kayıt ekle (INSERT) //uow eklendiği için kaldırıldı
     Task UpdateAsync(T entity,
     CancellationToken cancellationToken = default); // Kayıt güncelle (UPDATE)
     Task DeleteAsync(T entity,
     CancellationToken cancellationToken = default);// Kayıt sil (soft delete — SaveChanges'te yakalanıyor)
-    Task<int> SaveAsync(
-    CancellationToken cancellationToken = default);  // Değişiklikleri veritabanına kaydet neden int
+    //Task<int> SaveAsync(
+    //CancellationToken cancellationToken = default);  // Değişiklikleri veritabanına kaydet neden int
                                                      // 1 kayıt eklendi → 1
                                                      //1 kayıt güncellendi → 1
                                                      //2 kayıt silindi → 2
                                                      //Hiçbir şey değişmedi → 0
+
+    //uow eklendiği için silindi
 
     #endregion
 }

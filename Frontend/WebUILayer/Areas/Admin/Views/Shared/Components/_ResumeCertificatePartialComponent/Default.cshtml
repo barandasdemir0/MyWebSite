@@ -33,16 +33,16 @@
                             <td><span class="status-badge danger">Silindi</span></td>
                             <td>
                                 <div class="action-btns">
-                                    <a asp-action="UpdateCertificates" asp-route-guid="@item.Id" class="action-btn edit"
+                                    <a asp-action="UpdateCertificates" asp-route-id="@item.Id" class="action-btn edit"
                                        title="Detaylar">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form asp-action="DeleteCertificates" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="DeleteCertificates" asp-route-id="@item.Id" method="post">
                                         <button type="submit" class="action-btn delete hidden" title="Sil" data-action="deleteRow">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                    <form asp-action="RestoreCertificates" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="RestoreCertificates" asp-route-id="@item.Id" method="post">
                                         <button type="submit"  class="action-btn restore" title="Geri Yükle" data-action="restoreRow">
                                             <i class="fas fa-undo"></i>
                                         </button>
@@ -61,16 +61,16 @@
                             <td><span class="status-badge active">Sitede Aktif</span></td>
                             <td>
                                 <div class="action-btns">
-                                    <a asp-action="UpdateCertificates" asp-route-guid="@item.Id" class="action-btn edit"
+                                    <a asp-action="UpdateCertificates" asp-route-id="@item.Id" class="action-btn edit"
                                        title="Düzenle">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <form asp-action="DeleteCertificates" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="DeleteCertificates" asp-route-id="@item.Id" method="post">
                                         <button type="submit" class="action-btn delete" title="Sil" data-action="deleteRow">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                    <form asp-action="RestoreCertificates" asp-route-guid="@item.Id" method="post">
+                                    <form asp-action="RestoreCertificates" asp-route-id="@item.Id" method="post">
                                         <button type="submit" class="action-btn restore hidden" title="Geri Yükle" data-action="restoreRow">
                                             <i class="fas fa-undo"></i>
                                         </button>

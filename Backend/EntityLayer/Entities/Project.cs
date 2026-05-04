@@ -28,6 +28,8 @@ public sealed class Project : BaseEntity
     public bool IsPublished { get; set; } = false;
     public DateTime? PublishedAt { get; set; }
 
+    public string? AiSummary { get; set; }
+
     // Many-to-Many Navigation
     public ICollection<ProjectTopic> ProjectTopics { get; set; } = new List<ProjectTopic>();
 }

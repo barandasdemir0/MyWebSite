@@ -5,32 +5,26 @@ class NotificationSystem {
     }
 
     init() {
-        // console.log("NotificationSystem initializing...");
         this.createToastContainer();
-        // this.injectNotificationDropdown(); // Removed in favor of static HTML
         this.setupDropdownListeners();
-        // console.log("NotificationSystem initialized.");
+        this.setupNotificationPageListeners(); // Bildirim sayfası butonları
     }
 
     createToastContainer() {
         if (!document.querySelector('.admin-toast-container')) {
             const container = document.createElement('div');
             container.classList.add('admin-toast-container');
-            document.body.appendChild(container); // Appended to body
+            document.body.appendChild(container);
             this.toastContainer = container;
         } else {
             this.toastContainer = document.querySelector('.admin-toast-container');
         }
     }
 
-    // injectNotificationDropdown removed - using static HTML
-
     setupDropdownListeners() {
-        // SELECTORS
         const notifBtnSelector = '.notification-btn';
         const dropdownSelector = '.notification-dropdown';
 
-        // CLICK DELEGATION
         document.addEventListener('click', (e) => {
             const target = e.target;
             const dropdown = document.querySelector(dropdownSelector);
@@ -38,24 +32,17 @@ class NotificationSystem {
             // 1. Toggle Button
             const notifBtn = target.closest(notifBtnSelector);
             if (notifBtn) {
-                e.preventDefault();
                 e.stopPropagation();
 
-                // Mobile Redirect: Go to notifications page on small screens
                 if (window.innerWidth <= 768) {
-                    const mobileHref = notifBtn.getAttribute('data-mobile-href') || 'notifications.html';
-                    window.location.href = mobileHref;
+                    window.location.href = '/Admin/Notifications/Index';
                     return;
                 }
-
-                // console.log("Notification button clicked!");
 
                 if (dropdown) {
                     dropdown.classList.toggle('active');
                     const isActive = dropdown.classList.contains('active');
-                    // console.log("Dropdown toggled. Active:", isActive);
 
-                    // Force visibility check
                     if (isActive) {
                         dropdown.style.opacity = "1";
                         dropdown.style.visibility = "visible";
@@ -65,37 +52,32 @@ class NotificationSystem {
                         dropdown.style.visibility = "";
                         dropdown.style.transform = "";
                     }
-                } else {
-                    // console.error("Dropdown not found on click!");
                 }
                 return;
             }
 
             // 2. View All Redirect
             if (target.closest('.view-all-btn')) {
-                e.preventDefault();
                 e.stopPropagation();
-                window.location.href = 'notifications.html';
+                window.location.href = '/Admin/Notifications/Index';
                 return;
             }
 
-            // 3. Mark All Read
+            // 3. Mark All Read (Sadece görsel - DB'ye gitmiyor)
             if (target.closest('.mark-all-read')) {
                 if (dropdown) {
                     dropdown.querySelectorAll('.notification-item.unread').forEach(item => {
                         item.classList.remove('unread');
                     });
-                    this.showToast(window.I18N?.common?.success || 'Başarılı', window.I18N?.notifications?.allRead || 'Tüm bildirimler okundu olarak işaretlendi.', 'success');
+                    this.showToast('Başarılı', 'Tüm bildirimler okundu olarak işaretlendi.', 'success');
                 }
                 return;
             }
 
-            // 4. Click Outside
+            // 4. Click Outside - Kapat
             if (dropdown && dropdown.classList.contains('active')) {
-                // If click is not inside the dropdown
                 if (!dropdown.contains(target)) {
                     dropdown.classList.remove('active');
-                    // Reset styles
                     dropdown.style.opacity = "";
                     dropdown.style.visibility = "";
                     dropdown.style.transform = "";
@@ -103,37 +85,125 @@ class NotificationSystem {
             }
         });
 
-        // Hover Logic (Optional)
+        // Hover Açma
         const notifBtn = document.querySelector(notifBtnSelector);
         const headerActions = document.querySelector('.header-actions');
 
         if (notifBtn) {
             notifBtn.addEventListener('mouseenter', () => {
-                // Disable hover dropdown on mobile
                 if (window.innerWidth <= 768) return;
-
                 const dropdown = document.querySelector(dropdownSelector);
-                if (dropdown) {
-                    dropdown.classList.add('active');
-                    /*
-                    dropdown.style.opacity = "1";
-                    dropdown.style.visibility = "visible";
-                    dropdown.style.transform = "translateY(0) scale(1)";\
-                    */
-                }
+                if (dropdown) dropdown.classList.add('active');
             });
         }
 
         if (headerActions) {
             headerActions.addEventListener('mouseleave', () => {
                 const dropdown = document.querySelector(dropdownSelector);
-                if (dropdown) {
-                    dropdown.classList.remove('active');
-                    /*
-                   dropdown.style.opacity = "";
-                   dropdown.style.visibility = "";
-                   dropdown.style.transform = "";
-                   */
+                if (dropdown) dropdown.classList.remove('active');
+            });
+        }
+    }
+
+    // =============================================
+    // BİLDİRİM SAYFASI: Sil ve Geri Yükle Modalları
+    // =============================================
+    setupNotificationPageListeners() {
+        let pendingDeleteForm = null;
+        let pendingRestoreForm = null;
+
+        const deleteModal = document.getElementById('notifDeleteModal');
+        const restoreModal = document.getElementById('notifRestoreModal');
+
+        // Eğer bu sayfada modal yoksa (başka sayfalarda) çık
+        if (!deleteModal && !restoreModal) return;
+
+        // --- SİLME BUTONU ---
+        document.addEventListener('click', (e) => {
+            const deleteBtn = e.target.closest('[data-action="deleteRow"]');
+            if (deleteBtn) {
+                e.preventDefault();
+                pendingDeleteForm = deleteBtn.closest('.notif-delete-form');
+                const name = deleteBtn.getAttribute('data-name') || 'Bu bildirim';
+                const nameEl = document.getElementById('notifDeleteItemName');
+                if (nameEl) nameEl.textContent = name;
+                if (deleteModal) {
+                    deleteModal.classList.add('active');
+                }
+            }
+        });
+
+        // Silme: İptal
+        const cancelDelete = document.getElementById('cancelNotifDelete');
+        if (cancelDelete) {
+            cancelDelete.addEventListener('click', () => {
+                deleteModal.classList.remove('active');
+                pendingDeleteForm = null;
+            });
+        }
+
+        // Silme: Onayla
+        const confirmDelete = document.getElementById('confirmNotifDelete');
+        if (confirmDelete) {
+            confirmDelete.addEventListener('click', () => {
+                if (pendingDeleteForm) {
+                    pendingDeleteForm.submit();
+                }
+                deleteModal.classList.remove('active');
+            });
+        }
+
+        // Silme: Dışarı tıkla kapat
+        if (deleteModal) {
+            deleteModal.addEventListener('click', (e) => {
+                if (e.target === deleteModal) {
+                    deleteModal.classList.remove('active');
+                    pendingDeleteForm = null;
+                }
+            });
+        }
+
+        // --- GERİ YÜKLEME BUTONU ---
+        document.addEventListener('click', (e) => {
+            const restoreBtn = e.target.closest('[data-action="restoreRow"]');
+            if (restoreBtn) {
+                e.preventDefault();
+                pendingRestoreForm = restoreBtn.closest('.notif-restore-form');
+                const name = restoreBtn.getAttribute('data-name') || 'Bu bildirim';
+                const nameEl = document.getElementById('notifRestoreItemName');
+                if (nameEl) nameEl.textContent = name;
+                if (restoreModal) {
+                    restoreModal.classList.add('active');
+                }
+            }
+        });
+
+        // Restore: İptal
+        const cancelRestore = document.getElementById('cancelNotifRestore');
+        if (cancelRestore) {
+            cancelRestore.addEventListener('click', () => {
+                restoreModal.classList.remove('active');
+                pendingRestoreForm = null;
+            });
+        }
+
+        // Restore: Onayla
+        const confirmRestore = document.getElementById('confirmNotifRestore');
+        if (confirmRestore) {
+            confirmRestore.addEventListener('click', () => {
+                if (pendingRestoreForm) {
+                    pendingRestoreForm.submit();
+                }
+                restoreModal.classList.remove('active');
+            });
+        }
+
+        // Restore: Dışarı tıkla kapat
+        if (restoreModal) {
+            restoreModal.addEventListener('click', (e) => {
+                if (e.target === restoreModal) {
+                    restoreModal.classList.remove('active');
+                    pendingRestoreForm = null;
                 }
             });
         }
@@ -157,7 +227,6 @@ class NotificationSystem {
             <button class="admin-toast-close"><i class="fas fa-times"></i></button>
         `;
 
-        // Disable hover on buttons while toast is showing
         document.querySelectorAll('.btn').forEach(btn => {
             btn.classList.add('toast-active');
             btn.blur();
@@ -175,7 +244,6 @@ class NotificationSystem {
         toast.classList.add('closing');
         toast.addEventListener('animationend', () => {
             toast.remove();
-            // Remove toast-active class from buttons
             document.querySelectorAll('.btn').forEach(btn => {
                 btn.classList.remove('toast-active');
                 btn.blur();
@@ -184,7 +252,6 @@ class NotificationSystem {
     }
 
     showModal(title, message, onConfirmOrType, type = 'danger') {
-        // Handle both signatures: (title, message, callback, type) and (title, message, type)
         let onConfirm = null;
         let modalType = type;
 
@@ -194,7 +261,6 @@ class NotificationSystem {
             modalType = onConfirmOrType;
         }
 
-        // Only remove previously created confirmation modals, not page modals
         const existingModal = document.querySelector('.admin-confirmation-modal');
         if (existingModal) existingModal.remove();
 
@@ -205,7 +271,6 @@ class NotificationSystem {
             modalType === 'error' ? 'fa-exclamation-circle' :
                 modalType === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
 
-        // If no callback, show only OK button instead of Cancel/Confirm
         const footerHtml = onConfirm
             ? `<button class="btn btn-secondary cancel-btn">Vazgeç</button>
                <button class="btn btn-danger confirm-btn">Onayla</button>`
@@ -219,12 +284,8 @@ class NotificationSystem {
                     </div>
                     <div class="modal-title">${title}</div>
                 </div>
-                <div class="modal-body">
-                    ${message}
-                </div>
-                <div class="modal-footer">
-                    ${footerHtml}
-                </div>
+                <div class="modal-body">${message}</div>
+                <div class="modal-footer">${footerHtml}</div>
             </div>
         `;
 
@@ -253,11 +314,10 @@ class NotificationSystem {
     }
 }
 
-// Pagination functionality for notifications page
+// Pagination
 document.addEventListener('DOMContentLoaded', function () {
     const paginationBtns = document.querySelectorAll('.pagination-btn');
-
-    if (paginationBtns.length === 0) return; // Not on notifications page
+    if (paginationBtns.length === 0) return;
 
     paginationBtns.forEach((btn) => {
         btn.addEventListener('click', function () {
@@ -266,33 +326,21 @@ document.addEventListener('DOMContentLoaded', function () {
             const isNumber = !this.querySelector('i');
 
             if (isNumber) {
-                // Remove active class from all number buttons
                 document.querySelectorAll('.pagination-btn').forEach(b => {
-                    if (!b.querySelector('i')) {
-                        b.classList.remove('active');
-                    }
+                    if (!b.querySelector('i')) b.classList.remove('active');
                 });
-
-                // Add active class to clicked button
                 this.classList.add('active');
-
-                const pageNumber = parseInt(this.textContent);
-                // console.log('Bildirimler - Sayfa:', pageNumber);
-
             } else {
-                // Arrow button clicked
                 const currentActive = document.querySelector('.pagination-btn.active');
                 const currentPage = parseInt(currentActive?.textContent || 1);
                 const isNext = this.querySelector('.fa-chevron-right');
 
                 if (isNext) {
-                    // Next page
                     const nextBtn = Array.from(paginationBtns).find(b =>
                         !b.querySelector('i') && parseInt(b.textContent) === currentPage + 1
                     );
                     if (nextBtn) nextBtn.click();
                 } else {
-                    // Previous page
                     const prevBtn = Array.from(paginationBtns).find(b =>
                         !b.querySelector('i') && parseInt(b.textContent) === currentPage - 1
                     );
@@ -300,7 +348,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Update arrow button states
             updateNotificationsPaginationArrows();
         });
     });
@@ -322,6 +369,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (nextBtn) nextBtn.disabled = currentPage >= maxPage;
     }
 
-    // Initialize arrow states
     updateNotificationsPaginationArrows();
 });
+const notificationSystem = new NotificationSystem();

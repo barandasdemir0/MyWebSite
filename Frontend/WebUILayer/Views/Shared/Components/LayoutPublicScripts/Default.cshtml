@@ -1,6 +1,14 @@
-﻿
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
-
+<!-- ============================================
+     APP CONFIG (JS Dosyalarından ÖNCE Yüklenmeli)
+     ============================================ -->
+<script>
+    // Eğer appsettings.json'da "ApiBaseUrl" yoksa varsayılan olarak localhost kullan.
+    window.AppConfig = {
+        ApiUrl: "@Configuration["ApiBaseUrl"]" || "http://localhost:5028"
+    };
+</script>
 
 <!-- ============================================
      SCRIPTS
@@ -20,3 +28,4 @@
 <script src="~/Mytheme/portfolio/js/github.js"></script>
 <script src="~/Mytheme/portfolio/js/language.js"></script>
 <script src="~/Mytheme/portfolio/js/chatbot.js"></script>
+<script src="~/js/site.js"></script>

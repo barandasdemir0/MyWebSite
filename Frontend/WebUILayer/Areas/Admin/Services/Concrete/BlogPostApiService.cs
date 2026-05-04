@@ -1,6 +1,8 @@
 ﻿using DtoLayer.BlogPostDtos;
+using Microsoft.AspNetCore.WebUtilities;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete
@@ -13,11 +15,8 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         public async Task<PagedResult<BlogPostDto>> GetAllAdminAsync(PaginationQuery query)
         {
-            var url = $"{_endpoint}/admin-all?PageNumber={query.PageNumber}&PageSize={query.PageSize}";
-            if (query.TopicId.HasValue)
-            {
-                url += $"&TopicId={query.TopicId}";
-            }
+            var url = query.ToQueryString($"{_endpoint}/admin-all");
+
 
             var result = await _httpClient.GetFromJsonAsync<PagedResult<BlogPostDto>>(url);
             if (result == null)
@@ -28,15 +27,15 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         }
 
-        public async Task<BlogPostListDto?> GetDetailById(Guid guid)
+        public async Task<BlogPostDto?> GetDetailById(Guid guid)
         {
-            return await _httpClient.GetFromJsonAsync<BlogPostListDto>($"{_endpoint}/{guid}");
-            
+            return await _httpClient.GetFromJsonAsync<BlogPostDto>($"{_endpoint}/{guid}");
+
         }
 
-        public async Task<BlogPostListDto?> GetDetailBySlug(string slug)
+        public async Task<BlogPostDto?> GetDetailBySlug(string slug)
         {
-            return await _httpClient.GetFromJsonAsync<BlogPostListDto>($"{_endpoint}/{slug}");
+            return await _httpClient.GetFromJsonAsync<BlogPostDto>($"{_endpoint}/{slug}");
         }
 
         public async Task<List<BlogPostDto>> GetLatestAsync(int count)
@@ -56,7 +55,7 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         public async Task RestoreAsync(Guid id)
         {
-            var response = await _httpClient.PutAsync($"{_endpoint}/restore/{id}",null);
+            var response = await _httpClient.PutAsync($"{_endpoint}/restore/{id}", null);
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
@@ -65,6 +64,6 @@ namespace WebUILayer.Areas.Admin.Services.Concrete
 
         }
 
-        
+
     }
 }

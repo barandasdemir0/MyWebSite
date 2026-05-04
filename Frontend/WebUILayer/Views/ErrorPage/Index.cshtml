@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Sayfa Bulunamadı</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/variables.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/404.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/preloader.css">
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader-container">
+            <div class="loader-logo"><span>B</span>aran<span>.</span></div>
+            <div class="loader"></div>
+            <div class="loader-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="loader-progress"></div>
+            <div class="loader-text">Yükleniyor</div>
+        </div>
+    </div>
+    <div class="theme-actions"></div>
+    <div class="decorative-circle c1"></div>
+    <div class="decorative-circle c2"></div>
+
+    <div class="container">
+        <h1>@ViewBag.ErrorCode</h1>
+        <h2>@ViewBag.Title</h2>
+        <p>
+            @ViewBag.Message
+        </p>
+        <a href="/Home/Index/" class="btn">
+            <i class="fas fa-home"></i>
+            Ana Sayfaya Dön
+        </a>
+    </div>
+
+    <script src="/Mytheme/admin/js/modules/notifications.js"></script>
+    <script src="/Mytheme/admin/js/modules/auth.js"></script>
+    <script src="/Mytheme/admin/js/modules/ui.js"></script>
+    <script src="/Mytheme/admin/js/admin.js"></script>
+    <script src="/Mytheme/admin/js/theme-init.js"></script>
+</body>
+
+</html>

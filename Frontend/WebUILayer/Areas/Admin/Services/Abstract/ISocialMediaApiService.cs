@@ -4,7 +4,7 @@ namespace WebUILayer.Areas.Admin.Services.Abstract
 {
     public interface ISocialMediaApiService : IGenericApiService<SocialMediaDto, CreateSocialMediaDto, UpdateSocialMediaDto>
     {
-        Task<List<SocialMediaDto>> GetAdminAllAsync();
+        Task<List<SocialMediaDto>> GetAllAdminAsync();
         Task RestoreAsync(Guid guid);
     }
 }

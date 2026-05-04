@@ -11,7 +11,7 @@ public sealed class ContactManager :GenericManager<Contact,ContactDto,CreateCont
 
     private readonly IContactDal _contactDal;
 
-    public ContactManager(IContactDal contactDal, IMapper mapper) : base(contactDal, mapper)
+    public ContactManager(IContactDal contactDal, IMapper mapper, IUnitOfWork unitOfWork) : base(contactDal, mapper, unitOfWork)
     {
         _contactDal = contactDal;
     }
@@ -39,7 +39,7 @@ public sealed class ContactManager :GenericManager<Contact,ContactDto,CreateCont
             _mapper.Map(updateContactDto, query); //mevcut entity alanlarını güncelliyorsun
             await _contactDal.UpdateAsync(query, cancellationToken);
         }
-        await _contactDal.SaveAsync(cancellationToken); //işte burada add ve update yapıyor yaptığına göre
+        await _unitOfWork.SaveChangesAsync(cancellationToken); //işte burada add ve update yapıyor yaptığına göre
         return _mapper.Map<ContactDto>(query); //dbye kaydedilen dtoyu bize getirir
     }
 

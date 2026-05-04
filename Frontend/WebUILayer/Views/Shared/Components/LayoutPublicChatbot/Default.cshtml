@@ -1,4 +1,5 @@
-﻿<button class="chatbot-toggle" aria-label="Sohbet Aç">
+﻿@model UpdateChatbotSettingsDto
+<button class="chatbot-toggle" aria-label="Sohbet Aç">
     <i class="fas fa-comment-dots"></i>
     <span class="badge">1</span>
 </button>
@@ -7,7 +8,7 @@
     <div class="chatbot-header">
         <div class="chatbot-avatar">🤖</div>
         <div class="chatbot-info">
-            <h4>Baran Asistan</h4>
+            <h4>@Model?.AssistantName</h4>
             <span>Genellikle hemen yanıt verir</span>
         </div>
         <button class="chatbot-close" aria-label="Kapat">
@@ -18,15 +19,9 @@
         <div class="chat-message bot">
             <div class="message-avatar">🤖</div>
             <div class="message-content">
-                Merhaba! 👋 Ben Baran'ın dijital asistanıyım. Size projeler, yetenekler veya iletişim hakkında
-                yardımcı olabilirim. Ne öğrenmek istersiniz?
+                @Model?.WelcomeMessage
             </div>
         </div>
-    </div>
-    <div class="quick-replies">
-        <button class="quick-reply-btn">Baran kimdir?</button>
-        <button class="quick-reply-btn">Projeler</button>
-        <button class="quick-reply-btn">İletişim</button>
     </div>
     <div class="chatbot-input">
         <input type="text" id="chatbotInput" name="chatbotMessage" placeholder="Mesajınızı yazın..." />

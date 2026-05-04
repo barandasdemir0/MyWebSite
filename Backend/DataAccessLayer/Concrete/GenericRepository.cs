@@ -3,6 +3,7 @@ using DataAccessLayer.Abstract;
 using DataAccessLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Options;
 using SharedKernel.Shared;
 using System.Linq.Expressions;
 
@@ -27,7 +28,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 CancellationToken cancellationToken = default)
     {
         await _dbSet.AddAsync(entity, cancellationToken);
-    }
+    } 
 
     public Task DeleteAsync(T entity,
 CancellationToken cancellationToken = default)
@@ -36,11 +37,11 @@ CancellationToken cancellationToken = default)
         return Task.CompletedTask;  // async uyumluluğu için
     }
 
-    public async Task<int> SaveAsync(
-CancellationToken cancellationToken = default)
-    {
-        return await _context.SaveChangesAsync(cancellationToken);
-    }
+//    public async Task<int> SaveAsync(
+//CancellationToken cancellationToken = default)
+//    {
+//        return await _context.SaveChangesAsync(cancellationToken);
+//    } -->uow eklendiği için silidni
 
     public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
@@ -127,6 +128,11 @@ CancellationToken cancellationToken = default)
             // WithIdentityResolution → aynı Id'li entity'ler aynı referansı paylaşır
         }
 
+        if (options != null && options.IgnoreQueryFilters)
+        {
+            query = query.IgnoreQueryFilters();
+        }
+
         //  Sorguyu çalıştır ve sonuçları listele
         return await query.ToListAsync(cancellationToken);
         // BURADA SQL gerçekten veritabanına gider ve çalışır
@@ -141,27 +147,7 @@ CancellationToken cancellationToken = default)
     }
 
 
-    public async Task<List<T>> GetAllAdminAsync(bool tracking = true, Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes = null,
-CancellationToken cancellationToken = default)
-    {
-        var query = _dbSet.AsQueryable();
-
-        //// ❗ Global Filter'ı DEVRE DIŞI birak
-        // Normalde: WHERE IsDeleted = 0 (otomatik eklenir)
-        // Şimdi:    (hiç filtre yok, silinmişler de gelir)
-        query = query.IgnoreQueryFilters();
-        if (!tracking)
-        {
-            query = query.AsNoTrackingWithIdentityResolution();
-        }
-        if (includes != null)
-        {
-            query = includes(query);
-
-        }
-
-        return await query.ToListAsync(cancellationToken);
-    }
+    
 
 
     #endregion
@@ -182,6 +168,7 @@ CancellationToken cancellationToken = default)
             query = query.AsNoTrackingWithIdentityResolution();
         }
 
+      
         return await query.FirstOrDefaultAsync(filter, cancellationToken);
 
     }

@@ -28,7 +28,7 @@
                 <div class="col-lg-5" data-aos="fade-right">
                     <div class="about-image-wrapper">
                         <div class="about-image">
-                        <img src="@Model.About.ProfileImage"
+                        <img src="@Model.About?.ProfileImage"
                                  alt="Baran Dasdemir">
                         </div>
                     </div>
@@ -36,34 +36,34 @@
                 <div class="col-lg-7" data-aos="fade-left">
                     <div class="about-content">
 
-                    <h2>Merhaba, Ben <span class="gradient-text">@Model.About.FullName</span></h2>
+                    <h2>Merhaba, Ben <span class="gradient-text">@Model.About?.FullName</span></h2>
 
-                    <p class="about-text">@Model.About.Greeting</p>
-                    <p class="about-text">@Model.About.Bio</p>
+                    <p class="about-text">@Model.About?.Greeting</p>
+                    <p class="about-text">@Model.About?.Bio</p>
 
                         <div class="about-info">
 
                             <div class="info-item">
                                 <i class="fas fa-user"></i>
-                            <span><strong>İsim:</strong> @Model.About.FullName</span>
+                            <span><strong>İsim:</strong> @Model.About?.FullName</span>
                             </div>
 
                            
                                 <div class="info-item">
                                     <i class="fas fa-envelope"></i>
-                            <span><strong>Email:</strong> @Model.Contact.Email</span>
+                            <span><strong>Email:</strong> @Model.Contact?.Email</span>
                                 </div>
 
                                 <div class="info-item">
                                     <i class="fas fa-map-marker-alt"></i>
-                            <span><strong>Konum:</strong> @Model.Contact.Location</span>
+                            <span><strong>Konum:</strong> @Model.Contact?.Location</span>
                                 </div>
                             
 
                            
                                 <div class="info-item">
                                     <i class="fas fa-briefcase"></i>
-                                    <span><strong>Durum:</strong> @Model.SiteSetting.WorkStatus</span>
+                            <span><strong>Durum:</strong> @Model.SiteSetting?.WorkStatus</span>
                                 </div>
                             
 
@@ -72,10 +72,11 @@
                     </div> <!-- about-content -->
 
         
+                <a href="/Home/DownloadCv" class="btn-primary-custom" target="_blank" download>
+                    <i class="fas fa-download me-2"></i>CV İndir
+                </a>
 
-                    <a href="assets/cv-baran-dasdemir.pdf" class="btn-primary-custom" download>
-                        <i class="fas fa-download me-2"></i>CV İndir
-                    </a>
+               
                 </div>
             </div>
         </div>
@@ -138,21 +139,21 @@
                 <div class="col-6 col-md-4" data-aos="fade-up">
                     <div class="counter-item">
                         <div class="counter-icon"><i class="fas fa-code"></i></div>
-                    <div class="counter-number" data-target="@Model.About.ProjectCount">@Model.About.ProjectCount</div>
+                    <div class="counter-number" data-target="@Model.About?.ProjectCount">@Model.About?.ProjectCount</div>
                         <div class="counter-label">Proje</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="counter-item">
                         <div class="counter-icon"><i class="fas fa-calendar-alt"></i></div>
-                    <div class="counter-number" data-target="@Model.About.ExperienceYear">@Model.About.ExperienceYear</div>
+                    <div class="counter-number" data-target="@Model.About?.ExperienceYear">@Model.About?.ExperienceYear</div>
                         <div class="counter-label">Yıl Deneyim</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="counter-item">
                         <div class="counter-icon"><i class="fas fa-mug-hot"></i></div>
-                    <div class="counter-number" data-target="@Model.About.ProjectDrink">@Model.About.ProjectDrink</div>
+                    <div class="counter-number" data-target="@Model.About?.ProjectDrink">@Model.About?.ProjectDrink</div>
                         <div class="counter-label">Çay</div>
                     </div>
                 </div>

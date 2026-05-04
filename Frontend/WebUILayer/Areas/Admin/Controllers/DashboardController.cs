@@ -26,16 +26,22 @@ public class DashboardController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-       
+        // AWAIT YAZMADAN Görevleri (Task) başlatıp eşzamanlı olarak API'lere koşturuyoruz
+        var blogsTask = _blogPostApiService.GetLatestAsync(3);
+        var projectsTask = _projectApiService.GetLatestAsync(3);
+        var guestBookTask = _guestBookApiService.GetLatestAsync(3);
+        var messagesTask = _messageApiService.GetLatestAsync(3);
+        // Bütün görevlerin (Aynı anda) bitmesini bekle!
+        await Task.WhenAll(blogsTask, projectsTask, guestBookTask, messagesTask);
         var model = new DashboardIndexViewModel
         {
-            blogPostListDtos = await _blogPostApiService.GetLatestAsync(3), //3 tanesini getir diyoruz
-            projectListDtos = await _projectApiService.GetLatestAsync(3),
-            guestBookListDtos = await _guestBookApiService.GetLatestAsync(3),
-            messageListDtos = await _messageApiService.GetLatestAsync(3),
-          
-           
+            // Görevler bitti, sonuçları (Result) direkt al
+            blogPostListDtos = await blogsTask,
+            projectListDtos = await projectsTask,
+            guestBookListDtos = await guestBookTask,
+            messageListDtos = await messagesTask
         };
+
         return View(model);
     }
 }

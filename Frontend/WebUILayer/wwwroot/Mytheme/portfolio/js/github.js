@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedCountEl = document.getElementById('selectedCount');
     const template = document.getElementById('repoCardTemplate');
 
+    if (!fetchBtn || !publishBtn || !reposGrid) return;
+
     // Kartı template'den oluştur (inline HTML yok)
     function createRepoCard(repo) {
         const clone = template.content.cloneNode(true);

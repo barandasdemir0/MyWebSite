@@ -1,7 +1,7 @@
 ﻿
 using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.EducationDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +9,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class EducationsController : CrudController<EducationDto,CreateEducationDto,UpdateEducationDto>
+public sealed class EducationsController : PublicCrudController<EducationDto,CreateEducationDto,UpdateEducationDto>
 {
     private readonly IEducationService _educationService;
 

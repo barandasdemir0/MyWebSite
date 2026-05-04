@@ -2,14 +2,14 @@
 
 namespace DtoLayer.EducationDtos;
 
-public class EducationDto : IHasId
+public record EducationDto : IHasId
 {
-    public Guid Id { get; set; }
-    public string EducationDegree { get; set; } = string.Empty;
-    public DateTime? EducationStartDate { get; set; }
-    public DateTime? EducationFinishDate { get; set; }
-    public string EducationSchoolName { get; set; } = string.Empty;
-    public string EducationDescription { get; set; } = string.Empty;
-    public int? DisplayOrder { get; set; }
-    public bool IsDeleted { get; set; } = false;
+    public Guid Id { get; init; }
+    public string EducationDegree { get; init; } = string.Empty;
+    public DateTime? EducationStartDate { get; init; }
+    public DateTime? EducationFinishDate { get; init; }
+    public string EducationSchoolName { get; init; } = string.Empty;
+    public string EducationDescription { get; init; } = string.Empty;
+    public int? DisplayOrder { get; init; }
+    public bool IsDeleted { get; init; } = false;
 }

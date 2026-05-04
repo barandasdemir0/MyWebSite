@@ -1,12 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebUILayer.Areas.Admin.Services.Abstract;
 
-namespace WebUILayer.Areas.Admin.ViewComponents.LayoutComponents
+namespace WebUILayer.Areas.Admin.ViewComponents.LayoutComponents;
+
+public class _LayoutNavbarPartialComponent:ViewComponent
 {
-    public class _LayoutNavbarPartialComponent:ViewComponent
+    private readonly INotificationApiService _notificationApiService;
+
+    public _LayoutNavbarPartialComponent(INotificationApiService notificationApiService)
     {
-        public IViewComponentResult Invoke()
-        {
-            return View();
-        }
+        _notificationApiService = notificationApiService;
+    }
+
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var unreadNotification = await _notificationApiService.GetTopUnreadAsync(5);
+        return View(unreadNotification);
     }
 }

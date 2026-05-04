@@ -1,6 +1,7 @@
 ﻿using DtoLayer.GithubRepoDtos;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Services.Concrete;
 
@@ -12,7 +13,7 @@ public class GithubRepoApiService : GenericApiService<GithubRepoDto, CreateGithu
 
     public async Task<PagedResult<GithubApiRepoDto>> FetchFromGithubAsync(string username, PaginationQuery query)
     {
-        var url = $"{_endpoint}/fetch/{username}?PageNumber={query.PageNumber}&PageSize={query.PageSize}";
+        var url = query.ToQueryString($"{_endpoint}/fetch/{username}");
         var result = await _httpClient.GetFromJsonAsync<PagedResult<GithubApiRepoDto>>(url);
         return result ?? new PagedResult<GithubApiRepoDto>();
     }

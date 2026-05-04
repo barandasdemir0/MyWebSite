@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.CertificateDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +8,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class CertificatesController:CrudController<CertificateDto,CreateCertificateDto,UpdateCertificateDto>
+public sealed class CertificatesController: PublicCrudController<CertificateDto,CreateCertificateDto,UpdateCertificateDto>
 {
     private readonly ICertificateService _certificateService;
 

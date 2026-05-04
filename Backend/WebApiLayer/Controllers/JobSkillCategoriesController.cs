@@ -1,13 +1,13 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.JobSkillCategoryDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-public class JobSkillCategoriesController : CrudController<JobSkillCategoryDto, CreateJobSkillCategoryDto, UpdateJobSkillCategoryDto>
+public class JobSkillCategoriesController : PublicCrudController<JobSkillCategoryDto, CreateJobSkillCategoryDto, UpdateJobSkillCategoryDto>
 {
     private readonly IJobSkillCategoryService _jobSkillCategoryService;
 

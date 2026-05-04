@@ -2,17 +2,21 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MimeKit;
+using SharedKernel.Shared;
 
 namespace BusinessLayer.Services;
 
 public class EmailManager : IEmailService
 {
     private readonly IConfiguration _configuration;
+    private readonly AdminSettings _adminSettings;
 
-    public EmailManager(IConfiguration configuration)
+    public EmailManager(IConfiguration configuration, IOptions<AdminSettings> adminSettings)
     {
         _configuration = configuration;
+        _adminSettings = adminSettings.Value;
     }
 
 
@@ -21,7 +25,7 @@ public class EmailManager : IEmailService
     {
         // E-posta mesajını oluştur
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("Baran Dasdemir", _configuration["Email:From"]!)); // Gönderen adresini yapılandırmadan al
+        message.From.Add(new MailboxAddress(_adminSettings.FullName, _configuration["Email:From"]!)); // Gönderen adresini yapılandırmadan al
         message.To.Add(MailboxAddress.Parse(to));// Alıcı adresini ekle
 
         message.Subject = subject; // E-posta konusunu belirle

@@ -1,14 +1,13 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.SkillDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = RoleConsts.Admin)]
-public sealed class SkillsController : CrudController<SkillDto,CreateSkillDto,UpdateSkillDto>
+public sealed class SkillsController : PublicCrudController<SkillDto,CreateSkillDto,UpdateSkillDto>
 {
     private readonly ISkillService _skillService;
 

@@ -4,10 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section styles{
+@section styles {
     <link rel="stylesheet" href="~/Mytheme/portfolio/css/components/search.css">
 }
-
 
 <!-- PAGE HEADER -->
 <section class="section" style="padding-top: 150px; padding-bottom: 20px; background: var(--bg-secondary);">
@@ -20,8 +19,6 @@
     </div>
 </section>
 
-  @foreach (var project in Model.projectDtos)
-            {
 <!-- PORTFOLIO SECTION -->
 <section class="section portfolio-section" style="padding-top: 40px;">
     <div class="container">
@@ -32,101 +29,53 @@
             <i class="fas fa-search search-icon"></i>
         </div>
 
-        <!-- Filter Buttons -->
+        <!-- Category Filters -->
         <div class="portfolio-filters" data-aos="fade-up" style="margin-bottom: 50px;">
             <button class="filter-btn active" data-filter="*">Tümü</button>
             @foreach (var topic in Model.topicDtos)
             {
                 <button class="filter-btn" data-filter="@topic.Name">@topic.Name</button>
             }
-           
+          
         </div>
 
-        <!-- Portfolio Grid -->
+        <!-- Portfolio Grid (FOREACH SADECE BURADA OLMALIDIR) -->
         <div class="portfolio-grid">
-          
-                <!-- Project 1 - Web -->
-                <div class="portfolio-item portfolio-card" data-category="@project.Topics" data-aos="fade-up">
+            @foreach (var project in Model.projectDtos)
+            {
+                <div class="portfolio-item portfolio-card" data-category="@string.Join(" ", project.Topics)" data-aos="fade-up">
+
                     <div class="portfolio-image">
-                        <img src="@project.ImageUrl"
-                             alt="@project.Name">
+                        <img src="@project.ImageUrl" alt="@project.Name">
                         <div class="portfolio-overlay">
-                            <button type="button" class="btn-icon" data-bs-toggle="modal"
-                                    data-bs-target="#projectModal1">
+                            <!-- Detay butonuna tıklandığında direkt ProjectDetail sayfasına gidecek -->
+                            <a href="/Project/ProjectDetail/@project.Slug" class="btn-icon">
                                 <i class="fas fa-eye"></i>
-                            </button>
-                            <a href="/project/ProjectDetail/@project.Slug" target="_blank" class="btn-icon"><i class="fas fa-external-link-alt"></i></a>
+                            </a>
+                            <a href="@project.WebsiteUrl" target="_blank" class="btn-icon"><i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                     <div class="portfolio-info">
-                        <span class="portfolio-category">@project.Topics</span>
+                        <span class="portfolio-category">@string.Join(", ", project.Topics)</span>
                         <h4>@project.Name</h4>
                         <div class="portfolio-tags">
-                            @foreach (var languages in project.Technologies)
+                            @foreach (var lang in project.TechnologyList)
                             {
-                                <span class="portfolio-tag">@languages</span>
+                                <span class="portfolio-tag">@lang</span>
                             }
-                           
                         </div>
                     </div>
                 </div>
-         
-           
-
-          
+            }
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination-wrapper">
-            <button class="pagination-btn" id="prevPage">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="pagination-btn active">1</button>
-            <button class="pagination-btn">2</button>
-            <button class="pagination-btn">3</button>
-            <button class="pagination-btn" id="nextPage">
-                <i class="fas fa-chevron-right"></i>
-            </button>
+       
+        <div class="mt-4" data-aos="fade-up">
+            @await Component.InvokeAsync("LayoutPublicPagination", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
         </div>
     </div>
 </section>
 
-<!-- PROJECT MODAL 1 -->
-<div class="modal fade" id="projectModal1" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">E-Ticaret Platformu</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                    <img src="@project.ImageUrl"
-                         alt="@project.Name" class="img-fluid rounded mb-4">
-                <h5>Proje Hakkında</h5>
-                <p>
-                        @project.ShortDescription
-                </p>
-                <h5 class="mt-4">Teknolojiler</h5>
-                <div class="portfolio-tags">
-                    @foreach (var languages in project.Technologies)
-                        {
-                            <span class="portfolio-tag">@languages</span>
-                        }
-                </div>
-                <div class="mt-4 d-flex align-items-center gap-3">
-                        <a href="@project.WebsiteUrl" class="btn-primary-custom"><i class="fas fa-external-link-alt me-2"></i>Demo</a>
-                        <a href="@project.GithubUrl" class="btn-outline-custom"><i class="fab fa-github me-2"></i>GitHub</a>
-                    <a href="/project/ProjectDetail/@project.Slug" class="btn-outline-custom">
-                        <i class="fas fa-info-circle me-2"></i>Proje Detayları
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-}
-
-
-@section scripts{
+@section scripts {
     <script src="~/Mytheme/portfolio/js/portfolio.js"></script>
 }

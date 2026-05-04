@@ -13,9 +13,3 @@ public class RefreshTokenRequestValidator:AbstractValidator<RefreshTokenRequestD
             .NotEmpty().WithMessage("Refresh token zorunludur");
     }
 }
-//Biri Postman veya curl ile API'ne direkt istek atarsa boş body gönderebilir. Validator olmadan AuthManager.RefreshTokenAsync içinde 
-
-//GetPrincipalFromExpiredToken(null)
-// çağrılır → exception fırlar.
-
-//Yani: Bu validator kullanıcı için değil, API'ni koruması için.

@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Abstract;
 using DtoLayer.AuthDtos.Items;
 using DtoLayer.AuthDtos.Requests;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -20,7 +21,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-
+    [EnableRateLimiting(RateLimitConsts.Auth)]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto,CancellationToken cancellationToken)
     {
@@ -35,6 +36,7 @@ public class AuthController : ControllerBase
         }
     }
 
+    [EnableRateLimiting(RateLimitConsts.Auth)]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto,CancellationToken cancellationToken)
     {

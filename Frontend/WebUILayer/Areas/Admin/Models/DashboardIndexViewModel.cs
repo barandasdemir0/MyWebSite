@@ -11,6 +11,6 @@ public class DashboardIndexViewModel
     public List<BlogPostDto> blogPostListDtos { get; set; } = new List<BlogPostDto>();
 
     //public int totalBlogPosts { get; set; }
-    public List<MessageListDto> messageListDtos { get; set; } = new List<MessageListDto>();
-    public List<GuestBookListDto> guestBookListDtos { get; set; } = new List<GuestBookListDto>();
+    public List<MessageDto> messageListDtos { get; set; } = new();
+    public List<GuestBookDto> guestBookListDtos { get; set; } = new ();
 }

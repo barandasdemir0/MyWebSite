@@ -26,52 +26,71 @@ public class BlogController : Controller
 
     public async Task<IActionResult> Index(PaginationQuery query)
     {
-        var about = await _publicAboutApiService.GetAllAsync();
-        var pagedResult = await _publicBlogPostApiService.GetAllPagedAsync(query);
-
-        var models = new BlogViewModel
+        try
         {
-            aboutDto = about.FirstOrDefault(),
-            blogPostListDtos = pagedResult.Items,
-            topicDtos = await _publicTopicApiService.GetAllAsync(),
-            CurrentPage = pagedResult.PageNumber,
-            TotalPages = pagedResult.TotalPages
-        };
-
-        return View(models);
+            // 1. Bağımsız verilerin HEPSİNİ AYNI ANDA başlatıyoruz (Performans artışı)
+            var aboutTask = _publicAboutApiService.GetAllAsync();
+            var pagedResultTask = _publicBlogPostApiService.GetAllPagedAsync(query);
+            var topicTask = _publicTopicApiService.GetAllAsync();
+            // 2. İşlemlerin bitmesini paralel olarak bekliyoruz
+            await Task.WhenAll(aboutTask, pagedResultTask, topicTask);
+            var models = new BlogViewModel
+            {
+                aboutDto = aboutTask.Result.FirstOrDefault(),
+                blogPostListDtos = pagedResultTask.Result.Items,
+                topicDtos = topicTask.Result,
+                CurrentPage = pagedResultTask.Result.PageNumber,
+                TotalPages = pagedResultTask.Result.TotalPages
+            };
+            return View(models);
+        }
+        catch (Exception)
+        {
+            // Eğer API çökmüşse veya veritabanı bağlantısı koptuysa anasayfaya at
+            TempData["Error"] = "Blog yazıları şu anda yüklenemiyor, lütfen daha sonra tekrar deneyin.";
+            // Not: Eğer HomeController veya DefaultController varsa oraya yönlendirebilirsin
+            return RedirectToAction("Index", "Default");
+        }
     }
 
     public async Task<IActionResult> BlogDetail(string id)
     {
-        
+
         if (string.IsNullOrEmpty(id))
         {
             return RedirectToAction(nameof(Index));
         }
-
-        var blog = await _publicBlogPostApiService.GetBySlugAsync(id);
-        if (blog==null)
+        try
         {
+            // 1. AŞAMA: Önce Blog'u çekmek ZORUNDAYIZ (Çünkü kategorisi 'MainTopic' lazım)
+            var blog = await _publicBlogPostApiService.GetBySlugAsync(id);
+            if (blog == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            // 2. AŞAMA: Blog geldiğine göre geri kalan her şeyi AYNI ANDA çekebiliriz
+            var aboutTask = _publicAboutApiService.GetAllAsync();
+            var relatedProjectsTask = _publicProjectApiService.GetLatestAsync(3, blog.MainTopic);
+            var socialMediaTask = _publicSocialMediaApiService.GetAllAsync();
+            // Üçünü aynı anda paralel bekle (Sayfa açılışı 3 kat hızlanır)
+            await Task.WhenAll(aboutTask, relatedProjectsTask, socialMediaTask);
+            var models = new BlogDetailViewModel
+            {
+                BlogPostDto = blog,
+                AboutDto = aboutTask.Result.FirstOrDefault(),
+                SocialMediaDtos = socialMediaTask.Result,
+                ProjectDtos = relatedProjectsTask.Result
+            };
+
+            return View(models);
+        }
+        catch (Exception)
+        {
+            TempData["Error"] = "Bu blog yazısına şu anda ulaşılamıyor.";
             return RedirectToAction(nameof(Index));
         }
 
-        var about = await _publicAboutApiService.GetAllAsync();
 
 
-        var relatedProjects = await _publicProjectApiService.GetLatestAsync(3, blog.MainTopic);
-
-        var models = new BlogDetailViewModel
-        {
-            BlogPostDto = blog,
-            AboutDto = about.FirstOrDefault(),
-            SocialMediaDtos = await _publicSocialMediaApiService.GetAllAsync(),
-            ProjectDtos = relatedProjects
-        };
-        return View(models);
-
-
-
-
-    
     }
 }

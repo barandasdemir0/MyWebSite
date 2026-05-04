@@ -18,10 +18,7 @@ public class CreateGithubRepoValidator : AbstractValidator<CreateGithubRepoDto>
             .NotEmpty().WithMessage("Repo URL boş olamaz.") // Url zorunlu olsun dedik
             .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _)).When(x => !string.IsNullOrEmpty(x.RepoUrl))
             .WithMessage("Geçerli bir URL giriniz.");
-        RuleFor(x => x.StarCount)
-            .GreaterThanOrEqualTo(0).WithMessage("Yıldız sayısı 0'dan küçük olamaz.");
-        RuleFor(x => x.ForkCount)
-            .GreaterThanOrEqualTo(0).WithMessage("Fork sayısı 0'dan küçük olamaz.");
+       
     }
 }
 

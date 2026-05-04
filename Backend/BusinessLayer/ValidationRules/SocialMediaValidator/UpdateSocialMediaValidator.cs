@@ -8,10 +8,10 @@ public class UpdateSocialMediaValidator:AbstractValidator<UpdateSocialMediaDto>
     public UpdateSocialMediaValidator()
     {
         RuleFor(x => x.SocialMediaName)
-           .NotEmpty()
-           .WithMessage("Lütfen bu alanı boş bırakmayın")
-           .MaximumLength(100)
-           .WithMessage("100 karakterden uzun sosyal medya ismi olamaz");
+             .NotEmpty()
+             .WithMessage("Lütfen bu alanı boş bırakmayın")
+             .MaximumLength(100)
+             .WithMessage("100 karakterden uzun sosyal medya ismi olamaz");
 
         RuleFor(x => x.SocialMediaUrl)
             .NotEmpty()
@@ -19,7 +19,7 @@ public class UpdateSocialMediaValidator:AbstractValidator<UpdateSocialMediaDto>
             .MaximumLength(250)
             .WithMessage("250 karakterden uzun sosyal medya urli olamaz");
 
-        RuleFor(x => x.SocialMediaName)
+        RuleFor(x => x.SocialMediaIcon)
             .NotEmpty()
             .WithMessage("Lütfen bu alanı boş bırakmayın")
             .MaximumLength(100)

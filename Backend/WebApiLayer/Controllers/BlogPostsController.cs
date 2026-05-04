@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.BlogPostDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
@@ -9,7 +9,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPostDto,UpdateBlogPostDto>
+public sealed class BlogPostsController:SecureCrudController<BlogPostDto,CreateBlogPostDto,UpdateBlogPostDto>
 {
 
     private readonly IBlogPostService _blogPostService;
@@ -61,9 +61,10 @@ public sealed class BlogPostsController:CrudController<BlogPostDto,CreateBlogPos
 
     [AllowAnonymous]
     [HttpGet("latest/{count}")]
-    public async Task<IActionResult> GetLatest(int count,CancellationToken cancellationToken)
+    public async Task<IActionResult> GetLatest(int count, [FromQuery]string? topic=null,CancellationToken cancellationToken=default)
     {
-        var values = await _blogPostService.GetLatestAsync(count, cancellationToken);
+        count = Math.Clamp(count, 1, 20);
+        var values = await _blogPostService.GetLatestAsync(count,topic,cancellationToken);
         if (values==null)
         {
             return NotFound();

@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Abstract;
-using CV.EntityLayer.Entities;
 using DtoLayer.NotificationDtos;
+using EntityLayer.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
@@ -8,8 +8,7 @@ using SharedKernel.Shared;
 namespace WebApiLayer.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = RoleConsts.Admin)]
-public class NotificationsController: CrudController<NotificationDto,CreateNotificationDto,UpdateNotificationDto>
+public class NotificationsController: SecureCrudController<NotificationDto,CreateNotificationDto,UpdateNotificationDto>
 {
     private readonly INotificationService _notificationService;
 
@@ -38,6 +37,16 @@ public class NotificationsController: CrudController<NotificationDto,CreateNotif
         }
         return Ok(values);
     }
+
+    [Authorize(Roles = RoleConsts.Admin)]
+    [HttpGet("unread")]
+    public async Task<IActionResult> GetTopUnread([FromQuery] int count=5 , CancellationToken cancellation = default)
+    {
+        count = Math.Clamp(count, 1, 20);
+        var values = await _notificationService.GetTopUnreadAsync(count, cancellation);
+        return Ok(values);
+    }
+
 
     [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]

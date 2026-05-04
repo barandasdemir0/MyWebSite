@@ -8,10 +8,10 @@ public class UpdateEducationValidator:AbstractValidator<UpdateEducationDto>
     public UpdateEducationValidator()
     {
         RuleFor(x => x.EducationDegree)
-           .NotEmpty()
-           .WithMessage("Bu Alan Boş Geçilemez")
-           .MaximumLength(50)
-           .WithMessage("Bu Alan 50 Karakterden fazla olamaz");
+             .NotEmpty()
+             .WithMessage("Bu Alan Boş Geçilemez")
+             .MaximumLength(50)
+             .WithMessage("Bu Alan 50 Karakterden fazla olamaz");
 
         RuleFor(x => x.EducationSchoolName)
             .NotEmpty()

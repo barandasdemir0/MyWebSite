@@ -11,7 +11,7 @@ public sealed class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
         builder.ToTable("BlogPosts");
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Title).IsRequired().HasMaxLength(150);
+        builder.Property(x => x.Title).IsRequired().HasMaxLength(150).IsRequired();
         builder.Property(x => x.Slug).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Technologies).IsRequired().HasMaxLength(50);
         builder.HasIndex(x => x.Slug).IsUnique();

@@ -1,0 +1,109 @@
+﻿@model UpdateChatbotSettingsDto
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "chatbot-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles
+{
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/chatbot.css">
+}
+<form asp-action="Index" method="post">
+    <input type="hidden" asp-for="Id" />
+<div class="content-grid">
+ 
+    <!-- General Settings -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-sliders-h"></i>Genel Ayarlar</h3>
+        </div>
+
+       
+
+
+            <div class="form-group">
+                <label>Asistan Adı</label>
+                <input type="text" class="form-control" asp-for="AssistantName" placeholder="Örn: Asistan">
+                <span asp-validation-for="AssistantName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Karşılama Mesajı</label>
+                <textarea class="form-control chatbot-textarea"
+                          placeholder="Kullanıcı sohbeti açtığında görünecek ilk mesaj..." asp-for="WelcomeMessage"></textarea>
+                <span asp-validation-for="WelcomeMessage" class="text-danger"></span>
+            </div>
+
+           
+      
+    </div>
+
+    <!-- Knowledge Base & Behavior -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-brain"></i>Bilgi Tabanı & Davranış</h3>
+        </div>
+
+       
+            <div class="form-group">
+                <label>System Prompt (Talimatlar)</label>
+                <textarea class="form-control prompt-textarea" asp-for="SystemPrompt" placeholder="You are an AI assistant..."></textarea>
+            <span asp-validation-for="SystemPrompt" class="text-danger"></span>
+                <br>
+                <p class="input-hint">
+                    Chatbot'un nasıl davranması gerektiğini
+                    ve temel bilgileri
+                    buraya girin.
+                </p>
+            </div>
+
+            <!-- User Requested: API Key instead of Model Select -->
+            <div class="form-group">
+                <label>API Key</label>
+                <div class="api-key-toggle">
+                    <input type="password" asp-for="ApiKey" class="form-control" id="apiKeyInput" placeholder="sk-..."
+                           value="">
+                <span asp-validation-for="ApiKey" class="text-danger"></span>
+                    <button type="button" class="api-key-button" id="apiKeyToggleBtn">
+                        <i class="fas fa-eye" id="apiKeyIcon"></i>
+                    </button>
+                </div>
+                <br>
+                <p class="input-hint">Girdiğiniz API anahtarı veritabanında şifrelenerek saklanacaktır.</p>
+            </div>
+
+            <!-- Optional Model Name -->
+            <div class="form-group">
+                <label>Model Adı (Opsiyonel)</label>
+                <input type="text" class="form-control" asp-for="ModelName" placeholder="Örn: gpt-4, gpt-3.5-turbo">
+            <span asp-validation-for="ModelName" class="text-danger"></span>
+                <br>
+                <br>
+                <p class="input-hint">
+                    Kullanılacak modelin tam adını girin. Boş bırakılırsa varsayılan model
+                    kullanılır.
+                </p>
+            </div>
+
+          @*   <div class="form-actions">
+                <button type="button" class="btn btn-success" data-action="saveBrain">
+                    <i class="fas fa-save"></i>
+                    Ayarları Güncelle
+                </button>
+            </div> *@
+      
+        <div class="form-actions">
+                <button type="submit" class="btn btn-success" data-action="saveBrain">
+                <i class="fas fa-save"></i>
+                Ayarları Güncelle
+            </button>
+        </div>
+    </div>
+</div>
+ </form>
+@section Scripts {
+    <script src="/Mytheme/admin/js/modules/chatbot.js"></script>
+
+
+}
+

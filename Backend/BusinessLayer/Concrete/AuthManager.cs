@@ -4,12 +4,14 @@ using DataAccessLayer.Abstract;
 using DtoLayer.AuthDtos.Items;
 using DtoLayer.AuthDtos.Requests;
 using DtoLayer.AuthDtos.Responses;
+using EntityLayer.Constants;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Enums;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace BusinessLayer.Concrete;
 
@@ -143,9 +145,11 @@ public class AuthManager : IAuthService
     }
 
 
- 
-    //tekrarı önlemek için azılan metottur
-    
+  
+
+    //tekrarı önlemek için yazılan metottur
+
+
     private static LoginResultDto Fail(string error)
     {
         return new LoginResultDto

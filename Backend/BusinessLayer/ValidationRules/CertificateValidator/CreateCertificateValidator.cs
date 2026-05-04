@@ -10,17 +10,17 @@ public class CreateCertificateValidator:AbstractValidator<CreateCertificateDto>
         RuleFor(x => x.CertificateName).NotEmpty()
            .WithMessage("Bu Alan Boş Geçilemez")
            .MaximumLength(100)
-           .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.");
+           .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.").MustBeSafeHtml();
 
         RuleFor(x => x.IssuingCompany).NotEmpty()
            .WithMessage("Bu Alan Boş Geçilemez")
            .MaximumLength(100)
-           .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.");
+           .WithMessage("Bu Alan En fazla 100 Karakter olmalıdır.").MustBeSafeHtml();
 
         RuleFor(x => x.CertificateDescription).NotEmpty()
            .WithMessage("Bu Alan Boş Geçilemez")
            .MinimumLength(10)
-           .WithMessage("En az 10 karakter veri girmeniz gerekiyor");
+           .WithMessage("En az 10 karakter veri girmeniz gerekiyor").MustBeSafeHtml();
 
         RuleFor(x => x.IssueDate)
             .NotNull()

@@ -10,7 +10,7 @@ public class SkillManager :GenericManager<Skill,SkillDto,CreateSkillDto,UpdateSk
 {
     private readonly ISkillDal _skillDal;
 
-    public SkillManager(ISkillDal skillDal, IMapper mapper) : base(skillDal, mapper)
+    public SkillManager(ISkillDal skillDal, IMapper mapper, IUnitOfWork unitOfWork) : base(skillDal, mapper, unitOfWork)
     {
         _skillDal = skillDal;
     }
@@ -26,7 +26,7 @@ public class SkillManager :GenericManager<Skill,SkillDto,CreateSkillDto,UpdateSk
         entity.DeletedAt = null;
 
         await _skillDal.UpdateAsync(entity, cancellationToken: cancellationToken);
-        await _skillDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return _mapper.Map<SkillDto>(entity);
     }

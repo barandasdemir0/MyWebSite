@@ -18,6 +18,8 @@ public class BlogPostDto : IHasId
 
     //ek 
     public string MainTopic { get; set; } = string.Empty;
+    public string? AiSummary { get; set; }
+
 
 
     // İlişkiler (Okuma)

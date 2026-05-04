@@ -2,6 +2,7 @@
 using BusinessLayer.Extensions;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using DtoLayer.ProjectDtos;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +14,18 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 {
     private readonly IProjectDal _projectDal;
 
-    public ProjectManager(IProjectDal projectDal, IMapper mapper) : base(projectDal, mapper)
+    public ProjectManager(IProjectDal projectDal, IMapper mapper, IUnitOfWork unitOfWork) : base(projectDal, mapper, unitOfWork)
     {
         _projectDal = projectDal;
     }
 
     public override async Task<ProjectDto> AddAsync(CreateProjectDto dto, CancellationToken cancellationToken = default)
     {
+        var sanitizer = new Ganss.Xss.HtmlSanitizer();
+        if (!string.IsNullOrEmpty(dto.Description))
+        {
+            dto.Description = sanitizer.Sanitize(dto.Description);
+        }
         var entity = _mapper.Map<Project>(dto);
         entity.Slug = await UniqueSlugAsync(dto.Name, cancellationToken);
         if (entity.IsPublished && entity.PublishedAt == null)
@@ -34,7 +40,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
             }
         }
         await _projectDal.AddAsync(entity, cancellationToken);
-        await _projectDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<ProjectDto>(entity);
     }
 
@@ -44,7 +50,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
         if (entity != null)
         {
             await _projectDal.DeleteAsync(entity, cancellationToken);
-            await _projectDal.SaveAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 
@@ -78,6 +84,11 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 
     public override async Task<ProjectDto?> UpdateAsync(Guid guid, UpdateProjectDto dto, CancellationToken cancellationToken = default)
     {
+        var sanitizer = new Ganss.Xss.HtmlSanitizer();
+        if (!string.IsNullOrEmpty(dto.Description))
+        {
+            dto.Description = sanitizer.Sanitize(dto.Description);
+        }
         var entity = await _projectDal.GetAsync(x => x.Id == guid,
         tracking: true,
         includes: source => source.Include(x => x.ProjectTopics).ThenInclude(y => y.Topic), cancellationToken: cancellationToken);
@@ -100,7 +111,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
             }
         }
         await _projectDal.UpdateAsync(entity, cancellationToken: cancellationToken);
-        await _projectDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<ProjectDto>(entity);
     }
 
@@ -119,7 +130,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 
     }
 
-    public async Task<ProjectListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
+    public async Task<ProjectDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _projectDal.RestoreDeleteByIdAsync(guid, cancellationToken: cancellationToken);
         if (entity == null)
@@ -130,12 +141,12 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
         entity.DeletedAt = null;
 
         await _projectDal.UpdateAsync(entity, cancellationToken);
-        await _projectDal.SaveAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<ProjectListDto>(entity);
+        return _mapper.Map<ProjectDto>(entity);
     }
 
-    public async Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<ProjectDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
     {
         //var entity = await _projectDal.GetAllAdminAsync(tracking: false);
         //return _mapper.Map<PagedResult<ProjectListDto>>(entity);
@@ -145,13 +156,13 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
             query.TopicId
             , cancellationToken);
 
-        return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+        return _mapper.Map<List<ProjectDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
     }
 
-    public async Task<PagedResult<ProjectListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<ProjectDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _projectDal.GetUserListPagesAsync(query.PageNumber, query.PageSize, query.TopicId, cancellationToken);
-        return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+        return _mapper.Map<List<ProjectDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
     }
 
     public async Task<List<ProjectDto>> GetLatestAsync(int count, string? topic = null, CancellationToken cancellationToken = default)

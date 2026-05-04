@@ -8,7 +8,7 @@ public interface IGuestBookDal:IGenericRepository<GuestBook>
     CancellationToken cancellationToken = default);
 
 
-    Task<(List<GuestBook> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, CancellationToken cancellationToken = default);
+    Task<(List<GuestBook> Items, int TotalCount)> GetAdminListPagesAsync(int page, int size, bool? isApproved = null, CancellationToken cancellationToken = default);
 
     Task<(List<GuestBook> Items, int TotalCount)> GetUserListPagesAsync(int page, int size, CancellationToken cancellationToken = default);
 }

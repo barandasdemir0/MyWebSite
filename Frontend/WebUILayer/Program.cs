@@ -45,9 +45,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
-app.UseMiddleware<MaintenanceMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<MaintenanceMiddleware>();
+
+app.UseStatusCodePagesWithReExecute("/ErrorPage/Index", "?code={0}");
 
 app.UseRouting();
 app.UseSession();
