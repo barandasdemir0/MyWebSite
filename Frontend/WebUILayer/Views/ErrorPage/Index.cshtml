@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -38,12 +37,12 @@
     <div class="decorative-circle c2"></div>
 
     <div class="container">
-        <h1>404</h1>
-        <h2>Sayfa Kayıp!</h2>
+        <h1>@ViewBag.ErrorCode</h1>
+        <h2>@ViewBag.Title</h2>
         <p>
-            Aradığın sayfa uzay boşluğunda kaybolmuş gibi görünüyor. Ana sayfaya dönerek yolculuğuna devam edebilirsin.
+            @ViewBag.Message
         </p>
-        <a href="dashboard.html" class="btn">
+        <a href="/Home/Index/" class="btn">
             <i class="fas fa-home"></i>
             Ana Sayfaya Dön
         </a>

@@ -48,6 +48,7 @@ app.UseStaticFiles();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<MaintenanceMiddleware>();
 
+app.UseStatusCodePagesWithReExecute("/ErrorPage/Index", "?code={0}");
 
 app.UseRouting();
 app.UseSession();
