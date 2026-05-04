@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -193,7 +192,8 @@ public static class Extension
             options.AddPolicy("AllowFrontend", policy => // CORS politikasını yapılandırır
             policy.WithOrigins(origins) // Belirtilen kökenlere izin verir (örneğin, "http://localhost:3000" gibi)
             .AllowAnyHeader() // Herhangi bir HTTP başlığına izin verir
-            .AllowAnyMethod()); // Herhangi bir HTTP yöntemine izin verir (GET, POST, PUT, DELETE vb.)
+            .AllowAnyMethod()
+            .AllowCredentials()); // Herhangi bir HTTP yöntemine izin verir (GET, POST, PUT, DELETE vb.)
         });
     }
 

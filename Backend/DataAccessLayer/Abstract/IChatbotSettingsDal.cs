@@ -4,4 +4,5 @@ namespace DataAccessLayer.Abstract;
 
 public interface IChatbotSettingsDal:IGenericRepository<ChatbotSettings>
 {
+    Task<ChatbotSettings?> GetActiveSettingsAsync();
 }

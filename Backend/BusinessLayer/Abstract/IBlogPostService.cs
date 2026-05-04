@@ -12,10 +12,10 @@ public interface IBlogPostService : IGenericService<BlogPost, BlogPostDto, Creat
     //bu yöntem ile slug ile çektik daha sağlıklı bir yöntem oldu
     Task<BlogPostDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default);
 
-    Task<BlogPostListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
+    Task<BlogPostDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default);
 
-    Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default);
-    Task<PagedResult<BlogPostListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default);
+    Task<PagedResult<BlogPostDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default);
+    Task<PagedResult<BlogPostDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default);
 
     //count ile kaçtane blog yazısı istiyorsun bunu hallettik
     Task<List<BlogPostDto>> GetLatestAsync(int count, string? topic = null, CancellationToken cancellationToken = default);

@@ -8,6 +8,8 @@ public class CreateBlogPostDto
     public string Technologies { get; set; } = string.Empty;
     public int ReadTime { get; set; }
     public bool IsPublished { get; set; }
+    public string? AiSummary { get; set; }
+
 
     // İlişkiler (Seçim)
     public List<Guid> TopicIds { get; set; } = new();     // Seçilen topic ID'leri

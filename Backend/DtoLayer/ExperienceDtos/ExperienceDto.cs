@@ -12,4 +12,6 @@ public record ExperienceDto : IHasId
     public string ExperienceDescription { get; init; } = string.Empty;
     public int? DisplayOrder { get; init; }   // Sıralama için
     public bool IsDeleted { get; init; } = false;
+    public string? AiSummary { get; set; }
+
 }

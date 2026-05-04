@@ -10,7 +10,6 @@ public sealed class GuestBookMapping : IRegister
     {
 
         config.NewConfig<GuestBook, GuestBookDtos.GuestBookDto>();
-        config.NewConfig<GuestBook, GuestBookDtos.GuestBookListDto>();
         config.NewConfig<CreateGuestBookDto, GuestBook>().Ignore(x => x.Id);
         config.NewConfig<UpdateGuestBookDto, GuestBook>().Ignore(x => x.Id);
     }

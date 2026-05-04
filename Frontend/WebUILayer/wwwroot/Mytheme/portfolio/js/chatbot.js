@@ -1,168 +1,152 @@
-/* ============================================
-   CHATBOT.JS - Interactive Chatbot Widget
-   ============================================ */
-
+let connection;
 document.addEventListener('DOMContentLoaded', function () {
     initChatbot();
+    initSignalR();
+    loadSessionState();
 });
+
+function initSignalR() {
+    const hubAdresi = window.AppConfig.ApiUrl + "/chatHub";
+    connection = new signalR.HubConnectionBuilder().withUrl(hubAdresi).withAutomaticReconnect().build();
+    connection.on("ReceiveBotMessage", function (response) {
+        hideTypingIndicator();
+        addMessage(response, 'bot');
+        saveMessageToSession(response, 'bot');
+    });
+    connection.on("ReceiveError", function (errorMsg) {
+        hideTypingIndicator();
+        addMessage(errorMsg, 'bot');
+    });
+    connection.start().catch(err => console.error(err));
+}
 
 function initChatbot() {
     const toggle = document.querySelector('.chatbot-toggle');
-    const window = document.querySelector('.chatbot-window');
+    const chatbotWindow = document.querySelector('.chatbot-window');
     const closeBtn = document.querySelector('.chatbot-close');
     const input = document.querySelector('.chatbot-input input');
     const sendBtn = document.querySelector('.chatbot-send');
-    const messagesContainer = document.querySelector('.chatbot-messages');
     const quickReplies = document.querySelectorAll('.quick-reply-btn');
 
-    if (!toggle || !window) return;
+    if (!toggle || !chatbotWindow) return;
 
-    // Toggle chatbot window
+    // --- SENİN SİLİNEN ESKİ KODLARIN (Chatbot Açma/Kapatma) ---
     toggle.addEventListener('click', function () {
         this.classList.toggle('active');
-        window.classList.toggle('active');
-
-        // Change icon
+        chatbotWindow.classList.toggle('active');
         const icon = this.querySelector('i');
-        if (window.classList.contains('active')) {
+
+        if (chatbotWindow.classList.contains('active')) {
             icon.className = 'fas fa-times';
-            // Remove notification badge
-            const badge = this.querySelector('.badge');
-            if (badge) badge.remove();
-            // Focus input
-            setTimeout(() => input?.focus(), 300);
+            localStorage.setItem('chatbotOpen', 'true');
         } else {
             icon.className = 'fas fa-comment-dots';
+            localStorage.setItem('chatbotOpen', 'false');
         }
     });
 
-    // Close button
     if (closeBtn) {
         closeBtn.addEventListener('click', function () {
             toggle.classList.remove('active');
-            window.classList.remove('active');
+            chatbotWindow.classList.remove('active');
             toggle.querySelector('i').className = 'fas fa-comment-dots';
+            localStorage.setItem('chatbotOpen', 'false');
         });
     }
 
-    // Send message
+    // --- YENİ URL GÖNDEREN MESAJ FONKSİYONU ---
     function sendMessage() {
         const message = input?.value.trim();
         if (!message) return;
 
-        // Add user message
         addMessage(message, 'user');
+        saveMessageToSession(message, 'user');
         input.value = '';
-
-        // Show typing indicator
         showTypingIndicator();
 
-        // Simulate bot response (replace with actual API call)
-        setTimeout(() => {
+        const currentUrl = window.location.pathname;
+
+        connection.invoke("SendMessage", message, currentUrl).catch(err => {
             hideTypingIndicator();
-            const response = getBotResponse(message);
-            addMessage(response, 'bot');
-        }, 1000 + Math.random() * 1000);
-    }
-
-    if (sendBtn) {
-        sendBtn.addEventListener('click', sendMessage);
-    }
-
-    if (input) {
-        input.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+            addMessage("Bağlantı hatası oluştu.", 'bot');
         });
     }
 
-    // Quick replies
+    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+    if (input) input.addEventListener('keypress', function (e) { if (e.key === 'Enter') sendMessage(); });
+
     quickReplies.forEach(btn => {
         btn.addEventListener('click', function () {
-            const message = this.textContent.trim();
-            input.value = message;
+            input.value = this.textContent.trim();
             sendMessage();
         });
     });
+}
 
-    // Add message to chat
-    function addMessage(text, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `chat-message ${sender}`;
+// --- GÜVENLİ XSS KORUMALI MESAJ EKLEME ---
+function addMessage(text, sender) {
+    const messagesContainer = document.querySelector('.chatbot-messages');
+    const div = document.createElement('div');
+    div.className = `chat-message ${sender}`;
 
-        const avatarIcon = sender === 'bot' ? '🤖' : '👤';
+    const avatarDiv = document.createElement('div');
+    avatarDiv.className = 'message-avatar';
+    avatarDiv.textContent = sender === 'bot' ? '🤖' : '👤';
 
-        messageDiv.innerHTML = `
-            <div class="message-avatar">${avatarIcon}</div>
-            <div class="message-content">${text}</div>
-        `;
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = text; // Güvenlik burada!
 
-        messagesContainer.appendChild(messageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    div.appendChild(avatarDiv);
+    div.appendChild(contentDiv);
+
+    messagesContainer.appendChild(div);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function showTypingIndicator() {
+    const messagesContainer = document.querySelector('.chatbot-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-message bot typing';
+    div.innerHTML = `<div class="message-avatar">🤖</div><div class="typing-indicator"><span></span><span></span><span></span></div>`;
+    messagesContainer.appendChild(div);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const typing = document.querySelector('.typing');
+    if (typing) typing.remove();
+}
+
+// --- ÇÖKMEYE KARŞI KORUMALI HAFIZA ---
+function saveMessageToSession(text, sender) {
+    try {
+        let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
+        history.push({ text: text, sender: sender });
+        localStorage.setItem('chatHistory', JSON.stringify(history));
+    } catch (e) {
+        console.error("Local storage kayıt hatası:", e);
+        localStorage.removeItem('chatHistory');
     }
+}
 
-    // Typing indicator
-    function showTypingIndicator() {
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'chat-message bot typing';
-        typingDiv.innerHTML = `
-            <div class="message-avatar">🤖</div>
-            <div class="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        `;
-        messagesContainer.appendChild(typingDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-        const typing = messagesContainer.querySelector('.typing');
-        if (typing) typing.remove();
-    }
-
-    // Simple bot responses (replace with AI/API integration)
-    function getBotResponse(message) {
-        const lowerMessage = message.toLowerCase();
-
-        // Greetings
-        if (lowerMessage.includes('merhaba') || lowerMessage.includes('selam') || lowerMessage.includes('hey')) {
-            return 'Merhaba! 👋 Ben Baran\'ın asistanıyım. Size nasıl yardımcı olabilirim?';
+function loadSessionState() {
+    try {
+        if (localStorage.getItem('chatbotOpen') === 'true') {
+            document.querySelector('.chatbot-toggle')?.classList.add('active');
+            document.querySelector('.chatbot-window')?.classList.add('active');
+            const icon = document.querySelector('.chatbot-toggle i');
+            if (icon) icon.className = 'fas fa-times';
         }
 
-        // About
-        if (lowerMessage.includes('kim') || lowerMessage.includes('baran') || lowerMessage.includes('hakkında')) {
-            return 'Baran, 5+ yıllık deneyime sahip bir Full-Stack Developer. Web, mobil ve SaaS projeleri geliştiriyor. Daha fazla bilgi için Hakkımda sayfasını ziyaret edebilirsiniz! 🚀';
+        let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
+        if (history.length > 0) {
+            const firstBotMessage = document.querySelector('.chatbot-messages .bot:first-child');
+            if (firstBotMessage) firstBotMessage.remove();
+            history.forEach(msg => addMessage(msg.text, msg.sender));
         }
-
-        // Skills
-        if (lowerMessage.includes('teknoloji') || lowerMessage.includes('beceri') || lowerMessage.includes('yetenek') || lowerMessage.includes('skill')) {
-            return 'Baran\'ın uzmanlık alanları: React, Vue.js, Node.js, Flutter, Python, PostgreSQL, MongoDB, AWS ve Docker. Modern web teknolojilerinin hepsinde deneyimli! 💻';
-        }
-
-        // Contact
-        if (lowerMessage.includes('iletişim') || lowerMessage.includes('mail') || lowerMessage.includes('ulaş')) {
-            return 'Baran\'a ulaşmak için İletişim sayfasını kullanabilir veya hello@barandasdemir.com adresine mail gönderebilirsiniz. Genellikle 24 saat içinde dönüş yapar! 📧';
-        }
-
-        // Projects
-        if (lowerMessage.includes('proje') || lowerMessage.includes('çalışma') || lowerMessage.includes('portfolio')) {
-            return 'Baran\'ın e-ticaret platformları, mobil uygulamalar ve SaaS projeleri gibi birçok çalışması var. Detaylar için Projeler sayfasına göz atın! 🎨';
-        }
-
-        // Hire
-        if (lowerMessage.includes('iş') || lowerMessage.includes('freelance') || lowerMessage.includes('müsait') || lowerMessage.includes('hire')) {
-            return 'Evet! Baran şu anda yeni projeler için müsait. Freelance veya tam zamanlı iş tekliflerinizi İletişim sayfasından iletebilirsiniz. ✅';
-        }
-
-        // Default response
-        const defaults = [
-            'İlginç bir soru! Bu konuda daha fazla bilgi için İletişim sayfasından Baran\'a ulaşabilirsiniz. 🤔',
-            'Hmm, bu konuda kesin bilgim yok. Baran\'a direkt sormanızı öneririm! 📨',
-            'Anladım! Daha detaylı bilgi için web sitesindeki ilgili sayfaları inceleyebilirsiniz. 📚'
-        ];
-        return defaults[Math.floor(Math.random() * defaults.length)];
+    } catch (e) {
+        console.error("Geçmiş mesajları yükleme hatası:", e);
+        localStorage.removeItem('chatHistory');
     }
 }

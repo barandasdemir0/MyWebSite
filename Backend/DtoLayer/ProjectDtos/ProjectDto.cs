@@ -29,8 +29,9 @@ public class ProjectDto : IHasId
     public DateTime? PublishedAt { get; set; }
 
     public bool IsDeleted { get; set; } = false;
-    // İlişkiler (Okuma)
+    public string? AiSummary { get; set; }
 
+    // İlişkiler (Okuma)
 
     public List<string> TechnologyList { get; set; } = new();
 

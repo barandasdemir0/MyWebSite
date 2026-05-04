@@ -8,4 +8,6 @@ public sealed class Experience : BaseEntity
     public string ExperienceCompanyName { get; set; } = string.Empty;
     public string ExperienceDescription { get; set; } = string.Empty;
     public int DisplayOrder { get; set; }   // Sıralama için
+    public string? AiSummary { get; set; }
+
 }

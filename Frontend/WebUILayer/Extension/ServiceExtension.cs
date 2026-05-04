@@ -72,6 +72,9 @@ public static class ServiceExtension
         services.AddHttpClient<IMessageApiService, MessageApiService>().AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<IGuestBookApiService, GuestBookApiService>().AddHttpMessageHandler<JwtTokenHandler>();
+        services.AddHttpClient<IChatbotSettingsApiService, ChatbotSettingsApiService>().AddHttpMessageHandler<JwtTokenHandler>();
+
+      
 
 
 
@@ -124,6 +127,8 @@ public static class ServiceExtension
 
         services.AddHttpClient<IPublicTopicApiService, PublicTopicApiService>();
         services.AddScoped<IGuestSessionService, GuestSessionService>();
+
+       
 
 
 

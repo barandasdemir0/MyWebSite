@@ -15,6 +15,8 @@ public class CreateProjectDto
     public string? GithubUrl { get; set; }
     public string Technologies { get; set; } = string.Empty;
     public bool IsPublished { get; set; } = false;
+    public string? AiSummary { get; set; }
+
 
     // İlişkiler (Seçim)
     public List<Guid> TopicIds { get; set; } = new();

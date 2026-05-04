@@ -51,12 +51,12 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
         return _mapper.Map<List<BlogPostDto>>(entity);
     }
 
-    public async Task<PagedResult<BlogPostListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<BlogPostDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
     {
         // DAL'daki özel metodunu çağırıyorsun.
         // Include ve Tracking işlemleri ZATEN O METODUN İÇİNDE YAPILDI.
         var (items, totalCount) = await _blogPostDal.GetAdminListPagesAsync(query.PageNumber, query.PageSize, query.TopicId, cancellationToken);
-        return _mapper.Map<List<BlogPostListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+        return _mapper.Map<List<BlogPostDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
 
     }
 
@@ -82,7 +82,7 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
         return _mapper.Map<BlogPostDto>(entity);
     }
 
-    public async Task<BlogPostListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
+    public async Task<BlogPostDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _blogPostDal.RestoreDeletedByIdAsync(guid, cancellationToken);
         if (entity == null)
@@ -93,7 +93,7 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
         entity.DeletedAt = null;
         await _repository.UpdateAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return _mapper.Map<BlogPostListDto>(entity);
+        return _mapper.Map<BlogPostDto>(entity);
     }
 
     public override async Task<BlogPostDto?> UpdateAsync(Guid id, UpdateBlogPostDto dto, CancellationToken cancellationToken = default)
@@ -165,9 +165,9 @@ public class BlogPostManager :GenericManager<BlogPost,BlogPostDto,CreateBlogPost
         return _mapper.Map<List<BlogPostDto>>(entities);
     }
 
-    public async Task<PagedResult<BlogPostListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<BlogPostDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _blogPostDal.GetUserListPagesAsync(query.PageNumber, query.PageSize, query.TopicId, cancellationToken);
-        return _mapper.Map<List<BlogPostListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+        return _mapper.Map<List<BlogPostDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
     }
 }

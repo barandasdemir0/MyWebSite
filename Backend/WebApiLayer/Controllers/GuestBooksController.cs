@@ -10,7 +10,7 @@ namespace WebApiLayer.Controllers;
 
 
 [Route("api/[controller]")]
-public sealed class GuestBooksController : SecureCrudController<GuestBookListDto,CreateGuestBookDto,UpdateGuestBookDto>
+public sealed class GuestBooksController : SecureCrudController<GuestBookDto, CreateGuestBookDto,UpdateGuestBookDto>
 {
 
     private readonly IGuestBookService _guestBookService;

@@ -130,7 +130,7 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
 
     }
 
-    public async Task<ProjectListDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
+    public async Task<ProjectDto?> RestoreAsync(Guid guid, CancellationToken cancellationToken = default)
     {
         var entity = await _projectDal.RestoreDeleteByIdAsync(guid, cancellationToken: cancellationToken);
         if (entity == null)
@@ -143,10 +143,10 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
         await _projectDal.UpdateAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<ProjectListDto>(entity);
+        return _mapper.Map<ProjectDto>(entity);
     }
 
-    public async Task<PagedResult<ProjectListDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<ProjectDto>> GetAllAdminAsync(PaginationQuery query, CancellationToken cancellationToken = default)
     {
         //var entity = await _projectDal.GetAllAdminAsync(tracking: false);
         //return _mapper.Map<PagedResult<ProjectListDto>>(entity);
@@ -156,13 +156,13 @@ public class ProjectManager : GenericManager<Project,ProjectDto,CreateProjectDto
             query.TopicId
             , cancellationToken);
 
-        return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+        return _mapper.Map<List<ProjectDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
     }
 
-    public async Task<PagedResult<ProjectListDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<ProjectDto>> GetAllUserAsync(PaginationQuery query, CancellationToken cancellationToken = default)
     {
         var (items, totalCount) = await _projectDal.GetUserListPagesAsync(query.PageNumber, query.PageSize, query.TopicId, cancellationToken);
-        return _mapper.Map<List<ProjectListDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
+        return _mapper.Map<List<ProjectDto>>(items).ToPagedResult(query.PageNumber, query.PageSize, totalCount);
     }
 
     public async Task<List<ProjectDto>> GetLatestAsync(int count, string? topic = null, CancellationToken cancellationToken = default)

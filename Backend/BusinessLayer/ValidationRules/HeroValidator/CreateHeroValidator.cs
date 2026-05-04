@@ -16,7 +16,7 @@ public class CreateHeroValidator:AbstractValidator<CreateHeroDto>
 
         RuleFor(x => x.ScrollingText)
            .MaximumLength(1000)
-           .WithMessage("1000 Karakterden fazla olmadığına dikkat ediniz").MustBeSafeHtml();
+           .WithMessage("1000 Karakterden fazla olmadığına dikkat ediniz");
 
         RuleFor(x => x.HeroAbout)
             .NotEmpty()

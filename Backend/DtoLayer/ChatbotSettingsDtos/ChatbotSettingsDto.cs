@@ -9,5 +9,5 @@ public record ChatbotSettingsDto : IHasId
     public string WelcomeMessage { get; init; } = string.Empty;
     public string SystemPrompt { get; init; } = string.Empty;
     public string? ApiKey { get; init; }          // Şifrelenecek
-    public string? ModelName { get; init; }       // "gpt-4o"
+    public string? ModelName { get; init; }       // "model"
 }

@@ -5,4 +5,6 @@ namespace BusinessLayer.Abstract;
 
 public interface IChatbotSettingsService:IGenericService<ChatbotSettings,ChatbotSettingsDto,CreateChatbotSettingsDto,UpdateChatbotSettingsDto>
 {
+    Task<ChatbotSettingsDto?> GetSingleAsync(CancellationToken cancellationToken = default);
+    Task<ChatbotSettingsDto> SaveAsync(UpdateChatbotSettingsDto updateDto, CancellationToken cancellationToken = default);
 }

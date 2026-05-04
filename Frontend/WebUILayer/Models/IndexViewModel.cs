@@ -16,7 +16,7 @@ public class IndexViewModel
     public AboutDto? aboutDto { get; set; }
     public List<SkillDto> skillDtos { get; set; } = new();
     public List<ProjectDto> projectListDtos { get; set; } = new();
-    public List<GuestBookListDto> guestBookListDtos { get; set; } = new();
+    public List<GuestBookDto> guestBookListDtos { get; set; } = new();
     public List<GithubRepoDto> githubRepoDtos { get; set; } = new();
     public List<SocialMediaDto> socialMediaDtos { get; set; } = new();
 }
