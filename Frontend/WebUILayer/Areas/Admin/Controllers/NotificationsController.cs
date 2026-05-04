@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Models;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
@@ -28,9 +29,9 @@ public class NotificationsController : Controller
         {
             NotificationDtos = pagedResult.Items,
             CurrentPage = pagedResult.PageNumber,
-            TotalPages = pagedResult.PageSize
+            TotalPages = pagedResult.TotalPages
         };
-        return View();
+        return View(model);
     }
 
     [HttpPost]
@@ -39,6 +40,30 @@ public class NotificationsController : Controller
         await _notificationApiService.ReadMessageAsync(id);
         string referer = Request.Headers["Referer"].ToString();
         return Redirect(string.IsNullOrEmpty(referer) ? "/Admin/Dashboard/Index" : referer);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+
+        return await this.SafeAction
+            (
+            action: () => _notificationApiService.DeleteAsync(id),
+            successMessage: "Silme işlemi Başarılı oldu",
+            ErrorMessage: "Silme İşlemi Başarısız oldu"
+            );
+    }
+    [HttpPost]
+    public async Task<IActionResult> Restore(Guid id)
+    {
+
+        return await this.SafeAction
+            (
+            action: () => _notificationApiService.RestoreAsync(id),
+            successMessage: "Geri Alma işlemi Başarılı oldu",
+            ErrorMessage: "Geri Alma İşlemi Başarısız oldu"
+            );
     }
 
 }

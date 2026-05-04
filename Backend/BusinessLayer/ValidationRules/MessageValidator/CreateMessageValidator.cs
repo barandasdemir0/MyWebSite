@@ -22,12 +22,6 @@ public class CreateMessageValidator:AbstractValidator<CreateMessageDto>
             .MaximumLength(100)
             .WithMessage("Lütfen Normal Uzunluklarda ad ve soyad giriniz 100 karakterden fazla olmamalı");
 
-        RuleFor(x => x.ReceiverEmail).NotEmpty()
-          .WithMessage("Bu alanı lütfen doldurunuz")
-          .EmailAddress()
-          .WithMessage("Lütfen Mail standartlarına uysun")
-          .MaximumLength(100)
-          .WithMessage("Lütfen Normal Uzunluklarda ad ve soyad giriniz 100 karakterden fazla olmamalı");
 
         RuleFor(x => x.Subject).NotEmpty()
           .WithMessage("Bu alanı lütfen doldurunuz")

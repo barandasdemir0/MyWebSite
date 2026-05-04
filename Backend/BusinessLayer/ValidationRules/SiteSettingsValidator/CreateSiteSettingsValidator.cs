@@ -12,9 +12,9 @@ public class CreateSiteSettingsValidator:AbstractValidator<CreateSiteSettingDto>
             .MaximumLength(100).WithMessage("Çalışma durumu en fazla 100 karakter olabilir.");
         // SEO Alanları
         RuleFor(x => x.SiteTitle)
-            .MaximumLength(200).WithMessage("Site başlığı en fazla 200 karakter olabilir.").MustBeSafeHtml();
+            .MaximumLength(200).WithMessage("Site başlığı en fazla 200 karakter olabilir.");
         RuleFor(x => x.MetaDescription)
-            .MaximumLength(300).WithMessage("Meta açıklaması en fazla 300 karakter olması önerilir (SEO için).").MustBeSafeHtml();
+            .MaximumLength(300).WithMessage("Meta açıklaması en fazla 300 karakter olması önerilir (SEO için).");
         RuleFor(x => x.SiteKeywords)
             .MaximumLength(300).WithMessage("Anahtar kelimeler çok uzun olamaz.");
         RuleFor(x => x.GoogleAnalyticsId)

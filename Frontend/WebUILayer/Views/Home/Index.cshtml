@@ -33,16 +33,16 @@
         <div class="hero-typed">
             <span class="typed-text" data-words="@Model.heroDto?.ScrollingText"></span>
         </div>
-        <p class="hero-description">
+      @*   <p class="hero-description">
             @Model.heroDto?.ProfessionalTitle
-        </p>
+        </p> *@
 
         <!-- CTA Buttons -->
         <div class="hero-buttons">
             <a href="/project/Index/" class="btn-primary-custom">
                 <i class="fas fa-rocket me-2"></i>Projelerim
             </a>
-            <a href="assets/cv-baran-dasdemir.pdf" class="btn-outline-custom" download>
+            <a href="/Home/DownloadCv" class="btn-outline-custom" target="_blank" download>
                 <i class="fas fa-download me-2"></i>CV İndir
             </a>
             <a href="/Contact/Index/" class="btn-outline-custom">

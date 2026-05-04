@@ -11,21 +11,21 @@ public class UpdateBlogPostValidator:AbstractValidator<UpdateBlogPostDto>
         RuleFor(x => x.Title).NotEmpty()
             .WithMessage("Bu Alanı Girmek Zorundasınız")
             .MaximumLength(150)
-            .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır").MustBeSafeHtml();
+            .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır");
 
         RuleFor(x => x.Content)
            .NotEmpty().MustBeSafeHtml();
 
         RuleFor(x => x.CoverImage)
            .MaximumLength(200)
-           .WithMessage("Bu Alan Maksimum 200 Karakter Olmalıdır").MustBeSafeHtml();
+           .WithMessage("Bu Alan Maksimum 200 Karakter Olmalıdır");
 
         RuleFor(x => x.Technologies)
            .MaximumLength(50)
-           .WithMessage("Bu Alan Maksimum 50 Karakter Olmalıdır").MustBeSafeHtml();
+           .WithMessage("Bu Alan Maksimum 50 Karakter Olmalıdır");
 
         RuleFor(x => x.Content).NotEmpty()
-           .WithMessage("Bu Alanı Girmek Zorundasınız").MustBeSafeHtml();
+           .WithMessage("Bu Alanı Girmek Zorundasınız");
 
         RuleFor(x => x.TopicIds).NotEmpty()
            .WithMessage("Kategori Girilmesi zorunludur");

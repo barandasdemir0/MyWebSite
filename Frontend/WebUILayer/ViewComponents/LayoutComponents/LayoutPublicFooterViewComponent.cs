@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebUILayer.Areas.Admin.Services.Abstract;
 using WebUILayer.Models;
 using WebUILayer.Services.Abstract;
 
@@ -6,10 +7,10 @@ namespace WebUILayer.ViewComponents.LayoutComponents;
 
 public class LayoutPublicFooterViewComponent:ViewComponent
 {
-    private readonly IPublicContactApiService _publicContactApiService;
+    private readonly IContactApiService _publicContactApiService;
     private readonly IPublicSocialMediaApiService _publicSocialMediaApiService;
 
-    public LayoutPublicFooterViewComponent(IPublicContactApiService publicContactApiService, IPublicSocialMediaApiService publicSocialMediaApiService)
+    public LayoutPublicFooterViewComponent(IContactApiService publicContactApiService, IPublicSocialMediaApiService publicSocialMediaApiService)
     {
         _publicContactApiService = publicContactApiService;
         _publicSocialMediaApiService = publicSocialMediaApiService;

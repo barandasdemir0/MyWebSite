@@ -11,6 +11,6 @@ public class UpdateTopicValidator:AbstractValidator<UpdateTopicDto>
           .NotEmpty()
           .WithMessage("Lütfen Bu alanı Boş bırakmayınız")
           .MaximumLength(100)
-          .WithMessage("Lütfen 100 Karakterden daha fazla bir kategori ismi girmeyiniz").MustBeSafeHtml();
+          .WithMessage("Lütfen 100 Karakterden daha fazla bir kategori ismi girmeyiniz");
     }
 }

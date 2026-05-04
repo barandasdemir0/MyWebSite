@@ -11,13 +11,13 @@ public class CreateExperienceValidator:AbstractValidator<CreateExperienceDto>
             .NotEmpty()
             .WithMessage("Bu Alan Boş geçilemez")
             .MaximumLength(100)
-            .WithMessage("Bu Alan 100 Karakterden fazla olamaz").MustBeSafeHtml();
+            .WithMessage("Bu Alan 100 Karakterden fazla olamaz");
 
         RuleFor(x => x.ExperienceCompanyName)
             .NotEmpty()
             .WithMessage("Bu Alan Boş geçilemez")
             .MaximumLength(200)
-            .WithMessage("Bu Alan 200 Karakterden fazla olamaz").MustBeSafeHtml();
+            .WithMessage("Bu Alan 200 Karakterden fazla olamaz");
 
         
 

@@ -11,7 +11,7 @@ public class CreateSocialMediaValidator:AbstractValidator<CreateSocialMediaDto>
             .NotEmpty()
             .WithMessage("Lütfen bu alanı boş bırakmayın")
             .MaximumLength(100)
-            .WithMessage("100 karakterden uzun sosyal medya ismi olamaz").MustBeSafeHtml();
+            .WithMessage("100 karakterden uzun sosyal medya ismi olamaz");
 
         RuleFor(x => x.SocialMediaUrl)
             .NotEmpty()
@@ -23,7 +23,7 @@ public class CreateSocialMediaValidator:AbstractValidator<CreateSocialMediaDto>
             .NotEmpty()
             .WithMessage("Lütfen bu alanı boş bırakmayın")
             .MaximumLength(100)
-            .WithMessage("100 karakterden uzun sosyal iconu olamaz").MustBeSafeHtml();
+            .WithMessage("100 karakterden uzun sosyal iconu olamaz");
 
 
     }

@@ -27,9 +27,9 @@
                 <h4>Hızlı Linkler</h4>
                 <ul>
                     <li><a href="/Home/Index/">Ana Sayfa</a></li>
-                    <li><a href="/Home/About/">Hakkımda</a></li>
-                    <li><a href="/Home/Resume/">Özgeçmiş</a></li>
-                    <li><a href="/Home/Contact/">İletişim</a></li>
+                    <li><a href="/About/Index/">Hakkımda</a></li>
+                    <li><a href="/Resume/Index/">Özgeçmiş</a></li>
+                    <li><a href="/Contact/Index/">İletişim</a></li>
                 </ul>
             </div>
 
@@ -37,7 +37,8 @@
             <div class="footer-links">
                 <h4>Kaynaklar</h4>
                 <ul>
-                    <li><a href="assets/cv-baran-dasdemir.pdf" download>CV İndir</a></li>
+                    <li><a href="/Home/DownloadCv" target="_blank" download>CV İndir</a>
+                    </li>
                     <li><a href="/Blog/Index/">Blogum</a></li>
                     <li><a href="/Project/Index/">Projelerim</a></li>
                     <li><a href="/Guestbook/Index/">Ziyaret Defteri</a></li>
@@ -48,7 +49,6 @@
             <div class="footer-links">
                 <h4>İletişim</h4>
                 <ul>
-                  
                     <li><i class="fas fa-envelope me-2"></i>@Model.Contacts?.Email</li>
                     <li><i class="fas fa-phone me-2"></i>@Model.Contacts?.Phone</li>
                     <li><i class="fas fa-map-marker-alt me-2"></i>@Model.Contacts?.Location</li>

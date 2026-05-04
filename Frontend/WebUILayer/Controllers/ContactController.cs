@@ -14,13 +14,15 @@ public class ContactController : Controller
 
     private readonly IPublicMessageApiService _publicMessageApiService;
     private readonly IContactApiService _contactApiService;
+    private readonly IPublicSocialMediaApiService _publicSocialMediaApiService;
     private readonly AdminSettings _adminSettings;
 
-    public ContactController(IPublicMessageApiService publicMessageApiService, IContactApiService contactApiService, IOptions<AdminSettings> adminSettings)
+    public ContactController(IPublicMessageApiService publicMessageApiService, IContactApiService contactApiService, IOptions<AdminSettings> adminSettings, IPublicSocialMediaApiService publicSocialMediaApiService)
     {
         _publicMessageApiService = publicMessageApiService;
         _contactApiService = contactApiService;
         _adminSettings = adminSettings.Value;
+        _publicSocialMediaApiService = publicSocialMediaApiService;
     }
 
     [HttpGet]
@@ -28,10 +30,12 @@ public class ContactController : Controller
     {
         try
         {
+            
             var contact = await _contactApiService.GetContactForEditAsync();
-        var viewModel = new ContactMessageViewModel
+            var viewModel = new ContactMessageViewModel
         {
             contactDto = contact,
+            SocialMediaDtos = await _publicSocialMediaApiService.GetAllAsync(),
             createMessageDto = new CreateMessageDto() // Form için boş bir nesne yarat
         };
         return View(viewModel);

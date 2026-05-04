@@ -11,7 +11,7 @@ public class CreateSkillValidator:AbstractValidator<CreateSkillDto>
             .NotEmpty()
             .WithMessage("Yetenekleriniz boş geçilemez")
             .MaximumLength(100)
-            .WithMessage("100 Karakterden daha fazla yetenek ismi olamaz").MustBeSafeHtml();
+            .WithMessage("100 Karakterden daha fazla yetenek ismi olamaz");
 
         RuleFor(x => x.IconifyIcon)
             .NotEmpty()

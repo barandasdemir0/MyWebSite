@@ -12,7 +12,7 @@ public class CreateHeroValidator:AbstractValidator<CreateHeroDto>
             .MinimumLength(5)
             .WithMessage("5 Karakterden daha az bir ad ve soyadı girmeyiniz")
             .MaximumLength(50)
-            .WithMessage("50 Karakterden fazla olmadığına dikkat ediniz").MustBeSafeHtml();
+            .WithMessage("50 Karakterden fazla olmadığına dikkat ediniz");
 
         RuleFor(x => x.ScrollingText)
            .MaximumLength(1000)
@@ -22,6 +22,6 @@ public class CreateHeroValidator:AbstractValidator<CreateHeroDto>
             .NotEmpty()
             .WithMessage("Lütfenhakkımda kısmını Giriniz")
            .MaximumLength(2000)
-           .WithMessage("2000 Karakterden fazla olmadığına dikkat ediniz").MustBeSafeHtml();
+           .WithMessage("2000 Karakterden fazla olmadığına dikkat ediniz");
     }
 }
