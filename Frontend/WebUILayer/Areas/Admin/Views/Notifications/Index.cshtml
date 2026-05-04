@@ -1,0 +1,97 @@
+﻿@using WebUILayer.Areas.Admin.Models
+@model NotificationIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    ViewData["BodyClass"] = "notifications-page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/notifications.css?v=1.0">
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/notifications-page.css?v=1.0">
+}
+
+<div class="table-responsive">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Tür</th>
+                <th>Mesaj</th>
+                <th>Zaman</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.NotificationDtos == null || Model.NotificationDtos.Count == 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-center p-4">Hiç bildirim bulunamadı.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.NotificationDtos)
+                {
+                    // API'den gelen Type verisine göre ikonları ve renkleri senin HTML'ine göre eşleştiriyoruz
+                    string iconClass = "fa-info";
+                    string bgClass = "icon-blue";
+                    string typeText = "Bilgi";
+                    if (item.Type == "comment") { iconClass = "fa-comment-alt"; bgClass = "icon-blue"; typeText = "Yeni Yorum"; }
+                    else if (item.Type == "project") { iconClass = "fa-check-circle"; bgClass = "icon-green"; typeText = "Proje Onaylandı"; }
+                    else if (item.Type == "system") { iconClass = "fa-exclamation-triangle"; bgClass = "icon-yellow"; typeText = "Sistem Uyarısı"; }
+                    else if (item.Type == "user") { iconClass = "fa-user-plus"; bgClass = "icon-purple"; typeText = "Yeni Üye"; }
+                    // Okunma durumuna göre CSS sınıflarını belirliyoruz
+                    string rowClass = item.IsRead ? "" : "unread-row";
+                    string statusBadgeClass = item.IsRead ? "active" : "pending";
+                    string statusText = item.IsRead ? "Okundu" : "Okunmadı";
+                    <tr class="@rowClass">
+                        <td width="60">
+                            <div class="notif-icon-sm @bgClass">
+                                <i class="fas @iconClass"></i>
+                            </div>
+                        </td>
+                        <td>
+                            <strong>@typeText:</strong> @item.Message
+                        </td>
+                        <!-- DTO'da tarih özelliği yoktu, eğer eklersen buraya item.CreatedAt yazabilirsin -->
+                        <td>-</td>
+                        <td><span class="status-badge @statusBadgeClass">@statusText</span></td>
+                        <td>
+                            <div class="action-btns">
+                                @if (!item.IsRead)
+                                {
+                                    <!-- Okundu İşaretle Butonu (Minimum JS prensibiyle direkt Form POST) -->
+                                    <form asp-action="Read" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="action-btn edit" title="Okundu Olarak İşaretle">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <!-- Okunmuş olanlarda senin silme butonu tasarımın görünür -->
+                                    <!-- (API'de Delete metodu varsa burayı da form post içine alabilirsin) -->
+                                    <button class="action-btn delete" title="Sil">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Pagination -->
+@await Component.InvokeAsync("_LayoutPaginationPartialComponent", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
+@section Scripts {
+    <script src="/Mytheme/admin/js/modules/pages.js"></script>
+    <script src="/Mytheme/admin/js/modules/notifications.js"></script>
+}

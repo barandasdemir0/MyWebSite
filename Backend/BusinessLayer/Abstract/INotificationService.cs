@@ -9,4 +9,6 @@ public interface INotificationService:IGenericService<Notification,NotificationD
     Task<NotificationDto?> ReadByIdAsync(Guid guid,CancellationToken cancellationToken = default);
     Task<NotificationDto?> RestoreAsync(Guid guid,CancellationToken cancellationToken = default);
     Task<PagedResult<NotificationDto>> GetAllAdminAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default);
+
+     Task<List<NotificationDto>> GetTopUnreadAsync(int count, CancellationToken cancellationToken = default);
 }

@@ -1,19 +1,24 @@
-﻿<footer class="footer">
+﻿@model FooterViewModel
+
+<footer class="footer">
     <div class="container">
         <div class="footer-content">
             <!-- Brand -->
             <div class="footer-brand">
                 <h3><span>B</span>aran<span>.</span></h3>
-                <p>Modern teknolojilerle web, mobil ve SaaS çözümleri geliştiren tutkulu bir developer.</p>
+                <p>Modern teknolojilerle web, mobil ve Yapay Zeka çözümleri geliştiren tutkulu bir developer.</p>
                 <div class="footer-social">
-                    <a href="https://github.com/" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
-                    <a href="https://linkedin.com/" target="_blank" rel="noopener">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://twitter.com/" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
-                    <a href="https://instagram.com/" target="_blank" rel="noopener">
-                        <i class="fab fa-instagram"></i>
-                    </a>
+                    @foreach (var social in Model.SocialMedias)
+                    {
+                        <a href="@social.SocialMediaUrl" target="_blank" rel="noopener" aria-label="@social.SocialMediaName">
+                            <span class="iconify"
+                                  data-icon="@social.SocialMediaIcon"
+                                  data-width="14"
+                                  data-height="14"></span>
+                        </a>
+                    }
+                   
+
                 </div>
             </div>
 
@@ -21,10 +26,10 @@
             <div class="footer-links">
                 <h4>Hızlı Linkler</h4>
                 <ul>
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="about.html">Hakkımda</a></li>
-                    <li><a href="resume.html">Özgeçmiş</a></li>
-                    <li><a href="contact.html">İletişim</a></li>
+                    <li><a href="/Home/Index/">Ana Sayfa</a></li>
+                    <li><a href="/Home/About/">Hakkımda</a></li>
+                    <li><a href="/Home/Resume/">Özgeçmiş</a></li>
+                    <li><a href="/Home/Contact/">İletişim</a></li>
                 </ul>
             </div>
 
@@ -33,9 +38,9 @@
                 <h4>Kaynaklar</h4>
                 <ul>
                     <li><a href="assets/cv-baran-dasdemir.pdf" download>CV İndir</a></li>
-                    <li><a href="blog.html">Blogum</a></li>
-                    <li><a href="portfolio.html">Projelerim</a></li>
-                    <li><a href="guestbook.html">Ziyaret Defteri</a></li>
+                    <li><a href="/Blog/Index/">Blogum</a></li>
+                    <li><a href="/Project/Index/">Projelerim</a></li>
+                    <li><a href="/Guestbook/Index/">Ziyaret Defteri</a></li>
                 </ul>
             </div>
 
@@ -43,9 +48,10 @@
             <div class="footer-links">
                 <h4>İletişim</h4>
                 <ul>
-                    <li><i class="fas fa-envelope me-2"></i>hello@barandasdemir.com</li>
-                    <li><i class="fas fa-phone me-2"></i>+90 555 123 4567</li>
-                    <li><i class="fas fa-map-marker-alt me-2"></i>İstanbul, Türkiye</li>
+                  
+                    <li><i class="fas fa-envelope me-2"></i>@Model.Contacts?.Email</li>
+                    <li><i class="fas fa-phone me-2"></i>@Model.Contacts?.Phone</li>
+                    <li><i class="fas fa-map-marker-alt me-2"></i>@Model.Contacts?.Location</li>
                 </ul>
             </div>
         </div>
@@ -53,7 +59,7 @@
         <!-- Footer Bottom -->
         <div class="footer-bottom">
             <p class="footer-copyright">
-                © 2024 Baran Dasdemir. Made with <span>❤️</span> in Istanbul
+                © @DateTime.UtcNow.Year Baran Dasdemir. Made with <span>❤️</span> in @Model.Contacts?.Location
             </p>
         </div>
     </div>

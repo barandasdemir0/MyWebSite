@@ -74,6 +74,8 @@ public static class ServiceExtension
         services.AddHttpClient<IGuestBookApiService, GuestBookApiService>().AddHttpMessageHandler<JwtTokenHandler>();
         services.AddHttpClient<IChatbotSettingsApiService, ChatbotSettingsApiService>().AddHttpMessageHandler<JwtTokenHandler>();
 
+        services.AddHttpClient<INotificationApiService, NotificationApiService>().AddHttpMessageHandler<JwtTokenHandler>();
+
       
 
 

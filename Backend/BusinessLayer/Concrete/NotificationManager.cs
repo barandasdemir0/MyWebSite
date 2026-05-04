@@ -9,7 +9,7 @@ using SharedKernel.Shared;
 
 namespace BusinessLayer.Concrete;
 
-public class NotificationManager : GenericManager<Notification,NotificationDto,CreateNotificationDto,UpdateNotificationDto> ,INotificationService
+public class NotificationManager : GenericManager<Notification, NotificationDto, CreateNotificationDto, UpdateNotificationDto>, INotificationService
 {
     private readonly INotificationDal _notificationDal;
 
@@ -26,9 +26,23 @@ public class NotificationManager : GenericManager<Notification,NotificationDto,C
     public async Task<PagedResult<NotificationDto>> GetAllAdminAsync(PaginationQuery paginationQuery, CancellationToken cancellationToken = default)
     {
         var (items, count) = await _notificationDal.GetAdminListPagesAsync(paginationQuery.PageNumber, paginationQuery.PageSize, cancellationToken);
-        return _mapper.Map<List<NotificationDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize,count);
+        return _mapper.Map<List<NotificationDto>>(items).ToPagedResult(paginationQuery.PageNumber, paginationQuery.PageSize, count);
     }
 
+    public async Task<List<NotificationDto>> GetTopUnreadAsync(int count, CancellationToken cancellationToken = default)
+    {
+        var entities = await _repository.GetAllAsync(
+            filter: x => !x.IsDeleted && !x.IsRead,
+            tracking: false,
+            options: new QueryOptions<Notification>
+            {
+                OrderBy = x => x.CreatedAt,
+                Descending = true,
+                Take = count
+            }, cancellationToken: cancellationToken
+            );
+        return _mapper.Map<List<NotificationDto>>(entities);
+    }
 
     public async Task<NotificationDto?> ReadByIdAsync(Guid guid, CancellationToken cancellationToken = default)
     {
@@ -53,7 +67,7 @@ public class NotificationManager : GenericManager<Notification,NotificationDto,C
         }
         entity.IsDeleted = false;
         entity.DeletedAt = null;
-        await _notificationDal.UpdateAsync(entity,cancellationToken);
+        await _notificationDal.UpdateAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<NotificationDto>(entity);
     }

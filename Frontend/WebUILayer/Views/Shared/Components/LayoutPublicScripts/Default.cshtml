@@ -1,4 +1,16 @@
-﻿<!-- ============================================
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+<!-- ============================================
+     APP CONFIG (JS Dosyalarından ÖNCE Yüklenmeli)
+     ============================================ -->
+<script>
+    // Eğer appsettings.json'da "ApiBaseUrl" yoksa varsayılan olarak localhost kullan.
+    window.AppConfig = {
+        ApiUrl: "@Configuration["ApiBaseUrl"]" || "http://localhost:5028"
+    };
+</script>
+
+<!-- ============================================
      SCRIPTS
      ============================================ -->
 <!-- Bootstrap 5.3 JS -->

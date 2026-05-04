@@ -39,6 +39,16 @@ public class NotificationsController: SecureCrudController<NotificationDto,Creat
     }
 
     [Authorize(Roles = RoleConsts.Admin)]
+    [HttpGet("unread")]
+    public async Task<IActionResult> GetTopUnread([FromQuery] int count=5 , CancellationToken cancellation = default)
+    {
+        count = Math.Clamp(count, 1, 20);
+        var values = await _notificationService.GetTopUnreadAsync(count, cancellation);
+        return Ok(values);
+    }
+
+
+    [Authorize(Roles = RoleConsts.Admin)]
     [HttpPut("restore/{id}")]
     public async Task<IActionResult> Restore(Guid id,CancellationToken cancellationToken)
     {

@@ -13,11 +13,28 @@ namespace BusinessLayer.Concrete;
 public class GuestBookManager : GenericManager<GuestBook, GuestBookDto, CreateGuestBookDto, UpdateGuestBookDto>, IGuestBookService
 {
     private readonly IGuestBookDal _guestBookDal;
+    private readonly INotificationDal _notificationDal;
 
-    public GuestBookManager(IGuestBookDal guestBookDal, IMapper mapper, IUnitOfWork unitOfWork) : base(guestBookDal, mapper, unitOfWork)
+    public GuestBookManager(IGuestBookDal guestBookDal, IMapper mapper, IUnitOfWork unitOfWork, INotificationDal notificationDal) : base(guestBookDal, mapper, unitOfWork)
     {
         _guestBookDal = guestBookDal;
+        _notificationDal = notificationDal;
     }
+
+    public override async Task<GuestBookDto> AddAsync(CreateGuestBookDto dto, CancellationToken cancellationToken = default)
+    {
+        var result = await base.AddAsync(dto, cancellationToken);
+        await _notificationDal.AddAsync(new Notification
+        {
+            Type = "comment",
+            Message = $"{dto.AuthorName} ziyaretçi defterine onay bekleyen yeni bir kayıt bıraktı.",
+            IsRead = false,
+        }, cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return result;
+    }
+
 
     public async Task<GuestBookDto?> ApproveAsync(Guid guid, CancellationToken cancellationToken = default)
     {

@@ -18,15 +18,17 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
 
     private readonly IMessageDal _messageDal;
     private readonly IEmailService _emailService;
+    private readonly INotificationDal _notificationDal;
     private readonly ILogger<MessageManager> _logger;
     private readonly AdminSettings _adminSettings;
 
-    public MessageManager(IMessageDal messageDal, IMapper mapper, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<MessageManager> logger, IOptions<AdminSettings> adminSettings) : base(messageDal, mapper, unitOfWork)
+    public MessageManager(IMessageDal messageDal, IMapper mapper, IEmailService emailService, IUnitOfWork unitOfWork, ILogger<MessageManager> logger, IOptions<AdminSettings> adminSettings, INotificationDal notificationDal) : base(messageDal, mapper, unitOfWork)
     {
         _messageDal = messageDal;
         _emailService = emailService;
         _logger = logger;
         _adminSettings = adminSettings.Value;
+        _notificationDal = notificationDal;
     }
 
     public override async Task<MessageDto> AddAsync(CreateMessageDto dto, CancellationToken cancellationToken = default)
@@ -37,6 +39,8 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
         var entity = _mapper.Map<Message>(dto);
         await _repository.AddAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+       
 
         try
         {
@@ -56,6 +60,13 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
                     $"Yeni Mesaj: {dto.Subject}",
                     emailBody,
                     cancellationToken);
+                await _notificationDal.AddAsync(new Notification
+                {
+                    Type = "user",
+                    Message = $"{dto.SenderName} adlı kullanıcıdan yeni bir mesaj geldi.",
+                    IsRead = false
+                }, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
             }
 
             else if (dto.Folder == MessageFolder.Sent)
@@ -75,6 +86,7 @@ public class MessageManager : GenericManager<Message, MessageDto, CreateMessageD
                 );
             }
             // Draft ise e-posta gönderilmez — sadece veritabanına kayıt
+          
         }
         catch (Exception ex)
         {

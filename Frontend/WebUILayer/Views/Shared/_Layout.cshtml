@@ -28,14 +28,7 @@
 
     @await Component.InvokeAsync("LayoutPublicChatbot")
 
-    @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
-    <script>
-        // Eğer appsettings.json'da "ApiBaseUrl" yoksa varsayılan olarak localhost kullan.
-        window.AppConfig = {
-        ApiUrl: "@Configuration["ApiBaseUrl"]" || "http://localhost:5028"
-        };
-    </script>
-
+   
     @await Component.InvokeAsync("LayoutPublicScripts")
 
 
