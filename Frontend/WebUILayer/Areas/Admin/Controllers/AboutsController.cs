@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
-using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
