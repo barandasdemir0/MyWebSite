@@ -6,7 +6,7 @@
 <script>
     // Eğer appsettings.json'da "ApiBaseUrl" yoksa varsayılan olarak localhost kullan.
     window.AppConfig = {
-        ApiUrl: "@Configuration["ApiBaseUrl"]" || "http://localhost:5028"
+        ApiUrl: "@Configuration["ApiSettings:BaseUrl"]" || "http://localhost:5028"
     };
 </script>
 

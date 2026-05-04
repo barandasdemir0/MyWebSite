@@ -181,9 +181,9 @@ public static class ServiceExtension
         {
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
-            options.Cookie.SameSite = SameSiteMode.Strict; // EKLENDİ
+            options.Cookie.SameSite = SameSiteMode.Lax; // EKLENDİ
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // EKLENDİ
-            options.IdleTimeout = TimeSpan.FromMinutes(5);
+            options.IdleTimeout = TimeSpan.FromHours(5);
         });
     }
 
