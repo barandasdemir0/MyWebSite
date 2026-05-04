@@ -133,7 +133,7 @@ jobs:
           lftp -u "${FTP_USER},${FTP_PASS}" "${FTP_HOST}" <<EOF
             set ftp:ssl-allow yes
             set ssl:verify-certificate yes
-            set net:timeout 60
+            set net:timeout 15
             set net:max-retries 5
             set net:reconnect-interval-base 5
             mirror --reverse --delete --no-perms --parallel=5 --verbose ./publish-api/ /api.barandasdemir.com/
@@ -149,7 +149,7 @@ jobs:
           lftp -u "${FTP_USER},${FTP_PASS}" "${FTP_HOST}" <<EOF
             set ftp:ssl-allow yes
             set ssl:verify-certificate yes
-            set net:timeout 60
+            set net:timeout 15
             set net:max-retries 5
             set net:reconnect-interval-base 5
             mirror --reverse --delete --no-perms --parallel=5 --verbose ./publish-mvc/ /httpdocs/

@@ -1,11 +1,17 @@
-﻿// 1. GTranslate Motorunu Gizlice Kur (Sayfa Yüklendiğinde)
-document.addEventListener("DOMContentLoaded", function () {
-    window.gtranslateSettings = {
-        "default_language": "tr",
-        "languages": ["tr", "en"],
-        "wrapper_selector": ".gtranslate_wrapper"
+﻿// --- HİLE: Android'deki "Uygulamalara erişmek istiyor" uyarısını susturur ---
+if (window.navigator && window.navigator.credentials) {
+    const originalGet = window.navigator.credentials.get;
+    window.navigator.credentials.get = function (options) {
+        if (options && (options.publicKey || options.password || options.federated)) {
+            return new Promise((resolve) => { resolve(null); });
+        }
+        return originalGet.call(window.navigator.credentials, options);
     };
+}
 
+// GTranslate Kurulumu
+document.addEventListener("DOMContentLoaded", function () {
+    window.gtranslateSettings = { "default_language": "tr", "languages": ["tr", "en"], "wrapper_selector": ".gtranslate_wrapper" };
     const gtranslateWrapper = document.createElement('div');
     gtranslateWrapper.className = 'gtranslate_wrapper';
     gtranslateWrapper.style.display = 'none';
@@ -17,18 +23,23 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(gtranslateScript);
 });
 
-// 2. Senin language.js dosyanın fırlattığı "Dil Değişti" sinyalini yakala!
+// Dil değiştiğinde Preloader'ı göster ve sayfayı yenile
 document.addEventListener('languageChange', function (e) {
     const targetLang = e.detail.language;
-    if (targetLang === 'en') {
-        document.cookie = "googtrans=/tr/en; path=/";
-        document.cookie = "googtrans=/tr/en; path=/; domain=" + window.location.hostname;
-        // Hash satırını sildik!
-    } else {
-        document.cookie = "googtrans=/tr/tr; path=/";
-        document.cookie = "googtrans=/tr/tr; path=/; domain=" + window.location.hostname;
-        // Hash satırını sildik!
+
+    // Sayfa boş kalmasın diye Preloader'ı zorla açıyoruz
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.classList.remove('fade-out');
+        preloader.style.display = 'flex';
+        preloader.style.opacity = '1';
     }
-    // Sistemin çerezleri okuyup çevrilmiş açılması için sayfayı yenile
-    location.reload();
+
+    if (targetLang === 'en') {
+        document.cookie = "googtrans=/tr/en; path=/; domain=" + window.location.hostname;
+    } else {
+        document.cookie = "googtrans=/tr/tr; path=/; domain=" + window.location.hostname;
+    }
+
+    setTimeout(() => { location.reload(); }, 150);
 });
