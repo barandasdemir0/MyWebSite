@@ -119,34 +119,35 @@ function hideTypingIndicator() {
 }
 
 // --- ÇÖKMEYE KARŞI KORUMALI HAFIZA ---
+// --- 24 Saatlik Chat Temizleme Mantığı ---
 function saveMessageToSession(text, sender) {
     try {
-        let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
-        history.push({ text: text, sender: sender });
-        localStorage.setItem('chatHistory', JSON.stringify(history));
+        let chatData = {
+            timestamp: Date.now(), // Kayıt zamanı
+            history: JSON.parse(localStorage.getItem('chatHistory'))?.history || []
+        };
+        chatData.history.push({ text: text, sender: sender });
+        localStorage.setItem('chatHistory', JSON.stringify(chatData));
     } catch (e) {
-        console.error("Local storage kayıt hatası:", e);
         localStorage.removeItem('chatHistory');
     }
 }
-
 function loadSessionState() {
     try {
-        if (localStorage.getItem('chatbotOpen') === 'true') {
-            document.querySelector('.chatbot-toggle')?.classList.add('active');
-            document.querySelector('.chatbot-window')?.classList.add('active');
-            const icon = document.querySelector('.chatbot-toggle i');
-            if (icon) icon.className = 'fas fa-times';
-        }
+        let chatData = JSON.parse(localStorage.getItem('chatHistory'));
 
-        let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
-        if (history.length > 0) {
-            const firstBotMessage = document.querySelector('.chatbot-messages .bot:first-child');
-            if (firstBotMessage) firstBotMessage.remove();
-            history.forEach(msg => addMessage(msg.text, msg.sender));
+        if (chatData) {
+            const currentTIme = Date.now();
+            const twentyFourHours = 1 * 60 * 60 * 1000; // Milisaniye cinsinden 24 saat
+            // Eğer 24 saat geçmişse her şeyi sil!
+            if (currentTIme - chatData.timestamp > twentyFourHours) {
+                localStorage.removeItem('chatHistory');
+                return;
+            }
+            // 24 saat geçmemişse mesajları yükle
+            chatData.history.forEach(msg => addMessage(msg.text, msg.sender));
         }
     } catch (e) {
-        console.error("Geçmiş mesajları yükleme hatası:", e);
         localStorage.removeItem('chatHistory');
     }
 }

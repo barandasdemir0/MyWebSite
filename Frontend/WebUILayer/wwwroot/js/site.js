@@ -1,54 +1,48 @@
-﻿// --- HİLE: Android'deki "Uygulamalara erişmek istiyor" uyarısını susturur ---
+﻿// --- 1. HİLE: İzin Penceresini Blokla (Sayfanın en başında kalsın) ---
 if (window.navigator && window.navigator.credentials) {
-    const originalGet = window.navigator.credentials.get;
-    window.navigator.credentials.get = function (options) {
-        if (options && (options.publicKey || options.password || options.federated)) {
-            return new Promise((resolve) => { resolve(null); });
-        }
-        return originalGet.call(window.navigator.credentials, options);
-    };
+    window.navigator.credentials.get = () => new Promise(resolve => resolve(null));
 }
 
-// GTranslate Kurulumu
-document.addEventListener("DOMContentLoaded", function () {
-    window.gtranslateSettings = { "default_language": "tr", "languages": ["tr", "en"], "wrapper_selector": ".gtranslate_wrapper" };
-    const gtranslateWrapper = document.createElement('div');
-    gtranslateWrapper.className = 'gtranslate_wrapper';
-    gtranslateWrapper.style.display = 'none';
-    document.body.appendChild(gtranslateWrapper);
+// --- 2. GTranslate Ayarları ---
+window.gtranslateSettings = {
+    "default_language": "tr",
+    "languages": ["tr", "en"],
+    "wrapper_selector": ".gtranslate_wrapper",
+    "detect_browser_language": false,
+    "auto_switch": false
+};
 
-    const gtranslateScript = document.createElement('script');
-    gtranslateScript.src = "https://cdn.gtranslate.net/widgets/latest/float.js";
-    gtranslateScript.defer = true;
-    document.body.appendChild(gtranslateScript);
-});
+// --- 3. DİL DEĞİŞTİRME FONKSİYONU (Butonuna bunu bağlayabilirsin) ---
+function setLanguage(lang) {
+    const domain = window.location.hostname;
 
-// Dil değiştiğinde Preloader'ı göster ve sayfayı yenile
-document.addEventListener('languageChange', function (e) {
-    const targetLang = e.detail.language;
-
-    // Sayfa boş kalmasın diye Preloader'ı zorla açıyoruz
+    // Preloader'ı aç
     const preloader = document.getElementById('preloader');
     if (preloader) {
-        preloader.classList.remove('fade-out');
         preloader.style.display = 'flex';
         preloader.style.opacity = '1';
     }
 
-    if (targetLang === 'en') {
-        document.cookie = "googtrans=/tr/en; path=/; domain=" + window.location.hostname;
-    } else {
-        document.cookie = "googtrans=/tr/tr; path=/; domain=" + window.location.hostname;
-    }
+    // Çerezleri hem domainli hem domainsiz yazıyoruz (Garanti olsun)
+    const cookieValue = (lang === 'en') ? "/tr/en" : "/tr/tr";
 
-    setTimeout(() => { location.reload(); }, 150);
+    document.cookie = "googtrans=" + cookieValue + "; path=/;";
+    document.cookie = "googtrans=" + cookieValue + "; path=/; domain=." + domain;
+    document.cookie = "googtrans=" + cookieValue + "; path=/; domain=" + domain;
+
+    // Sayfayı yenile
+    setTimeout(() => { location.reload(); }, 250);
+}
+
+// --- 4. Senin Mevcut Event Dinleyicin (Eğer bunu kullanıyorsan kalsın) ---
+document.addEventListener('languageChange', function (e) {
+    setLanguage(e.detail.language);
 });
-// --- HİLE: Geri butonuna basıldığında takılı kalan Loader'ı kapatır ---
-window.addEventListener('pageshow', function (event) {
-    if (event.persisted) {
-        const preloader = document.querySelector('.preloader');
-        if (preloader) {
-            preloader.classList.add('hidden'); // Loader'ı sakla
-        }
-    }
+
+// --- 5. GTranslate Scriptini Yükle ---
+document.addEventListener("DOMContentLoaded", function () {
+    const gtranslateScript = document.createElement('script');
+    gtranslateScript.src = "https://cdn.gtranslate.net/widgets/latest/float.js";
+    gtranslateScript.defer = true;
+    document.body.appendChild(gtranslateScript);
 });
