@@ -19,7 +19,7 @@ public class ChatHub:Hub
     {
         try
         {
-            string cacheKey = $"chat_limit_{Context.ConnectionId}";
+            //string cacheKey = $"chat_limit_{Context.ConnectionId}";
             //if (_memoryCache.TryGetValue(cacheKey,out _))
             //{
                 //await Clients.Caller.SendAsync("ReceiveError", "Çok hızlı mesaj gönderiyorsunuz. Lütfen biraz bekleyin.");
@@ -30,9 +30,10 @@ public class ChatHub:Hub
             string response = await _chatbotManagerService.ProcessUserMessageAsync(message,currentUrl);
             await Clients.Caller.SendAsync("ReceiveBotMessage", response);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            await Clients.Caller.SendAsync("ReceiveError", "Asistan şu an hizmet veremiyor.");
+
+            await Clients.Caller.SendAsync("ReceiveError", "Asistan şu an hizmet veremiyor."+ex.Message);
         }
     }
 }
