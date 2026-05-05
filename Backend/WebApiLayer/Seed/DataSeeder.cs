@@ -1,6 +1,8 @@
 ﻿using CV.EntityLayer.Entities;
+using DataAccessLayer.Context;
 using EntityLayer.Constants;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApiLayer.Seed;
 
@@ -8,6 +10,7 @@ public static class DataSeeder
 {
     public static async Task SeedAsync(IServiceProvider services)
     {
+
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var configuration = services.GetRequiredService<IConfiguration>();
@@ -63,6 +66,8 @@ public static class DataSeederExtension
     {
 
         using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await context.Database.MigrateAsync();
         await DataSeeder.SeedAsync(scope.ServiceProvider);
 
     }
