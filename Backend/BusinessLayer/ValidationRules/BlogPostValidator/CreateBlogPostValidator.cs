@@ -16,7 +16,7 @@ public class CreateBlogPostValidator:AbstractValidator<CreateBlogPostDto>
             .WithMessage("Bu Alan Maksimum 150 Karakter Olmalıdır");
 
         RuleFor(x => x.Content)
-           .NotEmpty().MustBeSafeHtml();
+           .NotEmpty();
 
         RuleFor(x => x.CoverImage)
            .MaximumLength(200)
