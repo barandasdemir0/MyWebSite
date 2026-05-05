@@ -11,13 +11,13 @@ public class RegisterValidator : AbstractValidator<RegisterDto>
             .NotEmpty()
             .WithMessage("Ad Alanı Girmek Zorunludur")
             .MaximumLength(50)
-            .WithMessage("İsim maksimum 50 karakter olmalıdır").MustBeSafeHtml();
+            .WithMessage("İsim maksimum 50 karakter olmalıdır");
 
         RuleFor(x => x.Surname)
             .NotEmpty()
             .WithMessage("Ad Alanı Girmek Zorunludur")
             .MaximumLength(50)
-            .WithMessage("Soyadı maksimum 50 karakter olmalıdır").MustBeSafeHtml();
+            .WithMessage("Soyadı maksimum 50 karakter olmalıdır");
 
         RuleFor(x => x.Email)
             .NotEmpty()
