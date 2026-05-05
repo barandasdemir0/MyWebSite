@@ -1,7 +1,7 @@
 name: Deploy MyWebSite (API + MVC)
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main" ]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
