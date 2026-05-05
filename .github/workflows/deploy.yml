@@ -27,15 +27,16 @@ jobs:
           key: nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: nuget-
 
-      # 4. API appsettings
+      # 4. API appsettings.Production.json oluştur
       - name: Create API Settings
         env:
           DB_CONN: ${{ secrets.DB_CONNECTION_STRING }}
-          SEED_PASS: ${{ secrets.SEED_ADMIN_PASSWORD }}
+          SEED_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          SEED_PASS: ${{ secrets.ADMIN_PASSWORD }}
           JWT_KEY: ${{ secrets.JWT_SECRET_KEY }}
           JWT_ISS: ${{ secrets.JWT_ISSUER }}
           JWT_AUD: ${{ secrets.JWT_AUDIENCE }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASSWORD }}
+          GMAIL_PASS: ${{ secrets.GMAIL_PASSWORD }}
           CORS: ${{ secrets.CORS_ORIGIN }}
           GH_ID: ${{ secrets.CLIENT_ID_GITHUB }}
           GH_SECRET: ${{ secrets.CLIENT_SECRET_GITHUB }}
@@ -44,11 +45,12 @@ jobs:
         run: |
           jq -n \
             --arg db "$DB_CONN" \
-            --arg seed "$SEED_PASS" \
+            --arg sEmail "$SEED_EMAIL" \
+            --arg sPass "$SEED_PASS" \
             --arg jwt "$JWT_KEY" \
             --arg iss "$JWT_ISS" \
             --arg aud "$JWT_AUD" \
-            --arg email "$EMAIL_PASS" \
+            --arg emailPass "$GMAIL_PASS" \
             --arg cors "$CORS" \
             --arg ghId "$GH_ID" \
             --arg ghSecret "$GH_SECRET" \
@@ -57,9 +59,9 @@ jobs:
             '{
               Logging: { LogLevel: { Default: "Warning" } },
               ConnectionStrings: { SqlServer: $db },
-              Seed: { AdminEmail: "barandasdemir.bd@gmail.com", AdminPassword: $seed },
+              Seed: { AdminEmail: $sEmail, AdminPassword: $sPass },
               Jwt: { SecretKey: $jwt, Issuer: $iss, Audience: $aud },
-              Email: { Password: $email },
+              Email: { Password: $emailPass },
               Cors: { AllowedOrigins: ($cors | split(",")) },
               OAuth: {
                 GitHub: { ClientId: $ghId, ClientSecret: $ghSecret },
@@ -67,7 +69,15 @@ jobs:
               }
             }' > Backend/WebApiLayer/appsettings.Production.json
 
-      # 5. MVC appsettings
+      # 5. Build API
+      - name: Publish API
+        run: dotnet publish Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
+
+      # 6. API Ayarlarını Pakete Kopyala
+      - name: Copy API Settings to Publish Folder
+        run: cp Backend/WebApiLayer/appsettings.Production.json ./publish-api/appsettings.Production.json
+
+      # 7. MVC appsettings.Production.json oluştur
       - name: Create MVC Settings
         env:
           GH_ID: ${{ secrets.CLIENT_ID_GITHUB }}
@@ -89,13 +99,13 @@ jobs:
               }
             }' > Frontend/WebUILayer/appsettings.Production.json
 
-      # 6. Build API
-      - name: Publish API
-        run: dotnet publish Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
-
-      # 7. Build MVC
+      # 8. Build MVC
       - name: Publish MVC
         run: dotnet publish Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
+
+      # 9. MVC Ayarlarını Pakete Kopyala
+      - name: Copy MVC Settings to Publish Folder
+        run: cp Frontend/WebUILayer/appsettings.Production.json ./publish-mvc/appsettings.Production.json
 
       # =========================
       # 🔥 SADECE MAIN'DE ÇALIŞIR
