@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initSignalR() {
-    const hubAdresi = "https://api.barandasdemir.com/chatHub";
+    const hubAdresi = window.AppConfig.HubUrl; 
     connection = new signalR.HubConnectionBuilder().withUrl(hubAdresi).withAutomaticReconnect().build();
     connection.on("ReceiveBotMessage", function (response) {
         hideTypingIndicator();
