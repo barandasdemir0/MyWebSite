@@ -54,7 +54,7 @@ jobs:
               Seed: { AdminEmail: "barandasdemir.bd@gmail.com", AdminPassword: $seed },
               Jwt: { SecretKey: $jwt, Issuer: $iss, Audience: $aud },
               Email: { Password: $email },
-              Cors: { AllowedOrigins: [$cors] },
+              Cors: { AllowedOrigins: ($cors | split(",")) },
               OAuth: {
                 GitHub: {
                   ClientId: $ghId,
