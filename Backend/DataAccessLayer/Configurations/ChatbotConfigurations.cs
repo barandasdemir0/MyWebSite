@@ -22,10 +22,10 @@ public sealed class ChatbotConfigurations : IEntityTypeConfiguration<ChatbotSett
         builder.Property(x => x.AssistantName).HasMaxLength(100).IsRequired();
         builder.Property(x => x.WelcomeMessage).HasMaxLength(500);
         builder.Property(x => x.SystemPrompt).HasMaxLength(2000); // Prompt uzun olabilir
-        //builder.Property(e => e.ApiKey).HasMaxLength(500).HasConversion(
-        //   v => v == null ? null : _protector.Protect(v),       // Yazarken şifrele
-        //    v => v == null ? null : _protector.Unprotect(v)     // Okurken çöz (Uygulama düz metin görür, DB şifreli)
-        //);
+        builder.Property(e => e.ApiKey).HasMaxLength(500).HasConversion(
+           v => v == null ? null : _protector.Protect(v),       // Yazarken şifrele
+            v => v == null ? null : _protector.Unprotect(v)     // Okurken çöz (Uygulama düz metin görür, DB şifreli)
+        );
         builder.Property(x => x.ModelName).HasMaxLength(100);
     }
 }
