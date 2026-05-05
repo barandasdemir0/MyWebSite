@@ -3,10 +3,14 @@
 <!-- ============================================
      APP CONFIG (JS Dosyalarından ÖNCE Yüklenmeli)
      ============================================ -->
+<!-- _Layout.cshtml içinde script kısmını bu hale getir -->
 <script>
-    // Eğer appsettings.json'da "ApiBaseUrl" yoksa varsayılan olarak localhost kullan.
+    // appsettings'ten gelen URL'yi al (Örn: https://api.barandasdemir.com/api/)
+    const rawApiUrl = "@Configuration["ApiSettings:BaseUrl"]" || "http://localhost:5028/api/";
+    
     window.AppConfig = {
-        ApiUrl: "@Configuration["ApiSettings:BaseUrl"]" || "http://localhost:5028"
+        // SignalR için sondaki "/api/" kısmını atıp "/chatHub" ekliyoruz
+        HubUrl: rawApiUrl.replace(/\/api\/?$/, '') + "/chatHub"
     };
 </script>
 
