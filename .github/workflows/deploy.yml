@@ -1,19 +1,24 @@
 name: Deploy MyWebSite (API + MVC)
+
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       # 1. Kodu çek
       - name: Checkout
         uses: actions/checkout@v4
+
       # 2. .NET kur
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
+
       # 3. NuGet cache
       - name: Cache NuGet
         uses: actions/cache@v4
@@ -21,7 +26,8 @@ jobs:
           path: ~/.nuget/packages
           key: nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: nuget-
-            # 4. API appsettings.Production.json olustur
+
+      # 4. API appsettings
       - name: Create API Settings
         env:
           DB_CONN: ${{ secrets.DB_CONNECTION_STRING }}
@@ -56,17 +62,12 @@ jobs:
               Email: { Password: $email },
               Cors: { AllowedOrigins: ($cors | split(",")) },
               OAuth: {
-                GitHub: {
-                  ClientId: $ghId,
-                  ClientSecret: $ghSecret
-                },
-                LinkedIn: {
-                  ClientId: $liId,
-                  ClientSecret: $liSecret
-                }
+                GitHub: { ClientId: $ghId, ClientSecret: $ghSecret },
+                LinkedIn: { ClientId: $liId, ClientSecret: $liSecret }
               }
             }' > Backend/WebApiLayer/appsettings.Production.json
-      # 5. MVC appsettings.Production.json olustur
+
+      # 5. MVC appsettings
       - name: Create MVC Settings
         env:
           GH_ID: ${{ secrets.CLIENT_ID_GITHUB }}
@@ -83,27 +84,29 @@ jobs:
               Logging: { LogLevel: { Default: "Warning" } },
               ApiSettings: { BaseUrl: "https://api.barandasdemir.com/api/" },
               OAuth: {
-                GitHub: {
-                  ClientId: $ghId,
-                  ClientSecret: $ghSecret
-                },
-                LinkedIn: {
-                  ClientId: $liId,
-                  ClientSecret: $liSecret
-                }
+                GitHub: { ClientId: $ghId, ClientSecret: $ghSecret },
+                LinkedIn: { ClientId: $liId, ClientSecret: $liSecret }
               }
             }' > Frontend/WebUILayer/appsettings.Production.json
-      # 6. API derle
+
+      # 6. Build API
       - name: Publish API
         run: dotnet publish Backend/WebApiLayer/WebApiLayer.csproj -c Release -o ./publish-api
-      # 7. MVC derle
+
+      # 7. Build MVC
       - name: Publish MVC
         run: dotnet publish Frontend/WebUILayer/WebUILayer.csproj -c Release -o ./publish-mvc
-      # 8. lftp kur
+
+      # =========================
+      # 🔥 SADECE MAIN'DE ÇALIŞIR
+      # =========================
+
       - name: Install lftp
+        if: github.ref_name == 'main'
         run: sudo apt-get install -y lftp
-      # 9. Bakim sayfasi olustur
+
       - name: Create Maintenance Page
+        if: github.ref_name == 'main'
         run: |
           cat > ./app_offline.htm << 'HTML'
           <!DOCTYPE html>
@@ -115,16 +118,21 @@ jobs:
           </body>
           </html>
           HTML
-      # 10. API bakima al
+
       - name: API - Maintenance ON
+        if: github.ref_name == 'main'
         run: |
-          curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
-      # 11. MVC bakima al
+          curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/app_offline.htm \
+          --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
+
       - name: MVC - Maintenance ON
+        if: github.ref_name == 'main'
         run: |
-          curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
-            # 12. API deploy (Sadece değişenleri atar)
+          curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/app_offline.htm \
+          --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
+
       - name: API - Deploy
+        if: github.ref_name == 'main'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.MY_FTP_HOST }}
@@ -134,8 +142,8 @@ jobs:
           server-dir: /api.barandasdemir.com/
           state-name: .api-deploy-state.json
 
-      # 13. MVC deploy (Sadece değişenleri atar)
       - name: MVC - Deploy
+        if: github.ref_name == 'main'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.MY_FTP_HOST }}
@@ -145,14 +153,16 @@ jobs:
           server-dir: /httpdocs/
           state-name: .mvc-deploy-state.json
 
-      # 14. API bakimi kapat (Hata vermeyen güvenli yöntem)
       - name: API - Maintenance OFF
+        if: github.ref_name == 'main'
         continue-on-error: true
         run: |
-          lftp -u "${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }}" "${{ secrets.MY_FTP_HOST }}" -e "rm -f /api.barandasdemir.com/app_offline.htm; quit"
+          lftp -u "${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }}" "${{ secrets.MY_FTP_HOST }}" \
+          -e "rm -f /api.barandasdemir.com/app_offline.htm; quit"
 
-      # 15. MVC bakimi kapat (Hata vermeyen güvenli yöntem)
       - name: MVC - Maintenance OFF
+        if: github.ref_name == 'main'
         continue-on-error: true
         run: |
-          lftp -u "${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }}" "${{ secrets.MY_FTP_HOST }}" -e "rm -f /httpdocs/app_offline.htm; quit"
+          lftp -u "${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }}" "${{ secrets.MY_FTP_HOST }}" \
+          -e "rm -f /httpdocs/app_offline.htm; quit"

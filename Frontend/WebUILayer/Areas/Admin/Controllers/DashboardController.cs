@@ -7,7 +7,6 @@ namespace WebUILayer.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize]
-[Route("[area]/[controller]/[action]/{id?}")]
 public class DashboardController : Controller
 {
     private readonly IBlogPostApiService _blogPostApiService;
