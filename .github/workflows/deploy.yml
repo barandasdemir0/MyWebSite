@@ -123,45 +123,36 @@ jobs:
       - name: MVC - Maintenance ON
         run: |
           curl -T ./app_offline.htm ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/app_offline.htm --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" --ftp-create-dirs
-      # 12. API deploy
+            # 12. API deploy (Sadece değişenleri atar)
       - name: API - Deploy
-        env:
-          FTP_HOST: ${{ secrets.MY_FTP_HOST }}
-          FTP_USER: ${{ secrets.MY_FTP_USER }}
-          FTP_PASS: ${{ secrets.MY_FTP_PASS }}
-        run: |
-          lftp -u "${FTP_USER},${FTP_PASS}" "${FTP_HOST}" <<EOF
-            set ftp:ssl-allow yes
-            set ssl:verify-certificate yes
-            set net:timeout 15
-            set net:max-retries 5
-            set net:reconnect-interval-base 5
-            mirror --reverse --delete --no-perms --parallel=5 --verbose ./publish-api/ /api.barandasdemir.com/
-            quit
-          EOF
-      # 13. MVC deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.MY_FTP_HOST }}
+          username: ${{ secrets.MY_FTP_USER }}
+          password: ${{ secrets.MY_FTP_PASS }}
+          local-dir: ./publish-api/
+          server-dir: /api.barandasdemir.com/
+          state-name: .api-deploy-state.json
+
+      # 13. MVC deploy (Sadece değişenleri atar)
       - name: MVC - Deploy
-        env:
-          FTP_HOST: ${{ secrets.MY_FTP_HOST }}
-          FTP_USER: ${{ secrets.MY_FTP_USER }}
-          FTP_PASS: ${{ secrets.MY_FTP_PASS }}
-        run: |
-          lftp -u "${FTP_USER},${FTP_PASS}" "${FTP_HOST}" <<EOF
-            set ftp:ssl-allow yes
-            set ssl:verify-certificate yes
-            set net:timeout 15
-            set net:max-retries 5
-            set net:reconnect-interval-base 5
-            mirror --reverse --delete --no-perms --parallel=5 --verbose ./publish-mvc/ /httpdocs/
-            quit
-          EOF
-      # 14. API bakimi kapat
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.MY_FTP_HOST }}
+          username: ${{ secrets.MY_FTP_USER }}
+          password: ${{ secrets.MY_FTP_PASS }}
+          local-dir: ./publish-mvc/
+          server-dir: /httpdocs/
+          state-name: .mvc-deploy-state.json
+
+      # 14. API bakimi kapat (Hata vermeyen güvenli yöntem)
       - name: API - Maintenance OFF
         continue-on-error: true
         run: |
-          curl ftp://${{ secrets.MY_FTP_HOST }}/api.barandasdemir.com/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "-DELE app_offline.htm"
-      # 15. MVC bakimi kapat
+          lftp -u "${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }}" "${{ secrets.MY_FTP_HOST }}" -e "rm -f /api.barandasdemir.com/app_offline.htm; quit"
+
+      # 15. MVC bakimi kapat (Hata vermeyen güvenli yöntem)
       - name: MVC - Maintenance OFF
         continue-on-error: true
         run: |
-          curl ftp://${{ secrets.MY_FTP_HOST }}/httpdocs/ --user "${{ secrets.MY_FTP_USER }}:${{ secrets.MY_FTP_PASS }}" -Q "-DELE app_offline.htm"
+          lftp -u "${{ secrets.MY_FTP_USER }},${{ secrets.MY_FTP_PASS }}" "${{ secrets.MY_FTP_HOST }}" -e "rm -f /httpdocs/app_offline.htm; quit"
