@@ -21,7 +21,7 @@ public class TwoFactorController : ControllerBase
 
 
     [EnableRateLimiting(RateLimitConsts.Email)]
-    [Authorize]
+    [AllowAnonymous]
     [HttpPost("send-email-code")]
     public async Task<IActionResult> SendEmailCode([FromBody] SendEmailCodeDto sendEmailCodeDto, CancellationToken cancellationToken)
     {
