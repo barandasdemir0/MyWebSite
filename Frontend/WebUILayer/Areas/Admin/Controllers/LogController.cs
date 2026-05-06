@@ -19,14 +19,20 @@ public class LogController : Controller
 
     public async Task<IActionResult> Index([FromQuery] PaginationQuery paginationQuery)
     {
-        var pagedResult = await _logApiService.GetResultLogsAsync(paginationQuery);
-        var model = new LogsIndexViewModel
+        try
         {
-            ResultLogDtos = pagedResult.Items,
-            CurrentPage = pagedResult.PageNumber,
-            TotalPages = pagedResult.TotalPages
-        };
-
-        return View(model);
+            var pagedResult = await _logApiService.GetResultLogsAsync(paginationQuery);
+            var model = new LogsIndexViewModel
+            {
+                ResultLogDtos = pagedResult.Items,
+                CurrentPage = pagedResult.PageNumber,
+                TotalPages = pagedResult.TotalPages
+            };
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            return Content("API ŞU YÜZDEN PATLADI: " + ex.Message);
+        }
     }
 }
