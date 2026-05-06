@@ -214,10 +214,51 @@ public static class ServiceExtension
     {
         services.AddWebOptimizer(pipeline =>
         {
-            pipeline.MinifyCssFiles("/Mytheme/**/*.css");
-            pipeline.MinifyJsFiles("/Mytheme/**/*.js", "/js/**/*.js");
+            // TÜM CSS dosyalarını TEK bir bundle'a topla
+            pipeline.AddCssBundle("/css/bundle.css",
+                // 1. Base (önce yüklenmeli)
+                "/Mytheme/portfolio/css/base/variables.css",
+                "/Mytheme/portfolio/css/base/reset.css",
+
+                // 2. Components
+                "/Mytheme/portfolio/css/components/navbar.css",
+                "/Mytheme/portfolio/css/components/buttons.css",
+                "/Mytheme/portfolio/css/components/cards.css",
+                "/Mytheme/portfolio/css/components/forms.css",
+                "/Mytheme/portfolio/css/components/footer.css",
+                "/Mytheme/portfolio/css/components/modal.css",
+                "/Mytheme/portfolio/css/components/language.css",
+                "/Mytheme/portfolio/css/components/chatbot.css",
+                "/Mytheme/portfolio/css/components/availability.css",
+                "/Mytheme/portfolio/css/components/testimonials.css",
+                "/Mytheme/portfolio/css/components/search.css",
+                "/Mytheme/portfolio/css/components/related-content.css",
+
+                // 3. Sections
+                "/Mytheme/portfolio/css/sections/hero.css",
+                "/Mytheme/portfolio/css/sections/sections.css",
+                "/Mytheme/portfolio/css/sections/marquee.css",
+                "/Mytheme/portfolio/css/sections/github.css",
+                "/Mytheme/portfolio/css/sections/guestbook.css",
+                "/Mytheme/portfolio/css/sections/blog.css",
+                "/Mytheme/portfolio/css/sections/blog-details.css",
+                "/Mytheme/portfolio/css/sections/project-details.css",
+
+                // 4. Pages
+                "/Mytheme/portfolio/css/pages/contact.css",
+                "/Mytheme/portfolio/css/pages/project-detail.css",
+                "/Mytheme/portfolio/css/pages/resume.css",
+
+                // 5. Theme & Responsive (en sonda — override eder)
+                "/Mytheme/portfolio/css/themes.css",
+                "/Mytheme/portfolio/css/responsive.css"
+            );
+
+            //// JS dosyalarını ayrı ayrı küçült (bundle yapmaya gerek yok)
+            //pipeline.MinifyJsFiles("/Mytheme/**/*.js", "/js/**/*.js");
         });
     }
+
 
 
 }

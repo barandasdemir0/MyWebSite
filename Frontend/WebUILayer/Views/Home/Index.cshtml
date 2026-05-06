@@ -3,14 +3,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @section styles {
-    <!-- Section CSS -->
-    <link rel="stylesheet" href="/Mytheme/portfolio/css/sections/sections.css">
-    <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/marquee.css">
-    <link rel="stylesheet" href="~/Mytheme/portfolio/css/components/testimonials.css">
-    <link rel="stylesheet" href="~/Mytheme/portfolio/css/sections/github.css">
-    <link rel="stylesheet" href="/Mytheme/portfolio/css/components/availability.css">
 }
 
 <!-- ============================================
@@ -33,7 +26,7 @@
         <div class="hero-typed">
             <span class="typed-text" data-words="@Model.heroDto?.ScrollingText"></span>
         </div>
-      @*   <p class="hero-description">
+        @*   <p class="hero-description">
             @Model.heroDto?.ProfessionalTitle
         </p> *@
 
@@ -84,8 +77,8 @@
             <div class="col-lg-6" data-aos="fade-right">
                 <div class="about-image-wrapper">
                     <div class="about-image">
-                        <img src="@Model.aboutDto?.ProfileImage"
-                             alt="@Model.aboutDto?.FullName">
+                        <img src="@Model.aboutDto?.ProfileImage" alt="@Model.aboutDto?.FullName"
+                             width="585" height="585" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -126,7 +119,7 @@
                           data-width="48"
                           data-height="48">@skills.IconifyIcon</span>
                 </div>
-            } 
+            }
             <!-- Duplicate for seamless loop -->
             @foreach (var skills in Model.skillDtos)
             {
@@ -185,14 +178,14 @@
         </div>
 
         <div class="portfolio-grid">
-               @foreach (var project in Model.projectListDtos)
-                {
-            <!-- Project 1 -->
-            <div class="portfolio-card" data-aos="fade-up" data-aos-delay="0">
+            @foreach (var project in Model.projectListDtos)
+            {
+                <!-- Project 1 -->
+                <div class="portfolio-card" data-aos="fade-up" data-aos-delay="0">
              
                     <div class="portfolio-image">
-                        <img src="@project.ImageUrl"
-                             alt="@project.Name">
+                        <img src="@project.ImageUrl" alt="@project.Name"
+                             width="662" height="373" loading="lazy">
                         <div class="portfolio-overlay">
                             <a href="/Project/ProjectDetail/@project.Slug" class="btn-icon" title="Detay"><i class="fas fa-eye"></i></a>
                             <a href="@project.WebsiteUrl" class="btn-icon" title="Demo"><i class="fas fa-external-link-alt"></i></a>
@@ -208,9 +201,9 @@
                             }
                         </div>
                     </div>
+
              
-               
-            </div>
+                </div>
             }
         </div>
 
@@ -244,7 +237,8 @@
                             <div class="carousel-item active">
                                 <div class="testimonial-card text-center">
                                     <div class="testimonial-avatar mb-4 d-inline-block">
-                                        <img src="@guestBook.AuthorAvatarUrl" alt="Client 1">
+                                        <img src="@guestBook.AuthorAvatarUrl" alt="@guestBook.AuthorName"
+                                             width="80" height="80" loading="lazy">
                                     </div>
                                     <p class="testimonial-text">
                                         @guestBook.Message
@@ -255,8 +249,8 @@
                                 </div>
                             </div>
                         }
-                       
 
+                       
                     </div>
 
                     <!-- Controls -->
@@ -324,9 +318,9 @@
                     </div>
                 </div>
             }
+
            
 
-    
         </div>
 
         <div class="text-center mt-5" data-aos="fade-up">

@@ -4,46 +4,22 @@
 
 <!DOCTYPE html>
 <html lang="tr" data-theme="dark">
-
-
-
 <head>
     @await Component.InvokeAsync("LayoutPublicHeader")
     @RenderSection("Styles", required: false)
-    <link rel="stylesheet" href="/Mytheme/portfolio/css/themes.css">
-    <link rel="stylesheet" href="/Mytheme/portfolio/css/responsive.css">
-
-
 </head>
 
 <body>
-   
     @await Component.InvokeAsync("LayoutPublicPreLoader")
     @await Component.InvokeAsync("LayoutPublicNavbar")
-
-  
     @RenderBody()
-
-
     @await Component.InvokeAsync("LayoutPublicFooter")
-
-
     @await Component.InvokeAsync("LayoutPublicChatbot")
-
-   
     @await Component.InvokeAsync("LayoutPublicScripts")
-
-
     <!-- Back to Top Button -->
     <button class="back-to-top" aria-label="Back to top">
         <i class="fas fa-arrow-up"></i>
     </button>
-  
-   
     @RenderSection("Scripts", required: false)
-    
-
-
 </body>
-
 </html>

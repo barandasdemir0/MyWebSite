@@ -254,11 +254,11 @@
 
 @keyframes progressSlide {
     0% {
-        left: -100%;
+        transform: translateX(-130%);
     }
 
     100% {
-        left: 100%;
+        transform: translateX(430%);
     }
 }
 

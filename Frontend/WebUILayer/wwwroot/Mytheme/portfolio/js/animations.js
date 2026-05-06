@@ -1,13 +1,19 @@
 /* ============================================
    ANIMATIONS.JS - All Animation Related Functions
    ============================================ */
-
-document.addEventListener('DOMContentLoaded', function () {
+function startAnimations() {
     initAOS();
     initCounters();
     initProgressBars();
-    initTypingEffect();
-});
+    setTimeout(initTypingEffect, 100); // 100ms gecikme ile çalıştır
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startAnimations);
+} else {
+    startAnimations();
+}
+// Tüm CSS ve Scriptler yüklendikten sonra çalışmayı garanti eder
+window.addEventListener('load', startAnimations);
 
 /* ============================================
    AOS - Animate On Scroll

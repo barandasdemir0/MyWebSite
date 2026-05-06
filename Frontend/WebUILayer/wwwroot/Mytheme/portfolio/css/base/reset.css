@@ -102,3 +102,6 @@ a:hover {
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(10px);
 }
+.preloader {
+    contain: layout style paint;
+}
