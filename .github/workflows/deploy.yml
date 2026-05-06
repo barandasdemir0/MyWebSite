@@ -66,6 +66,25 @@ jobs:
               OAuth: {
                 GitHub: { ClientId: $ghId, ClientSecret: $ghSecret },
                 LinkedIn: { ClientId: $liId, ClientSecret: $liSecret }
+              },
+              Serilog: {
+                MinimumLevel: {
+                  Default: "Warning",
+                  Override: { Microsoft: "Error", System: "Error" }
+                },
+                WriteTo: [
+                  {
+                    Name: "MSSqlServer",
+                    Args: {
+                      connectionString: "SqlServer",
+                      sinkOptionsSection: { tableName: "Logs", autoCreateSqlTable: true },
+                      columnOptionsSection: {
+                        timeStamp: { columnName: "CreatedAt" },
+                        removeStandardColumns: [ "MessageTemplate", "Properties", "Id" ]
+                      }
+                    }
+                  }
+                ]
               }
             }' > Backend/WebApiLayer/appsettings.Production.json
 
