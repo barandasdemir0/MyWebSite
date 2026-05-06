@@ -44,23 +44,22 @@
                         }
                     </span>
                 </div>
-                   <div class="two-factor-actions">
-                <form action="Toggle2FA" method="post" class="btn btn-secondary">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="Enable" value="false">
-                    <input type="hidden" name="Provider" value="@Model.Preferred2FAProvider">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-times"></i> 2FA'yı Kapat
-                    </button>
-                </form>
-  
-            </div>
+                <div class="two-factor-actions">
+                    <form asp-area="Admin" asp-controller="Security" asp-action="Toggle2FA" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Enable" value="false">
+                        <input type="hidden" name="Provider" value="@Model.Preferred2FAProvider">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-times"></i> 2FA'yı Kapat
+                        </button>
+                    </form>
+                </div>
             }
             else
             {
                  <!-- 2FA KAPALI: Açma formu + yöntem seçimi -->
             <p class="two-factor-desc">Hesabınızı korumak için iki aşamalı doğrulamayı açın.</p>
-            <form action="/Admin/Security/Toggle2FA" method="post">
+                <form asp-area="Admin" asp-controller="Security" asp-action="Toggle2FA" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="Enable" value="true">
                 

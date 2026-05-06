@@ -145,20 +145,24 @@ public static class ServiceExtension
 
     }
 
-
     public static void AddAutoValidate(this IServiceCollection services)
     {
         services.AddControllersWithViews(options =>
         {
             options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
             options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+
+            // KRİTİK: Yazdığın filtreyi buraya ekle!
             options.Filters.Add<ValidationExceptionFilter>();
         });
-
     }
 
 
-
+    public static void AddAuthorizationServices(this IServiceCollection services)
+    {
+        // Sistemdeki "Unable to find required services" hatasını bu satır çözer.
+        services.AddAuthorization();
+    }
 
     public static void AddCookieAuth(this IServiceCollection services)
     {
@@ -178,6 +182,7 @@ public static class ServiceExtension
 
     public static void AddSessionTempData(this IServiceCollection services)
     {
+        services.AddDistributedMemoryCache();
         services.AddSession(options =>
         {
             options.Cookie.HttpOnly = true;

@@ -1,4 +1,5 @@
-﻿using DtoLayer.ContactDtos;
+﻿using DtoLayer.AboutDtos;
+using DtoLayer.ContactDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -30,7 +31,16 @@ public class ContactController : Controller
     public async Task<IActionResult> Index(UpdateContactDto updateContactDto)
     {
         if (!ModelState.IsValid) return View(updateContactDto);
-        await _contactApiService.SaveContactAsync(updateContactDto);
+        try
+        {
+            await _contactApiService.SaveContactAsync(updateContactDto);
         return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddApiError(ex);
+            return View(updateContactDto);
+        }
+
     }
 }

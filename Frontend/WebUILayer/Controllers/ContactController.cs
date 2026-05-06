@@ -50,11 +50,15 @@ public class ContactController : Controller
 
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
+    //[ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(ContactMessageViewModel ContactMessageViewModel)
     {
         if (!ModelState.IsValid)
         {
+            // SAYFAYI GERİ DÖNDÜRMEDEN ÖNCE EKSİK VERİLERİ TEKRAR DOLDURUYORUZ
+            ContactMessageViewModel.contactDto = await _contactApiService.GetContactForEditAsync();
+            ContactMessageViewModel.SocialMediaDtos = await _publicSocialMediaApiService.GetAllAsync();
+
             return View(ContactMessageViewModel);
         }
 

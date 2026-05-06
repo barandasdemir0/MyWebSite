@@ -20,28 +20,36 @@ public class GlobalExceptionMiddleware
         {
             await _next(httpContext);
         }
-
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Beklenmeyen Hata : {message}", ex.Message);
+            _logger.LogError(ex, "Hata oluştu: {message}", ex.Message);
+
+            // Eğer bu bir validasyon hatasıysa (JSON içeriği varsa) 
+            // Middleware bunu yakalayıp Redirect yapmamalı!
+            if (IsValidationException(ex.Message))
+            {
+                // Hatayı fırlat ki ValidationExceptionFilter yakalayıp ModelState'e basabilsin
+                throw;
+            }
+
             if (httpContext.Request.Path.StartsWithSegments("/api"))
             {
-
-                httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                httpContext.Response.ContentType = "application/json";
-
-                var response = new
-                {
-                    error = "Sunucu hatası oluştu"
-                };
-                await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
+                // API istekleri için JSON dön
+                httpContext.Response.StatusCode = 500;
+                await httpContext.Response.WriteAsJsonAsync(new { error = "Sunucu hatası" });
             }
             else
             {
+                // Gerçekten beklenmedik bir hataysa yönlendir
                 httpContext.Response.Redirect("/Home/Error");
             }
-
         }
+    }
+
+    private bool IsValidationException(string message)
+    {
+        // API'den gelen mesajın bir ValidationProblemDetails (JSON) olup olmadığını kontrol et
+        return message.Trim().StartsWith("{") && message.Contains("errors");
     }
 
 }

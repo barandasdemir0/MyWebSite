@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeModalBtn = document.querySelector('.close-modal');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
 
-    // Modal Kapatma İşlemleri
     function closeSuccessModal() {
         if (successModal) successModal.classList.remove('visible');
     }
@@ -16,47 +15,76 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Form Gönderme İşlemi
-    if (form) {
-        form.addEventListener('submit', function (e) {
-            // 1. SAYFANIN YENİLENMESİNİ KESİNLİKLE DURDUR
-          /*  e.preventDefault();*/
+    // Hata mesajlarını temizle
+    function clearErrors() {
+        form.querySelectorAll('.server-error').forEach(el => el.remove());
+        form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    }
 
-            // Form kurallara uyuyor mu kontrol et (Boş alan var mı?)
+    // Sunucu hata mesajlarını input'ların altına yaz
+    function showErrors(errors) {
+        clearErrors();
+        for (const [key, messages] of Object.entries(errors)) {
+            // "createMessageDto.SenderName" → input'u bul
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                input.classList.add('is-invalid');
+                const span = document.createElement('span');
+                span.className = 'text-danger server-error';
+                span.textContent = messages[0]; // İlk mesajı göster
+                input.insertAdjacentElement('afterend', span);
+            }
+        }
+    }
+
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Client-side boş alan kontrolü
             if (!form.checkValidity()) {
                 e.stopPropagation();
                 form.classList.add('was-validated');
                 return;
             }
 
-            // 2. BUTON ANİMASYONUNU BAŞLAT
+            clearErrors();
+
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Gönderiliyor...';
 
-            // 3. İŞTE O SİHİRLİ SATIR: Verileri arka planda C# Controller'a gönderir
-            fetch(form.action, {
-                method: form.method,
-                body: new FormData(form)
-            });
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: new FormData(form)
+                });
 
-            // 4. BEKLEME ANİMASYONU VE MODALI AÇMA (1.5 Saniye sonra)
-            setTimeout(() => {
+                if (response.ok) {
+                    // Başarılı
+                    form.reset();
+                    form.classList.remove('was-validated');
+                    if (successModal) {
+                        successModal.classList.add('visible');
+                        successModal.classList.add('success-animation');
+                        setTimeout(() => successModal.classList.remove('success-animation'), 1000);
+                    }
+                } else if (response.status === 400) {
+                    // Validasyon hataları
+                    const errors = await response.json();
+                    if (errors && typeof errors === 'object') {
+                        showErrors(errors);
+                    }
+                } else {
+                    alert('Sistemsel bir hata oluştu. Lütfen tekrar deneyin.');
+                }
+            } catch (err) {
+                alert('Bağlantı hatası. Lütfen tekrar deneyin.');
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
-                form.reset();
-                form.classList.remove('was-validated');
-
-                // Modalı Göster ve Efekti Çalıştır
-                if (successModal) {
-                    successModal.classList.add('visible');
-                    successModal.classList.add('success-animation');
-                    setTimeout(() => {
-                        successModal.classList.remove('success-animation');
-                    }, 1000);
-                }
-            }, 1500);
+            }
         });
     }
 });

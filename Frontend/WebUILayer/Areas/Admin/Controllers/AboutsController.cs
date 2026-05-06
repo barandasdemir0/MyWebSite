@@ -1,7 +1,10 @@
 ﻿using DtoLayer.AboutDtos;
+using DtoLayer.HeroDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Areas.Admin.Services.Concrete;
+using WebUILayer.Extension;
 
 namespace WebUILayer.Areas.Admin.Controllers;
 
@@ -31,8 +34,19 @@ public class AboutsController : Controller
     public async Task<IActionResult> Index(UpdateAboutDto updateAboutDto)
     {
         if (!ModelState.IsValid) return View(updateAboutDto);
-        await _aboutApiService.SaveAboutAsync(updateAboutDto);
-        return RedirectToAction(nameof(Index));
+
+        try
+        {
+            await _aboutApiService.SaveAboutAsync(updateAboutDto);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddApiError(ex);
+            return View(updateAboutDto);
+        }
+        
+
 
     }
 

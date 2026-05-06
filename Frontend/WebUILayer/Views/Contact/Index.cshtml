@@ -83,34 +83,34 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="name">Adınız Soyadınız*</label>
-                                    <input type="text" class="form-control" asp-for="@Model.createMessageDto!.SenderName"
+                                    <label class="form-label" asp-for="createMessageDto.SenderName">Adınız Soyadınız*</label>
+                                    <input type="text" class="form-control" asp-for="createMessageDto.SenderName"
                                            placeholder="Adınızı girin" required>
                                     <div class="invalid-feedback">Lütfen adınızı ve soyadınızı girin.</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="email">Email *</label>
-                                    <input type="email" class="form-control" asp-for="@Model.createMessageDto!.SenderEmail"
+                                    <label class="form-label" asp-for="createMessageDto.SenderEmail">Email *</label>
+                                    <input type="email" class="form-control" asp-for="createMessageDto.SenderEmail"
                                            placeholder="email@ornek.com" required>
                                     <div class="invalid-feedback">Lütfen geçerli bir email girin.</div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label class="form-label" for="subject">Konu *</label>
-                                    <input type="text" class="form-control" asp-for="@Model.createMessageDto!.Subject"
+                                    <label class="form-label" asp-for="createMessageDto.Subject">Konu *</label>
+                                    <input type="text" class="form-control" asp-for="createMessageDto.Subject"
                                            placeholder="Mesajınızın konusu" required>
-                                    <div class="invalid-feedback">Lütfen konu girin.</div>
+                                    <div class="invalid-feedback">Lütfen konunuzu en az 5 karakter olacak biçimde yazın.</div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label class="form-label" for="message">Mesajınız *</label>
-                                    <textarea class="form-control" asp-for="@Model.createMessageDto!.Body" rows="5"
+                                    <label class="form-label" asp-for="createMessageDto.Body">Mesajınız *</label>
+                                    <textarea class="form-control" asp-for="createMessageDto.Body" rows="5"
                                               placeholder="Mesajınızı buraya yazın..." required></textarea>
-                                    <div class="invalid-feedback">Lütfen mesajınızı yazın.</div>
+                                    <div class="invalid-feedback">Lütfen mesajınızı en az 5 karakter olacak biçimde yazın.</div>
                                 </div>
                             </div>
                             <div class="col-12">

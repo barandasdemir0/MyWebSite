@@ -18,6 +18,7 @@ builder.Services.AddAutoValidate();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSessionTempData();
 builder.Services.AddMemoryCache();
+builder.Services.AddAuthorizationServices();
 
 
 
