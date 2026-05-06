@@ -175,7 +175,7 @@ public static class ServiceExtension
             options.Cookie.Name = "AdminAuth";
             options.Cookie.HttpOnly = true;
             options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             options.ExpireTimeSpan = TimeSpan.FromHours(8);
         });
     }
@@ -188,8 +188,8 @@ public static class ServiceExtension
         {
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
-            options.Cookie.SameSite = SameSiteMode.None; // EKLENDİ
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // EKLENDİ
+            options.Cookie.SameSite = SameSiteMode.Lax; // EKLENDİ
+            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // EKLENDİ
             options.IdleTimeout = TimeSpan.FromHours(5);
         });
     }

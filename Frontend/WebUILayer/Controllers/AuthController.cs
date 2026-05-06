@@ -103,7 +103,8 @@ public class AuthController : Controller
             // API hata verse bile kullanıcının tarayıcı Cookie'sini silerek güvenli çıkışı garantileriz
             await _cookieAuthService.SignOutAsync();
         }
-        return RedirectToAction(nameof(Login));
+        return RedirectToAction(nameof(Login)); // Admin login'e dönsün
+
     }
 
 

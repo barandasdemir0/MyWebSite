@@ -27,7 +27,8 @@ public class OAuthController : Controller
         var state = Guid.NewGuid().ToString("N");
         HttpContext.Session.SetString("GithubOAuthState", state);
         // GitHub OAuth yetkilendirme URL'sine yönlendir
-        return Redirect($"https://github.com/login/oauth/authorize?client_id={clientId}&state={state}");
+        string redirectUri = Url.Action("GithubCallback", "OAuth", null, Request.Scheme)!;
+        return Redirect($"https://github.com/login/oauth/authorize?client_id={clientId}&redirect_uri={redirectUri}&state={state}");
     }
 
 
@@ -153,4 +154,11 @@ public class OAuthController : Controller
         return RedirectToAction(nameof(GuestBookController.Index), GuestBookController.name);
     }
 
+    [HttpPost]
+    [IgnoreAntiforgeryToken]
+    public IActionResult GuestLogout()
+    {
+        _guestSessionService.clearGuest();
+        return RedirectToAction(nameof(GuestBookController.Index), GuestBookController.name);
+    }
 }

@@ -67,6 +67,6 @@ public class GuestBookController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-
+    
 
 }
