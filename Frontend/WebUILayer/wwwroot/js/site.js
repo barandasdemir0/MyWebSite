@@ -12,7 +12,7 @@ window.gtranslateSettings = {
     "auto_switch": false
 };
 
-// --- 3. Dil Seçimini Başlatan Kod (DOMContentLoaded içinde) ---
+// --- 3. Dil Seçimini Başlatan Kod ---
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.lang-option').forEach(btn => {
         btn.addEventListener('click', function () {
@@ -29,15 +29,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // --- 4. ASIL DİL DEĞİŞTİRME FONKSİYONU ---
 function setLanguage(lang) {
-    const domains = [null, window.location.hostname, ".localhost"];
-    domains.forEach(domain => {
-        let cookieStr = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    // Tüm olası domainler için çerezi temizle
+    var hostname = window.location.hostname;
+    var parts = hostname.split('.');
+    var rootDomain = parts.length >= 2 ? parts.slice(-2).join('.') : hostname;
+    var domains = [null, hostname, "." + hostname, "." + rootDomain];
+
+    domains.forEach(function (domain) {
+        var cookieStr = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         if (domain) cookieStr += "; domain=" + domain;
         document.cookie = cookieStr;
     });
 
     if (lang === 'en') {
         document.cookie = "googtrans=/tr/en; path=/";
+        document.cookie = "googtrans=/tr/en; path=/; domain=." + rootDomain;
     }
 
     location.reload();
@@ -46,7 +52,7 @@ function setLanguage(lang) {
 // --- 5. HİLE: Geri butonunda takılan Loader'ı kapatır ---
 window.addEventListener('pageshow', function (event) {
     if (event.persisted) {
-        const preloader = document.querySelector('.preloader');
+        var preloader = document.querySelector('.preloader');
         if (preloader) { preloader.style.display = 'none'; }
     }
 });
