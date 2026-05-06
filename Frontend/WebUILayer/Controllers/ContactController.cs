@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SharedKernel.Shared;
 using WebUILayer.Areas.Admin.Services.Abstract;
+using WebUILayer.Extension;
 using WebUILayer.Models;
 using WebUILayer.Services.Abstract;
 
@@ -79,9 +80,11 @@ public class ContactController : Controller
             TempData["Error"] = "Mesaj gönderilemedi, lütfen tekrar deneyin.";
             return View(ContactMessageViewModel);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            TempData["Error"] = "Sistemsel bir hata oluştu. Mesajınız gönderilemedi.";
+            ModelState.AddApiError(ex, "createMessageDto");
+            ContactMessageViewModel.contactDto = await _contactApiService.GetContactForEditAsync();
+            ContactMessageViewModel.SocialMediaDtos = await _publicSocialMediaApiService.GetAllAsync();
             return View(ContactMessageViewModel);
         }
     }

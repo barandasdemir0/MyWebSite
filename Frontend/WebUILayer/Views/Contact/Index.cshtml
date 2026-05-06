@@ -79,13 +79,19 @@
             <div class="col-lg-7" data-aos="fade-left">
                 <div class="contact-form">
                     <h3 class="mb-4">Mesaj Gönderin</h3>
-                    <form asp-controller="Contact"  asp-action="Index" method="post" class="needs-validation" novalidate id="contactForm">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div data-contact-success="true" style="display:none;"></div>
+                    }
+
+                    <form asp-controller="Contact"  asp-action="Index" method="post"  id="contactForm">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" asp-for="createMessageDto.SenderName">Adınız Soyadınız*</label>
                                     <input type="text" class="form-control" asp-for="createMessageDto.SenderName"
                                            placeholder="Adınızı girin" required>
+                                    <span asp-validation-for="createMessageDto.SenderName" class="text-danger"></span>
                                     <div class="invalid-feedback">Lütfen adınızı ve soyadınızı girin.</div>
                                 </div>
                             </div>
@@ -94,6 +100,7 @@
                                     <label class="form-label" asp-for="createMessageDto.SenderEmail">Email *</label>
                                     <input type="email" class="form-control" asp-for="createMessageDto.SenderEmail"
                                            placeholder="email@ornek.com" required>
+                                    <span asp-validation-for="createMessageDto.SenderEmail" class="text-danger"></span>
                                     <div class="invalid-feedback">Lütfen geçerli bir email girin.</div>
                                 </div>
                             </div>
@@ -102,6 +109,7 @@
                                     <label class="form-label" asp-for="createMessageDto.Subject">Konu *</label>
                                     <input type="text" class="form-control" asp-for="createMessageDto.Subject"
                                            placeholder="Mesajınızın konusu" required>
+                                    <span asp-validation-for="createMessageDto.Subject" class="text-danger"></span>
                                     <div class="invalid-feedback">Lütfen konunuzu en az 5 karakter olacak biçimde yazın.</div>
                                 </div>
                             </div>
@@ -110,6 +118,7 @@
                                     <label class="form-label" asp-for="createMessageDto.Body">Mesajınız *</label>
                                     <textarea class="form-control" asp-for="createMessageDto.Body" rows="5"
                                               placeholder="Mesajınızı buraya yazın..." required></textarea>
+                                    <span asp-validation-for="createMessageDto.Body" class="text-danger"></span>
                                     <div class="invalid-feedback">Lütfen mesajınızı en az 5 karakter olacak biçimde yazın.</div>
                                 </div>
                             </div>
