@@ -185,10 +185,11 @@
         </div>
 
         <div class="portfolio-grid">
+               @foreach (var project in Model.projectListDtos)
+                {
             <!-- Project 1 -->
             <div class="portfolio-card" data-aos="fade-up" data-aos-delay="0">
-                @foreach (var project in Model.projectListDtos)
-                {
+             
                     <div class="portfolio-image">
                         <img src="@project.ImageUrl"
                              alt="@project.Name">
@@ -207,10 +208,10 @@
                             }
                         </div>
                     </div>
-                }
+             
                
             </div>
-
+            }
         </div>
 
         <div class="text-center mt-5" data-aos="fade-up">

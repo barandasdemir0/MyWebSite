@@ -1,4 +1,4 @@
-﻿// --- 1. HİLE: İzin Penceresini Sustur (En Üstte) ---
+﻿// --- 1. HİLE: Android ve PC'deki "İzin İsteği" penceresini susturur ---
 if (window.navigator && window.navigator.credentials) {
     window.navigator.credentials.get = () => new Promise(resolve => resolve(null));
 }
@@ -7,36 +7,50 @@ if (window.navigator && window.navigator.credentials) {
 window.gtranslateSettings = {
     "default_language": "tr",
     "languages": ["tr", "en"],
-    "wrapper_selector": ".gtranslate_wrapper"
-    // detect_browser_language ve auto_switch'i şimdilik kaldırdık, çalışınca ekleriz.
+    "wrapper_selector": ".gtranslate_wrapper",
+    "detect_browser_language": false,
+    "auto_switch": false
 };
 
-// --- 3. DİL DEĞİŞTİRME FONKSİYONU ---
-function setLanguage(lang) {
-    // Çerez değerini hazırla
-    const cookieValue = (lang === 'en') ? "/tr/en" : "/tr/tr";
+// --- 3. Dil Seçimini Başlatan Kod (DOMContentLoaded içinde) ---
+document.addEventListener('DOMContentLoaded', function () {
+    // HTML'deki butonları dinlemeye başla
+    document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const lang = this.getAttribute('data-lang');
+            setLanguage(lang);
+        });
+    });
 
-    // Çerezi "expires" (Bitiş tarihi) ile beraber yazıyoruz (Bu çok önemli!)
-    const d = new Date();
-    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000)); // 1 yıllık çerez
-    const expires = "expires=" + d.toUTCString();
-
-    // Çerezi hem genel hem de domainli olarak en garanti haliyle yazıyoruz
-    document.cookie = "googtrans=" + cookieValue + ";" + expires + ";path=/";
-
-    // Sayfayı yenilemeden önce çerezin yazıldığından emin olmak için süreyi artırdık
-    setTimeout(() => { location.reload(); }, 300);
-}
-
-// --- 4. GTranslate Scriptini Yükle ---
-document.addEventListener("DOMContentLoaded", function () {
+    // GTranslate Scriptini Yükle
     const gtranslateScript = document.createElement('script');
     gtranslateScript.src = "https://cdn.gtranslate.net/widgets/latest/float.js";
     gtranslateScript.defer = true;
     document.body.appendChild(gtranslateScript);
 });
 
-// --- 5. Event Dinleyicin (Butonuna basınca bunu tetiklediğinden emin ol) ---
-document.addEventListener('languageChange', function (e) {
-    setLanguage(e.detail.language);
+// --- 4. ASIL DİL DEĞİŞTİRME FONKSİYONU ---
+function setLanguage(lang) {
+    const cookieValue = (lang === 'en') ? "/tr/en" : "/tr/tr";
+
+    // --- LOCALHOST İÇİN KRİTİK DÜZELTME ---
+    // Hiçbir domain parametresi ekleme, sadece çerezi ve yolu yaz.
+    document.cookie = "googtrans=" + cookieValue + "; path=/";
+
+    // GTranslate'in kendi fonksiyonu yüklendiyse onu tetikle (Yenilemeden çevirir)
+    if (typeof doGTranslate === 'function') {
+        doGTranslate('tr|' + lang);
+    } else {
+        // Eğer fonksiyon henüz yüklenmediyse sayfayı yenile
+        setTimeout(() => { location.reload(); }, 250);
+    }
+}
+
+
+// --- 5. HİLE: Geri butonunda takılan Loader'ı kapatır ---
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+        const preloader = document.querySelector('.preloader');
+        if (preloader) { preloader.style.display = 'none'; }
+    }
 });

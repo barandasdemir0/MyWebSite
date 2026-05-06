@@ -28,7 +28,7 @@ builder.Services.AddThirdPartyServices(builder.Configuration);
 builder.Services.AddIdentityAndJwt(builder.Configuration);
 builder.Services.CorsPolicy(builder.Configuration);
 builder.Services.AddMemoryCache();
-
+builder.Services.AddDataProtectionConfig();
 builder.Services.AddSignalR();
 
 

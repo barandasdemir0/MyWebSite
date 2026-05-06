@@ -53,9 +53,7 @@ public sealed class AppDbContext:IdentityDbContext<AppUser,IdentityRole<Guid>,Gu
         // Diğer parametresiz olanları otomatik bul
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        // Parametreli olan ChatbotConfigurations'ı ELDEN (MANUEL) ekle!
-        var protector = this.GetService<IDataProtectionProvider>().CreateProtector("ChatbotApiKeySecurity");
-        modelBuilder.ApplyConfiguration(new ChatbotConfigurations(protector));
+       
         //bu configurasyon dosyalarımızı bulup otomatik uygular hani biz fluentapi yaptık ya
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())

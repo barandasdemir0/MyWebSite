@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Services;
 using BusinessLayer.ValidationRules;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
@@ -11,6 +12,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -136,6 +138,7 @@ public static class Extension
         services.Scan(scan => scan.FromAssemblyOf<IBusinessMarker>().AddClasses(c => c.Where(t => t.Name.EndsWith("Manager"))).AsImplementedInterfaces().WithScopedLifetime());
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<EncryptionService>();
 
     }
 
@@ -180,6 +183,15 @@ public static class Extension
                     ClockSkew = TimeSpan.Zero // Token'ın geçerlilik süresine ekstra bir tolerans ekler (genellikle 5 dakika varsayılan olarak eklenir, burada sıfır yaparak bu toleransı kaldırıyoruz)
                 };
             });
+    }
+
+    public static void AddDataProtectionConfig(this IServiceCollection services)
+    {
+        var keysFolder = Path.Combine(Directory.GetCurrentDirectory(), "keys");
+
+        services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo(keysFolder))
+            .SetApplicationName("MyWebSite");
     }
 
     public static void CorsPolicy(this IServiceCollection services, IConfiguration configuration)

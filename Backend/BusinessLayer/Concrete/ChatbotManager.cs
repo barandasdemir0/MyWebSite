@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Services;
 using DataAccessLayer.Abstract;
 using Microsoft.Extensions.Logging;
 
@@ -13,8 +14,9 @@ public class ChatbotManager : IChatbotManagerService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ChatbotManager> _logger;
     private readonly IPortfolioContextService _contextService;
+    private readonly EncryptionService _encryptionService;
 
-  
+
 
     private static readonly string[] BannedInputKeywords = {
             "kural", "prompt", "ignore", "unut", "simülasyon", "test mod",
@@ -24,7 +26,7 @@ public class ChatbotManager : IChatbotManagerService
         "<DatabaseContext>", "WHITELIST", "GÖREV:", "KATI KURALLAR"
         };
 
-    public ChatbotManager(IChatbotSettingsDal chatbotSettingsService, IChatbotCacheDal chatbotCacheDal, IGroqApiService groqApiService, IUnitOfWork unitOfWork, ILogger<ChatbotManager> logger, IPortfolioContextService contextService)
+    public ChatbotManager(IChatbotSettingsDal chatbotSettingsService, IChatbotCacheDal chatbotCacheDal, IGroqApiService groqApiService, IUnitOfWork unitOfWork, ILogger<ChatbotManager> logger, IPortfolioContextService contextService, EncryptionService encryptionService)
     {
         _chatbotSettingsService = chatbotSettingsService;
         _chatbotCacheDal = chatbotCacheDal;
@@ -32,6 +34,7 @@ public class ChatbotManager : IChatbotManagerService
         _unitOfWork = unitOfWork;
         _logger = logger;
         _contextService = contextService;
+        _encryptionService = encryptionService;
     }
 
     public async Task<string> ProcessUserMessageAsync(string question, string currentUrl)
@@ -59,8 +62,20 @@ public class ChatbotManager : IChatbotManagerService
         <DatabaseContext> {contextData} </DatabaseContext>";
         try
         {
+
             // 5. Groq API İsteği
-            string botReply = await _groqApiService.FetchResponseFromGroqAsync(settings.ApiKey, settings.ModelName, finalPromt, question);
+            string apiKey;
+
+            try
+            {
+                apiKey = _encryptionService.Decrypt(settings.ApiKey);
+            }
+            catch
+            {
+                _logger.LogWarning("API Key decrypt edilemedi, plain fallback kullanıldı.");
+                apiKey = settings.ApiKey; // fallback
+            }
+            string botReply = await _groqApiService.FetchResponseFromGroqAsync(apiKey, settings.ModelName, finalPromt, question);
             // 6. Çıkış Koruması (Output Guardrail)
             if (!IsOutputSafe(botReply))
             {

@@ -152,6 +152,7 @@ public static class ServiceExtension
         {
             options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
             options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            options.Filters.Add<ValidationExceptionFilter>();
         });
 
     }
