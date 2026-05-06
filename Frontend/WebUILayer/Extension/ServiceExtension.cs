@@ -75,6 +75,7 @@ public static class ServiceExtension
         services.AddHttpClient<IChatbotSettingsApiService, ChatbotSettingsApiService>().AddHttpMessageHandler<JwtTokenHandler>();
 
         services.AddHttpClient<INotificationApiService, NotificationApiService>().AddHttpMessageHandler<JwtTokenHandler>();
+        services.AddHttpClient<ILogApiService, LogApiService>().AddHttpMessageHandler<JwtTokenHandler>();
 
       
 

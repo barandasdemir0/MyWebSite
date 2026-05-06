@@ -1,12 +1,18 @@
 ﻿using BusinessLayer.Container;
-using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using WebApiLayer.Hubs;
 using WebApiLayer.Middleware;
 using WebApiLayer.Seed;
+using Serilog;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 
 // Add services to the container.
 
@@ -30,6 +36,7 @@ builder.Services.CorsPolicy(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddDataProtectionConfig();
 builder.Services.AddSignalR();
+
 
 
 
@@ -64,5 +71,7 @@ app.MapHub<ChatHub>("/chatHub");
 
 await app.SeedDatabaseAsync();
 
+Log.Information("Sistem başarıyla başlatıldı. Loglama mimarisi aktif ve izleniyor.");
+Log.Warning("SİSTEM BAŞLATILDI: Loglama altyapısı devreye girdi.");
 
 app.Run();

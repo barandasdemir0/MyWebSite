@@ -42,6 +42,7 @@ public sealed class AppDbContext:IdentityDbContext<AppUser,IdentityRole<Guid>,Gu
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     public DbSet<ChatbotCache> ChatbotCaches { get; set; }
+    public DbSet<SystemLog> Logs { get; set; }
 
 
     //global query filter otomatik soft delete filtresi
