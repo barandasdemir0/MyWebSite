@@ -71,7 +71,5 @@ app.MapHub<ChatHub>("/chatHub");
 
 await app.SeedDatabaseAsync();
 
-Log.Information("Sistem başarıyla başlatıldı. Loglama mimarisi aktif ve izleniyor.");
-Log.Warning("SİSTEM BAŞLATILDI: Loglama altyapısı devreye girdi.");
 
 app.Run();

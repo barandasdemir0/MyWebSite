@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Abstract;
+using BusinessLayer.Services;
 using CV.EntityLayer.Entities;
 using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
@@ -11,11 +12,12 @@ namespace BusinessLayer.Concrete;
 public class ChatbotSettingsManager : GenericManager<ChatbotSettings,ChatbotSettingsDto,CreateChatbotSettingsDto,UpdateChatbotSettingsDto> ,IChatbotSettingsService
 {
     private readonly IChatbotSettingsDal _chatbotSettingsDal;
+    private readonly EncryptionService _encryptionService;
 
-    public ChatbotSettingsManager(IChatbotSettingsDal chatbotSettingsDal, IMapper mapper,IUnitOfWork unitOfWork) : base(chatbotSettingsDal, mapper, unitOfWork)
+    public ChatbotSettingsManager(IChatbotSettingsDal chatbotSettingsDal, IMapper mapper, IUnitOfWork unitOfWork, EncryptionService encryptionService) : base(chatbotSettingsDal, mapper, unitOfWork)
     {
         _chatbotSettingsDal = chatbotSettingsDal;
-
+        _encryptionService = encryptionService;
     }
 
     public async Task<ChatbotSettingsDto?> GetSingleAsync(CancellationToken cancellationToken = default)
@@ -34,13 +36,16 @@ public class ChatbotSettingsManager : GenericManager<ChatbotSettings,ChatbotSett
         if (query==null)
         {
             query = _mapper.Map<ChatbotSettings>(updateDto);
+            query.ApiKey = _encryptionService.Encrypt(updateDto.ApiKey ?? string.Empty);
             await _repository.AddAsync(query, cancellationToken);
         }
         else
         {
             _mapper.Map(updateDto, query);
+            query.ApiKey = _encryptionService.Encrypt(updateDto.ApiKey ?? string.Empty);
             await _repository.UpdateAsync(query, cancellationToken);
         }
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return _mapper.Map<ChatbotSettingsDto>(query);
     }
