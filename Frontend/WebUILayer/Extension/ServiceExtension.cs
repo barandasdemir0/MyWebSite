@@ -5,6 +5,9 @@ using WebUILayer.Areas.Admin.Services.Concrete;
 using WebUILayer.Helper;
 using WebUILayer.Services.Abstract;
 using WebUILayer.Services.Concrete;
+using WebOptimizer;
+
+
 
 namespace WebUILayer.Extension;
 
@@ -77,7 +80,7 @@ public static class ServiceExtension
         services.AddHttpClient<INotificationApiService, NotificationApiService>().AddHttpMessageHandler<JwtTokenHandler>();
         services.AddHttpClient<ILogApiService, LogApiService>().AddHttpMessageHandler<JwtTokenHandler>();
 
-      
+
 
 
 
@@ -131,7 +134,7 @@ public static class ServiceExtension
         services.AddHttpClient<IPublicTopicApiService, PublicTopicApiService>();
         services.AddScoped<IGuestSessionService, GuestSessionService>();
 
-       
+
 
 
 
@@ -191,6 +194,28 @@ public static class ServiceExtension
             options.Cookie.SameSite = SameSiteMode.Lax; // EKLENDİ
             options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // EKLENDİ
             options.IdleTimeout = TimeSpan.FromHours(5);
+        });
+    }
+
+    public static void AddPerformanceOptimization(this IServiceCollection services)
+    {
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.MimeTypes = new[]
+            {
+            "text/html", "text/css", "application/javascript",
+            "application/json", "image/svg+xml", "text/plain"
+            };
+        });
+    }
+
+    public static void AddWebOptimization(this IServiceCollection services)
+    {
+        services.AddWebOptimizer(pipeline =>
+        {
+            pipeline.MinifyCssFiles("/Mytheme/**/*.css");
+            pipeline.MinifyJsFiles("/Mytheme/**/*.js", "/js/**/*.js");
         });
     }
 

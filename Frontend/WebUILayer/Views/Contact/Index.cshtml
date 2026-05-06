@@ -25,7 +25,7 @@
         <div class="row g-5">
             <!-- Contact Info -->
             <div class="col-lg-5" data-aos="fade-right">
-                <h3 class="mb-4">Hadi Konuşalım</h3>
+                <h2 class="mb-4">Hadi Konuşalım</h2>
                 <p class="mb-4 contact-info-text">
                     Yeni projeler, işbirlikleri veya sadece merhaba demek için benimle iletişime geçebilirsiniz.
                     Size en kısa sürede dönüş yapacağım.
@@ -35,14 +35,14 @@
                     <div class="contact-item">
                         <div class="contact-icon"><i class="fas fa-envelope"></i></div>
                         <div class="contact-details">
-                            <h4>Email</h4>
+                            <h3>Email</h3>
                             <p><a href="mailto:@Model.contactDto?.Email">@Model.contactDto?.Email</a></p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <div class="contact-icon"><i class="fas fa-phone"></i></div>
                         <div class="contact-details">
-                            <h4>Telefon</h4>
+                            <h3>Telefon</h3>
                             <p><a href="tel:@Model.contactDto?.Phone">@Model.contactDto?.Phone</a></p>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
             <!-- Contact Form -->
             <div class="col-lg-7" data-aos="fade-left">
                 <div class="contact-form">
-                    <h3 class="mb-4">Mesaj Gönderin</h3>
+                    <h2 class="mb-4">Mesaj Gönderin</h2>
                     @if (TempData["Success"] != null)
                     {
                         <div data-contact-success="true" style="display:none;"></div>

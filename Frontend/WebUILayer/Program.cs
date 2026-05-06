@@ -19,6 +19,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSessionTempData();
 builder.Services.AddMemoryCache();
 builder.Services.AddAuthorizationServices();
+builder.Services.AddPerformanceOptimization();
+builder.Services.AddWebOptimization();
 
 
 
@@ -44,7 +46,16 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseResponseCompression();
+app.UseWebOptimizer();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=31536000, immutable");
+    }
+});
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<MaintenanceMiddleware>();

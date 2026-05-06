@@ -9,29 +9,20 @@
     --primary-light: #818cf8;
     --secondary-color: #0ea5e9;
     --accent-color: #06b6d4;
-
     --bg-primary: #f8fafc;
     /* Soft Ambient Light - Clean & Minimal */
-    --bg-body-gradient:
-        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.08) 0%, transparent 60%),
-        #f8fafc;
-
+    --bg-body-gradient: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.08) 0%, transparent 60%), #f8fafc;
     --bg-secondary: #ffffff;
     --bg-tertiary: #f1f5f9;
-
     /* Clean Glass Card */
     --bg-card: rgba(255, 255, 255, 0.8);
     --card-border: rgba(226, 232, 240, 0.8);
-
     --text-primary: #0f172a;
     --text-secondary: #475569;
-    --text-muted: #94a3b8;
-
+    --text-muted: #8b95a8;
     --glass-bg: rgba(255, 255, 255, 0.8);
     --glass-border: rgba(226, 232, 240, 0.8);
     --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
     --gradient-hero: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
     /* Navbar collapse background for light mode */
     --navbar-bg: rgba(248, 250, 252, 0.95);
@@ -44,30 +35,21 @@
     --primary-light: #818cf8;
     --secondary-color: #0ea5e9;
     --accent-color: #06b6d4;
-
     --bg-primary: #0f172a;
     /* Deep Ambient Light - Subtle & Classy */
     /* Referans görseldeki gibi çok yumuşak, bölgesel ışıklar */
-    --bg-body-gradient:
-        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 100% 100%, rgba(244, 63, 94, 0.1) 0%, transparent 50%),
-        #0f172a;
-
+    --bg-body-gradient: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(244, 63, 94, 0.1) 0%, transparent 50%), #0f172a;
     --bg-secondary: #1e293b;
     --bg-tertiary: #334155;
-
     /* Dark Glass Card - Cleaner without strong gradient */
     --bg-card: rgba(30, 41, 59, 0.6);
     --card-border: rgba(255, 255, 255, 0.08);
-
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-
+    --text-muted: #8b95a8;
     --glass-bg: rgba(30, 41, 59, 0.6);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-
     --gradient-hero: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
     /* Navbar collapse background for dark mode */
     --navbar-bg: rgba(15, 15, 35, 0.98);
