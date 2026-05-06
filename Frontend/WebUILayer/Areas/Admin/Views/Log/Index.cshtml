@@ -1,0 +1,51 @@
+﻿@using WebUILayer.Areas.Admin.Models
+@model LogsIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@section Styles {
+
+
+    <link rel="stylesheet" href="/Mytheme/admin/css/modules/messages.css">
+}
+<div class="container-fluid py-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Sistem Kayıtları</h5>
+            <span class="badge bg-secondary">@Model.ResultLogDtos.Count Kayıt</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table">
+                    @foreach (var item in Model.ResultLogDtos)
+                    {
+                        <tr>
+                            <td>@item.CreatedAt</td>
+                            <td><span class="badge">@item.Level</span></td>
+                            <td>@item.Message</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Exception))
+                                {
+                                    @* Inline JS yok, sadece veri taşıyan class ve data-attribute var *@
+                                    <button type="button"
+                                            class="btn btn-outline-primary btn-sm btn-log-detail"
+                                            data-exception="@item.Exception">
+                                        Detay
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Component.InvokeAsync("_LayoutPaginationPartialComponent", new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages })
+@section Scripts {
+    <script src="~/js/log-viewer.js"></script>
+}
