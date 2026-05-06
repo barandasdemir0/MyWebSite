@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+ï»¿using Microsoft.AspNetCore.Authentication.Cookies;
 using WebUILayer.Extension;
 using WebUILayer.Middleware;
 
@@ -53,6 +53,8 @@ app.UseStatusCodePagesWithReExecute("/ErrorPage/Index", "?code={0}");
 
 app.UseRouting();
 app.UseSession();
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -62,7 +64,7 @@ app.MapStaticAssets();
 
 
 
-#region area için özel kod
+#region area iÃ§in Ã¶zel kod
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");

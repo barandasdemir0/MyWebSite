@@ -77,7 +77,7 @@ jobs:
                     Name: "MSSqlServer",
                     Args: {
                       connectionString: "SqlServer",
-                      sinkOptionsSection: { tableName: "Logs", autoCreateSqlTable: true },
+                      sinkOptionsSection: { tableName: "Logs", schemaName: "baranUser", autoCreateSqlTable: false },
                       columnOptionsSection: {
                         timeStamp: { columnName: "CreatedAt" },
                         removeStandardColumns: [ "MessageTemplate", "Properties", "Id" ]
