@@ -27,7 +27,10 @@
     <footer>
     @await Component.InvokeAsync("LayoutPublicFooter")
     </footer>
-    @await Component.InvokeAsync("LayoutPublicChatbot")
+    @if (!isBot)
+    {
+        @await Component.InvokeAsync("LayoutPublicChatbot")
+    }
     @await Component.InvokeAsync("LayoutPublicScripts")
     <!-- Back to Top Button -->
     <button class="back-to-top" aria-label="Sayfanın en üstüne çık" title="Yukarı Çık">
