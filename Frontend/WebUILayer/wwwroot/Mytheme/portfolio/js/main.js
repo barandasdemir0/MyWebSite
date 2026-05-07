@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initBackToTop();
     initPreloader();
     initFormValidation();
-    initPortfolioFilter();
+ /*   initPortfolioFilter();*/
     initResumeTabs();
     initLazyLoading();
     initPageTransitions(); // New feature

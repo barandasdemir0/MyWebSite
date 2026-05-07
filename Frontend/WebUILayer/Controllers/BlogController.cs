@@ -28,19 +28,17 @@ public class BlogController : Controller
     {
         try
         {
-            // 1. Bağımsız verilerin HEPSİNİ AYNI ANDA başlatıyoruz (Performans artışı)
-            var aboutTask = _publicAboutApiService.GetAllAsync();
-            var pagedResultTask = _publicBlogPostApiService.GetAllPagedAsync(query);
-            var topicTask = _publicTopicApiService.GetAllAsync();
-            // 2. İşlemlerin bitmesini paralel olarak bekliyoruz
-            await Task.WhenAll(aboutTask, pagedResultTask, topicTask);
+            var aboutList = await _publicAboutApiService.GetAllAsync();
+            var pagedResult = await _publicBlogPostApiService.GetAllPagedAsync(query);
+            var topics = await _publicTopicApiService.GetAllAsync();
+
             var models = new BlogViewModel
             {
-                aboutDto = aboutTask.Result.FirstOrDefault(),
-                blogPostListDtos = pagedResultTask.Result.Items,
-                topicDtos = topicTask.Result,
-                CurrentPage = pagedResultTask.Result.PageNumber,
-                TotalPages = pagedResultTask.Result.TotalPages
+                aboutDto = aboutList.FirstOrDefault(),
+                blogPostListDtos = pagedResult.Items,
+                topicDtos = topics,
+                CurrentPage = pagedResult.PageNumber,
+                TotalPages = pagedResult.TotalPages
             };
             return View(models);
         }
@@ -69,17 +67,16 @@ public class BlogController : Controller
                 return RedirectToAction(nameof(Index));
             }
             // 2. AŞAMA: Blog geldiğine göre geri kalan her şeyi AYNI ANDA çekebiliriz
-            var aboutTask = _publicAboutApiService.GetAllAsync();
-            var relatedProjectsTask = _publicProjectApiService.GetLatestAsync(3, blog.MainTopic);
-            var socialMediaTask = _publicSocialMediaApiService.GetAllAsync();
-            // Üçünü aynı anda paralel bekle (Sayfa açılışı 3 kat hızlanır)
-            await Task.WhenAll(aboutTask, relatedProjectsTask, socialMediaTask);
+            var aboutList = await _publicAboutApiService.GetAllAsync();
+            var relatedProjects = await _publicProjectApiService.GetLatestAsync(3, blog.MainTopic);
+            var socialMediaList = await _publicSocialMediaApiService.GetAllAsync();
+
             var models = new BlogDetailViewModel
             {
                 BlogPostDto = blog,
-                AboutDto = aboutTask.Result.FirstOrDefault(),
-                SocialMediaDtos = socialMediaTask.Result,
-                ProjectDtos = relatedProjectsTask.Result
+                AboutDto = aboutList.FirstOrDefault(),
+                SocialMediaDtos = socialMediaList,
+                ProjectDtos = relatedProjects
             };
 
             return View(models);
