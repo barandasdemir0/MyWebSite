@@ -13,6 +13,8 @@ public class CreateSiteSettingDto
     public string? MetaDescription { get; set; }
     public string? GoogleAnalyticsId { get; set; }
     public string? SiteKeywords { get; set; }
+    public string? MicrosoftClarityId { get; set; }
+    public string? DefaultSeoImageUrl { get; set; }
 
     // Yeni Alanlar
     public bool IsMaintenanceMode { get; set; }

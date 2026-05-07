@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /Admin/
+Disallow: /Error/
+
+Sitemap: https://www.barandasdemir.com/sitemap.xml

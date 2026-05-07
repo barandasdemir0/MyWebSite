@@ -1,12 +1,23 @@
-﻿<meta charset="UTF-8">
+﻿@model SiteSettingDto
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description"
-      content="Baran Dasdemir - Web Developer, Mobile App Developer & SaaS Creator. Professional portfolio showcasing modern web and mobile projects.">
-<meta name="keywords" content="Baran Dasdemir, Web Developer, Mobile Developer, SaaS, AI Expert, Portfolio">
+<!-- 1. Temel SEO Etiketleri (Veritabanından) -->
+<title>@(string.IsNullOrEmpty(Model.SiteTitle) ? "Baran Dasdemir | Portfolyo" : Model.SiteTitle)</title>
+<meta name="description" content="@(string.IsNullOrEmpty(Model.MetaDescription) ? "Baran Dasdemir Professional Portfolio" : Model.MetaDescription)">
+<meta name="keywords" content="@(string.IsNullOrEmpty(Model.SiteKeywords) ? "Web Developer, Software" : Model.SiteKeywords)">
 <meta name="author" content="Baran Dasdemir">
+<!-- 2. Tema Rengi -->
 <meta name="theme-color" content="#0f0f23">
-
-<title>Baran Dasdemir | Web & Mobile Developer</title>
+<!-- 3. Open Graph (Sosyal Medya - WhatsApp, LinkedIn Paylaşım Önizlemeleri) -->
+<meta property="og:title" content="@Model.SiteTitle">
+<meta property="og:description" content="@Model.MetaDescription">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.barandasdemir.com">
+@if (!string.IsNullOrEmpty(Model.DefaultSeoImageUrl))
+{
+    <meta property="og:image" content="@Model.DefaultSeoImageUrl">
+    <meta name="twitter:image" content="@Model.DefaultSeoImageUrl">
+}
 
 <!-- Preconnect -->
 <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -55,4 +55,5 @@ public static class ChatbotConstants
     public static readonly string[] SummaryKeywords = {
         "özetle", "özet", "bu sayfa", "kısaca", "summarize", "this page", "summary", "brief", "short", "tldr"
     };
+
 }

@@ -1,14 +1,40 @@
-﻿<nav class="navbar navbar-expand-xl">
+﻿<nav class="navbar navbar-expand-xl" aria-label="Ana Menü">
     <div class="container">
-        <a class="navbar-brand" href="/Home/Index/">
+        <a class="navbar-brand" href="/Home/Index/" aria-label="Ana Sayfaya Git">
             <span>B</span>aran<span>.</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <!-- MOBİLDE GÖRÜNEN SAĞ KISIM (Butonlar dışarı alındı) -->
+        <div class="d-flex align-items-center order-xl-last ms-auto me-2 me-xl-0">
+            <!-- Language Dropdown -->
+            <div class="lang-dropdown me-2" id="langDropdown">
+                <button class="lang-toggle" aria-label="Dil Seç" aria-haspopup="true" aria-expanded="false">
+                    <span class="notranslate">TR</span>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </button>
+                <div class="lang-menu" role="menu">
+                    <button class="lang-option active" data-lang="tr" role="menuitem">
+                        <span>🇹🇷</span> Türkçe
+                    </button>
+                    <button class="lang-option" data-lang="en" role="menuitem">
+                        <span>🇬🇧</span> English
+                    </button>
+                </div>
+            </div>
 
+            <!-- Theme Toggle -->
+            <button class="theme-toggle me-2" aria-label="Karanlık/Aydınlık Tema Değiştir">
+                <i class="fas fa-sun" aria-hidden="true"></i>
+            </button>
+
+            <!-- Hamburger Menü -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Menüyü Aç/Kapat">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <!-- AÇILIR KAPANIR MENÜ LİNKLERİ -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -33,28 +59,6 @@
                     <a class="nav-link" asp-controller="Contact" asp-action="Index">İletişim</a>
                 </li>
             </ul>
-
-            <!-- Language Dropdown -->
-            <div class="lang-dropdown" id="langDropdown">
-                <button class="lang-toggle" aria-label="Dil Seç">
-                    <span class="notranslate">TR</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="lang-menu">
-                    <button class="lang-option active" data-lang="tr">
-                        <span>🇹🇷</span> Türkçe
-                    </button>
-                    <button class="lang-option" data-lang="en">
-                        <span>🇬🇧</span> English
-                    </button>
-                </div>
-            </div>
-
-       
-            <!-- Theme Toggle -->
-            <button class="theme-toggle" aria-label="Toggle theme">
-                <i class="fas fa-sun"></i>
-            </button>
         </div>
     </div>
 </nav>

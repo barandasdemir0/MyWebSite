@@ -56,3 +56,25 @@ window.addEventListener('pageshow', function (event) {
         if (preloader) { preloader.style.display = 'none'; }
     }
 });
+// === Analytics Loader (Minimum JS) ===
+(function () {
+    var el = document.getElementById("analytics-data");
+    if (!el) return;
+
+    var ga = el.dataset.gaId;
+    var cl = el.dataset.clarityId;
+
+    if (ga) {
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + ga;
+        document.head.appendChild(s);
+        s.onload = function () { window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag("js", new Date()); gtag("config", ga); };
+    }
+
+    if (cl) {
+        var c = document.createElement("script");
+        c.textContent = '(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","' + cl + '")';
+        document.head.appendChild(c);
+    }
+})();

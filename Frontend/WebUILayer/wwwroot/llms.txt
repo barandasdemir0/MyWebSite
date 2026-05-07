@@ -1,0 +1,17 @@
+# Baran Dasdemir - Professional Portfolio
+
+> Baran Dasdemir is a Software Developer specializing in Web, Mobile App Development, SaaS, and AI integration. 
+
+## Technical Stack
+- .NET Clean Architecture & MVC
+- Modern JavaScript, HTML5, CSS3
+- SignalR & Real-time applications
+- AI Chatbot Integrations
+
+## Core Pages
+- https://www.barandasdemir.com/
+- About: https://www.barandasdemir.com/About
+- Resume: https://www.barandasdemir.com/Resume
+- Projects: https://www.barandasdemir.com/Project
+- Blog: https://www.barandasdemir.com/Blog
+- Contact: https://www.barandasdemir.com/Contact

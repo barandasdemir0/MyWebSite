@@ -476,6 +476,28 @@
         color: #000;
     }
 }
+/* İframe'leri (Video vb.) responsive ve scroll yapmayacak hale getiren kod */
+.iframe-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 Formatı */
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px; /* Tasarıma uyum için */
+}
+
+    .iframe-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+/* Sayfa taşmasını engellemek için sadece yumuşak bir X-ekseni gizlemesi */
+body {
+    overflow-x: hidden;
+}
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {

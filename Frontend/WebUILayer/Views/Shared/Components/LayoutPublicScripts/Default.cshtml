@@ -1,4 +1,5 @@
 ﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@model SiteSettingDto
 
 <!-- ============================================
      APP CONFIG (JS Dosyalarından ÖNCE Yüklenmeli)
@@ -34,3 +35,4 @@
 <script src="/Mytheme/portfolio/js/language.js" defer></script>
 <script src="/Mytheme/portfolio/js/chatbot.js" defer></script>
 <script src="/js/site.js" defer></script>
+<div id="analytics-data" data-ga-id="@Model.GoogleAnalyticsId" data-clarity-id="@Model.MicrosoftClarityId" style="display:none;"></div>

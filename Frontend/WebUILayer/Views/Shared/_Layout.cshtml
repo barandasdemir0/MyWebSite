@@ -11,14 +11,20 @@
 
 <body>
     @await Component.InvokeAsync("LayoutPublicPreLoader")
+    <header>
     @await Component.InvokeAsync("LayoutPublicNavbar")
+    </header>
+    <main id="main-content" role="main">
     @RenderBody()
+    </main>
+    <footer>
     @await Component.InvokeAsync("LayoutPublicFooter")
+    </footer>
     @await Component.InvokeAsync("LayoutPublicChatbot")
     @await Component.InvokeAsync("LayoutPublicScripts")
     <!-- Back to Top Button -->
-    <button class="back-to-top" aria-label="Back to top">
-        <i class="fas fa-arrow-up"></i>
+    <button class="back-to-top" aria-label="Sayfanın en üstüne çık" title="Yukarı Çık">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
     </button>
     @RenderSection("Scripts", required: false)
 </body>

@@ -106,32 +106,35 @@
                 <h3><i class="fas fa-share-alt mr-10"></i>Seo Ayarları</h3>
             </div>
 
-
             <div class="form-group">
-                <label><i class="fas fa-heading mr-5"></i>Site İsmi</label>
-                <input type="text" class="form-control" asp-for="SiteTitle" placeholder="site ismi">
+                <label><i class="fas fa-heading mr-5"></i>Site İsmi (Title)</label>
+                <input type="text" class="form-control" asp-for="SiteTitle" placeholder="Örn: Baran Dasdemir | Web Developer">
                 <span asp-validation-for="SiteTitle" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <label><i class="fas fa-tags mr-5"></i>Site Keywords</label>
-                <input type="text" class="form-control" asp-for="SiteKeywords" placeholder="Site Keywords">
+                <label><i class="fas fa-tags mr-5"></i>Site Anahtar Kelimeleri (Keywords)</label>
+                <input type="text" class="form-control" asp-for="SiteKeywords" placeholder="Örn: yazılım, developer, portfolyo, .net">
                 <span asp-validation-for="SiteKeywords" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <label><i class="fas fa-file-alt mr-5"></i>Meta Description </label>
-                <input type="text" class="form-control" asp-for="MetaDescription" placeholder="meta description">
+                <label><i class="fas fa-file-alt mr-5"></i>Meta Açıklaması (Description)</label>
+                <textarea class="form-control" rows="3" asp-for="MetaDescription" placeholder="Örn: Baran Dasdemir kişisel portfolyo ve blog web sitesi."></textarea>
                 <span asp-validation-for="MetaDescription" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <label>
-                    <i class="fas fa-chart-line mr-5"></i>
-                    Google Analitic Id
-                </label>
-                <input type="text" class="form-control" asp-for="GoogleAnalyticsId" placeholder="Google Analitik Id">
+                <label><i class="fas fa-image mr-5"></i>Varsayılan SEO Görseli (URL)</label>
+                <input type="text" class="form-control" asp-for="DefaultSeoImageUrl" placeholder="Örn: /images/seo-banner.jpg (Sosyal medya paylaşımlarında çıkacak resim)">
+                <span asp-validation-for="DefaultSeoImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-chart-line mr-5"></i>Google Analytics ID</label>
+                <input type="text" class="form-control" asp-for="GoogleAnalyticsId" placeholder="Örn: G-XXXXXXXXXX">
                 <span asp-validation-for="GoogleAnalyticsId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-chart-pie mr-5"></i>Microsoft Clarity ID</label>
+                <input type="text" class="form-control" asp-for="MicrosoftClarityId" placeholder="Örn: abcdefghij">
+                <span asp-validation-for="MicrosoftClarityId" class="text-danger"></span>
             </div>
         </div>
 
