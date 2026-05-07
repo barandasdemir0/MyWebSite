@@ -99,22 +99,48 @@ jobs:
       # 7. MVC appsettings.Production.json oluştur
       - name: Create MVC Settings
         env:
+          DB_CONN: ${{ secrets.DB_CONNECTION_STRING }} # Eklendi
           GH_ID: ${{ secrets.CLIENT_ID_GITHUB }}
           GH_SECRET: ${{ secrets.CLIENT_SECRET_GITHUB }}
           LI_ID: ${{ secrets.CLIENT_ID_LINKEDIN }}
           LI_SECRET: ${{ secrets.CLIENT_SECRET_LINKEDIN }}
         run: |
           jq -n \
+            --arg db "$DB_CONN" \
             --arg ghId "$GH_ID" \
             --arg ghSecret "$GH_SECRET" \
             --arg liId "$LI_ID" \
             --arg liSecret "$LI_SECRET" \
             '{
               Logging: { LogLevel: { Default: "Warning" } },
+              ConnectionStrings: { SqlServer: $db },
               ApiSettings: { BaseUrl: "https://api.barandasdemir.com/api/" },
               OAuth: {
                 GitHub: { ClientId: $ghId, ClientSecret: $ghSecret },
                 LinkedIn: { ClientId: $liId, ClientSecret: $liSecret }
+              },
+              Serilog: {
+                MinimumLevel: {
+                  Default: "Warning",
+                  Override: { Microsoft: "Error", System: "Error" }
+                },
+                WriteTo: [
+                  {
+                    Name: "MSSqlServer",
+                    Args: {
+                      connectionString: "SqlServer",
+                      sinkOptionsSection: { 
+                        tableName: "Logs", 
+                        schemaName: "baranUser", 
+                        autoCreateSqlTable: false 
+                      },
+                      columnOptionsSection: {
+                        timeStamp: { columnName: "CreatedAt" },
+                        removeStandardColumns: [ "MessageTemplate", "Properties", "Id" ]
+                      }
+                    }
+                  }
+                ]
               }
             }' > Frontend/WebUILayer/appsettings.Production.json
 
