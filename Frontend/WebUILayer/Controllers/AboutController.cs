@@ -25,23 +25,27 @@ public class AboutController : Controller
 
     public async Task<IActionResult> Index()
     {
-        // 1. Tüm istekleri "await" kullanmadan AYNI ANDA başlat
-        var aboutsTask = _publicAboutApiService.GetAllAsync();
-        var jobSkillsTask = _publicJobSkillApiService.GetAllAsync();
-        var jobSkillCategoriesTask = _publicJobSkillCategoryService.GetAllAsync();
-        var contactTask = _publicContactApiService.GetPublicContactSettingsAsync();
-        var siteSettingsTask = _publicSiteSettingsApiService.GetAllAsync();
-        // 2. Bütün görevlerin bitmesini paralel olarak bekle
-        await Task.WhenAll(aboutsTask, jobSkillsTask, jobSkillCategoriesTask, contactTask, siteSettingsTask);
-        // 3. Gelen sonuçları (Result) modele aktar
-        var model = new AboutViewModel
+        try
         {
-            About = aboutsTask.Result.FirstOrDefault(),
-            jobSkillDtos = jobSkillsTask.Result,
-            jobSkillCategoryDtos = jobSkillCategoriesTask.Result,
-            Contact = contactTask.Result,
-            SiteSetting = siteSettingsTask.Result.FirstOrDefault()
-        };
-        return View(model);
+            
+            var aboutsList = await _publicAboutApiService.GetAllAsync();
+            var jobSkillsList = await _publicJobSkillApiService.GetAllAsync();
+            var jobSkillCategoriesList = await _publicJobSkillCategoryService.GetAllAsync();
+            var contactInfo = await _publicContactApiService.GetPublicContactSettingsAsync();
+            var siteSettingsList = await _publicSiteSettingsApiService.GetAllAsync();
+            var model = new AboutViewModel
+            {
+                About = aboutsList.FirstOrDefault(),
+                jobSkillDtos = jobSkillsList,
+                jobSkillCategoryDtos = jobSkillCategoriesList,
+                Contact = contactInfo,
+                SiteSetting = siteSettingsList.FirstOrDefault()
+            };
+            return View(model);
+        }
+        catch (Exception)
+        {
+            return View(new AboutViewModel());
+        }
     }
 }

@@ -34,35 +34,30 @@ public class HomeController : Controller
     {
         try
         {
-            var aboutTask = _publicAboutApiService.GetAllAsync();
-        var siteSettingsTask = _publicSiteSettingsApiService.GetAllAsync();
-        var heroTask = _publicHeroApiService.GetAllAsync();
-        var socialMediaTask = _publicSocialMediaApiService.GetAllAsync();
-        var skillTask = _publicSkillApiService.GetAllAsync();
-        var projectTask = _publicProjectApiService.GetLatestAsync(3);
-        var guestBookTask = _publicGuestBookApiService.GetAllAsync();
-        var githubTask = _publicGithubApiService.GetAllAsync();
-
-        await Task.WhenAll(
-        aboutTask, siteSettingsTask, heroTask, socialMediaTask,
-        skillTask, projectTask, guestBookTask, githubTask
-    );
-        var models = new IndexViewModel
-        {
-            aboutDto = aboutTask.Result.FirstOrDefault(),
-            siteSettingDto = siteSettingsTask.Result.FirstOrDefault(),
-            heroDto = heroTask.Result.FirstOrDefault(),
-            socialMediaDtos = socialMediaTask.Result,
-            skillDtos = skillTask.Result,
-            projectListDtos = projectTask.Result,
-            guestBookListDtos = guestBookTask.Result,
-            githubRepoDtos = githubTask.Result
-        };
-        return View(models);
+            // İstekleri çakışmaması için sırayla çekiyoruz
+            var aboutList = await _publicAboutApiService.GetAllAsync();
+            var siteSettingsList = await _publicSiteSettingsApiService.GetAllAsync();
+            var heroList = await _publicHeroApiService.GetAllAsync();
+            var socialMediaList = await _publicSocialMediaApiService.GetAllAsync();
+            var skillList = await _publicSkillApiService.GetAllAsync();
+            var projectList = await _publicProjectApiService.GetLatestAsync(3);
+            var guestBookList = await _publicGuestBookApiService.GetAllAsync();
+            var githubList = await _publicGithubApiService.GetAllAsync();
+            var models = new IndexViewModel
+            {
+                aboutDto = aboutList.FirstOrDefault(),
+                siteSettingDto = siteSettingsList.FirstOrDefault(),
+                heroDto = heroList.FirstOrDefault(),
+                socialMediaDtos = socialMediaList,
+                skillDtos = skillList,
+                projectListDtos = projectList,
+                guestBookListDtos = guestBookList,
+                githubRepoDtos = githubList
+            };
+            return View(models);
         }
         catch (Exception)
         {
-            // API çökerse anasayfa 500 hatası vermesin, View'a boş bir nesne dönsün
             return View(new IndexViewModel());
         }
     }
