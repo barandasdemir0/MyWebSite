@@ -2,31 +2,48 @@
    ANIMATIONS.JS - All Animation Related Functions
    ============================================ */
 function startAnimations() {
-    initAOS();
-    initCounters();
-    initProgressBars();
-    setTimeout(initTypingEffect, 100); // 100ms gecikme ile çalıştır
+    // Her fonksiyonu ayrı micro-task olarak çalıştır → tek uzun görev yerine kısa görevler
+    requestAnimationFrame(function () {
+        initAOS();
+        // Diğerlerini bir sonraki frame'e bırak
+        requestAnimationFrame(function () {
+            initCounters();
+            initProgressBars();
+            setTimeout(initTypingEffect, 150);
+        });
+    });
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startAnimations);
 } else {
     startAnimations();
 }
-// Tüm CSS ve Scriptler yüklendikten sonra çalışmayı garanti eder
-window.addEventListener('load', startAnimations);
+// ÖNEMLİ: window.load'da tekrar çalıştırma KALDIRILDI (çift çalışma ve gereksiz reflow yapıyordu)
+
 
 /* ============================================
    AOS - Animate On Scroll
    ============================================ */
 function initAOS() {
     if (typeof AOS !== 'undefined') {
-        AOS.init({
-            duration: 800,
-            easing: 'ease-out-cubic',
-            once: true,
-            offset: 100,
-            delay: 100
-        });
+        // requestIdleCallback ile tarayıcı boşken çalıştır → zorunlu reflow'u ana thread'den kaydır
+        var initFn = function () {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 50,
+                delay: 0,
+                throttleDelay: 99,
+                debounceDelay: 50,
+                disableMutationObserver: true
+            });
+        };
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(initFn, { timeout: 2000 });
+        } else {
+            setTimeout(initFn, 200);
+        }
     }
 }
 

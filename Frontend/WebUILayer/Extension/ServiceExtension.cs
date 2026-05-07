@@ -255,7 +255,13 @@ public static class ServiceExtension
             );
 
             //// JS dosyalarını ayrı ayrı küçült (bundle yapmaya gerek yok)
-            //pipeline.MinifyJsFiles("/Mytheme/**/*.js", "/js/**/*.js");
+            pipeline.MinifyJsFiles("/Mytheme/portfolio/js/animations.js",
+                                   "/Mytheme/portfolio/js/main.js",
+                                   "/Mytheme/portfolio/js/github.js",
+                                   "/Mytheme/portfolio/js/language.js",
+                                   "/Mytheme/portfolio/js/chatbot.js",
+                                   "/Mytheme/portfolio/js/theme.js",
+                                   "/js/site.js");
         });
     }
 

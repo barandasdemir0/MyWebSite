@@ -106,3 +106,13 @@ a:hover {
 .preloader {
     contain: layout style paint;
 }
+/* Font Awesome font-display override — FOUT önleme */
+@font-face {
+    font-family: 'Font Awesome 6 Free';
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Font Awesome 6 Brands';
+    font-display: swap;
+}
