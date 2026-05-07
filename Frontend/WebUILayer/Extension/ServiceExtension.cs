@@ -216,6 +216,7 @@ public static class ServiceExtension
         {
             // TÜM CSS dosyalarını TEK bir bundle'a topla
             pipeline.AddCssBundle("/css/bundle.css",
+                "/css/bootstrap.min.css",
                 // 1. Base (önce yüklenmeli)
                 "/Mytheme/portfolio/css/base/variables.css",
                 "/Mytheme/portfolio/css/base/reset.css",
