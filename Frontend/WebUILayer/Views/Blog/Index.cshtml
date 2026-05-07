@@ -44,7 +44,7 @@
             @foreach (var blogs in Model.blogPostListDtos)
             {
                 <!-- Blog Post 1 -->
-                <article class="blog-card" data-aos="fade-up" data-category="@blogs.Topics.FirstOrDefault()">
+                <article class="blog-card" data-aos="fade-up" data-category="@string.Join(",", blogs.Topics)">
                     <div class="blog-image">
                         <span class="blog-category">@string.Join(", ", blogs.Topics)</span>
                         <img src="@blogs.CoverImage"

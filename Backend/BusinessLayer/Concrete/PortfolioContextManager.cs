@@ -53,11 +53,10 @@ public class PortfolioContextManager : IPortfolioContextService
         var siteSettings = (await _siteSettingsDal.GetAllAsync()).FirstOrDefault();
         if (siteSettings != null)
         {
-            contextBuilder.AppendLine("--- SİTE DURUM BİLGİSİ ---");
-            if (siteSettings.IsAvailable)
-                contextBuilder.AppendLine($"Baran şu anda yeni iş fırsatlarına ve projelere açıktır. Durum mesajı: {siteSettings.WorkStatus}");
-            else
-                contextBuilder.AppendLine("Baran şu anda aktif olarak yeni iş fırsatları aramamaktadır.");
+            contextBuilder.AppendLine("[SITE_STATUS]");
+            contextBuilder.AppendLine($"IsAvailable={siteSettings.IsAvailable}");
+            contextBuilder.AppendLine($"WorkStatus={siteSettings.WorkStatus}");
+            contextBuilder.AppendLine();
         }
 
         // ===== SOSYAL MEDYA =====
@@ -68,9 +67,10 @@ public class PortfolioContextManager : IPortfolioContextService
             var socials = await _socialMediaDal.GetAllAsync();
             if (socials.Any())
             {
-                contextBuilder.AppendLine("--- SOSYAL MEDYA HESAPLARIM ---");
+                contextBuilder.AppendLine("[SOCIAL_MEDIA]");
                 foreach (var s in socials)
-                    contextBuilder.AppendLine($"Baran'ın {s.SocialMediaName} hesabına şu adresten ulaşabilirsiniz: {s.SocialMediaUrl}");
+                    contextBuilder.AppendLine($"{s.SocialMediaName}={s.SocialMediaUrl}");
+                contextBuilder.AppendLine();
             }
         }
 
@@ -83,8 +83,11 @@ public class PortfolioContextManager : IPortfolioContextService
             var contact = contacts.FirstOrDefault();
             if (contact != null)
             {
-                contextBuilder.AppendLine("--- İLETİŞİM BİLGİLERİM ---");
-                contextBuilder.AppendLine($"Baran'a e-posta ile {contact.Email} adresinden, telefon ile {contact.Phone} numarasından ulaşabilirsiniz. Şu anda {contact.Location} konumunda bulunmaktadır.");
+                contextBuilder.AppendLine("[CONTACT_INFO]");
+                contextBuilder.AppendLine($"Email={contact.Email}");
+                contextBuilder.AppendLine($"Phone={contact.Phone}");
+                contextBuilder.AppendLine($"Location={contact.Location}");
+                contextBuilder.AppendLine();
             }
         }
 
@@ -98,19 +101,25 @@ public class PortfolioContextManager : IPortfolioContextService
             var hero = heroes.FirstOrDefault();
             if (hero != null)
             {
-                contextBuilder.AppendLine("--- GİRİŞ VE VİZYON (HERO) ---");
-                contextBuilder.AppendLine($"Baran'ın profesyonel ünvanı '{hero.ProfessionalTitle}' olup, çalıştığı teknolojiler arasında {hero.ScrollingText} bulunmaktadır.");
+                contextBuilder.AppendLine("[HERO]");
+                contextBuilder.AppendLine($"ProfessionalTitle={hero.ProfessionalTitle}");
+                contextBuilder.AppendLine($"Technologies={hero.ScrollingText}");
+                contextBuilder.AppendLine();
             }
+
             var abouts = await _aboutDal.GetAllAsync();
             var about = abouts.FirstOrDefault();
             if (about != null)
             {
-                contextBuilder.AppendLine("--- HAKKIMDA ---");
-                contextBuilder.AppendLine($"Baran'ın tam adı {about.FullName}'dir ve yazılım sektöründe profesyonel olarak {about.ExperienceYear} yıllık deneyimi bulunmaktadır. Toplamda {about.ProjectCount} adet proje geliştirmiştir.");
+                contextBuilder.AppendLine("[ABOUT]");
+                contextBuilder.AppendLine($"FullName={about.FullName}");
+                contextBuilder.AppendLine($"ExperienceYear={about.ExperienceYear}");
+                contextBuilder.AppendLine($"ProjectCount={about.ProjectCount}");
                 if (!string.IsNullOrEmpty(about.Bio))
-                    contextBuilder.AppendLine($"Baran kendisini şöyle tanıtmaktadır: {about.Bio}");
+                    contextBuilder.AppendLine($"Bio={about.Bio}");
                 if (!string.IsNullOrEmpty(about.Greeting))
-                    contextBuilder.AppendLine($"Karşılama mesajı: {about.Greeting}");
+                    contextBuilder.AppendLine($"Greeting={about.Greeting}");
+                contextBuilder.AppendLine();
             }
         }
 
@@ -122,20 +131,27 @@ public class PortfolioContextManager : IPortfolioContextService
         {
             var skills = await _jobSkillDal.GetAllAsync();
             var categories = await _jobSkillCategoryDal.GetAllAsync();
-            contextBuilder.AppendLine("--- YETENEKLERİM VE TEKNOLOJİLER ---");
+
+            contextBuilder.AppendLine("[JOB_SKILLS]");
             foreach (var cat in categories)
             {
                 var catSkills = skills.Where(s => s.JobSkillCategoryId == cat.Id).ToList();
                 if (catSkills.Any())
                 {
+                    contextBuilder.AppendLine($"Category={cat.CategoryName}");
                     foreach (var s in catSkills)
-                        contextBuilder.AppendLine($"Baran, {cat.CategoryName} kategorisinde yer alan {s.JobSkillName} teknolojisine %{s.JobSkillPercentage} oranında hakimdir.");
+                        contextBuilder.AppendLine($"- {s.JobSkillName}: {s.JobSkillPercentage}%");
                 }
             }
+            contextBuilder.AppendLine();
 
             var techSkills = await _skillDal.GetAllAsync();
             if (techSkills.Any())
-                contextBuilder.AppendLine($"Baran'ın günlük iş akışında kullandığı araç ve teknolojiler şunlardır: {string.Join(", ", techSkills.Select(s => s.SkillName))}.");
+            {
+                contextBuilder.AppendLine("[DAILY_TOOLS]");
+                contextBuilder.AppendLine($"Tools={string.Join(", ", techSkills.Select(s => s.SkillName))}");
+                contextBuilder.AppendLine();
+            }
         }
 
         // 3. EĞİTİM
@@ -145,9 +161,16 @@ public class PortfolioContextManager : IPortfolioContextService
             lowerQuestion.Contains("özgeçmiş"))
         {
             var educations = await _educationDal.GetAllAsync();
-            contextBuilder.AppendLine("--- EĞİTİM GEÇMİŞİM ---");
-            foreach (var edu in educations)
-                contextBuilder.AppendLine($"Baran, {edu.EducationStartDate:yyyy} - {(edu.EducationFinishDate.HasValue ? edu.EducationFinishDate.Value.ToString("yyyy") : "Günümüz")} yılları arasında {edu.EducationSchoolName} okulunda {edu.EducationDegree} eğitimini almıştır.");
+            if (educations.Any())
+            {
+                contextBuilder.AppendLine("[EDUCATION]");
+                foreach (var edu in educations)
+                {
+                    string endDate = edu.EducationFinishDate.HasValue ? edu.EducationFinishDate.Value.ToString("yyyy") : "Present";
+                    contextBuilder.AppendLine($"- School={edu.EducationSchoolName} | Degree={edu.EducationDegree} | Period={edu.EducationStartDate:yyyy}-{endDate}");
+                }
+                contextBuilder.AppendLine();
+            }
         }
 
         // 4. SERTİFİKALAR
@@ -156,9 +179,13 @@ public class PortfolioContextManager : IPortfolioContextService
             lowerQuestion.Contains("belge") || lowerQuestion.Contains("özgeçmiş"))
         {
             var certificates = await _certificateDal.GetAllAsync();
-            contextBuilder.AppendLine("--- SERTİFİKALARIM ---");
-            foreach (var cert in certificates)
-                contextBuilder.AppendLine($"Baran, {cert.IssueDate:yyyy} yılında {cert.IssuingCompany} kurumundan '{cert.CertificateName}' sertifikasını başarıyla almıştır.");
+            if (certificates.Any())
+            {
+                contextBuilder.AppendLine("[CERTIFICATES]");
+                foreach (var cert in certificates)
+                    contextBuilder.AppendLine($"- Name={cert.CertificateName} | Issuer={cert.IssuingCompany} | Year={cert.IssueDate:yyyy}");
+                contextBuilder.AppendLine();
+            }
         }
 
         // 5. DENEYİMLER
@@ -168,9 +195,17 @@ public class PortfolioContextManager : IPortfolioContextService
             lowerQuestion.Contains("özgeçmiş") || lowerQuestion.Contains("kariyer"))
         {
             var experiences = await _experienceDal.GetAllAsync();
-            contextBuilder.AppendLine("--- İŞ DENEYİMLERİM ---");
-            foreach (var e in experiences)
-                contextBuilder.AppendLine($"Baran, {e.ExperienceStartDate:yyyy} ile {(e.ExperienceFinishDate.HasValue ? e.ExperienceFinishDate.Value.ToString("yyyy") : "Günümüz")} yılları arasında {e.ExperienceCompanyName} şirketinde {e.ExperienceTitle} olarak görev yapmıştır. Bu pozisyondaki sorumlulukları: {e.ExperienceDescription}.");
+            if (experiences.Any())
+            {
+                contextBuilder.AppendLine("[EXPERIENCE]");
+                foreach (var e in experiences)
+                {
+                    string endDate = e.ExperienceFinishDate.HasValue ? e.ExperienceFinishDate.Value.ToString("yyyy") : "Present";
+                    contextBuilder.AppendLine($"- Company={e.ExperienceCompanyName} | Title={e.ExperienceTitle} | Period={e.ExperienceStartDate:yyyy}-{endDate}");
+                    contextBuilder.AppendLine($"  Description={e.ExperienceDescription}");
+                }
+                contextBuilder.AppendLine();
+            }
         }
 
         // 6. PROJELER
@@ -179,17 +214,24 @@ public class PortfolioContextManager : IPortfolioContextService
             lowerQuestion.Contains("yaptığın"))
         {
             var projects = await _projectDal.GetAllAsync(x => x.IsPublished);
-            contextBuilder.AppendLine("--- PROJELERİM ---");
-            foreach (var p in projects)
+            if (projects.Any())
             {
-                var summary = !string.IsNullOrEmpty(p.AiSummary) ? p.AiSummary
-                    : !string.IsNullOrEmpty(p.Description) ? Truncate(p.Description, 300)
-                    : p.ShortDescription;
-                contextBuilder.AppendLine($"Baran'ın geliştirdiği önemli projelerden biri '{p.Name}' projesidir. Bu projede {p.Technologies} teknolojilerini kullanmıştır. Projenin detayı şöyledir: {summary}.");
-                if (!string.IsNullOrEmpty(p.GithubUrl))
-                    contextBuilder.AppendLine($"  Bu projenin kaynak koduna {p.GithubUrl} adresinden ulaşılabilir.");
-                if (!string.IsNullOrEmpty(p.WebsiteUrl))
-                    contextBuilder.AppendLine($"  Bu projenin canlı demosunu {p.WebsiteUrl} adresinden inceleyebilirsiniz.");
+                contextBuilder.AppendLine("[PROJECTS]");
+                foreach (var p in projects)
+                {
+                    var summary = !string.IsNullOrEmpty(p.AiSummary) ? p.AiSummary
+                        : !string.IsNullOrEmpty(p.Description) ? Truncate(p.Description, 300)
+                        : p.ShortDescription;
+
+                    contextBuilder.AppendLine($"- Name={p.Name}");
+                    contextBuilder.AppendLine($"  Technologies={p.Technologies}");
+                    contextBuilder.AppendLine($"  Description={summary}");
+                    if (!string.IsNullOrEmpty(p.GithubUrl))
+                        contextBuilder.AppendLine($"  GithubUrl={p.GithubUrl}");
+                    if (!string.IsNullOrEmpty(p.WebsiteUrl))
+                        contextBuilder.AppendLine($"  WebsiteUrl={p.WebsiteUrl}");
+                }
+                contextBuilder.AppendLine();
             }
         }
 
@@ -199,9 +241,16 @@ public class PortfolioContextManager : IPortfolioContextService
             lowerQuestion.Contains("kaynak kod") || lowerQuestion.Contains("açık kaynak"))
         {
             var repos = await _githubRepoDal.GetAllAsync();
-            contextBuilder.AppendLine("--- GITHUB REPOLARIM ---");
-            foreach (var repo in repos)
-                contextBuilder.AppendLine($"Baran'ın açık kaynaklı projelerinden biri '{repo.RepoName}' adlı Github reposudur. {repo.Language} teknolojisi kullanılarak yazılan bu projenin amacı şudur: {repo.Description}.");
+            if (repos.Any())
+            {
+                contextBuilder.AppendLine("[GITHUB_REPOS]");
+                foreach (var repo in repos)
+                {
+                    contextBuilder.AppendLine($"- RepoName={repo.RepoName} | Language={repo.Language}");
+                    contextBuilder.AppendLine($"  Description={repo.Description}");
+                }
+                contextBuilder.AppendLine();
+            }
         }
 
         // 8. BLOGLAR
@@ -211,13 +260,21 @@ public class PortfolioContextManager : IPortfolioContextService
             lowerQuestion.Contains("sayfa") || lowerQuestion.Contains("page"))
         {
             var blogs = await _blogPostDal.GetAllAsync(x => x.IsPublished);
-            contextBuilder.AppendLine("--- BLOG YAZILARIM ---");
-            foreach (var b in blogs)
+            if (blogs.Any())
             {
-                var summary = !string.IsNullOrEmpty(b.AiSummary) ? b.AiSummary
-                    : !string.IsNullOrEmpty(b.Content) ? Truncate(b.Content, 500)
-                    : b.Title;
-                contextBuilder.AppendLine($"Baran'ın yazdığı profesyonel makalelerden biri '{b.Title}' başlığını taşımaktadır. Bu makale {b.Technologies} teknolojileri hakkındadır ve yaklaşık {b.ReadTime} dakikada okunabilir. Makalenin özeti şöyledir: {summary}.");
+                contextBuilder.AppendLine("[BLOG_POSTS]");
+                foreach (var b in blogs)
+                {
+                    var summary = !string.IsNullOrEmpty(b.AiSummary) ? b.AiSummary
+                        : !string.IsNullOrEmpty(b.Content) ? Truncate(b.Content, 500)
+                        : b.Title;
+
+                    contextBuilder.AppendLine($"- Title={b.Title}");
+                    contextBuilder.AppendLine($"  Technologies={b.Technologies}");
+                    contextBuilder.AppendLine($"  ReadTime={b.ReadTime} min");
+                    contextBuilder.AppendLine($"  Summary={summary}");
+                }
+                contextBuilder.AppendLine();
             }
         }
 
@@ -230,7 +287,13 @@ public class PortfolioContextManager : IPortfolioContextService
                 var abouts = await _aboutDal.GetAllAsync();
                 var about = abouts.FirstOrDefault();
                 if (about != null)
-                    contextBuilder.AppendLine($"Baran Daşdemir, {about.ExperienceYear} yıllık deneyime sahip profesyonel bir yazılım geliştiricisidir. {about.Bio}");
+                {
+                    contextBuilder.AppendLine("[FALLBACK_SUMMARY]");
+                    contextBuilder.AppendLine($"FullName={about.FullName}");
+                    contextBuilder.AppendLine($"ExperienceYear={about.ExperienceYear}");
+                    contextBuilder.AppendLine($"Bio={about.Bio}");
+                    contextBuilder.AppendLine();
+                }
             }
         }
 

@@ -42,7 +42,7 @@
         <div class="portfolio-grid">
             @foreach (var project in Model.projectDtos)
             {
-                <div class="portfolio-item portfolio-card" data-category="@string.Join(" ", project.Topics)" data-aos="fade-up">
+                <div class="portfolio-item portfolio-card" data-category="@string.Join(",", project.Topics)" data-aos="fade-up">
 
                     <div class="portfolio-image">
                         <img src="@project.ImageUrl" alt="@project.Name">

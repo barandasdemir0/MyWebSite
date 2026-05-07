@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 card.style.transform = 'scale(0.8) translateY(20px)';
 
                 setTimeout(() => {
-                    if (filterValue === '*' || category === filterValue) {
+                    if (filterValue === '*' || (category && category.split(',').map(c => c.trim()).includes(filterValue.trim()))) {
                         card.style.display = 'block';
                         setTimeout(() => {
                             card.style.opacity = '1';

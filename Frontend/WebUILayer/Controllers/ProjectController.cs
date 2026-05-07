@@ -27,7 +27,7 @@ public class ProjectController : Controller
             var models = new ProjectViewModel
             {
                 topicDtos = await _publicTopicApiService.GetAllAsync(),
-                projectDtos = await _publicProjectApiService.GetLatestAsync(3),
+                projectDtos = pagedResult.Items,
                 CurrentPage = pagedResult.PageNumber,
                 TotalPages = pagedResult.TotalPages
             };
