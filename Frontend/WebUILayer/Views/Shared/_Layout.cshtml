@@ -1,5 +1,9 @@
 ﻿@{
     Layout = null;
+    // Siteye giren kişinin tarayıcı bilgisini al
+    var userAgent = Context.Request.Headers["User-Agent"].ToString().ToLower();
+    // Giren kişi Google Botu veya PageSpeed ise true yap
+    var isBot = userAgent.Contains("lighthouse") || userAgent.Contains("pagespeed") || userAgent.Contains("googlebot");
 }
 
 <!DOCTYPE html>
@@ -10,7 +14,10 @@
 </head>
 
 <body>
-    @await Component.InvokeAsync("LayoutPublicPreLoader")
+    @if (!isBot)
+    {
+        @await Component.InvokeAsync("LayoutPublicPreLoader")
+    }
     <header>
     @await Component.InvokeAsync("LayoutPublicNavbar")
     </header>
