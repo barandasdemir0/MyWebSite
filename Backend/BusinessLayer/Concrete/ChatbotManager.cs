@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.Abstract;
 using BusinessLayer.Services;
 using DataAccessLayer.Abstract;
+using EntityLayer.Constants;
 using Microsoft.Extensions.Logging;
+
 
 namespace BusinessLayer.Concrete;
 
@@ -17,15 +19,6 @@ public class ChatbotManager : IChatbotManagerService
     private readonly EncryptionService _encryptionService;
 
 
-
-    private static readonly string[] BannedInputKeywords = {
-            "kural", "prompt", "ignore", "unut", "simülasyon", "test mod",
-            "json", "talimat", "sistem", "whitelist", "geliştirici", "developer"
-        };
-    private static readonly string[] BannedOutputKeywords = {
-        "<DatabaseContext>", "WHITELIST", "GÖREV:", "KATI KURALLAR"
-        };
-
     public ChatbotManager(IChatbotSettingsDal chatbotSettingsService, IChatbotCacheDal chatbotCacheDal, IGroqApiService groqApiService, IUnitOfWork unitOfWork, ILogger<ChatbotManager> logger, IPortfolioContextService contextService, EncryptionService encryptionService)
     {
         _chatbotSettingsService = chatbotSettingsService;
@@ -37,7 +30,7 @@ public class ChatbotManager : IChatbotManagerService
         _encryptionService = encryptionService;
     }
 
-    public async Task<string> ProcessUserMessageAsync(string question, string currentUrl)
+    public async Task<string> ProcessUserMessageAsync(string question, string currentUrl, CancellationToken cancellationToken=default)
     {
 
         string normalizedQuestion = question.Trim().ToLowerInvariant().TrimEnd('?');
@@ -56,7 +49,7 @@ public class ChatbotManager : IChatbotManagerService
         var settings = await _chatbotSettingsService.GetActiveSettingsAsync();
         if (settings == null || string.IsNullOrEmpty(settings.ApiKey)) throw new Exception("Chatbot ayarları eksik.");
         // 4. Veritabanı Bağlamını (Context) Oluştur
-        string contextData = await _contextService.BuildContextAsync(currentUrl, normalizedQuestion);
+        string contextData = await _contextService.BuildContextAsync(currentUrl, normalizedQuestion,cancellationToken);
         string finalPromt = $@"{settings.SystemPrompt}
         <SystemNote>Kullanıcı şu anda '{normalizedUrl}' sayfasında bulunuyor.</SystemNote>
         <DatabaseContext> {contextData} </DatabaseContext>";
@@ -111,7 +104,7 @@ public class ChatbotManager : IChatbotManagerService
     private bool IsInputSafe(string normalizedQuestion)
     {
         if (normalizedQuestion.Length > 250) return false;
-        foreach (var banned in BannedInputKeywords)
+        foreach (var banned in ChatbotConstants.BannedInputKeywords)
         {
             if (normalizedQuestion.Contains(banned)) return false;
         }
@@ -121,7 +114,7 @@ public class ChatbotManager : IChatbotManagerService
 
     private bool IsOutputSafe(string botReply)
     {
-        foreach (var banned in BannedOutputKeywords)
+        foreach (var banned in ChatbotConstants.BannedOutputKeywords)
         {
             if (botReply.Contains(banned, StringComparison.OrdinalIgnoreCase)) return false;
         }

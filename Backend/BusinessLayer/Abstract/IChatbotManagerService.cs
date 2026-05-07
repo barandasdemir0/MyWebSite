@@ -2,5 +2,5 @@
 
 public interface IChatbotManagerService
 {
-    Task<string> ProcessUserMessageAsync(string question, string currentUrl);
+    Task<string> ProcessUserMessageAsync(string question, string currentUrl, CancellationToken cancellationToken = default);
 }

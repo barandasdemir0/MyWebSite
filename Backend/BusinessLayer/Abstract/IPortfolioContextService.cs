@@ -2,5 +2,5 @@
 
 public interface IPortfolioContextService
 {
-    Task<string> BuildContextAsync(string currentUrl, string lowerQuestion);
+    Task<string> BuildContextAsync(string currentUrl, string lowerQuestion, CancellationToken cancellationToken = default);
 }

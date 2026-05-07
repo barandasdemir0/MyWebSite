@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.Abstract;
 using DataAccessLayer.Abstract;
-using System.Text;
+using EntityLayer.Constants; 
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace BusinessLayer.Concrete;
 
@@ -44,267 +46,164 @@ public class PortfolioContextManager : IPortfolioContextService
         _skillDal = skillDal;
     }
 
-    public async Task<string> BuildContextAsync(string currentUrl, string lowerQuestion)
+    public async Task<string> BuildContextAsync(string currentUrl, string lowerQuestion, CancellationToken cancellationToken=default)
     {
-        var contextBuilder = new StringBuilder();
-        string lowerUrl = currentUrl.ToLower();
+        string lowerUrl = currentUrl?.ToLower() ?? "";
+        lowerQuestion = lowerQuestion?.ToLower() ?? "";
 
-        // ===== GENEL BİLGİLER (HER ZAMAN YÜKLENİR) =====
-        var siteSettings = (await _siteSettingsDal.GetAllAsync()).FirstOrDefault();
+        // Yapay zekaya gidecek verileri tutacağımız Dictionary (JSON mimarisi)
+        var contextData = new Dictionary<string, object>();
+
+        // ===== GENEL BİLGİLER (Best Practice: GetAsync ve tracking: false) =====
+        var siteSettings = await _siteSettingsDal.GetAsync(x => true, tracking: false, cancellationToken:cancellationToken);
         if (siteSettings != null)
-        {
-            contextBuilder.AppendLine("[SITE_STATUS]");
-            contextBuilder.AppendLine($"IsAvailable={siteSettings.IsAvailable}");
-            contextBuilder.AppendLine($"WorkStatus={siteSettings.WorkStatus}");
-            contextBuilder.AppendLine();
-        }
+            contextData["SiteStatus"] = new { siteSettings.IsAvailable, siteSettings.WorkStatus };
 
         // ===== SOSYAL MEDYA =====
-        if (lowerQuestion.Contains("sosyal") || lowerQuestion.Contains("linkedin") || lowerQuestion.Contains("github") ||
-            lowerQuestion.Contains("instagram") || lowerQuestion.Contains("twitter") || lowerQuestion.Contains("iletişim") ||
-            lowerQuestion.Contains("ulaş") || lowerQuestion.Contains("takip") || lowerUrl.Contains("contact"))
+        if (HasAny(lowerUrl, ChatbotConstants.SocialKeywords) || HasAny(lowerQuestion, ChatbotConstants.SocialKeywords))
         {
-            var socials = await _socialMediaDal.GetAllAsync();
-            if (socials.Any())
-            {
-                contextBuilder.AppendLine("[SOCIAL_MEDIA]");
-                foreach (var s in socials)
-                    contextBuilder.AppendLine($"{s.SocialMediaName}={s.SocialMediaUrl}");
-                contextBuilder.AppendLine();
-            }
+            var socials = await _socialMediaDal.GetAllAsync(tracking: false);
+            if (socials.Any()) contextData["SocialMedia"] = socials.Select(s => new { s.SocialMediaName, s.SocialMediaUrl }).ToList();
         }
 
-        // ===== İLETİŞİM =====
-        if (lowerUrl.Contains("contact") || lowerQuestion.Contains("iletişim") || lowerQuestion.Contains("email") ||
-            lowerQuestion.Contains("mail") || lowerQuestion.Contains("telefon") || lowerQuestion.Contains("ulaş") ||
-            lowerQuestion.Contains("adres") || lowerQuestion.Contains("konum"))
+        // ===== İLETİŞİM (Best Practice: GetAsync) =====
+        if (HasAny(lowerUrl, ChatbotConstants.ContactKeywords) || HasAny(lowerQuestion, ChatbotConstants.ContactKeywords))
         {
-            var contacts = await _contactDal.GetAllAsync();
-            var contact = contacts.FirstOrDefault();
-            if (contact != null)
-            {
-                contextBuilder.AppendLine("[CONTACT_INFO]");
-                contextBuilder.AppendLine($"Email={contact.Email}");
-                contextBuilder.AppendLine($"Phone={contact.Phone}");
-                contextBuilder.AppendLine($"Location={contact.Location}");
-                contextBuilder.AppendLine();
-            }
+            var contact = await _contactDal.GetAsync(x => true, tracking: false);
+            if (contact != null) contextData["ContactInfo"] = new { contact.Email, contact.Phone, contact.Location };
         }
 
-        // 1. HERO & HAKKIMDA
-        if (lowerUrl == "/" || lowerUrl.Contains("about") || lowerQuestion.Contains("kim") ||
-            lowerQuestion.Contains("hakkında") || lowerQuestion.Contains("tanıt") ||
-            lowerQuestion.Contains("neler yaparsın") || lowerQuestion.Contains("kendini") ||
-            lowerQuestion.Contains("merhaba") || lowerQuestion.Contains("sen kimsin"))
+        // ===== 1. HERO & HAKKIMDA (Best Practice: GetAsync) =====
+        bool isHomeOrAbout = lowerUrl == "/" || lowerUrl.Contains("about");
+        if (isHomeOrAbout || HasAny(lowerQuestion, ChatbotConstants.AboutKeywords))
         {
-            var heroes = await _heroDal.GetAllAsync();
-            var hero = heroes.FirstOrDefault();
-            if (hero != null)
-            {
-                contextBuilder.AppendLine("[HERO]");
-                contextBuilder.AppendLine($"ProfessionalTitle={hero.ProfessionalTitle}");
-                contextBuilder.AppendLine($"Technologies={hero.ScrollingText}");
-                contextBuilder.AppendLine();
-            }
+            var hero = await _heroDal.GetAsync(x => true, tracking: false);
+            if (hero != null) contextData["Hero"] = new { hero.ProfessionalTitle, Technologies = hero.ScrollingText };
 
-            var abouts = await _aboutDal.GetAllAsync();
-            var about = abouts.FirstOrDefault();
-            if (about != null)
+            var about = await _aboutDal.GetAsync(x => true, tracking: false);
+            if (about != null) contextData["About"] = new
             {
-                contextBuilder.AppendLine("[ABOUT]");
-                contextBuilder.AppendLine($"FullName={about.FullName}");
-                contextBuilder.AppendLine($"ExperienceYear={about.ExperienceYear}");
-                contextBuilder.AppendLine($"ProjectCount={about.ProjectCount}");
-                if (!string.IsNullOrEmpty(about.Bio))
-                    contextBuilder.AppendLine($"Bio={about.Bio}");
-                if (!string.IsNullOrEmpty(about.Greeting))
-                    contextBuilder.AppendLine($"Greeting={about.Greeting}");
-                contextBuilder.AppendLine();
-            }
+                about.FullName,
+                about.ExperienceYear,
+                about.ProjectCount,
+                Bio = Truncate(about.Bio, 1000),
+                Greeting = Truncate(about.Greeting, 500)
+            };
         }
 
-        // 2. İŞ YETENEKLERİ & TEKNOLOJİ STACK
-        if (lowerUrl.Contains("skill") || lowerUrl == "/" || lowerUrl.Contains("about") ||
-            lowerQuestion.Contains("yetenek") || lowerQuestion.Contains("teknoloji") ||
-            lowerQuestion.Contains("dil") || lowerQuestion.Contains("stack") ||
-            lowerQuestion.Contains("bildiğin") || lowerQuestion.Contains("kullandığın"))
+        // ===== 2. İŞ YETENEKLERİ & TEKNOLOJİ STACK =====
+        if (isHomeOrAbout || lowerUrl.Contains("skill") || HasAny(lowerQuestion, ChatbotConstants.SkillKeywords))
         {
-            var skills = await _jobSkillDal.GetAllAsync();
-            var categories = await _jobSkillCategoryDal.GetAllAsync();
+            var skills = await _jobSkillDal.GetAllAsync(tracking: false);
+            var categories = await _jobSkillCategoryDal.GetAllAsync(tracking: false);
+            var jobSkillsList = categories.Select(cat => new {
+                Category = cat.CategoryName,
+                Skills = skills.Where(s => s.JobSkillCategoryId == cat.Id).Select(s => new { Name = s.JobSkillName, Percentage = s.JobSkillPercentage }).ToList()
+            }).Where(c => c.Skills.Any()).ToList();
 
-            contextBuilder.AppendLine("[JOB_SKILLS]");
-            foreach (var cat in categories)
-            {
-                var catSkills = skills.Where(s => s.JobSkillCategoryId == cat.Id).ToList();
-                if (catSkills.Any())
-                {
-                    contextBuilder.AppendLine($"Category={cat.CategoryName}");
-                    foreach (var s in catSkills)
-                        contextBuilder.AppendLine($"- {s.JobSkillName}: {s.JobSkillPercentage}%");
-                }
-            }
-            contextBuilder.AppendLine();
+            if (jobSkillsList.Any()) contextData["JobSkills"] = jobSkillsList;
 
-            var techSkills = await _skillDal.GetAllAsync();
-            if (techSkills.Any())
-            {
-                contextBuilder.AppendLine("[DAILY_TOOLS]");
-                contextBuilder.AppendLine($"Tools={string.Join(", ", techSkills.Select(s => s.SkillName))}");
-                contextBuilder.AppendLine();
-            }
+            var techSkills = await _skillDal.GetAllAsync(tracking: false);
+            if (techSkills.Any()) contextData["DailyTools"] = techSkills.Select(s => s.SkillName).ToList();
         }
 
-        // 3. EĞİTİM
-        if (lowerUrl.Contains("education") || lowerUrl.Contains("resume") || lowerUrl == "/" ||
-            lowerQuestion.Contains("okul") || lowerQuestion.Contains("eğitim") ||
-            lowerQuestion.Contains("üniversite") || lowerQuestion.Contains("mezun") ||
-            lowerQuestion.Contains("özgeçmiş"))
+        // ===== 3. EĞİTİM =====
+        bool isResume = lowerUrl.Contains("resume");
+        if (isHomeOrAbout || isResume || lowerUrl.Contains("education") || HasAny(lowerQuestion, ChatbotConstants.EducationKeywords))
         {
-            var educations = await _educationDal.GetAllAsync();
-            if (educations.Any())
-            {
-                contextBuilder.AppendLine("[EDUCATION]");
-                foreach (var edu in educations)
-                {
-                    string endDate = edu.EducationFinishDate.HasValue ? edu.EducationFinishDate.Value.ToString("yyyy") : "Present";
-                    contextBuilder.AppendLine($"- School={edu.EducationSchoolName} | Degree={edu.EducationDegree} | Period={edu.EducationStartDate:yyyy}-{endDate}");
-                }
-                contextBuilder.AppendLine();
-            }
+            var educations = await _educationDal.GetAllAsync(tracking: false);
+            if (educations.Any()) contextData["Education"] = educations.Select(e => new {
+                School = e.EducationSchoolName,
+                Degree = e.EducationDegree,
+                StartDate = e.EducationStartDate.ToString("yyyy"),
+                EndDate = e.EducationFinishDate.HasValue ? e.EducationFinishDate.Value.ToString("yyyy") : "Present"
+            }).ToList();
         }
 
-        // 4. SERTİFİKALAR
-        if (lowerUrl.Contains("certificate") || lowerUrl.Contains("resume") ||
-            lowerQuestion.Contains("sertifika") || lowerQuestion.Contains("kurs") ||
-            lowerQuestion.Contains("belge") || lowerQuestion.Contains("özgeçmiş"))
+        // ===== 4. SERTİFİKALAR =====
+        if (isResume || lowerUrl.Contains("certificate") || HasAny(lowerQuestion, ChatbotConstants.CertificateKeywords))
         {
-            var certificates = await _certificateDal.GetAllAsync();
-            if (certificates.Any())
-            {
-                contextBuilder.AppendLine("[CERTIFICATES]");
-                foreach (var cert in certificates)
-                    contextBuilder.AppendLine($"- Name={cert.CertificateName} | Issuer={cert.IssuingCompany} | Year={cert.IssueDate:yyyy}");
-                contextBuilder.AppendLine();
-            }
+            var certificates = await _certificateDal.GetAllAsync(tracking: false);
+            if (certificates.Any()) contextData["Certificates"] = certificates.Select(c => new {
+                Name = c.CertificateName,
+                Issuer = c.IssuingCompany,
+                Year = c.IssueDate.ToString("yyyy")
+            }).ToList();
         }
 
-        // 5. DENEYİMLER
-        if (lowerUrl.Contains("experience") || lowerUrl.Contains("resume") || lowerUrl == "/" ||
-            lowerQuestion.Contains("tecrübe") || lowerQuestion.Contains("deneyim") ||
-            lowerQuestion.Contains("çalıştın") || lowerQuestion.Contains("iş geçmişi") ||
-            lowerQuestion.Contains("özgeçmiş") || lowerQuestion.Contains("kariyer"))
+        // ===== 5. DENEYİMLER =====
+        if (isHomeOrAbout || isResume || lowerUrl.Contains("experience") || HasAny(lowerQuestion, ChatbotConstants.ExperienceKeywords))
         {
-            var experiences = await _experienceDal.GetAllAsync();
-            if (experiences.Any())
-            {
-                contextBuilder.AppendLine("[EXPERIENCE]");
-                foreach (var e in experiences)
-                {
-                    string endDate = e.ExperienceFinishDate.HasValue ? e.ExperienceFinishDate.Value.ToString("yyyy") : "Present";
-                    contextBuilder.AppendLine($"- Company={e.ExperienceCompanyName} | Title={e.ExperienceTitle} | Period={e.ExperienceStartDate:yyyy}-{endDate}");
-                    contextBuilder.AppendLine($"  Description={e.ExperienceDescription}");
-                }
-                contextBuilder.AppendLine();
-            }
+            var experiences = await _experienceDal.GetAllAsync(tracking: false);
+            if (experiences.Any()) contextData["Experience"] = experiences.Select(e => new {
+                Company = e.ExperienceCompanyName,
+                Title = e.ExperienceTitle,
+                StartDate = e.ExperienceStartDate.ToString("yyyy"),
+                EndDate = e.ExperienceFinishDate.HasValue ? e.ExperienceFinishDate.Value.ToString("yyyy") : "Present",
+                Description = Truncate(e.ExperienceDescription, 500)
+            }).ToList();
         }
 
-        // 6. PROJELER
-        if (lowerUrl.Contains("project") || lowerQuestion.Contains("proje") ||
-            lowerQuestion.Contains("uygulama") || lowerQuestion.Contains("geliştirdin") ||
-            lowerQuestion.Contains("yaptığın"))
+        // ===== 6. PROJELER =====
+        if (lowerUrl.Contains("project") || HasAny(lowerQuestion, ChatbotConstants.ProjectKeywords))
         {
-            var projects = await _projectDal.GetAllAsync(x => x.IsPublished);
-            if (projects.Any())
-            {
-                contextBuilder.AppendLine("[PROJECTS]");
-                foreach (var p in projects)
-                {
-                    var summary = !string.IsNullOrEmpty(p.AiSummary) ? p.AiSummary
-                        : !string.IsNullOrEmpty(p.Description) ? Truncate(p.Description, 300)
-                        : p.ShortDescription;
-
-                    contextBuilder.AppendLine($"- Name={p.Name}");
-                    contextBuilder.AppendLine($"  Technologies={p.Technologies}");
-                    contextBuilder.AppendLine($"  Description={summary}");
-                    if (!string.IsNullOrEmpty(p.GithubUrl))
-                        contextBuilder.AppendLine($"  GithubUrl={p.GithubUrl}");
-                    if (!string.IsNullOrEmpty(p.WebsiteUrl))
-                        contextBuilder.AppendLine($"  WebsiteUrl={p.WebsiteUrl}");
-                }
-                contextBuilder.AppendLine();
-            }
+            var projects = await _projectDal.GetAllAsync(x => x.IsPublished, tracking: false);
+            if (projects.Any()) contextData["Projects"] = projects.Select(p => new {
+                p.Name,
+                p.Technologies,
+                Description = !string.IsNullOrEmpty(p.AiSummary) ? p.AiSummary : Truncate(!string.IsNullOrEmpty(p.Description) ? p.Description : p.ShortDescription, 300),
+                p.GithubUrl,
+                p.WebsiteUrl
+            }).ToList();
         }
 
-        // 7. GITHUB REPOLARI
-        if (lowerUrl.Contains("github") || lowerUrl.Contains("repo") ||
-            lowerQuestion.Contains("github") || lowerQuestion.Contains("repo") ||
-            lowerQuestion.Contains("kaynak kod") || lowerQuestion.Contains("açık kaynak"))
+        // ===== 7. GITHUB REPOLARI =====
+        if (lowerUrl.Contains("github") || lowerUrl.Contains("repo") || HasAny(lowerQuestion, ChatbotConstants.GithubKeywords))
         {
-            var repos = await _githubRepoDal.GetAllAsync();
-            if (repos.Any())
-            {
-                contextBuilder.AppendLine("[GITHUB_REPOS]");
-                foreach (var repo in repos)
-                {
-                    contextBuilder.AppendLine($"- RepoName={repo.RepoName} | Language={repo.Language}");
-                    contextBuilder.AppendLine($"  Description={repo.Description}");
-                }
-                contextBuilder.AppendLine();
-            }
+            var repos = await _githubRepoDal.GetAllAsync(tracking: false);
+            if (repos.Any()) contextData["GithubRepos"] = repos.Select(r => new { r.RepoName, r.Language, r.Description }).ToList();
         }
 
-        // 8. BLOGLAR
-        if (lowerUrl.Contains("blog") || lowerQuestion.Contains("blog") ||
-            lowerQuestion.Contains("makale") || lowerQuestion.Contains("yazı") ||
-            lowerQuestion.Contains("özetle") || lowerQuestion.Contains("summarize") ||
-            lowerQuestion.Contains("sayfa") || lowerQuestion.Contains("page"))
+        // ===== 8. BLOGLAR =====
+        if (lowerUrl.Contains("blog") || HasAny(lowerQuestion, ChatbotConstants.BlogKeywords))
         {
-            var blogs = await _blogPostDal.GetAllAsync(x => x.IsPublished);
-            if (blogs.Any())
-            {
-                contextBuilder.AppendLine("[BLOG_POSTS]");
-                foreach (var b in blogs)
-                {
-                    var summary = !string.IsNullOrEmpty(b.AiSummary) ? b.AiSummary
-                        : !string.IsNullOrEmpty(b.Content) ? Truncate(b.Content, 500)
-                        : b.Title;
-
-                    contextBuilder.AppendLine($"- Title={b.Title}");
-                    contextBuilder.AppendLine($"  Technologies={b.Technologies}");
-                    contextBuilder.AppendLine($"  ReadTime={b.ReadTime} min");
-                    contextBuilder.AppendLine($"  Summary={summary}");
-                }
-                contextBuilder.AppendLine();
-            }
+            var blogs = await _blogPostDal.GetAllAsync(x => x.IsPublished, tracking: false);
+            if (blogs.Any()) contextData["BlogPosts"] = blogs.Select(b => new {
+                b.Title,
+                b.Technologies,
+                ReadTimeMinutes = b.ReadTime,
+                Summary = !string.IsNullOrEmpty(b.AiSummary) ? b.AiSummary : Truncate(b.Content, 500)
+            }).ToList();
         }
 
-        // ===== SAYFA BAZLI GENEL CONTEXT =====
-        if (lowerQuestion.Contains("özetle") || lowerQuestion.Contains("summarize") ||
-            lowerQuestion.Contains("bu sayfa") || lowerQuestion.Contains("this page"))
+        // ===== FALLBACK =====
+        if (!contextData.ContainsKey("About") && HasAny(lowerQuestion, ChatbotConstants.SummaryKeywords))
         {
-            if (contextBuilder.Length < 100)
-            {
-                var abouts = await _aboutDal.GetAllAsync();
-                var about = abouts.FirstOrDefault();
-                if (about != null)
-                {
-                    contextBuilder.AppendLine("[FALLBACK_SUMMARY]");
-                    contextBuilder.AppendLine($"FullName={about.FullName}");
-                    contextBuilder.AppendLine($"ExperienceYear={about.ExperienceYear}");
-                    contextBuilder.AppendLine($"Bio={about.Bio}");
-                    contextBuilder.AppendLine();
-                }
-            }
+            var about = await _aboutDal.GetAsync(x => true, tracking: false);
+            if (about != null) contextData["FallbackSummary"] = new { about.FullName, about.ExperienceYear, Bio = Truncate(about.Bio, 300) };
         }
 
-        return contextBuilder.ToString();
+        // Verileri temiz bir JSON'a dönüştür
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+
+        return JsonSerializer.Serialize(contextData, jsonOptions);
+    }
+
+    private static bool HasAny(string text, string[] keywords)
+    {
+        if (string.IsNullOrEmpty(text)) return false;
+        return keywords.Any(k => text.Contains(k));
     }
 
     private static string Truncate(string text, int maxLength)
     {
         if (string.IsNullOrEmpty(text)) return string.Empty;
-        text = System.Text.RegularExpressions.Regex.Replace(text, "<.*?>", " ");
-        text = System.Text.RegularExpressions.Regex.Replace(text, @"\s+", " ").Trim();
-        return text.Length <= maxLength ? text : text[..maxLength] + "...";
+        text = Regex.Replace(text, "<.*?>", " ");
+        text = Regex.Replace(text, @"\s+", " ").Trim();
+        return text.Length <= maxLength ? text : text.Substring(0, maxLength) + "...";
     }
 }
