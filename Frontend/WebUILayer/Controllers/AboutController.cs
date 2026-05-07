@@ -29,7 +29,7 @@ public class AboutController : Controller
         var aboutsTask = _publicAboutApiService.GetAllAsync();
         var jobSkillsTask = _publicJobSkillApiService.GetAllAsync();
         var jobSkillCategoriesTask = _publicJobSkillCategoryService.GetAllAsync();
-        var contactTask = _publicContactApiService.GetAllAsync();
+        var contactTask = _publicContactApiService.GetPublicContactSettingsAsync();
         var siteSettingsTask = _publicSiteSettingsApiService.GetAllAsync();
         // 2. Bütün görevlerin bitmesini paralel olarak bekle
         await Task.WhenAll(aboutsTask, jobSkillsTask, jobSkillCategoriesTask, contactTask, siteSettingsTask);
@@ -39,7 +39,7 @@ public class AboutController : Controller
             About = aboutsTask.Result.FirstOrDefault(),
             jobSkillDtos = jobSkillsTask.Result,
             jobSkillCategoryDtos = jobSkillCategoriesTask.Result,
-            Contact = contactTask.Result.FirstOrDefault(),
+            Contact = contactTask.Result,
             SiteSetting = siteSettingsTask.Result.FirstOrDefault()
         };
         return View(model);
