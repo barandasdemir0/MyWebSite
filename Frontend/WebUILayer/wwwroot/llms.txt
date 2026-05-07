@@ -1,17 +1,26 @@
-# Baran Dasdemir - Professional Portfolio
+# Baran Dasdemir - Professional Portfolio & IT Specialist
 
-> Baran Dasdemir is a Software Developer specializing in Web, Mobile App Development, SaaS, and AI integration. 
+> Baran Dasdemir is an Information Technology Specialist and Software Developer specializing in Web Development, Mobile App Development, SaaS Products, and AI Integration.
+
+## About
+Baran Dasdemir is a multi-disciplinary IT Specialist who builds modern, scalable web and mobile applications. Expert in .NET Clean Architecture, ASP.NET Core MVC, and Cybersecurity best practices. He is passionate about AI-powered solutions, real-time systems, and advanced software engineering.
 
 ## Technical Stack
-- .NET Clean Architecture & MVC
-- Modern JavaScript, HTML5, CSS3
-- SignalR & Real-time applications
-- AI Chatbot Integrations
+- Backend: .NET 9/10, ASP.NET Core MVC, Web API, Entity Framework Core, Clean Architecture, N TİER
+- Frontend: HTML5, CSS3, JavaScript (ES6+), Bootstrap 5
+- AI & Real-time: Groq AI, RAG Systems, SignalR
+- Database: SQL Server, PostgreSQL, Redis
+- Infrastructure: IT Management, Docker, CI/CD (GitHub Actions)
+- Security: OAuth 2.0, 2FA, JWT, OWASP Hardening
 
 ## Core Pages
-- https://www.barandasdemir.com/
+- Home: https://www.barandasdemir.com
 - About: https://www.barandasdemir.com/About
 - Resume: https://www.barandasdemir.com/Resume
 - Projects: https://www.barandasdemir.com/Project
 - Blog: https://www.barandasdemir.com/Blog
+- Guest Book: https://www.barandasdemir.com/GuestBook
 - Contact: https://www.barandasdemir.com/Contact
+## Contact
+- Website: https://www.barandasdemir.com
+- GitHub: https://github.com/barandasdemir

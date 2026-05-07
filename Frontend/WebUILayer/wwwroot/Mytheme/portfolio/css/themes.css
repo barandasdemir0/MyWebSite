@@ -19,7 +19,7 @@
     --card-border: rgba(226, 232, 240, 0.8);
     --text-primary: #0f172a;
     --text-secondary: #475569;
-    --text-muted: #8b95a8;
+    --text-muted: #64748b;
     --glass-bg: rgba(255, 255, 255, 0.8);
     --glass-border: rgba(226, 232, 240, 0.8);
     --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -46,7 +46,7 @@
     --card-border: rgba(255, 255, 255, 0.08);
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
-    --text-muted: #8b95a8;
+    --text-muted: #9ba5b7;
     --glass-bg: rgba(30, 41, 59, 0.6);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);

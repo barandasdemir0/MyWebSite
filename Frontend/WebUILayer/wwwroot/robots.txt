@@ -1,6 +1,13 @@
+# Baran Dasdemir - Portfolio Website
+# https://www.barandasdemir.com
 User-agent: *
 Allow: /
+# Admin paneli ve hata sayfaları taranmasın
 Disallow: /Admin/
 Disallow: /Error/
-
+Disallow: /ErrorPage/
+Disallow: /Auth/
+Disallow: /Account/
+Disallow: /TwoFactor/
+# Sitemap konumu
 Sitemap: https://www.barandasdemir.com/sitemap.xml

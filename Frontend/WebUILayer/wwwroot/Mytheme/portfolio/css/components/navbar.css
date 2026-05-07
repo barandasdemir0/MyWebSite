@@ -12,12 +12,13 @@
     background: transparent;
 }
 
-.navbar.scrolled {
-    background: var(--navbar-bg);
-    backdrop-filter: blur(20px);
-    box-shadow: var(--shadow-md);
-    padding: 15px 0;
-}
+    .navbar.scrolled {
+        background: var(--navbar-bg);
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        box-shadow: var(--shadow-md);
+        padding: 15px 0;
+    }
 
 .navbar-brand {
     font-family: var(--font-heading);
