@@ -14,7 +14,7 @@ public class LayoutPublicHeaderViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var values = await _publicSiteSettingsApiService.GetAllAsync();
+        var values = await _publicSiteSettingsApiService.GetPublicSiteSettingsAsync();
         return View(values);
     }
 }

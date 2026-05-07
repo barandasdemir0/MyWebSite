@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Serilog;
 using WebUILayer.Extension;
 using WebUILayer.Middleware;
 
@@ -32,9 +33,12 @@ builder.Services.AddWebOptimization();
 
 
 
-
+Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

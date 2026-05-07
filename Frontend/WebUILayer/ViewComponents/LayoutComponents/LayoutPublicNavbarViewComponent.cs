@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebUILayer.Areas.Admin.Services.Abstract;
 
 namespace WebUILayer.ViewComponents.LayoutComponents;
 

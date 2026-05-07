@@ -41,7 +41,7 @@ public class GlobalExceptionMiddleware
             else
             {
                 // Gerçekten beklenmedik bir hataysa yönlendir
-                httpContext.Response.Redirect("/Home/Error");
+                httpContext.Response.Redirect("/ErrorPage/Index?code=500");
             }
         }
     }

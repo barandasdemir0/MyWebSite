@@ -9,10 +9,12 @@ namespace WebUILayer.Helper;
 public class ValidationExceptionFilter : IExceptionFilter
 {
     private readonly IModelMetadataProvider _modelMetadataProvider;
+    ILogger<ValidationExceptionFilter> _logger;
 
-    public ValidationExceptionFilter(IModelMetadataProvider modelMetadataProvider)
+    public ValidationExceptionFilter(IModelMetadataProvider modelMetadataProvider, ILogger<ValidationExceptionFilter> logger)
     {
         _modelMetadataProvider = modelMetadataProvider;
+        _logger = logger;
     }
 
     public void OnException(ExceptionContext context)
@@ -27,6 +29,7 @@ public class ValidationExceptionFilter : IExceptionFilter
 
         try
         {
+            _logger.LogWarning("Validasyon hatası oluştu: {Message}", message);
             var problemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(message, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             if (problemDetails != null)
