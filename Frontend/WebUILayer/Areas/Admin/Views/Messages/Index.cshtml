@@ -161,10 +161,10 @@
                                 <td data-label="Tarih">@item.CreatedAt.AddHours(3).ToString("dd MMM yyyy HH:mm")</td>
                                 <td data-label="İşlemler">
                                     <div class="action-btns">
-                                        <button class="action-btn edit" title="Görüntüle"
+                                       @*  <button class="action-btn edit" title="Görüntüle"
                                                 data-action="openModal" data-target="msg-@item.Id">
                                             <i class="fas fa-eye"></i>
-                                        </button>
+                                        </button> *@
                                         @if (Model.ActiveCategory == "draft")
                                         {
                                             <button class="action-btn edit" title="Düzenle"
