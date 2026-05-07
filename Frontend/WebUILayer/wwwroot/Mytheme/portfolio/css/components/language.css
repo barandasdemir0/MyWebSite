@@ -115,27 +115,102 @@
 }
 
 /* Responsive */
+/* ============================================
+   RESPONSIVE - Language & Navbar Alignment
+   ============================================ */
 @media (max-width: 1199.98px) {
+    /* 1. Navbar'ın menüyü kesmesini engelliyoruz */
+    .navbar, .navbar > .container, .order-xl-last {
+        overflow: visible !important;
+    }
+
+    /* 2. Kapsayıcı: 'relative' ve hizalı */
     .lang-dropdown {
-        margin-left: 0;
-        margin-top: 15px;
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Mobilde butonu tam ortaya hizalar */
+        margin: 0 5px !important;
+        position: relative !important;
+        display: inline-block !important;
+        vertical-align: middle;
+        z-index: 1000;
     }
 
+    /* 3. Buton: TR yazısı sığacak genişlikte (52px) */
+    .lang-toggle {
+        width: 52px !important;
+        height: 44px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 10px !important;
+        background: var(--glass-bg) !important;
+        border: 1px solid var(--glass-border) !important;
+        gap: 4px !important;
+        cursor: pointer;
+    }
+
+    /* 4. Menü: Tam butonun altına çivili ve görünür */
     .lang-menu {
-        position: relative; /* Havada asılı kalmayı iptal et, sayfaya göm */
-        top: 0;
-        left: 0;
-        right: auto;
-        transform: none !important; /* Çakışmayı önlemek için animasyonu iptal et */
-        margin-top: 10px;
-        min-width: 150px;
-        display: none; /* Menü kapalıyken boşluk bırakmasın */
+        position: absolute !important;
+        top: 100% !important;
+        right: 0 !important;
+        left: auto !important;
+        margin-top: 10px !important;
+        min-width: 160px !important;
+        background: var(--bg-secondary, #1a1a2e) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 12px !important;
+        z-index: 999999 !important; /* Her şeyin üstünde kalsın */
+        display: none; /* JS ile açılır */
+        flex-direction: column;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        overflow: hidden !important;
     }
 
+    /* Menü açıldığında */
     .lang-dropdown.open .lang-menu {
-        display: flex; /* Menü açıldığında Çark ikonunu aşağı itsin */
+        display: flex !important;
     }
+
+    /* 5. Yazı ve ikon boyutları */
+    .lang-toggle span {
+        font-size: 12px !important;
+        font-weight: 700;
+        margin: 0 !important;
+    }
+
+    .lang-toggle i {
+        font-size: 10px !important;
+        margin: 0 !important;
+    }
+
+    /* Tema ve Hamburger ikonlarını dikeyde hizala */
+    .theme-toggle, .navbar-toggler {
+        height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        vertical-align: middle;
+    }
+    .theme-toggle, .navbar-toggler {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+        padding: 0 !important;
+        margin: 0 4px !important; /* Dış boşlukları sıfırlayıp sabitledik */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 10px !important; /* Çarkı da diğerleri gibi kare/yuvarlak yapıyoruz */
+        background: var(--glass-bg) !important;
+        border: 1px solid var(--glass-border) !important;
+        position: relative !important;
+        top: 0 !important; /* Eğer yukarı-aşağı kayma varsa sıfırlar */
+    }
+        /* Çark ikonunun içindeki resmi/ikonu ortala */
+        .theme-toggle i {
+            margin: 0 !important;
+            font-size: 16px !important;
+        }
 }
+

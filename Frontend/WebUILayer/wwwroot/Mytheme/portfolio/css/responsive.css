@@ -513,3 +513,38 @@ body {
         scroll-behavior: auto;
     }
 }
+/* Mobil cihazlar için çakışmayı önle */
+@media (max-width: 1200px) {
+    .navbar {
+        z-index: 1050; /* Navbar her zaman en üstte kalsın */
+    }
+
+    /* İletişim sayfasındaki o başlık kısmını aşağı kaydır */
+    .page-title-section, .breadcrumb-area {
+        padding-top: 100px !important;
+        margin-top: 0 !important;
+    }
+}
+@media (max-width: 1200px) {
+    /* Navbar'ı sabitleyelim */
+    .navbar {
+        position: relative !important;
+        z-index: 1100 !important;
+        background-color: var(--navbar-bg, #0f0f23) !important;
+    }
+
+    /* "BANA ULAŞIN" yazısını ve altındaki başlığı komple aşağı itelim */
+    /* Aşağıdaki sınıflardan hangisi sendeyse onu yakalayacaktır */
+    .page-header, .inner-page-banner, .breadcrumb-section {
+        padding-top: 150px !important; 
+        margin-top: 50px !important;
+    }
+
+    /* Eğer yazı hala yukarıdaysa, doğrudan o yazıyı hedef alalım */
+    span.subtitle, .hero-subtitle {
+        position: relative !important;
+        top: 0 !important;
+        margin-bottom: 10px !important;
+        display: block !important;
+    }
+}
