@@ -8,4 +8,11 @@ public class PublicHeroApiService : PublicReadApiService<HeroDto>, IPublicHeroAp
     public PublicHeroApiService(HttpClient httpClient/*, string endpoint*/) : base(httpClient, "heroes")
     {
     }
+
+    public async Task<HeroDto> GetPublicHeroesAsync()
+    {
+        var response = await _httpClient.GetAsync($"{_endpoint}/single");
+        if (!response.IsSuccessStatusCode) return new HeroDto();
+        return await response.Content.ReadFromJsonAsync<HeroDto>() ?? new HeroDto();
+    }
 }

@@ -4,4 +4,5 @@ namespace WebUILayer.Services.Abstract;
 
 public interface IPublicHeroApiService:IPublicReadApiService<HeroDto>
 {
+    Task<HeroDto> GetPublicHeroesAsync();
 }

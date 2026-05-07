@@ -35,9 +35,9 @@ public class HomeController : Controller
         try
         {
             // İstekleri çakışmaması için sırayla çekiyoruz
-            var aboutList = await _publicAboutApiService.GetAllAsync();
-            var siteSettingsList = await _publicSiteSettingsApiService.GetAllAsync();
-            var heroList = await _publicHeroApiService.GetAllAsync();
+            var aboutList = await _publicAboutApiService.GetPublicAboutsAsync();
+            var siteSettingsList = await _publicSiteSettingsApiService.GetPublicSiteSettingsAsync();
+            var heroList = await _publicHeroApiService.GetPublicHeroesAsync();
             var socialMediaList = await _publicSocialMediaApiService.GetAllAsync();
             var skillList = await _publicSkillApiService.GetAllAsync();
             var projectList = await _publicProjectApiService.GetLatestAsync(3);
@@ -45,9 +45,9 @@ public class HomeController : Controller
             var githubList = await _publicGithubApiService.GetAllAsync();
             var models = new IndexViewModel
             {
-                aboutDto = aboutList.FirstOrDefault(),
-                siteSettingDto = siteSettingsList.FirstOrDefault(),
-                heroDto = heroList.FirstOrDefault(),
+                aboutDto = aboutList,
+                siteSettingDto = siteSettingsList,
+                heroDto = heroList,
                 socialMediaDtos = socialMediaList,
                 skillDtos = skillList,
                 projectListDtos = projectList,
