@@ -149,6 +149,15 @@ public static class ServiceExtension
 
     }
 
+
+    public static void ResponseCompression(this IServiceCollection services)
+    {
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+        });
+    }
+
     public static void AddAutoValidate(this IServiceCollection services)
     {
         services.AddControllersWithViews(options =>

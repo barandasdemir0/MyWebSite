@@ -22,6 +22,8 @@ builder.Services.AddMemoryCache();
 builder.Services.AddAuthorizationServices();
 builder.Services.AddPerformanceOptimization();
 builder.Services.AddWebOptimization();
+builder.Services.ResponseCompression();
+
 
 
 
@@ -52,6 +54,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseResponseCompression();
 app.UseWebOptimizer();
+
 
 app.UseStaticFiles(new StaticFileOptions
 {

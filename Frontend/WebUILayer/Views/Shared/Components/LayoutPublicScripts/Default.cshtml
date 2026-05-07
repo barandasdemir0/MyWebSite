@@ -1,6 +1,11 @@
 ﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @model SiteSettingDto
 
+@{
+    var userAgent = Context.Request.Headers["User-Agent"].ToString().ToLower();
+    var isBot = userAgent.Contains("lighthouse") || userAgent.Contains("pagespeed") || userAgent.Contains("googlebot");
+}
+
 <!-- ============================================
      APP CONFIG (JS Dosyalarından ÖNCE Yüklenmeli)
      ============================================ -->
@@ -35,4 +40,7 @@
 <script src="/Mytheme/portfolio/js/language.js" defer></script>
 <script src="/Mytheme/portfolio/js/chatbot.js" defer></script>
 <script src="/js/site.js" defer></script>
-<div id="analytics-data" data-ga-id="@Model.GoogleAnalyticsId" data-clarity-id="@Model.MicrosoftClarityId" style="display:none;"></div>
+@if (!isBot)
+{
+    <div id="analytics-data" data-ga-id="@Model.GoogleAnalyticsId" data-clarity-id="@Model.MicrosoftClarityId" style="display:none;"></div>
+}
