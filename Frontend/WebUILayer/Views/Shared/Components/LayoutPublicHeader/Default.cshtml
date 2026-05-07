@@ -3,6 +3,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- 1. Temel SEO Etiketleri (Veritabanından) -->
 <title>@(string.IsNullOrEmpty(Model.SiteTitle) ? "Baran Dasdemir | Portfolyo" : Model.SiteTitle)</title>
+<!-- Sekme İkonu (Admin panelindeki SEO resminden çeker) -->
+@if (!string.IsNullOrEmpty(Model.DefaultSeoImageUrl))
+{
+    <link rel="icon" href="@Model.DefaultSeoImageUrl">
+}
+
 <meta name="description" content="@(string.IsNullOrEmpty(Model.MetaDescription) ? "Baran Dasdemir Professional Portfolio" : Model.MetaDescription)">
 <meta name="keywords" content="@(string.IsNullOrEmpty(Model.SiteKeywords) ? "Web Developer, Software" : Model.SiteKeywords)">
 <meta name="author" content="Baran Dasdemir">
