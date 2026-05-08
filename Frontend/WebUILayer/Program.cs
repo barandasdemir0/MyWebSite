@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.DataProtection;
 using Serilog;
 using WebUILayer.Extension;
 using WebUILayer.Middleware;
@@ -23,6 +23,12 @@ builder.Services.AddAuthorizationServices();
 builder.Services.AddPerformanceOptimization();
 builder.Services.AddWebOptimization();
 builder.Services.ResponseCompression();
+// Program.cs'e ekle (satır 24'ten sonra):
+
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "keys")))
+    .SetApplicationName("MyWebSite");
 
 
 
