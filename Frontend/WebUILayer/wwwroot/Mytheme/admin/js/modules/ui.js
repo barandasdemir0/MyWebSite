@@ -298,10 +298,16 @@ class UISystem {
         });
 
         // Approve Buttons
+
+        // ui.js satır 300-327 - Approve Buttons bölümü:
         document.querySelectorAll('.action-btn').forEach(btn => {
             if (btn.querySelector('.fa-check') && !btn.parentElement.classList.contains('quick-actions')) {
                 btn.addEventListener('click', () => {
+                    // Guestbook sayfasında bu handler'ı ÇALIŞTIRMA
+                    if (document.body.classList.contains('guestbook-page')) return;
+
                     const row = btn.closest('tr');
+
                     if (row) {
                         const statusBadge = row.querySelector('.status-badge');
                         if (statusBadge) {
