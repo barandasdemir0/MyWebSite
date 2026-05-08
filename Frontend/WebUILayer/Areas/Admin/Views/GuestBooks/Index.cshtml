@@ -51,9 +51,10 @@
                     <tr class="@(item.IsDeleted ? "deleted-item" : "")">
                         <td>
                             <div class="author-wrapper">
-                                <img src="@item.AuthorAvatarUrl" alt="@item.AuthorName" class="author-avatar"
+                                <img src="@(item.AuthorAvatarUrl.Contains("media.licdn.com") ? Url.Action("AvatarProxy", "OAuth", new { area = "", url = item.AuthorAvatarUrl }) : item.AuthorAvatarUrl)" alt="@item.AuthorName" class="author-avatar"
                                      onerror="this.onerror=null; this.src='/Mytheme/portfolio/assets/images/default-avatar.png'"
                                      width="45" height="45">
+
                                 <div>
                                     <strong>@item.AuthorName</strong>
                                     <p class="author-meta">Ziyaretçi</p>
