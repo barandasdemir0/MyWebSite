@@ -77,7 +77,9 @@
             <div class="guestbook-auth" data-aos="fade-up" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; text-align: left;">
                 <div class="d-flex align-items-center gap-3">
                     <img style="height:40px" src="@Model.GuestUser.AuthorAvatarUrl" alt="@Model.GuestUser.AuthorName" class="author-avatar"
+                         referrerpolicy="no-referrer"
                          onerror="this.src='/Mytheme/portfolio/assets/images/default-avatar.png'">
+
                     <div class="d-flex flex-column">
                         <strong class="text-white" style="font-size: 1.1rem;">@Model.GuestUser.AuthorName</strong>
                         <small class="text-muted">@Model.GuestUser.AuthProvider ile giriş yapıldı</small>
@@ -131,6 +133,7 @@
                     <div class="comment-avatar">
                         <!-- onerror ekle: -->
                         <img src="@item.AuthorAvatarUrl" alt="@item.AuthorName"
+                             referrerpolicy="no-referrer"
                              onerror="this.src='/Mytheme/portfolio/assets/images/default-avatar.png'">
                     </div>
                     <div class="comment-content">
