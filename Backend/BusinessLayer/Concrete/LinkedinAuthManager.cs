@@ -93,13 +93,17 @@ public class LinkedinAuthManager : ILinkedinAuthService
         using var document = JsonDocument.Parse(userJson);
         // Kullanıcı bilgilerini JSON içinde bulamazsak, null döndürüyoruz.
         var root = document.RootElement;
-
+        string avatarUrl = "";
+        if (root.TryGetProperty("picture", out var pictureProp))
+        {
+            avatarUrl = pictureProp.GetString() ?? "";
+        }
         return new OAuthUserProfileDto
         {
             AuthProvider = "LinkedIn",
             AuthProviderId = root.GetProperty("sub").GetString() ?? "",
             AuthorName = root.GetProperty("name").GetString() ?? "Bilinmeyen",
-            AuthorAvatarUrl = root.GetProperty("picture").GetString() ?? "",
+            AuthorAvatarUrl = avatarUrl,
             AuthorProfileUrl = ""
         };
     }

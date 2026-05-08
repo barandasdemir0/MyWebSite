@@ -43,7 +43,7 @@ public static class ControllerExtension
         modelState.AddModelError("", ex.Message);
     }
 
-    public static async Task<IActionResult> SafeAction(this Controller controller,Func<Task> action,string successMessage,string ErrorMessage, string redirectAction = "Index")
+    public static async Task<IActionResult> SafeAction(this Controller controller, Func<Task> action, string successMessage, string ErrorMessage, string redirectAction = "Index", object? routeValues = null)
     {
         try
         {
@@ -52,9 +52,9 @@ public static class ControllerExtension
         }
         catch (Exception)
         {
-
             controller.TempData["Error"] = ErrorMessage;
         }
-        return controller.RedirectToAction(redirectAction);
+        return controller.RedirectToAction(redirectAction, routeValues);
     }
+
 }

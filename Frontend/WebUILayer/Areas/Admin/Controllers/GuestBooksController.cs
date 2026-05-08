@@ -50,9 +50,11 @@ public class GuestBooksController : Controller
         return await this.SafeAction(
                 action: () => _guestBookApiService.ApproveAsync(id),
                 successMessage: "Mesaj başarıyla onaylandı ve yayına alındı.",
-                ErrorMessage: "Mesaj onaylanırken bir hata oluştu."
+                ErrorMessage: "Mesaj onaylanırken bir hata oluştu.",
+                routeValues: new { tab = "pending" }
             );
     }
+
 
     [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
@@ -60,9 +62,11 @@ public class GuestBooksController : Controller
         return await this.SafeAction(
                 action: () => _guestBookApiService.DeleteAsync(id),
                 successMessage: "Mesaj başarıyla silindi.",
-                ErrorMessage: "Mesaj silinirken bir hata oluştu."
+                ErrorMessage: "Mesaj silinirken bir hata oluştu.",
+                routeValues: new { tab = "approved" }
             );
     }
+
 
     [HttpPost]
     public async Task<IActionResult> Restore(Guid id)
@@ -70,9 +74,11 @@ public class GuestBooksController : Controller
         return await this.SafeAction(
             action: () => _guestBookApiService.RestoreAsync(id),
             successMessage: "Mesaj başarıyla geri yüklendi.",
-            ErrorMessage: "Mesaj geri yüklenirken bir hata oluştu."
+            ErrorMessage: "Mesaj geri yüklenirken bir hata oluştu.",
+            routeValues: new { tab = "approved" }
         );
     }
+
 
 
 

@@ -122,4 +122,65 @@
         new { currentPage = Model.CurrentPage, totalPages = Model.TotalPages, extraRouteValues = new Dictionary<string, string> { { "tab", Model.ActiveTab } } })
 </div>
 
+
+<!-- Yorum Görüntüleme Modalı -->
+<div id="commentModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-header-container">
+                <div class="modal-icon modal-icon-custom"><i class="fas fa-comment-dots"></i></div>
+                <h4 class="modal-title-custom">Yorum Detayı</h4>
+            </div>
+            <button class="modal-close" data-action="closeModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body-custom">
+            <div class="modal-meta">
+                <strong id="modalUserName"></strong>
+                <span style="margin-left:10px;"><i class="fas fa-clock fa-clock-custom"></i> <span id="modalDate"></span></span>
+            </div>
+            <textarea id="modalMessage" class="modal-message" readonly></textarea>
+        </div>
+        <div class="modal-footer-custom">
+            <button id="approveBtn" class="btn btn-success btn-approve-custom hidden">
+                <i class="fas fa-check"></i> Onayla
+            </button>
+            <button id="restoreBtn" class="btn btn-warning hidden">
+                <i class="fas fa-undo"></i> Geri Yükle
+            </button>
+            <button class="btn btn-outline" data-action="closeModal">Kapat</button>
+        </div>
+    </div>
+</div>
+
+<!-- Silme Onay Modalı -->
+<div id="deleteConfirmModal" class="admin-modal-overlay">
+    <div class="admin-modal" style="text-align:center; padding:25px;">
+        <div class="modal-icon modal-icon-delete" style="width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:15px;">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+        <h4>Silme Onayı</h4>
+        <p style="margin:10px 0;"><strong id="deleteItemName"></strong> adlı kullanıcının yorumunu silmek istediğinize emin misiniz?</p>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
+            <button id="cancelDelete" class="btn btn-outline">İptal</button>
+            <button id="confirmDelete" class="btn btn-danger">Sil</button>
+        </div>
+    </div>
+</div>
+
+<!-- Geri Yükleme Onay Modalı -->
+<div id="restoreModal" class="admin-modal-overlay">
+    <div class="admin-modal" style="text-align:center; padding:25px;">
+        <div class="modal-icon modal-icon-restore" style="width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:15px;">
+            <i class="fas fa-undo"></i>
+        </div>
+        <h4>Geri Yükleme Onayı</h4>
+        <p style="margin:10px 0;"><strong id="restoreItemName"></strong> adlı kullanıcının yorumunu geri yüklemek istediğinize emin misiniz?</p>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
+            <button id="cancelRestore" class="btn btn-outline">İptal</button>
+            <button id="confirmRestore" class="btn btn-warning">Geri Yükle</button>
+        </div>
+    </div>
+</div>
+
+
 <!-- Modal Kodların (Silme Onayı vb.) Aynı Şekilde Altta Kalacak -->
