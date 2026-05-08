@@ -27,7 +27,7 @@
 - [Lisans](#-lisans)
 ---
 ## 🎯 Hakkında
-Modern web teknolojileri kullanılarak geliştirilen, **Clean Architecture** prensiplerine sadık, tam katmanlı bir kişisel portfolyo web uygulamasıdır. Backend ve Frontend tamamen ayrışmış bir yapıda olup, aralarındaki iletişim RESTful API üzerinden sağlanmaktadır.
+Modern web teknolojileri kullanılarak geliştirilen, **N TIER Architecture** prensiplerine sadık, tam katmanlı bir kişisel portfolyo web uygulamasıdır. Backend ve Frontend tamamen ayrışmış bir yapıda olup, aralarındaki iletişim RESTful API üzerinden sağlanmaktadır.
 Projenin amacı, profesyonel deneyimleri, projeleri, blog yazılarını ve teknik yetenekleri dinamik bir şekilde sergilemek; ziyaretçilere yapay zekâ destekli gerçek zamanlı sohbet asistanı ile etkileşimli bir deneyim sunmaktır.
 ---
 ## ✨ Öne Çıkan Özellikler
