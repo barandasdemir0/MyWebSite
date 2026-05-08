@@ -1,6 +1,6 @@
 # 🚀 Baran Daşdemir — Portfolio
 **Full-Stack .NET Developer Portfolio & Personal Website**
-*Clean Architecture · RESTful API · AI-Powered Chatbot · Real-Time Communication*
+*N TIRR Architecture · RESTful API · AI-Powered Chatbot · Real-Time Communication*
 [![Live Site](https://img.shields.io/badge/🌐_Live_Site-barandasdemir.com-0f0f23?style=for-the-badge)](https://www.barandasdemir.com)
 [![API](https://img.shields.io/badge/⚡_API-api.barandasdemir.com-1e40af?style=for-the-badge)](https://api.barandasdemir.com)
 ![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet&logoColor=white)
