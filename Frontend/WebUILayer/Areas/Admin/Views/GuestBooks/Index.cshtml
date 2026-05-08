@@ -51,7 +51,8 @@
                     <tr class="@(item.IsDeleted ? "deleted-item" : "")">
                         <td>
                             <div class="author-wrapper">
-                                <img style="height:40px" src="@item.AuthorAvatarUrl" alt="@item.AuthorName" class="author-avatar">
+                                <img src="@item.AuthorAvatarUrl" alt="@item.AuthorName"
+                                     onerror="this.src='/Mytheme/portfolio/images/default-avatar.png'">
                                 <div>
                                     <strong>@item.AuthorName</strong>
                                     <p class="author-meta">Ziyaretçi</p>
