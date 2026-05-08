@@ -41,7 +41,7 @@ public class HomeController : Controller
             var socialMediaList = await _publicSocialMediaApiService.GetAllAsync();
             var skillList = await _publicSkillApiService.GetAllAsync();
             var projectList = await _publicProjectApiService.GetLatestAsync(3);
-            var guestBookList = await _publicGuestBookApiService.GetAllAsync();
+            var guestBookList = await _publicGuestBookApiService.GetLatestAsync(10);
             var githubList = await _publicGithubApiService.GetAllAsync();
             var models = new IndexViewModel
             {
