@@ -238,8 +238,11 @@
                             <div class="carousel-item active">
                                 <div class="testimonial-card text-center">
                                     <div class="testimonial-avatar mb-4 d-inline-block">
-                                        <img src="@guestBook.AuthorAvatarUrl" alt="@guestBook.AuthorName"
-                                             width="80" height="80" loading="lazy">
+                                        
+                                        <img src="@(guestBook.AuthorAvatarUrl.Contains("media.licdn.com") ? Url.Action("AvatarProxy", "OAuth", new { url = guestBook.AuthorAvatarUrl }) : guestBook.AuthorAvatarUrl)"
+                                             alt="@guestBook.AuthorName"
+                                             width="80" height="80" loading="lazy"
+                                             onerror="this.src='/Mytheme/portfolio/assets/images/default-avatar.png'">
                                     </div>
                                     <p class="testimonial-text">
                                         @guestBook.Message
