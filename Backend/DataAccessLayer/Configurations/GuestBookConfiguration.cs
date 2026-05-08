@@ -11,11 +11,11 @@ public sealed class GuestBookConfiguration : IEntityTypeConfiguration<GuestBook>
         builder.ToTable("GuestBooks");
         builder.HasKey(gb => gb.Id);
 
-        builder.Property(x => x.AuthProvider).IsRequired().HasMaxLength(50);
-        builder.Property(x => x.AuthProviderId).IsRequired().HasMaxLength(100);
-        builder.Property(x => x.AuthorName).IsRequired().HasMaxLength(100);
-        builder.Property(x => x.AuthorAvatarUrl).HasMaxLength(500);
-        builder.Property(x => x.AuthorProfileUrl).HasMaxLength(300);
+        builder.Property(x => x.AuthProvider).IsRequired().HasMaxLength(2000);
+        builder.Property(x => x.AuthProviderId).IsRequired().HasMaxLength(2000);
+        builder.Property(x => x.AuthorName).IsRequired().HasMaxLength(2000);
+        builder.Property(x => x.AuthorAvatarUrl).HasMaxLength(2000);
+        builder.Property(x => x.AuthorProfileUrl).HasMaxLength(2000);
         builder.Property(x => x.Message).IsRequired();
 
     }

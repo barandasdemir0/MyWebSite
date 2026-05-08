@@ -51,8 +51,9 @@
                     <tr class="@(item.IsDeleted ? "deleted-item" : "")">
                         <td>
                             <div class="author-wrapper">
-                                <img src="@item.AuthorAvatarUrl" alt="@item.AuthorName"
-                                     onerror="this.onerror=null; this.src='/Mytheme/portfolio/assets/images/default-avatar.png'">
+                                <img src="@item.AuthorAvatarUrl" alt="@item.AuthorName" class="author-avatar"
+                                     onerror="this.onerror=null; this.src='/Mytheme/portfolio/assets/images/default-avatar.png'"
+                                     width="45" height="45">
                                 <div>
                                     <strong>@item.AuthorName</strong>
                                     <p class="author-meta">Ziyaretçi</p>
@@ -124,64 +125,75 @@
 </div>
 
 
-<!-- Yorum Görüntüleme Modalı -->
-<div id="commentModal" class="admin-modal-overlay">
+<div class="admin-modal-overlay" id="commentModal">
     <div class="admin-modal">
         <div class="modal-header">
             <div class="modal-header-container">
-                <div class="modal-icon modal-icon-custom"><i class="fas fa-comment-dots"></i></div>
-                <h4 class="modal-title-custom">Yorum Detayı</h4>
+                <div class="modal-icon modal-icon-custom">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <h3 id="modalUserName" class="modal-title modal-title-custom">Kullanıcı Adı</h3>
             </div>
-            <button class="modal-close" data-action="closeModal"><i class="fas fa-times"></i></button>
         </div>
-        <div class="modal-body-custom">
+        <div class="modal-body modal-body-custom">
             <div class="modal-meta">
-                <strong id="modalUserName"></strong>
-                <span style="margin-left:10px;"><i class="fas fa-clock fa-clock-custom"></i> <span id="modalDate"></span></span>
+                <i class="fas fa-clock fa-clock-custom"></i>
+                <span id="modalDate" class="modal-date">Tarih</span>
             </div>
-            <textarea id="modalMessage" class="modal-message" readonly></textarea>
+            <textarea id="modalMessage" readonly class="form-control modal-message"></textarea>
         </div>
-        <div class="modal-footer-custom">
-            <button id="approveBtn" class="btn btn-success btn-approve-custom hidden">
-                <i class="fas fa-check"></i> Onayla
+        <div class="modal-footer modal-footer-custom">
+            <button class="btn btn-success btn-approve-custom hidden" id="approveBtn">
+                <i class="fas fa-check fa-clock-custom"></i>Onayla
             </button>
-            <button id="restoreBtn" class="btn btn-warning hidden">
-                <i class="fas fa-undo"></i> Geri Yükle
+            <button class="btn btn-warning btn-approve-custom hidden" id="restoreBtn">
+                <i class="fas fa-undo fa-clock-custom"></i>Geri Yükle
             </button>
-            <button class="btn btn-outline" data-action="closeModal">Kapat</button>
+            <button class="btn btn-secondary" data-action="closeModal">Kapat</button>
         </div>
     </div>
 </div>
 
-<!-- Silme Onay Modalı -->
-<div id="deleteConfirmModal" class="admin-modal-overlay">
-    <div class="admin-modal" style="text-align:center; padding:25px;">
-        <div class="modal-icon modal-icon-delete" style="width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:15px;">
-            <i class="fas fa-trash-alt"></i>
-        </div>
-        <h4>Silme Onayı</h4>
-        <p style="margin:10px 0;"><strong id="deleteItemName"></strong> adlı kullanıcının yorumunu silmek istediğinize emin misiniz?</p>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
-            <button id="cancelDelete" class="btn btn-outline">İptal</button>
-            <button id="confirmDelete" class="btn btn-danger">Sil</button>
-        </div>
-    </div>
-</div>
-
-<!-- Geri Yükleme Onay Modalı -->
+<!-- Restore Modal Template -->
 <div id="restoreModal" class="admin-modal-overlay">
-    <div class="admin-modal" style="text-align:center; padding:25px;">
-        <div class="modal-icon modal-icon-restore" style="width:50px;height:50px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:15px;">
-            <i class="fas fa-undo"></i>
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-restore">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div class="modal-title">Geri Yükle</div>
         </div>
-        <h4>Geri Yükleme Onayı</h4>
-        <p style="margin:10px 0;"><strong id="restoreItemName"></strong> adlı kullanıcının yorumunu geri yüklemek istediğinize emin misiniz?</p>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
-            <button id="cancelRestore" class="btn btn-outline">İptal</button>
-            <button id="confirmRestore" class="btn btn-warning">Geri Yükle</button>
+        <div class="modal-body">
+            <strong id="restoreItemName"></strong> kullanıcısının yorumu geri yüklenecek ve sitede tekrar yayına
+            alınacaktır.<br><br>
+            Bu işlem geri alınamaz (tekrar silmeniz gerekir).
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelRestore">İptal</button>
+            <button class="btn btn-warning" id="confirmRestore">Onayla ve Yükle</button>
         </div>
     </div>
 </div>
 
-
-<!-- Modal Kodların (Silme Onayı vb.) Aynı Şekilde Altta Kalacak -->
+<!-- Delete Confirmation Modal Template -->
+<div id="deleteConfirmModal" class="admin-modal-overlay">
+    <div class="admin-modal">
+        <div class="modal-header">
+            <div class="modal-icon modal-icon-delete">
+                <i class="fas fa-trash"></i>
+            </div>
+            <div class="modal-title">Silme Onayı</div>
+        </div>
+        <div class="modal-body">
+            <strong id="deleteItemName"></strong> silinecek. Bu işlem şimdilik geri alınabilir.<br><br>
+            Devam etmek istiyor musunuz?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelDelete">İptal</button>
+            <button class="btn btn-danger" id="confirmDelete">Evet, Sil</button>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="/Mytheme/admin/js/modules/guestbook.js"></script>
+}
