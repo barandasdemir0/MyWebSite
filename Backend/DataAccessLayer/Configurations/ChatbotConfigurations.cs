@@ -17,7 +17,7 @@ public sealed class ChatbotConfigurations : IEntityTypeConfiguration<ChatbotSett
         builder.Property(x => x.WelcomeMessage).HasMaxLength(500);
         builder.Property(x => x.SystemPrompt).HasMaxLength(2000);
 
-        builder.Property(x => x.ApiKey).HasMaxLength(500);
+        builder.Property(x => x.ApiKey).HasMaxLength(2000);
 
         builder.Property(x => x.ModelName).HasMaxLength(100);
     }
