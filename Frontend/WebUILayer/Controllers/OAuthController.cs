@@ -161,4 +161,22 @@ public class OAuthController : Controller
         _guestSessionService.clearGuest();
         return RedirectToAction(nameof(GuestBookController.Index), GuestBookController.name);
     }
+
+    [HttpGet]
+    [IgnoreAntiforgeryToken]
+    public async Task<IActionResult> AvatarProxy(string url)
+    {
+        if (string.IsNullOrEmpty(url) || !url.StartsWith("https://media.licdn.com/"))
+            return NotFound();
+        try
+        {
+            using var client = new HttpClient();
+            var bytes = await client.GetByteArrayAsync(url);
+            return File(bytes, "image/jpeg");
+        }
+        catch
+        {
+            return NotFound();
+        }
+    }
 }
