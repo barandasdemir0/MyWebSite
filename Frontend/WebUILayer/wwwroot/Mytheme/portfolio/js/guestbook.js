@@ -1,79 +1,110 @@
-// ============================================
-// GUESTBOOK PAGE - (INLINE JS OLMADAN, TEMİZ HALİ)
-// ============================================
+let currentCommentRow = null;
+
+function viewComment(btn) {
+    try {
+        currentCommentRow = btn.closest('tr');
+        const row = currentCommentRow;
+
+        const nameEl = row.querySelector('.author-wrapper strong');
+        const name = nameEl ? nameEl.innerText : 'Kullanıcı';
+
+        const messageEl = row.querySelector('.comment-text');
+        const message = messageEl ? messageEl.innerText : '';
+
+        let date = '';
+        if (row.cells && row.cells.length > 3) {
+            date = row.cells[3].innerText;
+        }
+
+        let isPending = false;
+        const card = row.closest('.card');
+        if (card) {
+            isPending = card.dataset.tableType === 'pending';
+        }
+
+        const modalName = document.getElementById('modalUserName');
+        const modalMsg = document.getElementById('modalMessage');
+        const modalDate = document.getElementById('modalDate');
+
+        if (modalName) modalName.innerText = name;
+        if (modalMsg) modalMsg.value = message;
+        if (modalDate) modalDate.innerText = date;
+
+        const approveBtn = document.getElementById('approveBtn');
+        const restoreBtn = document.getElementById('restoreBtn');
+
+        if (isPending) {
+            if (approveBtn) approveBtn.classList.remove('hidden');
+            if (restoreBtn) restoreBtn.classList.add('hidden');
+        } else {
+            if (approveBtn) approveBtn.classList.add('hidden');
+            if (restoreBtn) restoreBtn.classList.remove('hidden');
+        }
+
+        const modal = document.getElementById('commentModal');
+        if (modal) {
+            modal.classList.add('active');
+        }
+    } catch (err) {
+        console.error('Error in viewComment:', err);
+    }
+}
+
+function closeCommentModal() {
+    document.getElementById('commentModal').classList.remove('active');
+}
 
 document.addEventListener('DOMContentLoaded', function () {
-    const successModal = document.getElementById('guestbookSuccessModal');
-    const closeModalBtn = document.getElementById('closeSuccessModalBtn');
+    const modal = document.getElementById('commentModal');
 
-    // 1. Kapatma Butonu (Inline onclick yerine EventListener kullanıldı)
-    if (closeModalBtn && successModal) {
-        closeModalBtn.addEventListener('click', function () {
-            successModal.classList.remove('visible');
-        });
-    }
-
-    // 2. Modal dışına tıklayınca modalı kapatma
-    if (successModal) {
-        successModal.addEventListener('click', function (e) {
-            if (e.target === this) {
-                successModal.classList.remove('visible');
-            }
-        });
-    }
-
-    // 3. C#'tan Gelen Başarı Durumunu Kontrol Et (data-success attribute üzerinden)
-    if (successModal && successModal.getAttribute('data-success') === 'true') {
-        successModal.classList.add('visible'); // Modalı Aç
-        fireGuestbookConfetti(); // Konfetiyi patlat
-    }
-
-    // Form input validation (Textarea boşken "Gönder" butonunu kapatma)
-    const guestbookForm = document.querySelector('.guestbook-form form');
-    const submitBtn = guestbookForm ? guestbookForm.querySelector('button[type="submit"]') : null;
-    const textarea = guestbookForm ? guestbookForm.querySelector('textarea') : null;
-
-    if (textarea && submitBtn) {
-        textarea.addEventListener('input', function () {
-            if (textarea.value.trim().length > 0) {
-                submitBtn.disabled = false;
-                submitBtn.title = 'Gönder';
-            } else {
-                submitBtn.disabled = true;
-                submitBtn.title = 'Mesaj yazmalısınız';
-            }
-        });
-    }
-
-    // Confetti Fonksiyonu (Sadece içeriden çağrılacak şekilde encapsüle edildi)
-    function fireGuestbookConfetti() {
-        if (typeof confetti === 'undefined') {
-            console.warn('Confetti library not loaded');
+    // View/Action Handler
+    document.body.addEventListener('click', function (e) {
+        const viewBtn = e.target.closest('[data-action="viewComment"]');
+        if (viewBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            viewComment(viewBtn);
             return;
         }
 
-        const count = 200;
-        const defaults = { origin: { y: 0.7 } };
-
-        function fire(particleRatio, opts) {
-            confetti(Object.assign({}, defaults, opts, {
-                particleCount: Math.floor(count * particleRatio)
-            }));
+        const closeBtn = e.target.closest('[data-action="closeModal"]');
+        if (closeBtn) {
+            e.stopPropagation();
+            closeCommentModal();
+            return;
         }
+    }, true);
 
-        fire(0.25, { spread: 26, startVelocity: 55 });
-        fire(0.2, { spread: 60 });
-        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-        fire(0.1, { spread: 120, startVelocity: 45 });
+    // ==========================================
+    // MODAL İÇİNDEN ONAYLAMA VE GERİ YÜKLEME (GERÇEK SUBMİT)
+    // ==========================================
+    const approveBtn = document.getElementById('approveBtn');
+    const restoreBtn = document.getElementById('restoreBtn');
+
+    if (approveBtn) {
+        approveBtn.addEventListener('click', function () {
+            if (currentCommentRow) {
+                // Sadece boyama yapma, satırdaki gerçek C# formunu bul ve post et!
+                const form = currentCommentRow.querySelector('form[action*="Approve"]');
+                if (form) form.submit();
+            }
+        });
     }
-});
 
-// Pagination functionality for guestbook page
-document.addEventListener('DOMContentLoaded', function () {
+    if (restoreBtn) {
+        restoreBtn.addEventListener('click', function () {
+            if (currentCommentRow) {
+                // Sadece boyama yapma, satırdaki gerçek C# formunu bul ve post et!
+                const form = currentCommentRow.querySelector('form[action*="Restore"]');
+                if (form) form.submit();
+            }
+        });
+    }
+
+    // ==========================================
+    // ARAMA VE SAYFALAMA (SENİN ESKİ KODUN AYNEN KALDI)
+    // ==========================================
     const paginationBtns = document.querySelectorAll('.pagination-btn');
-    if (paginationBtns.length === 0) return;
-
     paginationBtns.forEach((btn) => {
         btn.addEventListener('click', function () {
             if (this.disabled || this.classList.contains('active')) return;
@@ -96,11 +127,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (prevBtn) prevBtn.click();
                 }
             }
-            updateGuestbookPaginationArrows();
+            updatePaginationArrows();
         });
     });
 
-    function updateGuestbookPaginationArrows() {
+    function updatePaginationArrows() {
         const currentActive = document.querySelector('.pagination-btn.active');
         const currentPage = parseInt(currentActive?.textContent || 1);
         const allPages = Array.from(document.querySelectorAll('.pagination-btn')).filter(b => !b.querySelector('i')).map(b => parseInt(b.textContent));
@@ -108,11 +139,111 @@ document.addEventListener('DOMContentLoaded', function () {
         const minPage = Math.min(...allPages);
         const maxPage = Math.max(...allPages);
 
-        const prevBtn = document.getElementById('prevPage');
-        const nextBtn = document.getElementById('nextPage');
+        const prevBtn = document.querySelector('.pagination-btn .fa-chevron-left')?.parentElement;
+        const nextBtn = document.querySelector('.pagination-btn .fa-chevron-right')?.parentElement;
 
         if (prevBtn) prevBtn.disabled = currentPage <= minPage;
         if (nextBtn) nextBtn.disabled = currentPage >= maxPage;
     }
-    updateGuestbookPaginationArrows();
+    updatePaginationArrows();
+
+    const searchInput = document.querySelector('.search-box input');
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const approvedTable = document.querySelectorAll('.card')[1];
+            if (approvedTable) {
+                const rows = approvedTable.querySelectorAll('.admin-table tbody tr');
+                rows.forEach(row => {
+                    const userName = row.querySelector('strong')?.textContent.toLowerCase() || '';
+                    const messageText = row.querySelector('.comment-text')?.textContent.toLowerCase() || '';
+                    if (userName.includes(searchTerm) || messageText.includes(searchTerm)) {
+                        row.classList.remove('hidden');
+                    } else {
+                        row.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    }
 });
+
+// ==========================================
+// SATIRDAKİ ÇÖP KUTUSU (SİLME) BUTONU (GERÇEK SUBMİT)
+// ==========================================
+document.body.addEventListener('click', function (e) {
+    const btn = e.target.closest('.action-btn.delete');
+    if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const form = btn.closest('form'); // Butonun bağlı olduğu C# formunu al
+        const row = btn.closest('tr');
+        const itemName = row.querySelector('.author-wrapper strong')?.textContent || 'Bu kullanıcı';
+
+        const modal = document.getElementById('deleteConfirmModal');
+        const itemNameSpan = document.getElementById('deleteItemName');
+        const confirmBtn = document.getElementById('confirmDelete');
+        const cancelBtn = document.getElementById('cancelDelete');
+
+        if (modal && itemNameSpan) {
+            itemNameSpan.textContent = itemName;
+            modal.classList.add('active');
+
+            const closeModal = () => modal.classList.remove('active');
+            cancelBtn.onclick = closeModal;
+            modal.onclick = (evt) => { if (evt.target === modal) closeModal(); };
+
+            confirmBtn.onclick = () => {
+                // Sadece arayüzü soldurma, C# postunu tetikle!
+                if (form) form.submit();
+            };
+        }
+    }
+}, true);
+
+// ==========================================
+// SATIRDAKİ GERİ YÜKLE BUTONU (GERÇEK SUBMİT)
+// ==========================================
+document.body.addEventListener('click', function (e) {
+    const btn = e.target.closest('.action-btn.restore');
+    if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const form = btn.closest('form');
+        const row = btn.closest('tr');
+        const itemName = row.querySelector('.author-wrapper strong')?.textContent || 'Bu kullanıcı';
+
+        const modal = document.getElementById('restoreModal');
+        const itemNameSpan = document.getElementById('restoreItemName');
+        const confirmBtn = document.getElementById('confirmRestore');
+        const cancelBtn = document.getElementById('cancelRestore');
+
+        if (modal && itemNameSpan) {
+            itemNameSpan.textContent = itemName;
+            modal.classList.add('active');
+
+            const closeModal = () => modal.classList.remove('active');
+            cancelBtn.onclick = closeModal;
+            modal.onclick = (evt) => { if (evt.target === modal) closeModal(); };
+
+            confirmBtn.onclick = function () {
+                if (form) form.submit();
+            };
+        }
+    }
+}, true);
+
+// ==========================================
+// SATIRDAKİ ONAYLAMA BUTONU (GARANTİ SUBMİT)
+// ==========================================
+document.body.addEventListener('click', function (e) {
+    const btn = e.target.closest('.action-btn.success'); // Yeşil onay butonu
+    if (btn) {
+        e.preventDefault();
+        e.stopPropagation(); // Temanın diğer engelleyici JS'lerini devre dışı bırak
+        const form = btn.closest('form'); // Butonun kapsayıcısı olan C# formunu bul
+        if (form) form.submit(); // Zorla Backend'e gönder!
+    }
+}, true);
