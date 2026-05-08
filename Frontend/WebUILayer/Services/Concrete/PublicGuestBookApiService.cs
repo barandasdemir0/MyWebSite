@@ -9,10 +9,10 @@ public class PublicGuestBookApiService : PublicReadApiService<GuestBookDto>, IPu
     {
     }
 
-    public async Task<List<GuestBookDto>> GetLatestAsync(int count)
-    {
-        var response = await _httpClient.GetAsync($"api/guestbooks/latest/{count}");
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<List<GuestBookDto>>() ?? new();
-    }
+    //public async Task<List<GuestBookDto>> GetLatestAsync(int count)
+    //{
+    //    var response = await _httpClient.GetAsync($"api/guestbooks/latest/{count}");
+    //    response.EnsureSuccessStatusCode();
+    //    return await response.Content.ReadFromJsonAsync<List<GuestBookDto>>() ?? new();
+    //}
 }
